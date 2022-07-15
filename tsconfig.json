@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src", 
+    "target": "es5",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "esnext",
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "strict": true,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true, 
+    "declaration": false,
+    "removeComments": true, 
+    "skipLibCheck": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noEmit": true, // 컴파일러가 js 파일 등 출력 결과물을 만들지 않을 것인가
+    "noEmitOnError": true, // 에러 발생시 js 소스코드, source map, declaration 등이 생성되지 않는다
+    "noUnusedLocals": false,  
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"],
+}
