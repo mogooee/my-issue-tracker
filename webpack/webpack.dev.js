@@ -1,25 +1,25 @@
-const { merge } = require("webpack-merge");
+const { merge } = require('webpack-merge');
 
-const common = require("./webpack.common.js");
+const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
-  mode: "development",
-  devtool: "source-map",
+  mode: 'development',
+  devtool: 'source-map',
   module: {
     rules: [
       {
-        test: /\.(ts|tsx)$/,
+        test: /\.(ts|tsx|js|jsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: "ts-loader",
+          loader: 'ts-loader',
           options: { compilerOptions: { noEmit: false } },
         },
       },
     ],
   },
   devServer: {
-    host: "localhost",
-    port: 3000,
+    host: 'localhost',
+    port: 8080,
     historyApiFallback: true, // 404 응답 시 index.html로 리다이렉트
   },
 });

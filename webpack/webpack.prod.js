@@ -1,35 +1,36 @@
-const { merge } = require("webpack-merge");
-const common = require("./webpack.common.js");
+const { merge } = require('webpack-merge');
+const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
-  mode: "production",
-  devtool: "hidden-source-map",
+  mode: 'production',
+  devtool: 'source-map',
   module: {
     rules: [
       {
         test: /\.(ts|tsx|js|jsx)$/,
+        exclude: /node_modules/,
         use: {
-          loader: "babel-loader",
+          loader: 'babel-loader',
           options: {
             presets: [
               [
-                "@babel/preset-env",
+                '@babel/preset-env',
                 {
-                  modules: "cjs",
+                  modules: 'cjs',
                 },
               ],
-              ["@babel/preset-react"],
-              ["@babel/preset-typescript"],
+              ['@babel/preset-react', { runtime: 'automatic' }],
+              ['@babel/preset-typescript'],
             ],
             plugins: [
               [
-                "@babel/plugin-transform-runtime",
+                '@babel/plugin-transform-runtime',
                 {
                   corejs: 3,
                   proposals: true,
                 },
               ],
-              ["babel-plugin-styled-components"],
+              ['babel-plugin-styled-components'],
             ],
           },
         },
