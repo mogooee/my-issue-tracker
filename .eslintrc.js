@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: ['plugin:react/recommended', 'plugin:prettier/recommended', 'airbnb'],
+  extends: ['plugin:react/recommended', 'plugin:prettier/recommended', 'airbnb', 'plugin:storybook/recommended'],
   settings: {
     'import/resolver': {
       node: {
@@ -46,4 +46,11 @@ module.exports = {
   globals: {
     JSX: true,
   },
+  'import/no-extraneous-dependencies': [
+    'error',
+    {
+      devDependencies: ['**/*.stories.*', '**/.storybook/**/*.*'],
+      peerDependencies: true,
+    },
+  ],
 };

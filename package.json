@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack serve --config webpack/webpack.dev.js --open --progress",
     "start": "cross-env NODE_ENV=development webpack --config webpack/webpack.dev.js --progress",
-    "build": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.prod.js --progress"
+    "build": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.prod.js --progress",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "repository": {
     "type": "git",
@@ -33,6 +35,14 @@
     "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
     "@babel/runtime-corejs3": "^7.18.6",
+    "@storybook/addon-actions": "^6.5.9",
+    "@storybook/addon-essentials": "^6.5.9",
+    "@storybook/addon-interactions": "^6.5.9",
+    "@storybook/addon-links": "^6.5.9",
+    "@storybook/builder-webpack5": "^6.5.9",
+    "@storybook/manager-webpack5": "^6.5.9",
+    "@storybook/react": "^6.5.9",
+    "@storybook/testing-library": "^0.0.13",
     "@svgr/webpack": "^6.2.1",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
@@ -50,6 +60,7 @@
     "eslint-plugin-jsx-a11y": "^6.6.0",
     "eslint-plugin-react": "^7.30.1",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-storybook": "^0.6.1",
     "html-webpack-plugin": "^5.5.0",
     "prettier": "^2.7.1",
     "style-loader": "^3.3.1",
