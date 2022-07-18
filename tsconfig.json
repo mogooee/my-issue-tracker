@@ -20,6 +20,6 @@
     "noEmitOnError": true, // 에러 발생시 js 소스코드, source map, declaration 등이 생성되지 않는다
     "noUnusedLocals": false,  
   },
-  "include": ["src"],
+  "include": ["src","custom.d.ts"],
   "exclude": ["node_modules"],
 }

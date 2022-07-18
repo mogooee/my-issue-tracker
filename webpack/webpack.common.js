@@ -20,12 +20,21 @@ module.exports = {
     rules: [
       {
         test: /\.css?$/,
-        use: ["style-loader", "css-loader"],
+        use: [{loader:"style-loader"}, {loader:"css-loader"}],
       },
       {
-        test: /\.svg$/,
-        type: "asset/inline",
+        test: /\.svg/,
+        type: 'asset/inline',
+        resourceQuery: /inline/, // *.svg?inline
       },
+      { 
+        test: /\.svg$/i,
+        issuer: /\.[jt]sx?$/,
+        use: {
+          loader: '@svgr/webpack',
+        },
+        resourceQuery: { not: [/inline/] },
+      }
     ],
   },
   plugins: [
