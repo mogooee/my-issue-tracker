@@ -1,46 +1,49 @@
-const path = require("path");
+const path = require('path');
 
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-require("dotenv").config();
+require('dotenv').config();
 
 module.exports = {
-  entry: path.resolve(__dirname, "..", "src", "index.tsx"),
+  entry: path.resolve(__dirname, '..', 'src', 'index.tsx'),
   output: {
-    path: path.join(__dirname, "..", "build"),
-    filename: "bundle.js",
-    assetModuleFilename: "assets/[name][ext]",
+    path: path.join(__dirname, '..', 'build'),
+    filename: 'bundle.js',
+    assetModuleFilename: 'assets/[name][ext]',
   },
   resolve: {
-    modules: ["node_modules"],
-    extensions: [".js", ".jsx", ".ts", ".tsx"],
+    alias: {
+      '@': path.resolve(__dirname, '..', 'src'),
+    },
+    modules: ['node_modules'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   module: {
     rules: [
       {
         test: /\.css?$/,
-        use: [{loader:"style-loader"}, {loader:"css-loader"}],
+        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
       },
       {
         test: /\.svg/,
         type: 'asset/inline',
         resourceQuery: /inline/, // *.svg?inline
       },
-      { 
+      {
         test: /\.svg$/i,
         issuer: /\.[jt]sx?$/,
         use: {
           loader: '@svgr/webpack',
         },
         resourceQuery: { not: [/inline/] },
-      }
+      },
     ],
   },
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "..", "public", "index.html"),
+      template: path.resolve(__dirname, '..', 'public', 'index.html'),
     }),
   ],
 };
