@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as S from '@/components/Atoms/Input/index.styles';
 
 export interface InputTypes {
@@ -8,7 +8,6 @@ export interface InputTypes {
   inputType: string;
   inputValue?: string;
   inputMaxLength: number;
-  inputRef?: React.RefObject<HTMLInputElement>;
   inputPlaceholder: string;
   isActive?: boolean;
   isTyping?: boolean;
@@ -27,11 +26,12 @@ const Input = ({ disabled = false, inputMaxLength = defaultMaxLength, ...props }
     inputSize,
     inputValue,
     inputPlaceholder,
-    inputRef,
     onChange,
     onClick,
     onBlur,
   } = props;
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {}, [inputValue]);
 
