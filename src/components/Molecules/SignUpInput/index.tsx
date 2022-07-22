@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import * as S from '@/components/Molecules/SignUpInput/index.styles';
 import Input from '@/components/Atoms/Input';
 import useInput from '@/hooks/useInput';
@@ -13,8 +12,7 @@ export interface SignUpInputTypes {
 
 const SignUpInput = ({ ...props }: SignUpInputTypes): JSX.Element => {
   const { inputType, maxLength, placeholder, pattern, patternMsg } = props;
-  const [isError, setIsError] = useState<boolean>(false);
-  const { isActive, isTyping, onChangeInput, onClickInput, onBlurInput } = useInput();
+  const { isError, setIsError, isActive, onChangeInput, onClickInput, onBlurInput } = useInput();
 
   return (
     <S.SignUpInput isError={isError} str={placeholder}>
@@ -22,10 +20,9 @@ const SignUpInput = ({ ...props }: SignUpInputTypes): JSX.Element => {
       <p className="caption">{patternMsg}</p>
       <Input
         isActive={isActive}
-        isTyping={isTyping}
         inputMaxLength={maxLength}
         inputPlaceholder={placeholder}
-        inputSize="LARGE"
+        inputSize="MEDIUM"
         inputType={inputType}
         onClick={onClickInput}
         onChange={(event: React.FormEvent<HTMLInputElement>) => {
@@ -33,9 +30,7 @@ const SignUpInput = ({ ...props }: SignUpInputTypes): JSX.Element => {
           setIsError(!value.match(pattern));
           onChangeInput(event);
         }}
-        onBlur={() => {
-          onBlurInput();
-        }}
+        onBlur={() => onBlurInput()}
       />
     </S.SignUpInput>
   );
