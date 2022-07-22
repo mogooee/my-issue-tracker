@@ -3,13 +3,13 @@ import styled from 'styled-components';
 export const CommonSignUpForm = styled.div`
   width: 340px;
 
-  button {
-    margin-top: 50px;
+  h1 {
+    margin: 0 0 20px 10px;
+    ${({ theme }) => theme.FONTSTYLES.LINK_LARGE};
   }
 
-  span {
-    display: inline-block;
-    margin: 15px 10px;
+  button {
+    margin-top: 50px;
   }
 
   form:disabled {

@@ -1,18 +1,24 @@
 import styled, { css } from 'styled-components';
 
-export const SignUpInput = styled.div<{ isError: boolean; str: string }>`
+export const SignUpInput = styled.div<{ isError: boolean; id: string }>`
+  form {
+    width: 100%;
+  }
+
   span {
     display: inline-block;
-    margin-left: 10px;
+    margin: 10px 0 0 10px;
     ${({ theme }) => theme.FONTSTYLES.TEXT_SMALL};
   }
 
   .caption {
-    margin: 0px 0px 5px 10px;
+    margin: 10px 0px 10px 10px;
     ${({ theme }) => theme.FONTSTYLES.TEXT_XSMALL};
   }
 
-  ${({ isError, str }) => {
+  ${({ isError, id }) => {
+    const str = id === '비밀번호 확인' ? '비밀번호가 일치하지 않습니다.' : `${id} 형식에 맞게 입력하세요`;
+
     return (
       isError &&
       css`
@@ -25,7 +31,7 @@ export const SignUpInput = styled.div<{ isError: boolean; str: string }>`
         }
 
         &::after {
-          content: '${str} 형식에 맞게 입력하세요';
+          content: '${str}';
           position: absolute;
           left: 10px;
           width: 100%;
