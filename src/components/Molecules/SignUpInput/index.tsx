@@ -3,15 +3,15 @@ import * as S from '@/components/Molecules/SignUpInput/index.styles';
 import Input from '@/components/Atoms/Input';
 import useInput from '@/hooks/useInput';
 
-export type SignUpInputTypes = {
+export interface SignUpInputTypes {
   inputType: string;
   maxLength: number;
   placeholder: string;
   pattern: RegExp;
   patternMsg: string;
-};
+}
 
-const SignUpInput = ({ ...props }): any => {
+const SignUpInput = ({ ...props }: SignUpInputTypes): JSX.Element => {
   const { inputType, maxLength, placeholder, pattern, patternMsg } = props;
   const [isError, setIsError] = useState<boolean>(false);
   const { isActive, isTyping, onChangeInput, onClickInput, onBlurInput } = useInput();
