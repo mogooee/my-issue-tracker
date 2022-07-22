@@ -8,14 +8,14 @@ export interface ButtonTypes {
   size: 'SMALL' | 'MEDIUM' | 'LARGE';
   buttonStyle: 'STANDARD' | 'SECONDARY' | 'NO_BORDER';
   iconInfo?: { icon: IconType; stroke?: string; fill?: string };
-  HandleOnClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  handleOnClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const Button = ({ buttonStyle = 'STANDARD', ...props }: ButtonTypes) => {
-  const { label, iconInfo, HandleOnClick } = props;
+  const { label, iconInfo, handleOnClick } = props;
 
   return (
-    <S.Button type="button" onClick={HandleOnClick} {...props} buttonStyle={buttonStyle}>
+    <S.Button type="button" onClick={handleOnClick} {...props} buttonStyle={buttonStyle}>
       {iconInfo && <Icon icon={iconInfo.icon} stroke={iconInfo.stroke} fill={iconInfo.fill} />}
       {label}
     </S.Button>
