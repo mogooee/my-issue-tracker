@@ -1,8 +1,12 @@
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { SignUpFormState, SignUpFormErrorState } from '@/components/Organisms/CommonSignUpForm';
+
 import * as S from '@/components/Molecules/SignUpInput/index.styles';
 import Input from '@/components/Atoms/Input';
 import useInput from '@/hooks/useInput';
 
 export interface SignUpInputTypes {
+  id: string;
   inputType: string;
   maxLength: number;
   placeholder: string;
@@ -11,11 +15,24 @@ export interface SignUpInputTypes {
 }
 
 const SignUpInput = ({ ...props }: SignUpInputTypes): JSX.Element => {
-  const { inputType, maxLength, placeholder, pattern, patternMsg } = props;
+  const { id, inputType, maxLength, placeholder, pattern, patternMsg } = props;
   const { isError, setIsError, isActive, onChangeInput, onClickInput, onBlurInput } = useInput();
 
+  const [signUpFormValue, setSignUpFormValue] = useRecoilState(SignUpFormState);
+  const setSignUpForErrorValue = useSetRecoilState(SignUpFormErrorState);
+
+  const handleOnChange = (event: React.FormEvent<HTMLInputElement>) => {
+    const { value } = event.currentTarget;
+    const isError = id === 'passwordVerification' ? value !== signUpFormValue.password : !value.match(pattern);
+
+    setIsError(isError);
+    setSignUpForErrorValue(isError);
+    setSignUpFormValue({ ...signUpFormValue, [id]: value });
+    onChangeInput(event);
+  };
+
   return (
-    <S.SignUpInput isError={isError} str={placeholder}>
+    <S.SignUpInput isError={isError} id={placeholder}>
       <span>{placeholder}</span>
       <p className="caption">{patternMsg}</p>
       <Input
@@ -25,11 +42,7 @@ const SignUpInput = ({ ...props }: SignUpInputTypes): JSX.Element => {
         inputSize="MEDIUM"
         inputType={inputType}
         onClick={onClickInput}
-        onChange={(event: React.FormEvent<HTMLInputElement>) => {
-          const { value } = event.currentTarget;
-          setIsError(!value.match(pattern));
-          onChangeInput(event);
-        }}
+        onChange={handleOnChange}
         onBlur={() => onBlurInput()}
       />
     </S.SignUpInput>
