@@ -1,4 +1,4 @@
-import Logo from '@/components/Atoms/Logo';
+import { FORM_INFO } from '@/components/Organisms/CommonSignUpForm/constants';
 import CommonSignUpForm from '@/components/Organisms/CommonSignUpForm';
 import styled from 'styled-components';
 
@@ -14,7 +14,7 @@ const StyledDiv = styled.div`
 const CommonSignUp = () => {
   return (
     <StyledDiv>
-      <CommonSignUpForm />
+      <CommonSignUpForm FORM_INFO={FORM_INFO} />
     </StyledDiv>
   );
 };

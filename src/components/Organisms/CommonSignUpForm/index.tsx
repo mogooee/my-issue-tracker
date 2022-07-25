@@ -1,6 +1,5 @@
 import { atom, useRecoilValue } from 'recoil';
 import * as S from '@/components/Organisms/CommonSignUpForm/index.styles';
-import { FORM_INFO } from '@/components/Organisms/CommonSignUpForm/constants';
 import Button from '@/components/Atoms/Button';
 import SignUpInput from '@/components/Molecules/SignUpInput';
 
@@ -21,7 +20,16 @@ export const SignUpFormState = atom<SignUpFormTypes>({
   default: { id: '', password: '', email: '', nickname: '' },
 });
 
-const CommonSignUpForm = () => {
+interface FormInfoTypes {
+  id: string;
+  inputType: string;
+  maxLength: number;
+  placeholder: string;
+  pattern: RegExp;
+  patternMsg: string;
+}
+
+const CommonSignUpForm = ({ FORM_INFO }: { FORM_INFO: FormInfoTypes[] }) => {
   const signUpFormValue = useRecoilValue(SignUpFormState);
   const signUpFormErrorValue = useRecoilValue(SignUpFormErrorState);
 

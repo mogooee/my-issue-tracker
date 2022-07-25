@@ -5,7 +5,7 @@ export const FORM_INFO = [
     maxLength: 16,
     placeholder: '아이디',
     pattern: /^[a-zA-Z0-9-*~^_]{6,16}$/g,
-    patternMsg: '4자 이상의 영문,숫자,특수문자(-*~^_)를 포함한 아이디를 입력해주세요.',
+    patternMsg: '영문,숫자,특수문자(-*~^_)를 포함하는 아이디 (4~16자)',
   },
   {
     id: 'password',
@@ -13,7 +13,7 @@ export const FORM_INFO = [
     maxLength: 16,
     placeholder: '비밀번호',
     pattern: /^[a-zA-Z0-9-~₩!@#$%^&*()_-]{8,16}$/g,
-    patternMsg: '8-16자의 영문,숫자,특수문자(~₩!@#$%^&*()_-)를 포함한 비밀번호를 입력해주세요.',
+    patternMsg: '영문,숫자,특수문자(~₩!@#$%^&*()_-)를 포함하는 비밀번호 (8~16자)',
   },
   {
     id: 'passwordVerification',
@@ -37,6 +37,6 @@ export const FORM_INFO = [
     maxLength: 12,
     placeholder: '닉네임',
     pattern: /^[ㄱ-힣a-zA-Z0-9-*~^_]{2,12}$/i,
-    patternMsg: '다른 유저와 겹치지 않는 별명을 입력해주세요.(2~12자)',
+    patternMsg: '다른 유저와 겹치지 않는 별명을 입력해주세요. (2~12자)',
   },
 ];

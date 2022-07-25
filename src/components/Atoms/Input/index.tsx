@@ -11,8 +11,8 @@ export interface InputTypes {
   inputPlaceholder: string;
   isActive?: boolean;
   isTyping?: boolean;
-  onClick: () => void;
-  onChange: (event: React.FormEvent<HTMLInputElement>) => void;
+  onClick?: () => void;
+  onChange?: (event: React.FormEvent<HTMLInputElement>) => void;
   onBlur?: () => void;
 }
 
@@ -42,7 +42,7 @@ const Input = ({ disabled = false, inputMaxLength = defaultMaxLength, ...props }
       onClick={() => {
         if (disabled) return;
         inputRef?.current?.focus();
-        onClick();
+        onClick!();
       }}
     >
       {isTyping && <label>{inputPlaceholder}</label>}
@@ -56,7 +56,7 @@ const Input = ({ disabled = false, inputMaxLength = defaultMaxLength, ...props }
         onBlur={onBlur}
         onChange={(event) => {
           const { value } = event.currentTarget;
-          onChange(event);
+          onChange!(event);
           // eslint-disable-next-line no-param-reassign
           if (Number(value) >= inputMaxLength) event.currentTarget.value = value.slice(0, inputMaxLength);
         }}

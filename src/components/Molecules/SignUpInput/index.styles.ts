@@ -14,6 +14,7 @@ export const SignUpInput = styled.div<{ isError: boolean; id: string }>`
   .caption {
     margin: 10px 0px 10px 10px;
     ${({ theme }) => theme.FONTSTYLES.TEXT_XSMALL};
+    font-size: 1.1rem;
   }
 
   ${({ isError, id }) => {
