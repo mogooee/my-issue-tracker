@@ -1,5 +1,5 @@
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { SignUpFormState, SignUpFormErrorState } from '@/components/Organisms/CommonSignUpForm';
+import { SignUpFormErrorState, SignUpFormState } from '@/stores/signUp';
 
 import * as S from '@/components/Molecules/SignUpInput/index.styles';
 import Input from '@/components/Atoms/Input';

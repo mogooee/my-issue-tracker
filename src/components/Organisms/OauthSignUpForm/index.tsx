@@ -1,3 +1,6 @@
+import { useRecoilValue } from 'recoil';
+import { SignUpFormErrorState, SignUpFormState } from '@/stores/signUp';
+
 import * as S from '@/components/Organisms/OauthSignUpForm/index.styles';
 import Button from '@/components/Atoms/Button';
 import Input, { InputTypes } from '@/components/Atoms/Input';
@@ -8,6 +11,9 @@ interface AuthDataTypes {
 }
 
 const OAuthSignUpForm = ({ authData }: { authData: AuthDataTypes }) => {
+  const signUpFormErrorValue = useRecoilValue(SignUpFormErrorState);
+  const signUpFormValue = useRecoilValue(SignUpFormState);
+
   const { email } = authData;
 
   const FORM_INFO = {
@@ -28,6 +34,8 @@ const OAuthSignUpForm = ({ authData }: { authData: AuthDataTypes }) => {
     inputPlaceholder: '이메일',
   };
 
+  const disabled = signUpFormErrorValue || !signUpFormValue.nickname;
+
   return (
     <S.OauthSignUpForm>
       <h1>추가 정보 입력</h1>
@@ -36,7 +44,7 @@ const OAuthSignUpForm = ({ authData }: { authData: AuthDataTypes }) => {
         <Input key={EMAIL_FORM.inputType} {...EMAIL_FORM} />
       </div>
       <SignUpInput key={FORM_INFO.id} {...FORM_INFO} />
-      <Button buttonStyle="STANDARD" label="동의하고 가입하기" size="LARGE" disabled={true} />
+      <Button buttonStyle="STANDARD" label="동의하고 가입하기" size="LARGE" disabled={disabled} />
     </S.OauthSignUpForm>
   );
 };

@@ -1,24 +1,9 @@
-import { atom, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
+import { SignUpFormErrorState, SignUpFormState } from '@/stores/signUp';
+
 import * as S from '@/components/Organisms/CommonSignUpForm/index.styles';
 import Button from '@/components/Atoms/Button';
 import SignUpInput from '@/components/Molecules/SignUpInput';
-
-export interface SignUpFormTypes {
-  id: string;
-  password: string;
-  email: string;
-  nickname: string;
-}
-
-export const SignUpFormErrorState = atom({
-  key: 'SignUpFormErrorState',
-  default: true,
-});
-
-export const SignUpFormState = atom<SignUpFormTypes>({
-  key: 'SignUpFormState',
-  default: { id: '', password: '', email: '', nickname: '' },
-});
 
 interface FormInfoTypes {
   id: string;
