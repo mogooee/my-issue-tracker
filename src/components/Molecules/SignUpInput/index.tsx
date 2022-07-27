@@ -1,5 +1,6 @@
 import { useRecoilState } from 'recoil';
 import { SignUpFormErrorState, SignUpFormState } from '@/stores/signUp';
+import axios, { AxiosError } from 'axios';
 
 import * as S from '@/components/Molecules/SignUpInput/index.styles';
 import Input from '@/components/Atoms/Input';
@@ -37,6 +38,34 @@ const SignUpInput = ({ ...props }: SignUpInputTypes): JSX.Element => {
     onChangeInput(event);
   };
 
+  const checkDuplicates = async (value: string) => {
+    if (id !== 'id' && id !== 'email' && id !== 'nickname') return;
+    if (formError!.state) return;
+    const router = id === 'id' ? 'login-id' : id;
+
+    try {
+      const { data } = await axios.get(`/members/${router}/${value}/exists`);
+
+      if (data === true) {
+        const map = signUpFormErrorValue.map((e) => {
+          return e.id === id ? { ...e, state: data, errMsg: `중복되는 ${placeholder} 입니다.` } : e;
+        });
+
+        setSignUpFormErrorValue(map);
+      }
+    } catch (error) {
+      const err = error as AxiosError;
+      throw err;
+    }
+  };
+
+  const handleOnBlur = (event: React.FormEvent<HTMLInputElement>) => {
+    onBlurInput();
+
+    if (event.currentTarget.value === '') return;
+    checkDuplicates(event.currentTarget.value);
+  };
+
   return (
     <S.SignUpInput isError={formError}>
       <span>{placeholder}</span>
@@ -49,7 +78,7 @@ const SignUpInput = ({ ...props }: SignUpInputTypes): JSX.Element => {
         inputType={inputType}
         onClick={onClickInput}
         onChange={handleOnChange}
-        onBlur={() => onBlurInput()}
+        onBlur={handleOnBlur}
       />
     </S.SignUpInput>
   );

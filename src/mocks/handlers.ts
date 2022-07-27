@@ -45,4 +45,40 @@ export const handlers = [
 
     return res(ctx.status(201), ctx.json(response));
   }),
+
+  // 유저 아이디 중복 검사
+  rest.get('members/login-id/:id/exists', (req, res, ctx) => {
+    const { id } = req.params;
+
+    // dobby123라는 유저가 이미 있는 경우
+    if (id === 'dobby123') {
+      return res(ctx.status(200), ctx.json(true));
+    }
+
+    return res(ctx.status(200), ctx.json(false));
+  }),
+
+  // 유저 닉네임 중복 검사
+  rest.get('members/nickname/:nickname/exists', (req, res, ctx) => {
+    const { nickname } = req.params;
+
+    // 도비라는 유저가 이미 있는 경우
+    if (nickname === '도비123') {
+      return res(ctx.status(200), ctx.json(true));
+    }
+
+    return res(ctx.status(200), ctx.json(false));
+  }),
+
+  // 유저 이메일 중복 검사
+  rest.get('members/email/:email/exists', (req, res, ctx) => {
+    const { email } = req.params;
+
+    // 도비라는 유저가 이미 있는 경우
+    if (email === 'dobby123@gmail.com') {
+      return res(ctx.status(200), ctx.json(true));
+    }
+
+    return res(ctx.status(200), ctx.json(false));
+  }),
 ];

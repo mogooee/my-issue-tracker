@@ -13,7 +13,7 @@ export interface InputTypes {
   isTyping?: boolean;
   onClick?: () => void;
   onChange?: (event: React.FormEvent<HTMLInputElement>) => void;
-  onBlur?: () => void;
+  onBlur?: (event: React.FormEvent<HTMLInputElement>) => void;
 }
 
 const defaultMaxLength = 20;
