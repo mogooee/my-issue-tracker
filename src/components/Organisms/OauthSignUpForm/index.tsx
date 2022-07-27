@@ -1,5 +1,7 @@
 import { useRecoilValue } from 'recoil';
 import { SignUpFormErrorState, SignUpFormState } from '@/stores/signUp';
+import axios, { AxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 import * as S from '@/components/Organisms/OauthSignUpForm/index.styles';
 import Button from '@/components/Atoms/Button';
@@ -36,6 +38,30 @@ const OAuthSignUpForm = ({ authData }: { authData: AuthDataTypes }) => {
 
   const disabled = signUpFormErrorValue || !signUpFormValue.nickname;
 
+  interface NewMemberTypes {
+    email: string;
+    nickname: string;
+    profileImage: string;
+    authProviderType: 'GITHUB' | 'NAVER' | 'KAKAO';
+  }
+
+  const navigate = useNavigate();
+
+  const clickSignUpButtonHandler = async () => {
+    try {
+      const { data } = await axios.post<NewMemberTypes>(`/members/new/auth`, {
+        email: authData.email,
+        nickname: signUpFormValue.nickname,
+        profileImage: 'string',
+        authProviderType: 'GITHUB',
+      });
+      navigate('/redirect-auth');
+    } catch (error) {
+      const err = error as AxiosError;
+      console.log(err);
+    }
+  };
+
   return (
     <S.OauthSignUpForm>
       <h1>추가 정보 입력</h1>
@@ -44,7 +70,13 @@ const OAuthSignUpForm = ({ authData }: { authData: AuthDataTypes }) => {
         <Input key={EMAIL_FORM.inputType} {...EMAIL_FORM} />
       </div>
       <SignUpInput key={FORM_INFO.id} {...FORM_INFO} />
-      <Button buttonStyle="STANDARD" label="동의하고 가입하기" size="LARGE" disabled={disabled} />
+      <Button
+        buttonStyle="STANDARD"
+        label="동의하고 가입하기"
+        size="LARGE"
+        disabled={disabled}
+        handleOnClick={clickSignUpButtonHandler}
+      />
     </S.OauthSignUpForm>
   );
 };
