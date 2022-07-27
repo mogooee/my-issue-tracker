@@ -5,7 +5,8 @@ export const FORM_INFO = [
     maxLength: 16,
     placeholder: '아이디',
     pattern: /^[a-zA-Z0-9-*~^_]{6,16}$/g,
-    patternMsg: '영문,숫자,특수문자(-*~^_)를 포함하는 아이디 (4~16자)',
+    patternMsg: '영문,숫자,특수문자(-*~^_)를 포함하는 아이디 (6~16자)',
+    errMsg: '아이디 형식에 맞게 입력하세요',
   },
   {
     id: 'password',
@@ -14,6 +15,7 @@ export const FORM_INFO = [
     placeholder: '비밀번호',
     pattern: /^[a-zA-Z0-9-~₩!@#$%^&*()_-]{8,16}$/g,
     patternMsg: '영문,숫자,특수문자(~₩!@#$%^&*()_-)를 포함하는 비밀번호 (8~16자)',
+    errMsg: '비밀번호 형식에 맞게 입력하세요',
   },
   {
     id: 'passwordVerification',
@@ -22,6 +24,7 @@ export const FORM_INFO = [
     placeholder: '비밀번호 확인',
     pattern: /^[a-zA-Z0-9-~₩!@#$%^&*()_-]{8,16}$/g,
     patternMsg: '',
+    errMsg: '비밀번호가 일치하지 않습니다',
   },
   {
     id: 'email',
@@ -30,6 +33,7 @@ export const FORM_INFO = [
     placeholder: '이메일',
     pattern: /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i,
     patternMsg: '',
+    errMsg: '이메일 형식에 맞게 입력하세요',
   },
   {
     id: 'nickname',
@@ -38,5 +42,6 @@ export const FORM_INFO = [
     placeholder: '닉네임',
     pattern: /^[ㄱ-힣a-zA-Z0-9-*~^_]{2,12}$/i,
     patternMsg: '다른 유저와 겹치지 않는 별명을 입력해주세요. (2~12자)',
+    errMsg: '닉네임 형식에 맞게 입력하세요',
   },
 ];

@@ -1,4 +1,4 @@
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { SignUpFormErrorState, SignUpFormState } from '@/stores/signUp';
 
 import * as S from '@/components/Molecules/SignUpInput/index.styles';
@@ -12,27 +12,33 @@ export interface SignUpInputTypes {
   placeholder: string;
   pattern: RegExp;
   patternMsg: string;
+  errMsg: string;
 }
 
 const SignUpInput = ({ ...props }: SignUpInputTypes): JSX.Element => {
-  const { id, inputType, maxLength, placeholder, pattern, patternMsg } = props;
-  const { isError, setIsError, isActive, onChangeInput, onClickInput, onBlurInput } = useInput();
+  const { id, inputType, maxLength, placeholder, pattern, patternMsg, errMsg } = props;
+  const { isActive, onChangeInput, onClickInput, onBlurInput } = useInput();
 
   const [signUpFormValue, setSignUpFormValue] = useRecoilState(SignUpFormState);
-  const setSignUpForErrorValue = useSetRecoilState(SignUpFormErrorState);
+  const [signUpFormErrorValue, setSignUpFormErrorValue] = useRecoilState(SignUpFormErrorState);
+
+  const formError = signUpFormErrorValue.find((el) => el.id === id);
 
   const handleOnChange = (event: React.FormEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
     const isError = id === 'passwordVerification' ? value !== signUpFormValue.password : !value.match(pattern);
 
-    setIsError(isError);
-    setSignUpForErrorValue(isError);
+    const changedErrorValue = signUpFormErrorValue.map((e) => {
+      return e.id === id ? { ...e, state: isError, errMsg } : e;
+    });
+
+    setSignUpFormErrorValue(changedErrorValue);
     setSignUpFormValue({ ...signUpFormValue, [id]: value });
     onChangeInput(event);
   };
 
   return (
-    <S.SignUpInput isError={isError} id={placeholder}>
+    <S.SignUpInput isError={formError}>
       <span>{placeholder}</span>
       <p className="caption">{patternMsg}</p>
       <Input

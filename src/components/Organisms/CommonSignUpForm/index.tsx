@@ -12,6 +12,7 @@ interface FormInfoTypes {
   placeholder: string;
   pattern: RegExp;
   patternMsg: string;
+  errMsg: string;
 }
 
 const CommonSignUpForm = ({ FORM_INFO }: { FORM_INFO: FormInfoTypes[] }) => {
@@ -29,7 +30,17 @@ const CommonSignUpForm = ({ FORM_INFO }: { FORM_INFO: FormInfoTypes[] }) => {
     return blank;
   };
 
-  const disabled = () => signUpFormErrorValue || isBlankForm();
+  const isError = () => {
+    let error = false;
+
+    signUpFormErrorValue.forEach((obj) => {
+      if (obj.state) error = true;
+    });
+
+    return error;
+  };
+
+  const disabled = () => isError() || isBlankForm();
 
   return (
     <S.CommonSignUpForm>

@@ -25,6 +25,7 @@ const OAuthSignUpForm = ({ authData }: { authData: AuthDataTypes }) => {
     placeholder: '닉네임',
     pattern: /^[ㄱ-힣a-zA-Z0-9-*~^_]{2,12}$/i,
     patternMsg: '다른 유저와 겹치지 않는 별명을 입력해주세요.(2~12자)',
+    errMsg: '닉네임 형식에 맞게 입력해주세요',
   };
 
   const EMAIL_FORM: InputTypes = {
@@ -36,7 +37,17 @@ const OAuthSignUpForm = ({ authData }: { authData: AuthDataTypes }) => {
     inputPlaceholder: '이메일',
   };
 
-  const disabled = signUpFormErrorValue || !signUpFormValue.nickname;
+  const isError = () => {
+    let error = false;
+
+    signUpFormErrorValue.forEach((obj) => {
+      if (obj.state) error = true;
+    });
+
+    return error;
+  };
+
+  const disabled = isError() || !signUpFormValue.nickname;
 
   interface NewMemberTypes {
     email: string;
@@ -58,7 +69,7 @@ const OAuthSignUpForm = ({ authData }: { authData: AuthDataTypes }) => {
       navigate('/redirect-auth');
     } catch (error) {
       const err = error as AxiosError;
-      console.log(err);
+      throw err;
     }
   };
 

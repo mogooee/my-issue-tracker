@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 function useInput() {
   const [isActive, setIsActive] = useState<boolean>(false);
   const [isTyping, setIsTyping] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
 
   const onChangeInput = (event: React.FormEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
@@ -15,7 +14,7 @@ function useInput() {
   const onClickInput = () => setIsActive(true);
   const onBlurInput = () => setIsActive(false);
 
-  return { isActive, isTyping, isError, onChangeInput, onClickInput, onBlurInput, setIsError };
+  return { isActive, isTyping, onChangeInput, onClickInput, onBlurInput };
 }
 
 export default useInput;
