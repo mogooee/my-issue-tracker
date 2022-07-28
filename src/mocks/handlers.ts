@@ -1,10 +1,17 @@
+import { RedirectAuthTypes, SignInMemberTypes } from '@/pages/Public/RedirectAuth';
 import { rest } from 'msw';
 
-const userTable: any = [];
+const userTable: SignInMemberTypes[] = [
+  {
+    id: 1,
+    email: 'dobby@gmail.com',
+    nickname: '도비',
+    profileImage: 'string',
+  },
+];
 const userInfo = {
   email: 'hoo@gmail.com',
   profileImage: 'string',
-  nickname: '후우',
 };
 
 const message = {
@@ -15,18 +22,35 @@ export const handlers = [
   // 유저 정보
   rest.get('api/auth/:provider', (req, res, ctx) => {
     const { provider } = req.params;
-    // const code = req.url.searchParams.get('code');
+    const code = req.url.searchParams.get('code');
 
-    if (provider === 'GITHUB') {
-      return res(ctx.status(200), ctx.json((userInfo.email = 'hoo@github.com')));
-    }
+    // 사이트에 유저정보를 요청하면 OAuth 정보 - 회원DB
+    const OAuthInfo = {
+      id: 'dobby',
+      email: 'dobby@gmail.co',
+      nickname: '도비',
+      profileImage: 'string',
+    };
 
-    if (provider === 'NAVER') {
-      return res(ctx.status(200), ctx.json((userInfo.email = 'hoo@naver.com')));
-    }
+    const response: RedirectAuthTypes = {
+      signUpFormData: null,
+      signInMember: null,
+    };
 
-    if (provider === 'KAKAO') {
-      return res(ctx.status(200), ctx.json((userInfo.email = 'hoo@daum.net')));
+    if (provider === 'GITHUB' || provider === 'NAVER' || provider === 'KAKAO') {
+      const member = userTable.find((el) => el.email === OAuthInfo.email);
+
+      if (member) {
+        response.signInMember = { ...OAuthInfo, id: member.id };
+      } else {
+        response.signUpFormData = {
+          resourceOwnerId: OAuthInfo.id,
+          email: OAuthInfo.email,
+          profileImage: OAuthInfo.profileImage,
+        };
+      }
+
+      return res(ctx.status(200), ctx.json(response));
     }
 
     return res(ctx.status(400), ctx.json(message));
