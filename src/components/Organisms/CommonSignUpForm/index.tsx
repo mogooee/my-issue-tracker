@@ -1,5 +1,8 @@
 import { useRecoilValue } from 'recoil';
-import { SignUpFormErrorState, SignUpFormState } from '@/stores/signUp';
+import { isError, SignUpFormState } from '@/stores/signUp';
+
+import { useNavigate } from 'react-router-dom';
+import { clickSignUpButtonHandler, GeneralNewMemberTypes } from '@/api/signUp';
 
 import * as S from '@/components/Organisms/CommonSignUpForm/index.styles';
 import Button from '@/components/Atoms/Button';
@@ -16,31 +19,17 @@ interface FormInfoTypes {
 }
 
 const CommonSignUpForm = ({ FORM_INFO }: { FORM_INFO: FormInfoTypes[] }) => {
+  const navigate = useNavigate();
   const signUpFormValue = useRecoilValue(SignUpFormState);
-  const signUpFormErrorValue = useRecoilValue(SignUpFormErrorState);
+  const { id, password, email, nickname } = signUpFormValue;
 
-  const isBlankForm = () => {
-    let blank = false;
-
-    Object.keys(signUpFormValue).forEach((key) => {
-      const k = key as keyof typeof signUpFormValue;
-      if (!signUpFormValue[k]) blank = true;
-    });
-
-    return blank;
+  const formData: GeneralNewMemberTypes = {
+    loginId: id,
+    password: password,
+    email: email,
+    nickname: nickname,
+    profileImage: null,
   };
-
-  const isError = () => {
-    let error = false;
-
-    signUpFormErrorValue.forEach((obj) => {
-      if (obj.state) error = true;
-    });
-
-    return error;
-  };
-
-  const disabled = () => isError() || isBlankForm();
 
   return (
     <S.CommonSignUpForm>
@@ -48,7 +37,13 @@ const CommonSignUpForm = ({ FORM_INFO }: { FORM_INFO: FormInfoTypes[] }) => {
       {FORM_INFO.map(({ ...props }) => {
         return <SignUpInput key={props.id} {...props} />;
       })}
-      <Button buttonStyle="STANDARD" label="회원가입" size="LARGE" disabled={disabled()} />
+      <Button
+        buttonStyle="STANDARD"
+        label="회원가입"
+        size="LARGE"
+        disabled={isError()}
+        handleOnClick={(e) => clickSignUpButtonHandler({ formData, type: 'general', navigate })}
+      />
     </S.CommonSignUpForm>
   );
 };

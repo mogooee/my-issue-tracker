@@ -1,3 +1,4 @@
+import { resetSignUpForm } from '@/stores/signUp';
 import OAuthSignUpForm from '@/components/Organisms/OauthSignUpForm';
 
 import styled from 'styled-components';
@@ -12,6 +13,8 @@ const StyledDiv = styled.div`
 `;
 
 const OAuthSignUp = () => {
+  resetSignUpForm();
+
   const authData = {
     email: '도톨비@gmail.com',
   };

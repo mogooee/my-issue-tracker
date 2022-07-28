@@ -4,6 +4,7 @@ const userTable: any = [];
 const userInfo = {
   email: 'hoo@gmail.com',
   profileImage: 'string',
+  nickname: '후우',
 };
 
 const message = {
@@ -31,9 +32,36 @@ export const handlers = [
     return res(ctx.status(400), ctx.json(message));
   }),
 
-  // 유저 추가
+  // 일반 회원 가입
+  rest.post('members/new/general', async (req, res, ctx) => {
+    const newMember = await req.json();
+    const { loginId, password, email, nickname } = newMember;
+
+    if (!loginId || !password || !email || !nickname) {
+      return res(ctx.status(400), ctx.json('필수 입력값을 입력해주세요'));
+    }
+
+    userTable.push(newMember);
+
+    const response = {
+      id: 0,
+      email: newMember.email,
+      nickname: newMember.nickname,
+      profileImage: newMember.profileImage,
+    };
+
+    return res(ctx.status(201), ctx.json(response));
+  }),
+
+  // Oauth 회원 가입
   rest.post('members/new/auth', async (req, res, ctx) => {
     const newMember = await req.json();
+    const { email, nickname } = newMember;
+
+    if (!email || !nickname) {
+      return res(ctx.status(400), ctx.json('필수 입력값을 입력해주세요'));
+    }
+
     userTable.push(newMember);
 
     const response = {

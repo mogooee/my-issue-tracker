@@ -1,7 +1,7 @@
 import { useRecoilValue } from 'recoil';
-import { SignUpFormErrorState, SignUpFormState } from '@/stores/signUp';
-import axios, { AxiosError } from 'axios';
+import { isError, SignUpFormState } from '@/stores/signUp';
 import { useNavigate } from 'react-router-dom';
+import { clickSignUpButtonHandler, OAuthNewMemberTypes } from '@/api/signUp';
 
 import * as S from '@/components/Organisms/OauthSignUpForm/index.styles';
 import Button from '@/components/Atoms/Button';
@@ -12,21 +12,21 @@ interface AuthDataTypes {
   email: string;
 }
 
+const FORM_INFO = {
+  id: 'nickname',
+  inputType: 'text',
+  maxLength: 12,
+  placeholder: '닉네임',
+  pattern: /^[ㄱ-힣a-zA-Z0-9-*~^_]{2,12}$/i,
+  patternMsg: '다른 유저와 겹치지 않는 별명을 입력해주세요.(2~12자)',
+  errMsg: '닉네임 형식에 맞게 입력해주세요',
+};
+
 const OAuthSignUpForm = ({ authData }: { authData: AuthDataTypes }) => {
-  const signUpFormErrorValue = useRecoilValue(SignUpFormErrorState);
+  const navigate = useNavigate();
   const signUpFormValue = useRecoilValue(SignUpFormState);
 
   const { email } = authData;
-
-  const FORM_INFO = {
-    id: 'nickname',
-    inputType: 'text',
-    maxLength: 12,
-    placeholder: '닉네임',
-    pattern: /^[ㄱ-힣a-zA-Z0-9-*~^_]{2,12}$/i,
-    patternMsg: '다른 유저와 겹치지 않는 별명을 입력해주세요.(2~12자)',
-    errMsg: '닉네임 형식에 맞게 입력해주세요',
-  };
 
   const EMAIL_FORM: InputTypes = {
     disabled: true,
@@ -37,40 +37,11 @@ const OAuthSignUpForm = ({ authData }: { authData: AuthDataTypes }) => {
     inputPlaceholder: '이메일',
   };
 
-  const isError = () => {
-    let error = false;
-
-    signUpFormErrorValue.forEach((obj) => {
-      if (obj.state) error = true;
-    });
-
-    return error;
-  };
-
-  const disabled = isError() || !signUpFormValue.nickname;
-
-  interface NewMemberTypes {
-    email: string;
-    nickname: string;
-    profileImage: string;
-    authProviderType: 'GITHUB' | 'NAVER' | 'KAKAO';
-  }
-
-  const navigate = useNavigate();
-
-  const clickSignUpButtonHandler = async () => {
-    try {
-      const { data } = await axios.post<NewMemberTypes>(`/members/new/auth`, {
-        email: authData.email,
-        nickname: signUpFormValue.nickname,
-        profileImage: 'string',
-        authProviderType: 'GITHUB',
-      });
-      navigate('/redirect-auth');
-    } catch (error) {
-      const err = error as AxiosError;
-      throw err;
-    }
+  const formData: OAuthNewMemberTypes = {
+    email: authData.email,
+    nickname: signUpFormValue.nickname,
+    profileImage: null,
+    authProviderType: 'GITHUB',
   };
 
   return (
@@ -85,8 +56,8 @@ const OAuthSignUpForm = ({ authData }: { authData: AuthDataTypes }) => {
         buttonStyle="STANDARD"
         label="동의하고 가입하기"
         size="LARGE"
-        disabled={disabled}
-        handleOnClick={clickSignUpButtonHandler}
+        disabled={isError()}
+        handleOnClick={(e) => clickSignUpButtonHandler({ formData, type: 'auth', navigate })}
       />
     </S.OauthSignUpForm>
   );

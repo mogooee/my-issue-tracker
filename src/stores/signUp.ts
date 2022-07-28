@@ -1,4 +1,4 @@
-import { atom } from 'recoil';
+import { atom, useRecoilValue, useResetRecoilState } from 'recoil';
 
 export interface SignUpFormErrorTypes {
   id: 'id' | 'password' | 'passwordVerification' | 'email' | 'nickname';
@@ -17,6 +17,17 @@ export const SignUpFormErrorState = atom<SignUpFormErrorTypes[]>({
   ],
 });
 
+export const isError = () => {
+  let error = false;
+
+  const signUpFormErrorValue = useRecoilValue(SignUpFormErrorState);
+  signUpFormErrorValue.forEach((obj) => {
+    if (obj.state) error = true;
+  });
+
+  return error;
+};
+
 export interface SignUpFormTypes {
   id: string;
   password: string;
@@ -28,3 +39,11 @@ export const SignUpFormState = atom<SignUpFormTypes>({
   key: 'SignUpFormState',
   default: { id: '', password: '', email: '', nickname: '' },
 });
+
+export const resetSignUpForm = () => {
+  const resetSignUpFormErrorState = useResetRecoilState(SignUpFormErrorState);
+  const resetSignUpFormState = useResetRecoilState(SignUpFormState);
+
+  resetSignUpFormErrorState();
+  resetSignUpFormState();
+};
