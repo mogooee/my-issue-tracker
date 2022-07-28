@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import * as logos from '@/components/Atoms/OauthLoginButton/svgs';
 import * as S from '@/components/Atoms/OauthLoginButton/index.styles';
 
@@ -13,7 +12,7 @@ const OauthLoginButton = ({ link = '#!', type }: OauthLoginTypes) => {
   const Logo = logos[type];
 
   return (
-    <S.StyledLink to={link}>
+    <S.StyledLink href={link}>
       <Logo />
     </S.StyledLink>
   );

@@ -3,9 +3,9 @@ import * as S from '@/components/Molecules/OauthLoginForm/index.styles';
 
 const OauthLoginForm = () => {
   const OauthBtnInfo: OauthLoginTypes[] = [
-    { type: 'Github', link: '#!' },
-    { type: 'Naver', link: '#!' },
-    { type: 'Kakao', link: '#!' },
+    { type: 'Github', link: `${process.env.REACT_APP_GITHUB_AUTH_URL}` },
+    { type: 'Naver', link: `${process.env.REACT_APP_NAVER_AUTH_URL}` },
+    { type: 'Kakao', link: `${process.env.REACT_APP_KAKAO_AUTH_URL}` },
   ];
 
   const OauthBtns = OauthBtnInfo.map((info) => {
