@@ -6,6 +6,7 @@ export interface OAuthNewMemberTypes {
   nickname: string;
   profileImage: string | null;
   authProviderType: 'GITHUB' | 'NAVER' | 'KAKAO';
+  resourceOwnerId: string;
 }
 
 export interface GeneralNewMemberTypes {
@@ -27,7 +28,6 @@ export const clickSignUpButtonHandler = async ({
 }) => {
   try {
     const { data } = await axios.post<OAuthNewMemberTypes | GeneralNewMemberTypes>(`/members/new/${type}`, formData);
-
     navigate('/issues');
   } catch (error) {
     const err = error as AxiosError;

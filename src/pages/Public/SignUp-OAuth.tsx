@@ -1,9 +1,10 @@
-import { SignUpFormErrorState, SignUpFormState } from '@/stores/signUp';
-import OAuthSignUpForm from '@/components/Organisms/OauthSignUpForm';
-
-import styled from 'styled-components';
 import { useEffect } from 'react';
 import { useResetRecoilState } from 'recoil';
+import { useQueryClient } from '@tanstack/react-query';
+import { SignUpFormErrorState, SignUpFormState } from '@/stores/signUp';
+import { RedirectAuthTypes } from '@/pages/Public/RedirectAuth';
+import styled from 'styled-components';
+import OAuthSignUpForm from '@/components/Organisms/OauthSignUpForm';
 
 const StyledDiv = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ direction: 'column', align: 'center', justify: 'center' })};
@@ -15,9 +16,8 @@ const StyledDiv = styled.div`
 `;
 
 const OAuthSignUp = () => {
-  const authData = {
-    email: '도톨비@gmail.com',
-  };
+  const queryClient = useQueryClient();
+  const authData = queryClient.getQueryData<RedirectAuthTypes>(['auth']);
 
   const resetSignUpFormErrorState = useResetRecoilState(SignUpFormErrorState);
   const resetSignUpFormState = useResetRecoilState(SignUpFormState);
@@ -29,7 +29,7 @@ const OAuthSignUp = () => {
 
   return (
     <StyledDiv>
-      <OAuthSignUpForm authData={authData} />
+      <OAuthSignUpForm SignUpFormData={authData?.signUpFormData!} />
     </StyledDiv>
   );
 };

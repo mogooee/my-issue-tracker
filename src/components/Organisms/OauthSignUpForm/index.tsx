@@ -8,9 +8,7 @@ import Button from '@/components/Atoms/Button';
 import Input, { InputTypes } from '@/components/Atoms/Input';
 import SignUpInput from '@/components/Molecules/SignUpInput';
 
-interface AuthDataTypes {
-  email: string;
-}
+import { SignUpFormDataTypes } from '@/pages/Public/RedirectAuth';
 
 const FORM_INFO = {
   id: 'nickname',
@@ -22,11 +20,11 @@ const FORM_INFO = {
   errMsg: '닉네임 형식에 맞게 입력해주세요',
 };
 
-const OAuthSignUpForm = ({ authData }: { authData: AuthDataTypes }) => {
+const OAuthSignUpForm = ({ SignUpFormData }: { SignUpFormData: SignUpFormDataTypes | null }) => {
   const navigate = useNavigate();
   const signUpFormValue = useRecoilValue(SignUpFormState);
 
-  const { email } = authData;
+  const { email, profileImage, resourceOwnerId } = SignUpFormData!;
 
   const EMAIL_FORM: InputTypes = {
     disabled: true,
@@ -38,10 +36,11 @@ const OAuthSignUpForm = ({ authData }: { authData: AuthDataTypes }) => {
   };
 
   const formData: OAuthNewMemberTypes = {
-    email: authData.email,
+    email: email,
     nickname: signUpFormValue.nickname,
-    profileImage: null,
+    profileImage: profileImage,
     authProviderType: 'GITHUB',
+    resourceOwnerId: resourceOwnerId,
   };
 
   return (

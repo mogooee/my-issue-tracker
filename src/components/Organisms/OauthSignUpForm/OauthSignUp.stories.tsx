@@ -1,5 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import OAuthSignUpForm from '@/components/Organisms/OauthSignUpForm/';
+import { SignUpFormDataTypes } from '@/pages/Public/RedirectAuth';
 
 export default {
   title: 'Organisms/OAuthSignUpForm',
@@ -8,11 +9,13 @@ export default {
 
 const Template: ComponentStory<typeof OAuthSignUpForm> = (args) => <OAuthSignUpForm {...args} />;
 
-const authData = {
-  authData: {
-    email: '도톨비@gmail.com',
-  },
+const signUpFormData: SignUpFormDataTypes = {
+  resourceOwnerId: 'string',
+  email: 'dobby@gmail.com',
+  profileImage: 'string',
 };
 
 export const Initial = Template.bind({});
-Initial.args = authData;
+Initial.args = {
+  SignUpFormData: signUpFormData,
+};

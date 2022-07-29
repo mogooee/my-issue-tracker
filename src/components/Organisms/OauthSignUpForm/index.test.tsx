@@ -21,12 +21,16 @@ jest.mock('react-router-dom', () => ({
 
 describe('OAuth가입 컴포넌트 테스트', () => {
   const rendering = () => {
-    const authData = { email: 'dobby@gmail.com' };
+    const signUpFormData = {
+      resourceOwnerId: 'string',
+      email: 'dobby@gmail.com',
+      profileImage: 'string',
+    };
     render(
       <RecoilRoot>
         <ThemeProvider theme={THEME}>
           <MemoryRouter initialEntries={['/']}>
-            <OAuthSignUpForm authData={authData} />
+            <OAuthSignUpForm SignUpFormData={signUpFormData} />
           </MemoryRouter>
         </ThemeProvider>
       </RecoilRoot>,
@@ -61,7 +65,7 @@ describe('OAuth가입 컴포넌트 테스트', () => {
   });
 
   test('가입하기 버튼을 클릭하면 회원가입 진행', async () => {
-    server.use(rest.post('members/new/auth', resolver));
+    server.use(rest.post('/members/new/auth', resolver));
     rendering();
 
     const nickname = screen.getByPlaceholderText('닉네임') as HTMLInputElement;
