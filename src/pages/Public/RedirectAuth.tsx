@@ -1,9 +1,9 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import styled from 'styled-components';
-import LoadingSpinner from '@/components/Atoms/LoadingSpinner';
+import { useEffect } from 'react';
 
-interface SignUpFormDataTypes {
+export interface SignUpFormDataTypes {
   resourceOwnerId: string;
   email: string;
   profileImage: string;
@@ -21,44 +21,34 @@ export interface RedirectAuthTypes {
   signInMember: SignInMemberTypes | null;
 }
 
-const StyledDiv = styled.div`
-  ${({ theme }) => theme.MIXIN.FLEX({ direction: 'column', align: 'center', justify: 'center' })};
-  height: 100vh;
-`;
-
 const RedirectAuth = () => {
-  // http://localhost:3000/redirect-auth?provider=GITHUB&code=1
   const [searchParams] = useSearchParams();
   const code = searchParams.get('code');
   const provider = searchParams.get('provider');
 
   const navigate = useNavigate();
 
-  const getData = async () => {
-    try {
-      const { data } = await axios.get<RedirectAuthTypes>(`/api/auth/${provider}?code=${code}`);
-      const { signUpFormData, signInMember } = data;
-
-      if (signInMember) {
-        // 로그인 -> 로컬에 정보저장해서 로그인 유지
-        navigate('/issues');
-      } else {
-        // 쿼리에 저장해서 signUpForm에서 사용
-        navigate('/signup-oauth');
-      }
-    } catch (error) {
-      const err = error as AxiosError;
-      throw err;
-    }
+  const fetchData = async (): Promise<RedirectAuthTypes> => {
+    const { data } = await axios.get<RedirectAuthTypes>(
+      `${process.env.REACT_APP_PUBLIC_URL}/api/auth/${provider}?code=${code}`,
+    );
+    return data;
   };
 
-  getData();
+  const { data } = useQuery<RedirectAuthTypes>(['auth'], fetchData);
 
-  return (
-    <StyledDiv>
-      <LoadingSpinner size={80} />
-    </StyledDiv>
-  );
+  useEffect(() => {
+    const { signUpFormData, signInMember } = data!;
+    if (signInMember) {
+      // 로그인 -> 로컬에 정보저장해서 로그인 유지
+      window.localStorage.setItem('userInfo', JSON.stringify(data));
+      navigate('/issues');
+    } else if (signUpFormData) {
+      navigate('/signup-oauth');
+    }
+  }, []);
+
+  return <div />;
 };
 
 export default RedirectAuth;
