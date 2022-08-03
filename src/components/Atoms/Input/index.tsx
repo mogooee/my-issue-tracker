@@ -12,8 +12,8 @@ export interface InputTypes {
   isActive?: boolean;
   isTyping?: boolean;
   onClick?: () => void;
-  onChange?: (event: React.FormEvent<HTMLInputElement>) => void;
-  onBlur?: (event: React.FormEvent<HTMLInputElement>) => void;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const defaultMaxLength = 20;
@@ -55,10 +55,10 @@ const Input = ({ disabled = false, inputMaxLength = defaultMaxLength, ...props }
         ref={inputRef}
         onBlur={onBlur}
         onChange={(event) => {
-          const { value } = event.currentTarget;
+          const { value } = event.target;
           onChange!(event);
           // eslint-disable-next-line no-param-reassign
-          if (Number(value) >= inputMaxLength) event.currentTarget.value = value.slice(0, inputMaxLength);
+          if (Number(value) >= inputMaxLength) event.target.value = value.slice(0, inputMaxLength);
         }}
       />
     </S.Form>

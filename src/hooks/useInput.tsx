@@ -4,8 +4,8 @@ function useInput() {
   const [isActive, setIsActive] = useState<boolean>(false);
   const [isTyping, setIsTyping] = useState<boolean>(false);
 
-  const onChangeInput = (event: React.FormEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
+  const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
     if (!value) return setIsTyping(false);
     // eslint-disable-next-line no-param-reassign
     return setIsTyping(true);

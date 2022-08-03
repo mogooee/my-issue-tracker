@@ -1,10 +1,11 @@
+import { useRef } from 'react';
 import { useRecoilState } from 'recoil';
-import { SignUpFormErrorState, SignUpFormState } from '@/stores/signUp';
-import axios, { AxiosError } from 'axios';
+import { SignUpFormErrorState, SignUpFormSelector } from '@/stores/signUp';
 
 import * as S from '@/components/Molecules/SignUpInput/index.styles';
 import Input from '@/components/Atoms/Input';
 import useInput from '@/hooks/useInput';
+import { getDuplicatesResult } from '@/api/signUp';
 
 export interface SignUpInputTypes {
   id: string;
@@ -20,13 +21,28 @@ const SignUpInput = ({ ...props }: SignUpInputTypes): JSX.Element => {
   const { id, inputType, maxLength, placeholder, pattern, patternMsg, errMsg } = props;
   const { isActive, onChangeInput, onClickInput, onBlurInput } = useInput();
 
-  const [signUpFormValue, setSignUpFormValue] = useRecoilState(SignUpFormState);
+  const [signUpFormValue, setSignUpFormValue] = useRecoilState(SignUpFormSelector);
   const [signUpFormErrorValue, setSignUpFormErrorValue] = useRecoilState(SignUpFormErrorState);
 
   const formError = signUpFormErrorValue.find((el) => el.id === id);
 
-  const handleOnChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
+  const timerId = useRef(0);
+
+  const debounce = (callback: any, delay: number = 2000) => {
+    return (event: React.ChangeEvent<HTMLInputElement>) => {
+      clearTimeout(timerId.current);
+      timerId.current = setTimeout(
+        () => {
+          callback(event);
+        },
+        delay,
+        event,
+      );
+    };
+  };
+
+  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
     const isError = id === 'passwordVerification' ? value !== signUpFormValue.password : !value.match(pattern);
 
     const changedErrorValue = signUpFormErrorValue.map((e) => {
@@ -34,7 +50,7 @@ const SignUpInput = ({ ...props }: SignUpInputTypes): JSX.Element => {
     });
 
     setSignUpFormErrorValue(changedErrorValue);
-    setSignUpFormValue({ ...signUpFormValue, [id]: value });
+    setSignUpFormValue({ [id]: value });
     onChangeInput(event);
   };
 
@@ -43,28 +59,25 @@ const SignUpInput = ({ ...props }: SignUpInputTypes): JSX.Element => {
     if (formError!.state) return;
     const router = id === 'id' ? 'login-id' : id;
 
-    try {
-      const { data } = await axios.get(`/members/${router}/${value}/exists`);
+    const data = await getDuplicatesResult(router, value);
 
-      if (data === true) {
-        const map = signUpFormErrorValue.map((e) => {
-          return e.id === id ? { ...e, state: data, errMsg: `중복되는 ${placeholder} 입니다.` } : e;
-        });
+    if (data === true) {
+      const map = signUpFormErrorValue.map((e) => {
+        return e.id === id ? { ...e, state: data, errMsg: `중복되는 ${placeholder} 입니다.` } : e;
+      });
 
-        setSignUpFormErrorValue(map);
-      }
-    } catch (error) {
-      const err = error as AxiosError;
-      throw err;
+      setSignUpFormErrorValue(map);
     }
   };
 
-  const handleOnBlur = (event: React.FormEvent<HTMLInputElement>) => {
+  const handleOnBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
     onBlurInput();
 
-    if (event.currentTarget.value === '') return;
-    checkDuplicates(event.currentTarget.value);
+    if (event.target.value === '') return;
+    checkDuplicates(event.target.value);
   };
+
+  const handleOnTyping = debounce(handleOnChange, 300);
 
   return (
     <S.SignUpInput isError={formError}>
@@ -77,7 +90,7 @@ const SignUpInput = ({ ...props }: SignUpInputTypes): JSX.Element => {
         inputSize="MEDIUM"
         inputType={inputType}
         onClick={onClickInput}
-        onChange={handleOnChange}
+        onChange={handleOnTyping}
         onBlur={handleOnBlur}
       />
     </S.SignUpInput>

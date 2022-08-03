@@ -1,4 +1,4 @@
-import { atom, useRecoilValue } from 'recoil';
+import { atom, selector, useRecoilValue } from 'recoil';
 
 export interface SignUpFormErrorTypes {
   id: 'id' | 'password' | 'passwordVerification' | 'email' | 'nickname';
@@ -38,4 +38,14 @@ export interface SignUpFormTypes {
 export const SignUpFormState = atom<SignUpFormTypes>({
   key: 'SignUpFormState',
   default: { id: '', password: '', email: '', nickname: '' },
+});
+
+export const SignUpFormSelector = selector<any>({
+  key: 'SignUpFormSelector',
+  get: ({ get }) => ({ ...get(SignUpFormState) }),
+  set: ({ set, get }, newValue) => {
+    const state = get(SignUpFormState);
+    const newState = { ...state, ...newValue };
+    set(SignUpFormState, newState);
+  },
 });

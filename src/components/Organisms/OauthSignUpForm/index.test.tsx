@@ -1,7 +1,7 @@
 import { rest } from 'msw';
 import { server } from '@/mocks/server';
 
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { RecoilRoot } from 'recoil';
@@ -60,12 +60,15 @@ describe('OAuth가입 컴포넌트 테스트', () => {
       name: /동의하고 가입하기/i,
     });
 
-    await userEvent.type(nickname, '도비');
-    expect(signUpButton).not.toBeDisabled();
+    await userEvent.type(nickname, '도비123445');
+
+    await waitFor(() => {
+      expect(signUpButton).not.toBeDisabled();
+    });
   });
 
   test('가입하기 버튼을 클릭하면 회원가입 진행', async () => {
-    server.use(rest.post('/members/new/auth', resolver));
+    server.use(rest.post('api/members/new/auth', resolver));
     rendering();
 
     const nickname = screen.getByPlaceholderText('닉네임') as HTMLInputElement;
@@ -74,8 +77,10 @@ describe('OAuth가입 컴포넌트 테스트', () => {
     }) as HTMLButtonElement;
 
     await userEvent.type(nickname, '도비');
+    await waitFor(() => {
+      expect(signUpButton).not.toBeDisabled();
+    });
     await userEvent.click(signUpButton);
-
     // post가 정상적으로 되었는지 확인
     expect(resolver).toBeCalledTimes(1);
     // navigate가 정상적으로 이동되었는지 확인
