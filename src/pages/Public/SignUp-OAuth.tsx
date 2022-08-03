@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useResetRecoilState } from 'recoil';
-import { useQueryClient } from '@tanstack/react-query';
 import { SignUpFormErrorState, SignUpFormState } from '@/stores/signUp';
-import { RedirectAuthTypes } from '@/pages/Public/RedirectAuth';
+import { useQueryClient } from '@tanstack/react-query';
+import { RedirectAuthTypes } from '@/api/redirectAuth';
 import styled from 'styled-components';
 import OAuthSignUpForm from '@/components/Organisms/OauthSignUpForm';
 
@@ -16,6 +16,8 @@ const StyledDiv = styled.div`
 `;
 
 const OAuthSignUp = () => {
+  window.history.forward();
+
   const queryClient = useQueryClient();
   const authData = queryClient.getQueryData<RedirectAuthTypes>(['auth']);
 

@@ -1,5 +1,4 @@
 import axios, { AxiosError } from 'axios';
-import { NavigateFunction } from 'react-router-dom';
 
 export interface OAuthNewMemberTypes {
   email: string;
@@ -17,18 +16,31 @@ export interface GeneralNewMemberTypes {
   profileImage: string | null;
 }
 
-export const clickSignUpButtonHandler = async ({
+export const postSignUpData = async ({
   formData,
   type,
-  navigate,
 }: {
   formData: OAuthNewMemberTypes | GeneralNewMemberTypes;
   type: 'general' | 'auth';
-  navigate: NavigateFunction;
 }) => {
   try {
-    const { data } = await axios.post<OAuthNewMemberTypes | GeneralNewMemberTypes>(`/members/new/${type}`, formData);
-    navigate('/issues');
+    const { data } = await axios.post<OAuthNewMemberTypes | GeneralNewMemberTypes>(
+      `api/members/new/${type}`,
+      formData,
+      { withCredentials: true },
+    );
+
+    return data;
+  } catch (error) {
+    const err = error as AxiosError;
+    throw err;
+  }
+};
+
+export const getDuplicatesResult = async (router: string, value: string) => {
+  try {
+    const { data } = await axios.get(`api/members/${router}/${value}/exists`);
+    return data;
   } catch (error) {
     const err = error as AxiosError;
     throw err;

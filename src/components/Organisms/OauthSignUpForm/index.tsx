@@ -1,14 +1,14 @@
 import { useRecoilValue } from 'recoil';
 import { isError, SignUpFormState } from '@/stores/signUp';
 import { useNavigate } from 'react-router-dom';
-import { clickSignUpButtonHandler, OAuthNewMemberTypes } from '@/api/signUp';
+import { postSignUpData, OAuthNewMemberTypes } from '@/api/signUp';
 
 import * as S from '@/components/Organisms/OauthSignUpForm/index.styles';
 import Button from '@/components/Atoms/Button';
 import Input, { InputTypes } from '@/components/Atoms/Input';
 import SignUpInput from '@/components/Molecules/SignUpInput';
 
-import { SignUpFormDataTypes } from '@/pages/Public/RedirectAuth';
+import { SignUpFormDataTypes } from '@/api/redirectAuth';
 
 const FORM_INFO = {
   id: 'nickname',
@@ -43,6 +43,14 @@ const OAuthSignUpForm = ({ SignUpFormData }: { SignUpFormData: SignUpFormDataTyp
     resourceOwnerId: resourceOwnerId,
   };
 
+  const disabled = isError() || !signUpFormValue.nickname;
+
+  const clickHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const data = await postSignUpData({ formData, type: 'auth' });
+    if (!data) return;
+    navigate('/issues');
+  };
+
   return (
     <S.OauthSignUpForm>
       <h1>추가 정보 입력</h1>
@@ -55,8 +63,8 @@ const OAuthSignUpForm = ({ SignUpFormData }: { SignUpFormData: SignUpFormDataTyp
         buttonStyle="STANDARD"
         label="동의하고 가입하기"
         size="LARGE"
-        disabled={isError()}
-        handleOnClick={(e) => clickSignUpButtonHandler({ formData, type: 'auth', navigate })}
+        disabled={disabled}
+        handleOnClick={clickHandler}
       />
     </S.OauthSignUpForm>
   );

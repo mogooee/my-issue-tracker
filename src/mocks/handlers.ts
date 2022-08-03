@@ -1,5 +1,5 @@
-import { RedirectAuthTypes, SignInMemberTypes } from '@/pages/Public/RedirectAuth';
 import { rest } from 'msw';
+import { RedirectAuthTypes, SignInMemberTypes } from '@/api/redirectAuth';
 
 const userTable: SignInMemberTypes[] = [
   {
@@ -9,10 +9,6 @@ const userTable: SignInMemberTypes[] = [
     profileImage: 'string',
   },
 ];
-const userInfo = {
-  email: 'hoo@gmail.com',
-  profileImage: 'string',
-};
 
 const message = {
   message: '뭔가 잘못됨',
@@ -57,7 +53,7 @@ export const handlers = [
   }),
 
   // 일반 회원 가입
-  rest.post('members/new/general', async (req, res, ctx) => {
+  rest.post('api/members/new/general', async (req, res, ctx) => {
     const newMember = await req.json();
     const { loginId, password, email, nickname } = newMember;
 
@@ -78,7 +74,7 @@ export const handlers = [
   }),
 
   // Oauth 회원 가입
-  rest.post('members/new/auth', async (req, res, ctx) => {
+  rest.post('api/members/new/auth', async (req, res, ctx) => {
     const newMember = await req.json();
     const { email, nickname } = newMember;
 
@@ -99,7 +95,7 @@ export const handlers = [
   }),
 
   // 유저 아이디 중복 검사
-  rest.get('members/login-id/:id/exists', (req, res, ctx) => {
+  rest.get('api/members/login-id/:id/exists', (req, res, ctx) => {
     const { id } = req.params;
 
     // dobby123라는 유저가 이미 있는 경우
@@ -111,7 +107,7 @@ export const handlers = [
   }),
 
   // 유저 닉네임 중복 검사
-  rest.get('members/nickname/:nickname/exists', (req, res, ctx) => {
+  rest.get('api/members/nickname/:nickname/exists', (req, res, ctx) => {
     const { nickname } = req.params;
 
     // 도비라는 유저가 이미 있는 경우
@@ -123,7 +119,7 @@ export const handlers = [
   }),
 
   // 유저 이메일 중복 검사
-  rest.get('members/email/:email/exists', (req, res, ctx) => {
+  rest.get('api/members/email/:email/exists', (req, res, ctx) => {
     const { email } = req.params;
 
     // 도비라는 유저가 이미 있는 경우
