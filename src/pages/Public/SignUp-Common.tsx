@@ -1,9 +1,14 @@
+import { useEffect } from 'react';
+import { useRecoilValue, useResetRecoilState } from 'recoil';
 import { SignUpFormErrorState, SignUpFormState } from '@/stores/signUp';
+
 import styled from 'styled-components';
 import { FORM_INFO } from '@/components/Organisms/CommonSignUpForm/constants';
 import CommonSignUpForm from '@/components/Organisms/CommonSignUpForm';
-import { useEffect } from 'react';
-import { useResetRecoilState } from 'recoil';
+
+import ModalPortal from '@/Portal';
+import Modal, { ModalState } from '@/components/Modal';
+import CompleteSignUp from '@/components/Modal/CompleteSignUp';
 
 const StyledDiv = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ direction: 'column', align: 'center', justify: 'center' })};
@@ -15,8 +20,14 @@ const StyledDiv = styled.div`
 `;
 
 const CommonSignUp = () => {
+  window.history.forward();
+
   const resetSignUpFormErrorState = useResetRecoilState(SignUpFormErrorState);
   const resetSignUpFormState = useResetRecoilState(SignUpFormState);
+
+  const isModal = useRecoilValue(ModalState);
+  const signUpFormValue = useRecoilValue(SignUpFormState);
+  const { id } = signUpFormValue;
 
   useEffect(() => {
     resetSignUpFormErrorState();
@@ -26,6 +37,13 @@ const CommonSignUp = () => {
   return (
     <StyledDiv>
       <CommonSignUpForm FORM_INFO={FORM_INFO} />
+      <ModalPortal>
+        {isModal && (
+          <Modal>
+            <CompleteSignUp id={id} />
+          </Modal>
+        )}
+      </ModalPortal>
     </StyledDiv>
   );
 };
