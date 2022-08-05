@@ -3,7 +3,7 @@ import { RedirectAuthTypes, SignInMemberTypes } from '@/api/redirectAuth';
 
 const userTable: SignInMemberTypes[] = [
   {
-    id: 1,
+    id: 123456789,
     email: 'dobby@gmail.com',
     nickname: '도비',
     profileImage: 'string',
@@ -15,15 +15,42 @@ const message = {
 };
 
 export const handlers = [
+  // silent-refresh
+  rest.get('api/silent-refresh', (req, res, ctx) => {
+    const response = {
+      accessToken: 'access123',
+    };
+
+    return res(ctx.status(200), ctx.json(response), ctx.cookie('refresh-token', 'refresh123'));
+  }),
+
+  // 로그인 검사 테스트용 API
+  rest.get('api/auth/test?memberId', (req, res, ctx) => {
+    const id = req.url.searchParams.get('memberId');
+
+    return res(ctx.status(200), ctx.json(id));
+  }),
+
+  // 유저 정보 요청 API
+  rest.get('api/auth/userinfo', (req, res, ctx) => {
+    const userInfo = {
+      id: '123456789',
+      email: 'dobby@gmail.com',
+      nickname: '도비',
+      profileImage: 'string',
+    };
+    return res(ctx.status(200), ctx.json(userInfo));
+  }),
+
   // 유저 정보
-  rest.get('api/auth/:provider', (req, res, ctx) => {
+  rest.get('api/auth/:provider?code', (req, res, ctx) => {
     const { provider } = req.params;
     const code = req.url.searchParams.get('code');
 
-    // 사이트에 유저정보를 요청하면 OAuth 정보 - 회원DB
+    // 사이트에 유저정보를 요청하면 OAuth 정보 - 깃허브에서 오는 정보 (signUpData)
     const OAuthInfo = {
       id: 'dobby',
-      email: 'dobby@gmail.co',
+      email: 'dobby@gmail.com',
       nickname: '도비',
       profileImage: 'string',
     };
@@ -33,7 +60,7 @@ export const handlers = [
       signInMember: null,
     };
 
-    if (provider === 'GITHUB' || provider === 'NAVER' || provider === 'KAKAO') {
+    if (provider === 'github' || provider === 'naver' || provider === 'kakao') {
       const member = userTable.find((el) => el.email === OAuthInfo.email);
 
       if (member) {
