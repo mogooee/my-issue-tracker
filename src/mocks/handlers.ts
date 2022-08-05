@@ -89,9 +89,10 @@ export const handlers = [
       email: newMember.email,
       nickname: newMember.nickname,
       profileImage: newMember.profileImage,
+      accessToken: 'access123',
     };
 
-    return res(ctx.status(201), ctx.json(response));
+    return res(ctx.status(201), ctx.json(response), ctx.cookie('refresh-token', 'refresh123'));
   }),
 
   // 유저 아이디 중복 검사

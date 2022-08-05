@@ -45,8 +45,7 @@ const CommonSignUpForm = ({ FORM_INFO }: { FORM_INFO: FormInfoTypes[] }) => {
   const disabled = isError() || isBlank();
 
   const clickHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    const data = await postSignUpData({ formData, type: 'general' });
-    if (!data) return;
+    await postSignUpData({ formData, type: 'general' });
     setModalState(true);
   };
 
