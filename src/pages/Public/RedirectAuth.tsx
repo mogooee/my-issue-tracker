@@ -3,7 +3,7 @@ import { useSetRecoilState } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
 import { getAuthMemberData, RedirectAuthTypes } from '@/api/redirectAuth';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { silentRefresh, getUserInfo } from '@/api/test';
+import { silentRefresh, getUserInfo } from '@/api/testApi';
 import { UserInfoState } from '@/stores/userInfo';
 
 const RedirectAuth = () => {
