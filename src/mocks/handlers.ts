@@ -45,7 +45,7 @@ export const handlers = [
   // 유저 정보
   rest.get('api/auth/:provider?code', (req, res, ctx) => {
     const { provider } = req.params;
-    const code = req.url.searchParams.get('code');
+    // const code = req.url.searchParams.get('code');
 
     // 사이트에 유저정보를 요청하면 OAuth 정보 - 깃허브에서 오는 정보 (signUpData)
     const OAuthInfo = {

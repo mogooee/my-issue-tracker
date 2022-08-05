@@ -132,12 +132,13 @@ describe('일반 가입 컴포넌트 테스트', () => {
     await waitFor(() => {
       expect(signUpButton).not.toBeDisabled();
     });
-
     await userEvent.click(signUpButton);
     // post가 정상적으로 되었는지 확인
     expect(resolver).toBeCalledTimes(1);
 
-    // // navigate가 정상적으로 이동되었는지 확인
-    // expect(mockedNavigate).toBeCalledTimes(1);
+    // 3초 뒤에 자동으로 navigate가 정상적으로 이동되었는지 확인
+    setTimeout(() => {
+      expect(mockedNavigate).toBeCalledTimes(1), 3000;
+    });
   });
 });
