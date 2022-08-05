@@ -1,5 +1,4 @@
 const { merge } = require('webpack-merge');
-
 const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
@@ -19,7 +18,16 @@ module.exports = merge(common, {
   },
   devServer: {
     host: 'localhost',
-    port: 8080,
+    port: 3000,
     historyApiFallback: true, // 404 응답 시 index.html로 리다이렉트
+    proxy: {
+      '/server': {
+        target: 'http://localhost:8080/',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/server': '',
+        },
+      },
+    },
   },
 });

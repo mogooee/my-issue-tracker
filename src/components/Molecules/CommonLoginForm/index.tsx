@@ -25,9 +25,8 @@ const LoginForm = (): JSX.Element => {
     onClickInput: onClickInputPassword,
     onBlurInput: onBlurInputPassword,
   } = useInput();
+
   const [idMaxLength, passwordMaxLength] = [10, 10];
-  const inputIdRef = useRef<HTMLInputElement>(null);
-  const inputPasswordRef = useRef<HTMLInputElement>(null);
 
   return (
     <Form>
@@ -41,7 +40,6 @@ const LoginForm = (): JSX.Element => {
         inputType="text"
         inputMaxLength={idMaxLength}
         inputPlaceholder="아이디"
-        inputRef={inputIdRef}
       />
       <Input
         isActive={isPasswordActive}
@@ -53,7 +51,6 @@ const LoginForm = (): JSX.Element => {
         inputType="password"
         inputMaxLength={passwordMaxLength}
         inputPlaceholder="비밀번호"
-        inputRef={inputPasswordRef}
       />
       <Button buttonStyle="STANDARD" label="아이디로 로그인" size="LARGE" />
     </Form>

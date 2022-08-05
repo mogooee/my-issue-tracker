@@ -1,3 +1,4 @@
+import { RecoilRoot } from 'recoil';
 import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
@@ -16,11 +17,13 @@ export const parameters = {
 
 export const decorators = [
   (Story) => (
-    <ThemeProvider theme={theme}>
-      <GlobalStyle />
-      <MemoryRouter>
-        <Story />
-      </MemoryRouter>
-    </ThemeProvider>
+    <RecoilRoot>
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <MemoryRouter>
+          <Story />
+        </MemoryRouter>
+      </ThemeProvider>
+    </RecoilRoot>
   ),
 ];
