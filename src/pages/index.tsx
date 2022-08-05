@@ -6,4 +6,6 @@ import Login from '@/pages/Public/Login';
 import OAuthSignUp from '@/pages/Public/SignUp-OAuth';
 import CommonSignUp from '@/pages/Public/SignUp-Common';
 
-export { Home, NotFound, RedirectAuth, Login, OAuthSignUp, CommonSignUp };
+import Issues from '@/pages/Private/Issues';
+
+export { Home, NotFound, RedirectAuth, Login, OAuthSignUp, CommonSignUp, Issues };

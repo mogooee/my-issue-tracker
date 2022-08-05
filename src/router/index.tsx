@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Home, NotFound, RedirectAuth, Login, OAuthSignUp, CommonSignUp } from '@/pages';
+import { Home, NotFound, RedirectAuth, Login, OAuthSignUp, CommonSignUp, Issues } from '@/pages';
 
 const Routers = (): JSX.Element => {
   return (
@@ -10,6 +10,7 @@ const Routers = (): JSX.Element => {
           <Route path="/redirect-auth" element={<RedirectAuth />} />
           <Route path="/signup-oauth" element={<OAuthSignUp />} />
           <Route path="/signup" element={<CommonSignUp />} />
+          <Route path="/issues" element={<Issues />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
