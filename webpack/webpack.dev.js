@@ -20,5 +20,14 @@ module.exports = merge(common, {
     host: 'localhost',
     port: 3000,
     historyApiFallback: true, // 404 응답 시 index.html로 리다이렉트
+    proxy: {
+      '/server': {
+        target: 'http://localhost:8080/',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/server': '',
+        },
+      },
+    },
   },
 });
