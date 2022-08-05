@@ -3,6 +3,7 @@ const webpack = require('webpack');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 require('dotenv').config();
 
@@ -50,5 +51,8 @@ module.exports = {
       process: 'process/browser',
     }),
     new webpack.DefinePlugin({ 'process.env': JSON.stringify(process.env) }),
+    // new BundleAnalyzerPlugin({
+    //   analyzerMode: 'static',
+    // }),
   ],
 };
