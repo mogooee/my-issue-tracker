@@ -12,6 +12,7 @@ import Trash from '@/assets/icons/trash.svg?component';
 import XSquare from '@/assets/icons/xSquare.svg?component';
 import PaperClip from '@/assets/icons/paperclip.svg?component';
 import Caret from '@/assets/icons/caret.svg?component';
+import Menu from '@/assets/icons/menu.svg?component';
 
 export {
   AlertCircle,
@@ -28,4 +29,5 @@ export {
   XSquare,
   PaperClip,
   Caret,
+  Menu,
 };
