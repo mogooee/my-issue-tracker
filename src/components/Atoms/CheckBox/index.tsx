@@ -1,30 +1,38 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from 'react';
+import { useRef } from 'react';
+import { useRecoilValue } from 'recoil';
+
 import * as S from '@/components/Atoms/CheckBox/index.styles';
 
+import { IssueTableCheckState } from '@/stores/checkBox';
+import useCheckBox from '@/hooks/useCheckBox';
+
 export interface CheckboxTypes {
-  id: number | 'ALL';
-  checkedIssue: string[];
-  checkedItemHandler: (id: string, isChecked: boolean) => void;
+  id: number;
+  checked?: boolean;
+  type?: 'parent' | 'child';
 }
 
-const CheckBox = ({ id, checkedItemHandler, checkedIssue }: CheckboxTypes) => {
-  const [isChecked, setIsChecked] = useState<boolean>(false);
+const CheckBox = ({ id, type, checked = false }: CheckboxTypes) => {
+  const { checkStatsState } = useRecoilValue(IssueTableCheckState);
+  const { clickParentCheckBox, clickChildCheckBox } = useCheckBox();
 
-  const onChangeCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsChecked(!isChecked);
-    checkedItemHandler(String(id), e.target.checked);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  if (type === 'parent' && inputRef?.current) {
+    inputRef.current.indeterminate = checkStatsState === 'some' ? true : false;
+  }
+
+  const onChangeCheckbox = (event: { target: HTMLInputElement }) => {
+    if (type === 'parent') {
+      clickParentCheckBox(event.target.checked);
+    } else {
+      clickChildCheckBox(id, event.target.checked);
+    }
   };
 
   return (
-    <S.CheckBox className="checkbox" checkedIssue={checkedIssue} data-id={id}>
-      <input
-        type="checkbox"
-        id={`checkbox-${id}`}
-        data-id={id}
-        onChange={onChangeCheckbox}
-        checked={checkedIssue.includes(String(id))}
-      />
+    <S.CheckBox className="checkbox">
+      <input type="checkbox" id={`checkbox-${id}`} checked={checked} onChange={onChangeCheckbox} ref={inputRef} />
       <label htmlFor={`checkbox-${id}`} />
     </S.CheckBox>
   );
