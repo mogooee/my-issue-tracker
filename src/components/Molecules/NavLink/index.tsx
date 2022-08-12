@@ -6,20 +6,21 @@ interface NavDataTypes {
   link: string;
 }
 
-interface NavTypes {
+export interface NavLinkTypes {
   navData: NavDataTypes[];
+  navLinkStyle?: 'NORMAL' | 'LINE';
 }
 
-export const NavLink = ({ navData }: NavTypes) => {
+export const NavLink = ({ navData, navLinkStyle = 'NORMAL' }: NavLinkTypes) => {
   return (
-    <>
+    <S.StyledNavLinks navLinkStyle={navLinkStyle}>
       {navData.map(({ icon, title, link }) => (
-        <S.StyledNavLink key={title} to={link}>
+        <S.StyledNavLink key={title} to={link} navLinkStyle={navLinkStyle}>
           {icon}
           <span>{title}</span>
         </S.StyledNavLink>
       ))}
-    </>
+    </S.StyledNavLinks>
   );
 };
 

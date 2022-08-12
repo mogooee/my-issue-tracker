@@ -3,7 +3,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 
 import CheckBox from '@/components/Atoms/CheckBox';
 import Icon from '@/components/Atoms/Icon';
-import NavLink from '@/components/Atoms/NavLink';
+import NavLink from '@/components/Molecules/NavLink';
 import IssueItem, { IssueInfoTypes } from '@/components/Molecules/IssueItem';
 
 import { CheckState, IssueTableCheckState } from '@/stores/checkBox';
