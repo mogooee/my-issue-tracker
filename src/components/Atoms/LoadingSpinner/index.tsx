@@ -4,8 +4,6 @@ type Size = {
   size: number;
 };
 
-const LoadingSpinner = ({ size }: Size) => {
-  return <S.LoadingSpinner size={size} />;
-};
+const LoadingSpinner = ({ size }: Size) => <S.LoadingSpinner size={size} />;
 
 export default LoadingSpinner;

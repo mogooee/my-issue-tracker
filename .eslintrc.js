@@ -3,12 +3,20 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: ['plugin:react/recommended', 'plugin:prettier/recommended', 'airbnb', 'plugin:storybook/recommended'],
+  extends: [
+    'plugin:react/recommended',
+    'plugin:prettier/recommended',
+    'airbnb',
+    'plugin:storybook/recommended',
+    'prettier',
+  ],
   settings: {
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts', '.tsx'],
+    },
     'import/resolver': {
-      node: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
-        moduleDirectory: ['node_modules', 'src/'], // 절대경로 노드 설정
+      webpack: {
+        config: './webpack/webpack.common.js',
       },
     },
   },
@@ -22,6 +30,7 @@ module.exports = {
   },
   plugins: ['react', '@typescript-eslint', 'prettier'],
   rules: {
+    'react/react-in-jsx-scope': 'off',
     'prettier/prettier': ['error'],
     'consistent-return': 'off',
     'react/require-default-props': 'off',
@@ -42,15 +51,30 @@ module.exports = {
     ],
     'react/jsx-props-no-spreading': 'off',
     'default-case': 'off',
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: ['**/*.stories.*', '**/.storybook/**/*.*'],
+        peerDependencies: true,
+      },
+    ],
+    'react/jsx-filename-extension': [
+      2,
+      {
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      },
+    ],
+    'no-unused-vars': 'off',
+    'import/no-cycle': 'off',
+    'import/prefer-default-export': 'off',
+    'jsx-a11y/label-has-associated-control': [
+      'error',
+      {
+        labelAttributes: ['htmlFor'],
+      },
+    ],
   },
   globals: {
     JSX: true,
   },
-  'import/no-extraneous-dependencies': [
-    'error',
-    {
-      devDependencies: ['**/*.stories.*', '**/.storybook/**/*.*'],
-      peerDependencies: true,
-    },
-  ],
 };

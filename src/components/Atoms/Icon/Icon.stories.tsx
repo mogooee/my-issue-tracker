@@ -83,3 +83,9 @@ XSquare.args = {
   icon: 'XSquare',
   stroke: COLORS.LABEL,
 };
+
+export const Menu = Template.bind({});
+Menu.args = {
+  icon: 'Menu',
+  stroke: COLORS.LABEL,
+};

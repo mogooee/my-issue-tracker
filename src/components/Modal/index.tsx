@@ -7,14 +7,12 @@ export const ModalState = atom<boolean>({
   default: false,
 });
 
-const Modal = ({ children }: any): JSX.Element => {
-  return (
-    <ModalPortal>
-      <BackGround>
-        <ModalBlock>{children}</ModalBlock>
-      </BackGround>
-    </ModalPortal>
-  );
-};
+const Modal = ({ children }: any): JSX.Element => (
+  <ModalPortal>
+    <BackGround>
+      <ModalBlock>{children}</ModalBlock>
+    </BackGround>
+  </ModalPortal>
+);
 
 export default Modal;

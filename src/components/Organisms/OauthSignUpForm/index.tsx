@@ -1,9 +1,10 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { isError, SignUpFormState } from '@/stores/signUp';
 import { UserInfoState } from '@/stores/userInfo';
 import { postSignUpData, OAuthNewMemberTypes, OAuthResponse } from '@/api/signUp';
 import { SignUpFormDataTypes } from '@/api/redirectAuth';
-import { useNavigate } from 'react-router-dom';
 
 import * as S from '@/components/Organisms/OauthSignUpForm/index.styles';
 import Button from '@/components/Atoms/Button';
@@ -37,18 +38,23 @@ const OAuthSignUpForm = ({ SignUpFormData }: { SignUpFormData: SignUpFormDataTyp
   };
 
   const formData: OAuthNewMemberTypes = {
-    email: email,
+    email,
     nickname: signUpFormValue.nickname,
-    profileImage: profileImage,
+    profileImage,
     authProviderType: 'GITHUB',
-    resourceOwnerId: resourceOwnerId,
+    resourceOwnerId,
   };
 
   const disabled = isError() || !signUpFormValue.nickname;
 
   const signUp = async () => {
-    const { id, email, nickname, profileImage } = (await postSignUpData({ formData, type: 'auth' })) as OAuthResponse;
-    setUserInfoState({ id, email, nickname, profileImage });
+    const {
+      id,
+      email: postEmail,
+      nickname,
+      profileImage: postProfileImage,
+    } = (await postSignUpData({ formData, type: 'auth' })) as OAuthResponse;
+    setUserInfoState({ id, email: postEmail, nickname, profileImage: postProfileImage });
   };
 
   const clickHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {

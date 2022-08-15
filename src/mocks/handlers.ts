@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { rest } from 'msw';
 import { RedirectAuthTypes, SignInMemberTypes } from '@/api/redirectAuth';
 

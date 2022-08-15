@@ -8,16 +8,13 @@ export default {
 
 const Template: ComponentStory<typeof CheckBox> = (args) => <CheckBox {...args} />;
 
-const checkedIssue: string[] = [];
-
-const checkedItemHandler = (id: string, isChecked: boolean) => {
-  // eslint-disable-next-line no-unused-expressions
-  isChecked ? checkedIssue.push(id) : checkedIssue.pop();
+export const Initial = Template.bind({});
+Initial.args = {
+  id: 0,
 };
 
-export const Checkebox = Template.bind({});
-Checkebox.args = {
-  id: 0,
-  checkedItemHandler,
-  checkedIssue,
+export const Checked = Template.bind({});
+Checked.args = {
+  ...Initial.args,
+  checked: true,
 };

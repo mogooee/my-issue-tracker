@@ -8,9 +8,7 @@ const OauthLoginForm = () => {
     { type: 'Kakao', link: `${process.env.REACT_APP_KAKAO_AUTH_URL}` },
   ];
 
-  const OauthBtns = OauthBtnInfo.map((info) => {
-    return <OauthLoginButton key={info.type} type={info.type} link={info.link} />;
-  });
+  const OauthBtns = OauthBtnInfo.map((info) => <OauthLoginButton key={info.type} type={info.type} link={info.link} />);
 
   return (
     <S.OauthLoginForm>

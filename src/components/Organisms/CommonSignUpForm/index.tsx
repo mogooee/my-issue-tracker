@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+import React from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { isError, SignUpFormState } from '@/stores/signUp';
 
@@ -25,9 +27,9 @@ const CommonSignUpForm = ({ FORM_INFO }: { FORM_INFO: FormInfoTypes[] }) => {
 
   const formData: GeneralNewMemberTypes = {
     loginId: id,
-    password: password,
-    email: email,
-    nickname: nickname,
+    password,
+    email,
+    nickname,
     profileImage: null,
   };
 
@@ -52,9 +54,9 @@ const CommonSignUpForm = ({ FORM_INFO }: { FORM_INFO: FormInfoTypes[] }) => {
   return (
     <S.CommonSignUpForm>
       <h1>회원가입</h1>
-      {FORM_INFO.map(({ ...props }) => {
-        return <SignUpInput key={props.id} {...props} />;
-      })}
+      {FORM_INFO.map(({ ...props }) => (
+        <SignUpInput key={props.id} {...props} />
+      ))}
       <Button buttonStyle="STANDARD" label="회원가입" size="LARGE" disabled={disabled} handleOnClick={clickHandler} />
     </S.CommonSignUpForm>
   );

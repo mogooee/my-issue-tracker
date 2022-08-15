@@ -12,7 +12,7 @@ export const testLoginOauth = async (id: number) => {
 
 export const silentRefresh = async () => {
   try {
-    const { data } = await axios.get(`api/silent-refresh`);
+    const { data } = await axios.get('api/silent-refresh');
     const { accessToken } = data;
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
     return data;
@@ -24,7 +24,7 @@ export const silentRefresh = async () => {
 
 export const getUserInfo = async () => {
   try {
-    const { data } = await axios.get(`api/auth/userinfo`);
+    const { data } = await axios.get('api/auth/userinfo');
     return data;
   } catch (error) {
     const err = error as AxiosError;

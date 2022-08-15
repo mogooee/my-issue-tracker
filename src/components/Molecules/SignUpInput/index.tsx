@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import { useRecoilState } from 'recoil';
 import { SignUpFormErrorState, SignUpFormSelector } from '@/stores/signUp';
 
@@ -28,8 +28,9 @@ const SignUpInput = ({ ...props }: SignUpInputTypes): JSX.Element => {
 
   const timerId = useRef(0);
 
-  const debounce = (callback: any, delay: number = 2000) => {
-    return (event: React.ChangeEvent<HTMLInputElement>) => {
+  const debounce =
+    (callback: any, delay: number = 2000) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       clearTimeout(timerId.current);
       timerId.current = setTimeout(
         () => {
@@ -39,15 +40,12 @@ const SignUpInput = ({ ...props }: SignUpInputTypes): JSX.Element => {
         event,
       );
     };
-  };
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     const isError = id === 'passwordVerification' ? value !== signUpFormValue.password : !value.match(pattern);
 
-    const changedErrorValue = signUpFormErrorValue.map((e) => {
-      return e.id === id ? { ...e, state: isError, errMsg } : e;
-    });
+    const changedErrorValue = signUpFormErrorValue.map((e) => (e.id === id ? { ...e, state: isError, errMsg } : e));
 
     setSignUpFormErrorValue(changedErrorValue);
     setSignUpFormValue({ [id]: value });
@@ -62,9 +60,9 @@ const SignUpInput = ({ ...props }: SignUpInputTypes): JSX.Element => {
     const data = await getDuplicatesResult(router, value);
 
     if (data === true) {
-      const map = signUpFormErrorValue.map((e) => {
-        return e.id === id ? { ...e, state: data, errMsg: `중복되는 ${placeholder} 입니다.` } : e;
-      });
+      const map = signUpFormErrorValue.map((e) =>
+        e.id === id ? { ...e, state: data, errMsg: `중복되는 ${placeholder} 입니다.` } : e,
+      );
 
       setSignUpFormErrorValue(map);
     }

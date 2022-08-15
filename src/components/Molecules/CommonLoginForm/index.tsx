@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import styled from 'styled-components';
 import Button from '@/components/Atoms/Button';
 import Input from '@/components/Atoms/Input';

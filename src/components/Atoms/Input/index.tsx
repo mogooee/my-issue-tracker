@@ -35,16 +35,21 @@ const Input = ({ disabled = false, inputMaxLength = defaultMaxLength, ...props }
 
   useEffect(() => {}, [inputValue]);
 
+  const handleOnClickForm = () => {
+    if (disabled) return;
+    inputRef?.current?.focus();
+    onClick!();
+  };
+
+  const handleOnChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    onChange!(event);
+    // eslint-disable-next-line no-param-reassign
+    if (Number(value) >= inputMaxLength) event.target.value = value.slice(0, inputMaxLength);
+  };
+
   return (
-    <S.Form
-      isActive={isActive}
-      inputSize={inputSize}
-      onClick={() => {
-        if (disabled) return;
-        inputRef?.current?.focus();
-        onClick!();
-      }}
-    >
+    <S.Form isActive={isActive} inputSize={inputSize} onClick={handleOnClickForm}>
       {isTyping && <label>{inputPlaceholder}</label>}
       <S.Input
         type={inputType}
@@ -54,12 +59,7 @@ const Input = ({ disabled = false, inputMaxLength = defaultMaxLength, ...props }
         maxLength={inputMaxLength}
         ref={inputRef}
         onBlur={onBlur}
-        onChange={(event) => {
-          const { value } = event.target;
-          onChange!(event);
-          // eslint-disable-next-line no-param-reassign
-          if (Number(value) >= inputMaxLength) event.target.value = value.slice(0, inputMaxLength);
-        }}
+        onChange={handleOnChangeInput}
       />
     </S.Form>
   );

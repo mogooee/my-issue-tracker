@@ -14,18 +14,16 @@ const queryClient = new QueryClient({
   },
 });
 
-const App = () => {
-  return (
-    <RecoilRoot>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <ReactQueryDevtools initialIsOpen={false} />
-          <GlobalStyle />
-          <Routers />
-        </ThemeProvider>
-      </QueryClientProvider>
-    </RecoilRoot>
-  );
-};
+const App = () => (
+  <RecoilRoot>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <GlobalStyle />
+        <Routers />
+      </ThemeProvider>
+    </QueryClientProvider>
+  </RecoilRoot>
+);
 
 export default App;

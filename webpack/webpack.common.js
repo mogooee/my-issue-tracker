@@ -1,8 +1,10 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const path = require('path');
 const webpack = require('webpack');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 require('dotenv').config();
@@ -51,6 +53,7 @@ module.exports = {
       process: 'process/browser',
     }),
     new webpack.DefinePlugin({ 'process.env': JSON.stringify(process.env) }),
+    new ESLintPlugin({ extensions: ['js', 'jsx', 'ts', 'tsx'] }),
     // new BundleAnalyzerPlugin({
     //   analyzerMode: 'static',
     // }),

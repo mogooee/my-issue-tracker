@@ -11,13 +11,11 @@ const StyledLogin = styled.div`
   }
 `;
 
-const Login = () => {
-  return (
-    <StyledLogin>
-      <Logo logoSize="Large" />
-      <LoginAndRegister />
-    </StyledLogin>
-  );
-};
+const Login = () => (
+  <StyledLogin>
+    <Logo logoSize="Large" />
+    <LoginAndRegister />
+  </StyledLogin>
+);
 
 export default Login;

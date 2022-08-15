@@ -18,7 +18,7 @@ const CompleteSignUp = ({ id }: { id: string }) => {
 
   useEffect(() => {
     const timerId = setInterval(() => {
-      setCount((count) => count - 1);
+      setCount((prevCount) => prevCount - 1);
     }, 1000);
 
     setTimeout(() => {

@@ -37,7 +37,7 @@ export const postSignUpData = async ({
     const { data } = await axios.post<OAuthResponse | Response>(`api/members/new/${type}`, formData);
     if (type === 'auth') {
       const { accessToken } = data as OAuthResponse;
-      axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+      axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
     }
     return data;
   } catch (error) {
