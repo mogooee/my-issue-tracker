@@ -22,3 +22,12 @@ export const getUserInfo = async () => {
     throw err;
   }
 };
+
+export const logout = async () => {
+  try {
+    await axios.head('/server/api/members/signout');
+  } catch (error) {
+    const err = error as AxiosError;
+    throw err;
+  }
+};

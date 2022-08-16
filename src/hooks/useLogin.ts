@@ -1,7 +1,7 @@
 import { useRecoilState } from 'recoil';
 import OAuthState from '@/stores/auth';
 import { UserInfoState } from '@/stores/userInfo';
-import { getUserInfo, silentRefresh } from '@/api/testApi';
+import { getUserInfo, silentRefresh } from '@/api/login_logout';
 
 const useLogin = () => {
   const [isOAuth, setIsOAuth] = useRecoilState(OAuthState);
