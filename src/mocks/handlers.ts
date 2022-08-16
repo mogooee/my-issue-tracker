@@ -7,7 +7,7 @@ const userTable: SignInMemberTypes[] = [
     id: 123456789,
     email: 'dobby@gmail.com',
     nickname: '도비',
-    profileImage: 'string',
+    profileImage: 'https://avatars.githubusercontent.com/u/85747667?s=96&v=4',
   },
 ];
 
@@ -17,7 +17,7 @@ const message = {
 
 export const handlers = [
   // silent-refresh
-  rest.get('api/silent-refresh', (req, res, ctx) => {
+  rest.get('api/auth/reissue', (req, res, ctx) => {
     const response = {
       accessToken: 'access123',
     };
@@ -26,19 +26,15 @@ export const handlers = [
   }),
 
   // 로그인 검사 테스트용 API
-  rest.get('api/auth/test?memberId', (req, res, ctx) => {
-    const id = req.url.searchParams.get('memberId');
-
-    return res(ctx.status(200), ctx.json(id));
-  }),
+  rest.get('api/auth/test', (req, res, ctx) => res(ctx.status(200))),
 
   // 유저 정보 요청 API
-  rest.get('api/auth/userinfo', (req, res, ctx) => {
+  rest.get('api/members/info', (req, res, ctx) => {
     const userInfo = {
       id: '123456789',
       email: 'dobby@gmail.com',
       nickname: '도비',
-      profileImage: 'string',
+      profileImage: 'https://avatars.githubusercontent.com/u/85747667?s=96&v=4',
     };
     return res(ctx.status(200), ctx.json(userInfo));
   }),
@@ -53,7 +49,7 @@ export const handlers = [
       id: 'dobby',
       email: 'dobby@gmail.com',
       nickname: '도비',
-      profileImage: 'string',
+      profileImage: 'https://avatars.githubusercontent.com/u/85747667?s=96&v=4',
     };
 
     const response: RedirectAuthTypes = {
