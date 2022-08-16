@@ -1,18 +1,22 @@
 import { useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+
 import { useSetRecoilState } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
-import { getAuthMemberData, RedirectAuthTypes } from '@/api/redirectAuth';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { silentRefresh, getUserInfo } from '@/api/testApi';
 import { UserInfoState } from '@/stores/userInfo';
+import OAuthState from '@/stores/auth';
+
+import { getAuthMemberData, RedirectAuthTypes } from '@/api/redirectAuth';
+import { getUserInfo, silentRefresh } from '@/api/testApi';
 
 const RedirectAuth = () => {
+  const navigate = useNavigate();
+  const setIsOAuth = useSetRecoilState(OAuthState);
+  const setUserInfoState = useSetRecoilState(UserInfoState);
+
   const [searchParams] = useSearchParams();
   const provider = searchParams.get('provider')!;
   const code = searchParams.get('code')!;
-
-  const navigate = useNavigate();
-  const setUserInfoState = useSetRecoilState(UserInfoState);
 
   const { data } = useQuery<RedirectAuthTypes>(['auth'], () => getAuthMemberData(provider, code));
 
@@ -22,10 +26,10 @@ const RedirectAuth = () => {
   };
 
   const login = async () => {
-    // 리프레시토큰을 가지고 새로운 리프레시토큰, 액세스 토큰을 발급받는다
     await silentRefresh();
-    // 액세스 토큰으로 유저정보 api 요청
     await saveUserInfo();
+    setIsOAuth(true);
+
     navigate('/issues');
   };
 

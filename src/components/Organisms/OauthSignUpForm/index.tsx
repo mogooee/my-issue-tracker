@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { isError, SignUpFormState } from '@/stores/signUp';
 import { UserInfoState } from '@/stores/userInfo';
+import OAuthState from '@/stores/auth';
 import { postSignUpData, OAuthNewMemberTypes, OAuthResponse } from '@/api/signUp';
 import { SignUpFormDataTypes } from '@/api/redirectAuth';
 
@@ -25,6 +26,7 @@ const OAuthSignUpForm = ({ SignUpFormData }: { SignUpFormData: SignUpFormDataTyp
   const navigate = useNavigate();
   const signUpFormValue = useRecoilValue(SignUpFormState);
   const setUserInfoState = useSetRecoilState(UserInfoState);
+  const setIsOAuth = useSetRecoilState(OAuthState);
 
   const { email, profileImage, resourceOwnerId } = SignUpFormData!;
 
@@ -59,6 +61,7 @@ const OAuthSignUpForm = ({ SignUpFormData }: { SignUpFormData: SignUpFormDataTyp
 
   const clickHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     await signUp();
+    setIsOAuth(true);
     navigate('/issues');
   };
 

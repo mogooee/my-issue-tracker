@@ -1,7 +1,5 @@
-import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { UserInfoState } from '@/stores/userInfo';
-import { testLoginOauth } from '@/api/testApi';
 
 import styled from 'styled-components';
 
@@ -32,12 +30,6 @@ const SubNav = styled.div`
 
 const Issues = () => {
   const UserInfoStateValue = useRecoilValue(UserInfoState);
-  const { id } = UserInfoStateValue;
-
-  useEffect(() => {
-    testLoginOauth(id);
-  }, []);
-
   const FILTER_TABS = FILTER_TABS_INFO;
 
   return (
