@@ -22,7 +22,7 @@ module.exports = merge(common, {
     historyApiFallback: true, // 404 응답 시 index.html로 리다이렉트
     proxy: {
       '/server': {
-        target: 'http://localhost:8080/',
+        target: 'http://3.36.249.0:8080/',
         changeOrigin: true,
         pathRewrite: {
           '^/server': '',

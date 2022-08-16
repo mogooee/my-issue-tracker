@@ -1,8 +1,8 @@
 import axios, { AxiosError } from 'axios';
 
-export const testLoginOauth = async (id: number) => {
+export const testLoginOauth = async () => {
   try {
-    const { data } = await axios.get(`api/auth/test?memberId=${id}`);
+    const { data } = await axios.get('/server/api/auth/test');
     return data;
   } catch (error) {
     const err = error as AxiosError;
@@ -12,9 +12,10 @@ export const testLoginOauth = async (id: number) => {
 
 export const silentRefresh = async () => {
   try {
-    const { data } = await axios.get('api/silent-refresh');
+    const { data } = await axios.get('/server/api/auth/reissue');
     const { accessToken } = data;
-    axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+    axios.defaults.headers.common.Authorization = `Bearer ${accessToken.token}`;
+
     return data;
   } catch (error) {
     const err = error as AxiosError;
@@ -24,7 +25,7 @@ export const silentRefresh = async () => {
 
 export const getUserInfo = async () => {
   try {
-    const { data } = await axios.get('api/auth/userinfo');
+    const { data } = await axios.get('/server/api/members/info');
     return data;
   } catch (error) {
     const err = error as AxiosError;
