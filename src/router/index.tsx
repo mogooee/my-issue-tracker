@@ -2,31 +2,13 @@ import { useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Home, NotFound, RedirectAuth, Login, OAuthSignUp, CommonSignUp, Issues } from '@/pages';
 
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import OAuthState from '@/stores/auth';
-import { UserInfoState } from '@/stores/userInfo';
-import { silentRefresh, getUserInfo } from '@/api/testApi';
+import useLogin from '@/hooks/useLogin';
 
 const Routers = (): JSX.Element => {
-  const [isOAuth, setIsOAuth] = useRecoilState(OAuthState);
-  const setUserInfoState = useSetRecoilState(UserInfoState);
-
-  const saveUserInfo = async () => {
-    const { id, email, nickname, profileImage } = await getUserInfo();
-    setUserInfoState({ id, email, nickname, profileImage });
-  };
-
-  const silentLogin = async () => {
-    try {
-      await silentRefresh();
-      await saveUserInfo();
-
-      setIsOAuth(true);
-    } catch (error) {
-      setIsOAuth(false);
-      throw error;
-    }
-  };
+  const isOAuth = useRecoilValue(OAuthState);
+  const { silentLogin } = useLogin();
 
   useEffect(() => {
     silentLogin();

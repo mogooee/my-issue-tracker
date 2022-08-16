@@ -10,6 +10,8 @@ import Button from '@/components/Atoms/Button';
 import SignUpInput from '@/components/Molecules/SignUpInput';
 import { ModalState } from '@/components/Modal';
 
+import useLogin from '@/hooks/useLogin';
+
 interface FormInfoTypes {
   id: string;
   inputType: string;
@@ -23,6 +25,7 @@ interface FormInfoTypes {
 const CommonSignUpForm = ({ FORM_INFO }: { FORM_INFO: FormInfoTypes[] }) => {
   const setModalState = useSetRecoilState(ModalState);
   const signUpFormValue = useRecoilValue(SignUpFormState);
+  const { setIsOAuth, setUserInfo } = useLogin();
   const { id, password, email, nickname } = signUpFormValue;
 
   const formData: GeneralNewMemberTypes = {
@@ -46,8 +49,19 @@ const CommonSignUpForm = ({ FORM_INFO }: { FORM_INFO: FormInfoTypes[] }) => {
 
   const disabled = isError() || isBlank();
 
+  const signUp = async () => {
+    const {
+      id: postId,
+      email: postEmail,
+      nickname: postNickname,
+      profileImage: postProfileImage,
+    } = (await postSignUpData({ formData, type: 'general' })) as MemeberResponseTypes;
+    setUserInfo({ id: postId, email: postEmail, nickname: postNickname, profileImage: postProfileImage });
+    setIsOAuth(true);
+  };
+
   const clickHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    await postSignUpData({ formData, type: 'general' });
+    await signUp();
     setModalState(true);
   };
 

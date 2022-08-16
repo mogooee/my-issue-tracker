@@ -1,9 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { isError, SignUpFormState } from '@/stores/signUp';
-import { UserInfoState } from '@/stores/userInfo';
-import OAuthState from '@/stores/auth';
+
 import { postSignUpData, OAuthNewMemberTypes, OAuthResponse } from '@/api/signUp';
 import { SignUpFormDataTypes } from '@/api/redirectAuth';
 
@@ -11,6 +10,8 @@ import * as S from '@/components/Organisms/OauthSignUpForm/index.styles';
 import Button from '@/components/Atoms/Button';
 import Input, { InputTypes } from '@/components/Atoms/Input';
 import SignUpInput from '@/components/Molecules/SignUpInput';
+
+import useLogin from '@/hooks/useLogin';
 
 const FORM_INFO = {
   id: 'nickname',
@@ -25,8 +26,7 @@ const FORM_INFO = {
 const OAuthSignUpForm = ({ SignUpFormData }: { SignUpFormData: SignUpFormDataTypes | null }) => {
   const navigate = useNavigate();
   const signUpFormValue = useRecoilValue(SignUpFormState);
-  const setUserInfoState = useSetRecoilState(UserInfoState);
-  const setIsOAuth = useSetRecoilState(OAuthState);
+  const { setIsOAuth, setUserInfo } = useLogin();
 
   const { email, profileImage, resourceOwnerId } = SignUpFormData!;
 
@@ -50,18 +50,14 @@ const OAuthSignUpForm = ({ SignUpFormData }: { SignUpFormData: SignUpFormDataTyp
   const disabled = isError() || !signUpFormValue.nickname;
 
   const signUp = async () => {
-    const {
-      id,
-      email: postEmail,
-      nickname,
-      profileImage: postProfileImage,
-    } = (await postSignUpData({ formData, type: 'auth' })) as OAuthResponse;
-    setUserInfoState({ id, email: postEmail, nickname, profileImage: postProfileImage });
+    const { memberResponse } = (await postSignUpData({ formData, type: 'auth' })) as OAuthResponse;
+    const { id, email: postEmail, nickname, profileImage: postProfileImage } = memberResponse;
+    setUserInfo({ id, email: postEmail, nickname, profileImage: postProfileImage });
+    setIsOAuth(true);
   };
 
   const clickHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     await signUp();
-    setIsOAuth(true);
     navigate('/issues');
   };
 
