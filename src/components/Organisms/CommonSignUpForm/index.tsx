@@ -3,7 +3,7 @@ import React from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { isError, SignUpFormState } from '@/stores/signUp';
 
-import { postSignUpData, GeneralNewMemberTypes } from '@/api/signUp';
+import { postSignUpData, GeneralNewMemberTypes, MemeberResponseTypes } from '@/api/signUp';
 
 import * as S from '@/components/Organisms/CommonSignUpForm/index.styles';
 import Button from '@/components/Atoms/Button';
@@ -26,7 +26,7 @@ const CommonSignUpForm = ({ FORM_INFO }: { FORM_INFO: FormInfoTypes[] }) => {
   const { id, password, email, nickname } = signUpFormValue;
 
   const formData: GeneralNewMemberTypes = {
-    loginId: id,
+    signInId: id,
     password,
     email,
     nickname,

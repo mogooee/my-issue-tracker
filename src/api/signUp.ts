@@ -9,22 +9,28 @@ export interface OAuthNewMemberTypes {
 }
 
 export interface GeneralNewMemberTypes {
-  loginId: string;
+  signInId: string;
   password: string;
   email: string;
   nickname: string;
   profileImage: string | null;
 }
 
-export interface OAuthResponse {
+export interface MemeberResponseTypes {
   id: number;
   email: string;
   nickname: string;
   profileImage: string;
-  accessToken?: string;
 }
 
-export type Response = Omit<OAuthResponse, 'accessToken'>;
+interface tokenType {
+  token: string;
+}
+
+export interface OAuthResponse {
+  memberResponse: MemeberResponseTypes;
+  accessToken?: tokenType;
+}
 
 export const postSignUpData = async ({
   formData,
@@ -34,7 +40,10 @@ export const postSignUpData = async ({
   type: 'general' | 'auth';
 }) => {
   try {
-    const { data } = await axios.post<OAuthResponse | Response>(`/server/api/members/new/${type}`, formData);
+    const { data } = await axios.post<OAuthResponse | MemeberResponseTypes>(
+      `/server/api/members/new/${type}`,
+      formData,
+    );
     if (type === 'auth') {
       const { accessToken } = data as OAuthResponse;
       axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
