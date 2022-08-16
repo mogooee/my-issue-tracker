@@ -24,7 +24,7 @@ export const StyledNavLinks = styled.div<StyledNavLinkTypes>`
   }}
 `;
 
-export const StyledNavLink = styled(NavLink)<StyledNavLinkTypes>`
+export const StyledNavLink = styled(NavLink)`
   display: inline-flex;
   align-items: center;
   padding: 0 10px;

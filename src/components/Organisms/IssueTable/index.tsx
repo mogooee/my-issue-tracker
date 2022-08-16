@@ -50,7 +50,7 @@ const IssueTable = ({ issueListData, filterTabs }: IssueTableTypes) => {
           {checkedIssueNum ? (
             <Dropdown {...OPEN_CLOSE_DROPDOWN_ARGS} />
           ) : (
-            filterTabs.map((info) => <Dropdown {...info} />)
+            filterTabs.map((info) => <Dropdown key={info.panelTitle} {...info} />)
           )}
         </S.IssueInfoTabs>
       </S.IssueHeader>
