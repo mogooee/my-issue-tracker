@@ -6,6 +6,7 @@ import * as S from '@/components/Molecules/SignUpInput/index.styles';
 import Input from '@/components/Atoms/Input';
 import useInput from '@/hooks/useInput';
 import { getDuplicatesResult } from '@/api/signUp';
+import debounce from '@/utils/debounce';
 
 export interface SignUpInputTypes {
   id: string;
@@ -20,26 +21,12 @@ export interface SignUpInputTypes {
 const SignUpInput = ({ ...props }: SignUpInputTypes): JSX.Element => {
   const { id, inputType, maxLength, placeholder, pattern, patternMsg, errMsg } = props;
   const { isActive, onChangeInput, onClickInput, onBlurInput } = useInput();
+  const timerId = useRef(0);
 
   const [signUpFormValue, setSignUpFormValue] = useRecoilState(SignUpFormState);
   const [signUpFormErrorValue, setSignUpFormErrorValue] = useRecoilState(SignUpFormErrorState);
 
   const formError = signUpFormErrorValue.find((el) => el.id === id);
-
-  const timerId = useRef(0);
-
-  const debounce =
-    (callback: any, delay: number = 2000) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      clearTimeout(timerId.current);
-      timerId.current = setTimeout(
-        () => {
-          callback(event);
-        },
-        delay,
-        event,
-      );
-    };
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -48,15 +35,14 @@ const SignUpInput = ({ ...props }: SignUpInputTypes): JSX.Element => {
     const changedErrorValue = signUpFormErrorValue.map((e) => (e.id === id ? { ...e, state: isError, errMsg } : e));
 
     setSignUpFormErrorValue(changedErrorValue);
-    setSignUpFormValue({ [id]: value });
+    setSignUpFormValue({ ...signUpFormValue, [id]: value });
     onChangeInput(event);
   };
 
   const checkDuplicates = async (value: string) => {
-    if (id !== 'id' && id !== 'email' && id !== 'nickname') return;
-    if (formError!.state) return;
-    const router = id === 'id' ? 'login-id' : id;
+    if ((id !== 'id' && id !== 'email' && id !== 'nickname') || formError!.state) return;
 
+    const router = id === 'id' ? 'signin-id' : id;
     const data = await getDuplicatesResult(router, value);
 
     if (data === true) {
@@ -75,7 +61,7 @@ const SignUpInput = ({ ...props }: SignUpInputTypes): JSX.Element => {
     checkDuplicates(event.target.value);
   };
 
-  const handleOnTyping = debounce(handleOnChange, 300);
+  const handleOnTyping = debounce(timerId, handleOnChange, 300);
 
   return (
     <S.SignUpInput isError={formError}>
