@@ -6,6 +6,7 @@ import { getAuthMemberData, RedirectAuthTypes } from '@/api/redirectAuth';
 import useLogin from '@/hooks/useLogin';
 
 const RedirectAuth = () => {
+  const { onSuccessLogin } = useLogin();
   const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
@@ -14,12 +15,13 @@ const RedirectAuth = () => {
 
   const { data } = useQuery<RedirectAuthTypes>(['auth'], () => getAuthMemberData(provider, code));
 
-  const { login } = useLogin();
-
   useEffect(() => {
-    const { signInMember } = data!;
+    if (!data) return;
+
+    const { signInMember } = data;
+
     if (signInMember) {
-      login();
+      onSuccessLogin(signInMember);
       navigate('/issues');
     } else {
       navigate('/signup-oauth');

@@ -1,16 +1,14 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { isError, SignUpFormState } from '@/stores/signUp';
-
 import { postSignUpData, GeneralNewMemberTypes, MemeberResponseTypes } from '@/api/signUp';
+import useLogin from '@/hooks/useLogin';
 
 import * as S from '@/components/Organisms/CommonSignUpForm/index.styles';
 import Button from '@/components/Atoms/Button';
 import SignUpInput from '@/components/Molecules/SignUpInput';
 import { ModalState } from '@/components/Modal';
-
-import useLogin from '@/hooks/useLogin';
 
 interface FormInfoTypes {
   id: string;
@@ -23,9 +21,11 @@ interface FormInfoTypes {
 }
 
 const CommonSignUpForm = ({ FORM_INFO }: { FORM_INFO: FormInfoTypes[] }) => {
+  const navigate = useNavigate();
+  const { onSuccessLogin } = useLogin();
+
   const setModalState = useSetRecoilState(ModalState);
   const signUpFormValue = useRecoilValue(SignUpFormState);
-  const { setIsOAuth, setUserInfo } = useLogin();
   const { id, password, email, nickname } = signUpFormValue;
 
   const formData: GeneralNewMemberTypes = {
@@ -50,18 +50,9 @@ const CommonSignUpForm = ({ FORM_INFO }: { FORM_INFO: FormInfoTypes[] }) => {
   const disabled = isError() || isBlank();
 
   const signUp = async () => {
-    const {
-      id: postId,
-      email: postEmail,
-      nickname: postNickname,
-      profileImage: postProfileImage,
-    } = (await postSignUpData({ formData, type: 'general' })) as MemeberResponseTypes;
-    setUserInfo({ id: postId, email: postEmail, nickname: postNickname, profileImage: postProfileImage });
-    setIsOAuth(true);
-  };
-
-  const clickHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    await signUp();
+    const memberResponse = (await postSignUpData({ formData, type: 'general' })) as MemeberResponseTypes;
+    onSuccessLogin(memberResponse);
+    navigate('/issues');
     setModalState(true);
   };
 
@@ -71,7 +62,7 @@ const CommonSignUpForm = ({ FORM_INFO }: { FORM_INFO: FormInfoTypes[] }) => {
       {FORM_INFO.map(({ ...props }) => (
         <SignUpInput key={props.id} {...props} />
       ))}
-      <Button buttonStyle="STANDARD" label="회원가입" size="LARGE" disabled={disabled} handleOnClick={clickHandler} />
+      <Button buttonStyle="STANDARD" label="회원가입" size="LARGE" disabled={disabled} handleOnClick={signUp} />
     </S.CommonSignUpForm>
   );
 };

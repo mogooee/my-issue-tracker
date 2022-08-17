@@ -1,7 +1,14 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { generalLogin } from '@/api/login_logout';
+import { OAuthResponse } from '@/api/signUp';
+import useInput from '@/hooks/useInput';
+import useLogin from '@/hooks/useLogin';
+
 import styled from 'styled-components';
 import Button from '@/components/Atoms/Button';
 import Input from '@/components/Atoms/Input';
-import useInput from '@/hooks/useInput';
 
 const Form = styled.div`
   form + form {
@@ -27,12 +34,27 @@ const LoginForm = (): JSX.Element => {
 
   const [idMaxLength, passwordMaxLength] = [10, 10];
 
+  const navigate = useNavigate();
+  const { onSuccessLogin } = useLogin();
+
+  const initLoginForm = { id: '', password: '' };
+  const [loginForm, setLoginForm] = useState(initLoginForm);
+
+  const login = async () => {
+    const { memberResponse } = (await generalLogin(loginForm)) as OAuthResponse;
+    onSuccessLogin(memberResponse);
+    navigate('/issues');
+  };
+
   return (
     <Form>
       <Input
         isActive={isIdActive}
         isTyping={isIdTyping}
-        onChange={onChangeInputId}
+        onChange={(e) => {
+          onChangeInputId(e);
+          setLoginForm({ ...loginForm, id: e.target.value });
+        }}
         onClick={onClickInputId}
         onBlur={onBlurInputId}
         inputSize="LARGE"
@@ -43,7 +65,10 @@ const LoginForm = (): JSX.Element => {
       <Input
         isActive={isPasswordActive}
         isTyping={isPasswordTyping}
-        onChange={onChangeInputPassword}
+        onChange={(e) => {
+          onChangeInputPassword(e);
+          setLoginForm({ ...loginForm, password: e.target.value });
+        }}
         onClick={onClickInputPassword}
         onBlur={onBlurInputPassword}
         inputSize="LARGE"
@@ -51,7 +76,7 @@ const LoginForm = (): JSX.Element => {
         inputMaxLength={passwordMaxLength}
         inputPlaceholder="비밀번호"
       />
-      <Button buttonStyle="STANDARD" label="아이디로 로그인" size="LARGE" />
+      <Button buttonStyle="STANDARD" label="아이디로 로그인" size="LARGE" handleOnClick={login} />
     </Form>
   );
 };

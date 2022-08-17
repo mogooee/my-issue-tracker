@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { isError, SignUpFormState } from '@/stores/signUp';
@@ -24,9 +23,9 @@ const FORM_INFO = {
 };
 
 const OAuthSignUpForm = ({ SignUpFormData }: { SignUpFormData: SignUpFormDataTypes | null }) => {
+  const { onSuccessLogin } = useLogin();
   const navigate = useNavigate();
   const signUpFormValue = useRecoilValue(SignUpFormState);
-  const { setIsOAuth, setUserInfo } = useLogin();
 
   const { email, profileImage, resourceOwnerId } = SignUpFormData!;
 
@@ -39,6 +38,8 @@ const OAuthSignUpForm = ({ SignUpFormData }: { SignUpFormData: SignUpFormDataTyp
     inputPlaceholder: '이메일',
   };
 
+  const disabled = isError() || !signUpFormValue.nickname;
+
   const formData: OAuthNewMemberTypes = {
     email,
     nickname: signUpFormValue.nickname,
@@ -47,17 +48,9 @@ const OAuthSignUpForm = ({ SignUpFormData }: { SignUpFormData: SignUpFormDataTyp
     resourceOwnerId,
   };
 
-  const disabled = isError() || !signUpFormValue.nickname;
-
   const signUp = async () => {
     const { memberResponse } = (await postSignUpData({ formData, type: 'auth' })) as OAuthResponse;
-    const { id, email: postEmail, nickname, profileImage: postProfileImage } = memberResponse;
-    setUserInfo({ id, email: postEmail, nickname, profileImage: postProfileImage });
-    setIsOAuth(true);
-  };
-
-  const clickHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    await signUp();
+    onSuccessLogin(memberResponse);
     navigate('/issues');
   };
 
@@ -74,7 +67,7 @@ const OAuthSignUpForm = ({ SignUpFormData }: { SignUpFormData: SignUpFormDataTyp
         label="동의하고 가입하기"
         size="LARGE"
         disabled={disabled}
-        handleOnClick={clickHandler}
+        handleOnClick={signUp}
       />
     </S.OauthSignUpForm>
   );

@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import { TokenType } from '@/api/signUp';
 
 export interface SignUpFormDataTypes {
   resourceOwnerId: string;
@@ -16,9 +17,20 @@ export interface SignInMemberTypes {
 export interface RedirectAuthTypes {
   signUpFormData: SignUpFormDataTypes | null;
   signInMember: SignInMemberTypes | null;
+  accessToken: TokenType | null;
 }
 
 export const getAuthMemberData = async (provider: string, code: string): Promise<RedirectAuthTypes> => {
-  const { data } = await axios.get<RedirectAuthTypes>(`/server/api/auth/${provider}?code=${code}`);
-  return data;
+  try {
+    const { data } = await axios.get<RedirectAuthTypes>(`/server/api/auth/${provider}?code=${code}`);
+
+    if (data.accessToken) {
+      axios.defaults.headers.common.Authorization = `Bearer ${data.accessToken.token}`;
+    }
+
+    return data;
+  } catch (error) {
+    const err = error as AxiosError;
+    throw err;
+  }
 };

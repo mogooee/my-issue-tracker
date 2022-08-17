@@ -1,33 +1,29 @@
 import { useRecoilState } from 'recoil';
 import OAuthState from '@/stores/auth';
-import { UserInfoState } from '@/stores/userInfo';
+import { LoginUserInfoState } from '@/stores/loginUserInfo';
 import { getUserInfo, silentRefresh } from '@/api/login_logout';
+import { MemeberResponseTypes } from '@/api/signUp';
 
 const useLogin = () => {
   const [isOAuth, setIsOAuth] = useRecoilState(OAuthState);
-  const [userInfo, setUserInfo] = useRecoilState(UserInfoState);
+  const [loginUserInfo, setLoginUserInfo] = useRecoilState(LoginUserInfoState);
 
-  const saveUserInfo = async () => {
-    const { id, email, nickname, profileImage } = await getUserInfo();
-    setUserInfo({ id, email, nickname, profileImage });
-  };
-
-  const login = async () => {
-    await silentRefresh();
-    await saveUserInfo();
+  const onSuccessLogin = (userInfo: MemeberResponseTypes) => {
+    setLoginUserInfo(userInfo);
     setIsOAuth(true);
   };
 
-  const silentLogin = async () => {
-    try {
-      login();
-    } catch (error) {
-      setIsOAuth(false);
-      throw error;
-    }
+  const saveLoginUserInfo = async () => {
+    const MemeberResponse = await getUserInfo();
+    onSuccessLogin(MemeberResponse);
   };
 
-  return { isOAuth, setIsOAuth, userInfo, setUserInfo, silentLogin, login };
+  const silentLogin = async () => {
+    await silentRefresh();
+    await saveLoginUserInfo();
+  };
+
+  return { isOAuth, setIsOAuth, loginUserInfo, setLoginUserInfo, silentLogin, onSuccessLogin };
 };
 
 export default useLogin;
