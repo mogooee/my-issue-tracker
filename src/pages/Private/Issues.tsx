@@ -1,5 +1,5 @@
 import { useRecoilValue } from 'recoil';
-import { UserInfoState } from '@/stores/userInfo';
+import { LoginUserInfoState } from '@/stores/loginUserInfo';
 
 import styled from 'styled-components';
 
@@ -29,12 +29,12 @@ const SubNav = styled.div`
 `;
 
 const Issues = () => {
-  const UserInfoStateValue = useRecoilValue(UserInfoState);
+  const LoginUserInfoStateValue = useRecoilValue(LoginUserInfoState);
   const FILTER_TABS = FILTER_TABS_INFO;
 
   return (
-    <div>
-      <Header user={UserInfoStateValue} />
+    <>
+      <Header user={LoginUserInfoStateValue} />
       <DivContainer>
         <FilterBar {...FILTERBAR_INFO} />
         <SubNav>
@@ -49,7 +49,7 @@ const Issues = () => {
         </SubNav>
       </DivContainer>
       <IssueTable issueListData={issueListData} filterTabs={FILTER_TABS} />
-    </div>
+    </>
   );
 };
 

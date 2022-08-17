@@ -23,13 +23,13 @@ export interface MemeberResponseTypes {
   profileImage: string;
 }
 
-interface tokenType {
+export interface TokenType {
   token: string;
 }
 
 export interface OAuthResponse {
   memberResponse: MemeberResponseTypes;
-  accessToken?: tokenType;
+  accessToken?: TokenType;
 }
 
 export const postSignUpData = async ({

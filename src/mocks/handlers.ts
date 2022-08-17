@@ -53,8 +53,15 @@ export const handlers = [
     };
 
     const response: RedirectAuthTypes = {
-      signUpFormData: null,
+      signUpFormData: {
+        resourceOwnerId: 'string',
+        email: 'hoo@gmail.com',
+        profileImage: 'string',
+      },
       signInMember: null,
+      accessToken: {
+        token: 'token',
+      },
     };
 
     if (provider === 'github' || provider === 'naver' || provider === 'kakao') {

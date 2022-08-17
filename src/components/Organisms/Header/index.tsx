@@ -1,26 +1,27 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { logout } from '@/api/login_logout';
-import useLogin from '@/hooks/useLogin';
+import useLogout from '@/hooks/useLogout';
 
 import * as S from '@/components/Organisms/Header/index.styles';
 import Icon from '@/components/Atoms/Icon';
 import Logo from '@/components/Atoms/Logo';
 import UserImage, { UserImageTypes } from '@/components/Atoms/UserImage';
+import { MemeberResponseTypes } from '@/api/signUp';
 
 interface HeaderTypes {
-  user: UserImageTypes;
+  user: MemeberResponseTypes;
 }
 
 const Header = ({ user }: HeaderTypes) => {
   const { id, nickname, profileImage } = user;
-  const [clickTab, setclickTab] = useState<boolean>(false);
-  const { setIsOAuth } = useLogin();
+
   const navigate = useNavigate();
+  const { setLogout } = useLogout();
+
+  const [clickTab, setclickTab] = useState<boolean>(false);
 
   const handleClickLogoutButton = async () => {
-    await logout();
-    setIsOAuth(false);
+    await setLogout();
     navigate('/login');
   };
 
