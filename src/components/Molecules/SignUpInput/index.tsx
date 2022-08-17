@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useRecoilState } from 'recoil';
-import { SignUpFormErrorState, SignUpFormSelector } from '@/stores/signUp';
+import { SignUpFormErrorState, SignUpFormState } from '@/stores/signUp';
 
 import * as S from '@/components/Molecules/SignUpInput/index.styles';
 import Input from '@/components/Atoms/Input';
@@ -21,7 +21,7 @@ const SignUpInput = ({ ...props }: SignUpInputTypes): JSX.Element => {
   const { id, inputType, maxLength, placeholder, pattern, patternMsg, errMsg } = props;
   const { isActive, onChangeInput, onClickInput, onBlurInput } = useInput();
 
-  const [signUpFormValue, setSignUpFormValue] = useRecoilState(SignUpFormSelector);
+  const [signUpFormValue, setSignUpFormValue] = useRecoilState(SignUpFormState);
   const [signUpFormErrorValue, setSignUpFormErrorValue] = useRecoilState(SignUpFormErrorState);
 
   const formError = signUpFormErrorValue.find((el) => el.id === id);
