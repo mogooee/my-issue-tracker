@@ -11,6 +11,7 @@ const useLogin = () => {
   const onSuccessLogin = (userInfo: MemeberResponseTypes) => {
     setLoginUserInfo(userInfo);
     setIsOAuth(true);
+    localStorage.setItem('Authentication', 'true');
   };
 
   const saveLoginUserInfo = async () => {
@@ -19,7 +20,11 @@ const useLogin = () => {
   };
 
   const silentLogin = async () => {
-    await silentRefresh();
+    const data = await silentRefresh();
+    if (!data) {
+      localStorage.removeItem('Authentication');
+      return;
+    }
     await saveLoginUserInfo();
   };
 

@@ -6,11 +6,10 @@ export const silentRefresh = async () => {
     const { data } = await axios.get('/server/api/auth/reissue');
     const { accessToken } = data;
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken.token}`;
-
     return data;
   } catch (error) {
     const err = error as AxiosError;
-    throw err;
+    // throw err;
   }
 };
 
@@ -24,9 +23,13 @@ export const getUserInfo = async () => {
   }
 };
 
-interface LoginTypes {
+export interface LoginTypes {
   id: string;
   password: string;
+}
+
+interface ErrorMessage {
+  message: string;
 }
 
 export const generalLogin = async (formData: LoginTypes) => {
@@ -34,8 +37,8 @@ export const generalLogin = async (formData: LoginTypes) => {
     const { data } = await axios.post<OAuthResponse>('/server/api/members/signin', formData);
     return data;
   } catch (error) {
-    const err = error as AxiosError;
-    throw err;
+    const err = error as AxiosError<ErrorMessage>;
+    // throw err;
   }
 };
 
@@ -43,6 +46,7 @@ export const logout = async () => {
   try {
     await axios.head('/server/api/members/signout');
     axios.defaults.headers.common.Authorization = '';
+    localStorage.removeItem('Authentication');
   } catch (error) {
     const err = error as AxiosError;
     throw err;
