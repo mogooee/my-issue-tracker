@@ -40,10 +40,7 @@ export const postSignUpData = async ({
   type: 'general' | 'auth';
 }) => {
   try {
-    const { data } = await axios.post<OAuthResponse | MemeberResponseTypes>(
-      `/server/api/members/new/${type}`,
-      formData,
-    );
+    const { data } = await axios.post<OAuthResponse | MemeberResponseTypes>(`api/members/new/${type}`, formData);
     if (type === 'auth') {
       const { accessToken } = data as OAuthResponse;
       axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
@@ -57,7 +54,7 @@ export const postSignUpData = async ({
 
 export const getDuplicatesResult = async (router: string, value: string) => {
   try {
-    const { data } = await axios.get(`/server/api/members/${router}/${value}/exists`);
+    const { data } = await axios.get(`api/members/${router}/${value}/exists`);
     return data;
   } catch (error) {
     const err = error as AxiosError;

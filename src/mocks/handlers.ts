@@ -86,9 +86,9 @@ export const handlers = [
   // 일반 회원 가입
   rest.post('api/members/new/general', async (req, res, ctx) => {
     const newMember = await req.json();
-    const { loginId, password, email, nickname } = newMember;
+    const { signInId, password, email, nickname } = newMember;
 
-    if (!loginId || !password || !email || !nickname) {
+    if (!signInId || !password || !email || !nickname) {
       return res(ctx.status(400), ctx.json('필수 입력값을 입력해주세요'));
     }
 
@@ -127,7 +127,7 @@ export const handlers = [
   }),
 
   // 유저 아이디 중복 검사
-  rest.get('api/members/login-id/:id/exists', (req, res, ctx) => {
+  rest.get('api/members/signin-id/:id/exists', (req, res, ctx) => {
     const { id } = req.params;
 
     // dobby123라는 유저가 이미 있는 경우

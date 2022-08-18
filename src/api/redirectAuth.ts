@@ -22,7 +22,7 @@ export interface RedirectAuthTypes {
 
 export const getAuthMemberData = async (provider: string, code: string): Promise<RedirectAuthTypes> => {
   try {
-    const { data } = await axios.get<RedirectAuthTypes>(`/server/api/auth/${provider}?code=${code}`);
+    const { data } = await axios.get<RedirectAuthTypes>(`api/auth/${provider}?code=${code}`);
 
     if (data.accessToken) {
       axios.defaults.headers.common.Authorization = `Bearer ${data.accessToken.token}`;
