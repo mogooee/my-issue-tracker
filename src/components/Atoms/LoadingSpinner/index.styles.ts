@@ -7,6 +7,12 @@ export const LoadingSpinner = styled.div<{ size: number }>`
   border-top: 10px solid ${({ theme }) => theme.COLORS.PRIMARY.BLUE};
   border-radius: 50%;
   animation: spinner 1s linear infinite;
+  position: fixed;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  margin: auto;
 
   @keyframes spinner {
     0% {
