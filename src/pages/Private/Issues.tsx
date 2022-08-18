@@ -33,7 +33,7 @@ const Issues = () => {
   const FILTER_TABS = FILTER_TABS_INFO;
 
   return (
-    <>
+    <div>
       <Header user={LoginUserInfoStateValue} />
       <DivContainer>
         <FilterBar {...FILTERBAR_INFO} />
@@ -49,7 +49,7 @@ const Issues = () => {
         </SubNav>
       </DivContainer>
       <IssueTable issueListData={issueListData} filterTabs={FILTER_TABS} />
-    </>
+    </div>
   );
 };
 
