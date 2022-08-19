@@ -1,9 +1,7 @@
 /* eslint-disable react/prop-types */
-import { useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { isError, SignUpFormState } from '@/stores/signUp';
 import { postSignUpData, GeneralNewMemberTypes, MemeberResponseTypes } from '@/api/signUp';
-import useLogin from '@/hooks/useLogin';
 
 import * as S from '@/components/Organisms/CommonSignUpForm/index.styles';
 import Button from '@/components/Atoms/Button';
@@ -21,9 +19,6 @@ interface FormInfoTypes {
 }
 
 const CommonSignUpForm = ({ FORM_INFO }: { FORM_INFO: FormInfoTypes[] }) => {
-  const navigate = useNavigate();
-  const { onSuccessLogin } = useLogin();
-
   const setModalState = useSetRecoilState(ModalState);
   const signUpFormValue = useRecoilValue(SignUpFormState);
   const { id, password, email, nickname } = signUpFormValue;
@@ -50,9 +45,7 @@ const CommonSignUpForm = ({ FORM_INFO }: { FORM_INFO: FormInfoTypes[] }) => {
   const disabled = isError() || isBlank();
 
   const signUp = async () => {
-    const memberResponse = (await postSignUpData({ formData, type: 'general' })) as MemeberResponseTypes;
-    onSuccessLogin(memberResponse);
-    navigate('/issues');
+    await postSignUpData({ formData, type: 'general' });
     setModalState(true);
   };
 
