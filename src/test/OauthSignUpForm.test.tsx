@@ -1,11 +1,11 @@
+/* eslint-disable no-undef */
+/* eslint-disable import/no-extraneous-dependencies */
 import { rest } from 'msw';
 import { server } from '@/mocks/server';
 
+import { RecoilRoot } from 'recoil';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-
-import { RecoilRoot } from 'recoil';
-import { MemoryRouter } from 'react-router-dom';
 
 import { ThemeProvider } from 'styled-components';
 import THEME from '@/styles/theme';
@@ -13,6 +13,7 @@ import OAuthSignUpForm from '@/components/Organisms/OauthSignUpForm';
 
 const mockedNavigate = jest.fn();
 const resolver = jest.fn();
+const duplicateResolver = jest.fn();
 
 jest.mock('react-router-dom', () => ({
   ...(jest.requireActual('react-router-dom') as any),
@@ -26,55 +27,42 @@ describe('OAuth가입 컴포넌트 테스트', () => {
       email: 'dobby@gmail.com',
       profileImage: 'string',
     };
+
     render(
       <RecoilRoot>
         <ThemeProvider theme={THEME}>
-          <MemoryRouter initialEntries={['/']}>
-            <OAuthSignUpForm SignUpFormData={signUpFormData} />
-          </MemoryRouter>
+          <OAuthSignUpForm SignUpFormData={signUpFormData} />
         </ThemeProvider>
       </RecoilRoot>,
     );
-  };
-
-  test('컴포넌트 렌더링', async () => {
-    rendering();
-    const nickname = screen.getByPlaceholderText('닉네임') as HTMLInputElement;
-    expect(nickname).toBeInTheDocument();
-  });
-
-  test('닉네임 정규식 체크', async () => {
-    rendering();
-    const nicknameRegex = /^[ㄱ-힣a-zA-Z0-9-*~^_]{2,12}$/i;
-    const nickname = screen.getByPlaceholderText('닉네임') as HTMLInputElement;
-
-    await userEvent.type(nickname, '도비');
-    expect(nickname.value).toMatch(nicknameRegex);
-  });
-
-  test('동의하고 가입하기 버튼 활성화', async () => {
-    rendering();
-
-    const nickname = screen.getByPlaceholderText('닉네임') as HTMLInputElement;
-    const signUpButton = screen.getByRole('button', {
-      name: /동의하고 가입하기/i,
-    });
-
-    await userEvent.type(nickname, '도비123445');
-
-    await waitFor(() => {
-      expect(signUpButton).not.toBeDisabled();
-    });
-  });
-
-  test('가입하기 버튼을 클릭하면 회원가입 진행', async () => {
-    server.use(rest.post('api/members/new/auth', resolver));
-    rendering();
 
     const nickname = screen.getByPlaceholderText('닉네임') as HTMLInputElement;
     const signUpButton = screen.getByRole('button', {
       name: /동의하고 가입하기/i,
     }) as HTMLButtonElement;
+
+    return {
+      nickname,
+      signUpButton,
+    };
+  };
+
+  test('컴포넌트 렌더링', async () => {
+    const { nickname } = rendering();
+    expect(nickname).toBeInTheDocument();
+  });
+
+  test('닉네임 정규식 체크', async () => {
+    const { nickname } = rendering();
+    const nicknameRegex = /^[ㄱ-힣a-zA-Z0-9-*~^_]{2,12}$/i;
+
+    await userEvent.type(nickname, '도비');
+    expect(nickname.value).toMatch(nicknameRegex);
+  });
+
+  test('가입하기 버튼 활성화 및 버튼을 클릭하면 회원가입 진행', async () => {
+    server.use(rest.post('api/members/new/auth', resolver));
+    const { nickname, signUpButton } = rendering();
 
     await userEvent.type(nickname, '도비');
     await waitFor(() => {

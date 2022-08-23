@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { isError, SignUpFormState } from '@/stores/signUp';
-import { postSignUpData, GeneralNewMemberTypes, MemeberResponseTypes } from '@/api/signUp';
+import { postSignUpData, GeneralNewMemberTypes } from '@/api/signUp';
 
 import * as S from '@/components/Organisms/CommonSignUpForm/index.styles';
 import Button from '@/components/Atoms/Button';
