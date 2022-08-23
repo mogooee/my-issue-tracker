@@ -102,6 +102,28 @@ describe('일반 가입 컴포넌트 테스트', () => {
     expect(nickname.value).toMatch(nicknameRegex);
   });
 
+  test('아이디, 이메일, 닉네임 중복확인', async () => {
+    const { id, email, nickname } = rendering();
+    server.use(rest.get('api/members/signin-id/:id/exists', duplicateResolver));
+    server.use(rest.get('api/members/nickname/:nickname/exists', duplicateResolver));
+    server.use(rest.get('api/members/email/:email/exists', duplicateResolver));
+
+    await userEvent.type(id, 'dobby123');
+    await userEvent.tab();
+    expect(id).not.toHaveFocus();
+    await waitFor(() => expect(duplicateResolver).toBeCalledTimes(1));
+
+    await userEvent.type(email, 'dobby123@gmail.com');
+    await userEvent.tab();
+    expect(email).not.toHaveFocus();
+    await waitFor(() => expect(duplicateResolver).toBeCalledTimes(2));
+
+    await userEvent.type(nickname, '도비');
+    await userEvent.tab();
+    expect(nickname).not.toHaveFocus();
+    await waitFor(() => expect(duplicateResolver).toBeCalledTimes(3));
+  });
+
   test('가입하기 버튼 활성화 및 버튼을 클릭하면 회원가입 진행', async () => {
     jest.useFakeTimers();
     server.use(rest.post('api/members/new/general', resolver));

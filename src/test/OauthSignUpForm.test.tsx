@@ -60,6 +60,17 @@ describe('OAuth가입 컴포넌트 테스트', () => {
     expect(nickname.value).toMatch(nicknameRegex);
   });
 
+  test('닉네임 중복확인', async () => {
+    const { nickname } = rendering();
+    server.use(rest.get('api/members/nickname/:nickname/exists', duplicateResolver));
+
+    await userEvent.type(nickname, '도비123');
+    await userEvent.tab();
+    expect(nickname).not.toHaveFocus();
+
+    await waitFor(() => expect(duplicateResolver).toBeCalledTimes(1));
+  });
+
   test('가입하기 버튼 활성화 및 버튼을 클릭하면 회원가입 진행', async () => {
     server.use(rest.post('api/members/new/auth', resolver));
     const { nickname, signUpButton } = rendering();
