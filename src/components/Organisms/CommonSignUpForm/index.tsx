@@ -1,8 +1,6 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { isError, SignUpFormState } from '@/stores/signUp';
-
 import { postSignUpData, GeneralNewMemberTypes } from '@/api/signUp';
 
 import * as S from '@/components/Organisms/CommonSignUpForm/index.styles';
@@ -26,7 +24,7 @@ const CommonSignUpForm = ({ FORM_INFO }: { FORM_INFO: FormInfoTypes[] }) => {
   const { id, password, email, nickname } = signUpFormValue;
 
   const formData: GeneralNewMemberTypes = {
-    loginId: id,
+    signInId: id,
     password,
     email,
     nickname,
@@ -46,7 +44,7 @@ const CommonSignUpForm = ({ FORM_INFO }: { FORM_INFO: FormInfoTypes[] }) => {
 
   const disabled = isError() || isBlank();
 
-  const clickHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const signUp = async () => {
     await postSignUpData({ formData, type: 'general' });
     setModalState(true);
   };
@@ -57,7 +55,7 @@ const CommonSignUpForm = ({ FORM_INFO }: { FORM_INFO: FormInfoTypes[] }) => {
       {FORM_INFO.map(({ ...props }) => (
         <SignUpInput key={props.id} {...props} />
       ))}
-      <Button buttonStyle="STANDARD" label="회원가입" size="LARGE" disabled={disabled} handleOnClick={clickHandler} />
+      <Button buttonStyle="STANDARD" label="회원가입" size="LARGE" disabled={disabled} handleOnClick={signUp} />
     </S.CommonSignUpForm>
   );
 };

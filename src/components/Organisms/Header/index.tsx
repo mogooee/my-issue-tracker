@@ -1,16 +1,29 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useLogout from '@/hooks/useLogout';
+
+import * as S from '@/components/Organisms/Header/index.styles';
 import Icon from '@/components/Atoms/Icon';
 import Logo from '@/components/Atoms/Logo';
 import UserImage, { UserImageTypes } from '@/components/Atoms/UserImage';
-import * as S from '@/components/Organisms/Header/index.styles';
-import { useState } from 'react';
+import { MemeberResponseTypes } from '@/api/signUp';
 
 interface HeaderTypes {
-  user: UserImageTypes;
+  user: MemeberResponseTypes;
 }
 
 const Header = ({ user }: HeaderTypes) => {
   const { id, nickname, profileImage } = user;
+
+  const navigate = useNavigate();
+  const { setLogout } = useLogout();
+
   const [clickTab, setclickTab] = useState<boolean>(false);
+
+  const handleClickLogoutButton = async () => {
+    await setLogout();
+    navigate('/login');
+  };
 
   return (
     <S.Header>
@@ -19,7 +32,9 @@ const Header = ({ user }: HeaderTypes) => {
         <Icon icon="Menu" />
         <UserImage id={id} nickname={nickname} profileImage={profileImage} imgSize="MEDIUM" />
       </S.UserTab>
-      <S.LogoutButton clickTab={clickTab}>로그아웃</S.LogoutButton>
+      <S.LogoutButton clickTab={clickTab} onClick={handleClickLogoutButton}>
+        로그아웃
+      </S.LogoutButton>
     </S.Header>
   );
 };

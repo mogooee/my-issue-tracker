@@ -39,7 +39,7 @@ const IssueItem = ({ issueInfo }: IssueItemTypes) => {
             {title}
           </Link>
           {labels.map(({ backgroundColor, title: labelTitle }) => (
-            <Label key={title} backgroundColor={backgroundColor} title={labelTitle} />
+            <Label key={labelTitle} backgroundColor={backgroundColor} title={labelTitle} />
           ))}
         </S.IssueTitle>
         <S.IssueContent>
@@ -55,7 +55,7 @@ const IssueItem = ({ issueInfo }: IssueItemTypes) => {
       </S.StyledIssue>
       <S.Assignee>
         {assignees.map(({ id: assigneeId, nickname, profileImage }) => (
-          <UserImage key={id} id={assigneeId} nickname={nickname} imgSize="SMALL" profileImage={profileImage} />
+          <UserImage key={assigneeId} id={assigneeId} nickname={nickname} imgSize="SMALL" profileImage={profileImage} />
         ))}
       </S.Assignee>
     </S.StyledIssueItem>

@@ -15,7 +15,7 @@ export interface NavLinkTypes {
 const NavLink = ({ navData, navLinkStyle = 'NORMAL' }: NavLinkTypes) => (
   <S.StyledNavLinks navLinkStyle={navLinkStyle}>
     {navData.map(({ icon, title, link }) => (
-      <S.StyledNavLink key={title} to={link} navLinkStyle={navLinkStyle}>
+      <S.StyledNavLink key={title} to={link}>
         {icon}
         <span>{title}</span>
       </S.StyledNavLink>

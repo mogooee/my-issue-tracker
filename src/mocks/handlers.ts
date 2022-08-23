@@ -7,7 +7,7 @@ const userTable: SignInMemberTypes[] = [
     id: 123456789,
     email: 'dobby@gmail.com',
     nickname: '도비',
-    profileImage: 'string',
+    profileImage: 'https://avatars.githubusercontent.com/u/85747667?s=96&v=4',
   },
 ];
 
@@ -17,7 +17,7 @@ const message = {
 
 export const handlers = [
   // silent-refresh
-  rest.get('api/silent-refresh', (req, res, ctx) => {
+  rest.get('api/auth/reissue', (req, res, ctx) => {
     const response = {
       accessToken: 'access123',
     };
@@ -26,39 +26,41 @@ export const handlers = [
   }),
 
   // 로그인 검사 테스트용 API
-  rest.get('api/auth/test?memberId', (req, res, ctx) => {
-    const id = req.url.searchParams.get('memberId');
-
-    return res(ctx.status(200), ctx.json(id));
-  }),
+  rest.get('api/auth/test', (req, res, ctx) => res(ctx.status(200))),
 
   // 유저 정보 요청 API
-  rest.get('api/auth/userinfo', (req, res, ctx) => {
+  rest.get('api/members/info', (req, res, ctx) => {
     const userInfo = {
       id: '123456789',
       email: 'dobby@gmail.com',
       nickname: '도비',
-      profileImage: 'string',
+      profileImage: 'https://avatars.githubusercontent.com/u/85747667?s=96&v=4',
     };
     return res(ctx.status(200), ctx.json(userInfo));
   }),
 
   // 유저 정보
-  rest.get('api/auth/:provider?code', (req, res, ctx) => {
+  rest.get('api/auth/:provider', (req, res, ctx) => {
     const { provider } = req.params;
-    // const code = req.url.searchParams.get('code');
 
     // 사이트에 유저정보를 요청하면 OAuth 정보 - 깃허브에서 오는 정보 (signUpData)
     const OAuthInfo = {
       id: 'dobby',
       email: 'dobby@gmail.com',
       nickname: '도비',
-      profileImage: 'string',
+      profileImage: 'https://avatars.githubusercontent.com/u/85747667?s=96&v=4',
     };
 
     const response: RedirectAuthTypes = {
-      signUpFormData: null,
+      signUpFormData: {
+        resourceOwnerId: 'string',
+        email: 'hoo@gmail.com',
+        profileImage: 'string',
+      },
       signInMember: null,
+      accessToken: {
+        token: 'token',
+      },
     };
 
     if (provider === 'github' || provider === 'naver' || provider === 'kakao') {
@@ -83,9 +85,9 @@ export const handlers = [
   // 일반 회원 가입
   rest.post('api/members/new/general', async (req, res, ctx) => {
     const newMember = await req.json();
-    const { loginId, password, email, nickname } = newMember;
+    const { signInId, password, email, nickname } = newMember;
 
-    if (!loginId || !password || !email || !nickname) {
+    if (!signInId || !password || !email || !nickname) {
       return res(ctx.status(400), ctx.json('필수 입력값을 입력해주세요'));
     }
 
@@ -124,7 +126,7 @@ export const handlers = [
   }),
 
   // 유저 아이디 중복 검사
-  rest.get('api/members/login-id/:id/exists', (req, res, ctx) => {
+  rest.get('api/members/signin-id/:id/exists', (req, res, ctx) => {
     const { id } = req.params;
 
     // dobby123라는 유저가 이미 있는 경우
@@ -158,4 +160,7 @@ export const handlers = [
 
     return res(ctx.status(200), ctx.json(false));
   }),
+
+  // 로그아웃
+  rest.head('api/members/signout', (req, res, ctx) => res(ctx.status(200))),
 ];
