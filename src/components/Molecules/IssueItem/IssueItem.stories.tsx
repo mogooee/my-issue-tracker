@@ -16,7 +16,7 @@ Initial.args = {
   issueInfo: {
     id: 1,
     title: '이슈 제목',
-    labels: [{ title: 'documentation', backgroundColor: DEFAULT_COLORS }],
+    labels: [{ title: 'documentation', backgroundColor: DEFAULT_COLORS, textColor: 'BLACK' }],
     writer: {
       id: 1,
       nickname: 'dotori',
