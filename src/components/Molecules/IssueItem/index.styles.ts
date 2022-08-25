@@ -40,3 +40,14 @@ export const Assignee = styled.div`
     margin-left: -10px;
   }
 `;
+
+export const Template = styled.div<{ templateColumns: string }>`
+  display: grid;
+  align-items: center;
+  padding: 18px 32px;
+  grid-template-columns: ${({ templateColumns }) => templateColumns};
+
+  .checkbox {
+    margin-top: -35px;
+  }
+`;
