@@ -57,6 +57,10 @@ const LabelItem = styled.div<{ templateColumns: string }>`
 `;
 
 const StyledLabelList = styled.div<{ isAddButtonClicked: boolean; editLabelId: number | null }>`
+  ${StyledAddLabelFeild.AddLabelField} {
+    ${({ editLabelId }) => editLabelId && 'border: none'}
+  }
+
   & > ${StyledAddLabelFeild.AddLabelField} {
     ${({ isAddButtonClicked }) => isAddButtonClicked && 'margin-bottom: 24px;'}
     border:1px solid ${({ theme }) => theme.COLORS.LINE};
@@ -77,6 +81,7 @@ const LabelList = () => {
   const LoginUserInfoStateValue = useRecoilValue(LoginUserInfoState);
   const [labelNum, milestoneNum] = [labelContents.length, 3];
   const [isAddButtonClicked, setIsAddButtonClicked] = useState<boolean>(false);
+  const [editLabelId, setEditLabelId] = useState<number | null>(null);
 
   return (
     <StyledLabelList isAddButtonClicked={isAddButtonClicked} editLabelId={editLabelId}>
@@ -95,17 +100,17 @@ const LabelList = () => {
             handleOnClick={() => setIsAddButtonClicked(false)}
           />
         ) : (
-        <Button
-          buttonStyle="STANDARD"
-          iconInfo={{
-            icon: 'Plus',
-            fill: '#FEFEFE',
-            stroke: '#FEFEFE',
-          }}
-          label="추가"
-          size="SMALL"
+          <Button
+            buttonStyle="STANDARD"
+            iconInfo={{
+              icon: 'Plus',
+              fill: '#FEFEFE',
+              stroke: '#FEFEFE',
+            }}
+            label="추가"
+            size="SMALL"
             handleOnClick={() => setIsAddButtonClicked(true)}
-        />
+          />
         )}
       </SubNav>
       {isAddButtonClicked && <AddLabelField type="NEW" />}
@@ -113,29 +118,44 @@ const LabelList = () => {
         header={<span>{`${labelNum}개의 레이블`}</span>}
         headerTemplateColumns={HEADER_COLUMNS}
         item={labelContents.map(({ id, title, backgroundColorCode, description, textColor }) => (
-          <TableItem key={id} templateColumns={ITEM_COLUMNS}>
-            <Label title={title} backgroundColor={backgroundColorCode} textColor={textColor} />
-            <Description>{description}</Description>
-            <EditButton>
-              <Button
-                buttonStyle="NO_BORDER"
-                iconInfo={{
-                  icon: 'Edit',
-                  stroke: COLORS.LABEL,
-                }}
-                label="편집"
-                size="SMALL"
+          <TableItem key={id}>
+            {editLabelId === id ? (
+              <AddLabelField
+                type="EDIT"
+                title={title}
+                description={description}
+                textColor={textColor}
+                backgroundColor={backgroundColorCode}
+                onClickCancleButton={() => setEditLabelId(null)}
+                onClickCompleteButton={() => setEditLabelId(id)}
               />
-              <Button
-                buttonStyle="NO_BORDER"
-                iconInfo={{
-                  icon: 'Trash',
-                  stroke: COLORS.ERROR.RED,
-                }}
-                label="삭제"
-                size="SMALL"
-              />
-            </EditButton>
+            ) : (
+              <LabelItem templateColumns={ITEM_COLUMNS}>
+                <Label title={title} backgroundColor={backgroundColorCode} textColor={textColor} />
+                <Description>{description}</Description>
+                <EditButton>
+                  <Button
+                    buttonStyle="NO_BORDER"
+                    iconInfo={{
+                      icon: 'Edit',
+                      stroke: COLORS.LABEL,
+                    }}
+                    label="편집"
+                    size="SMALL"
+                    handleOnClick={() => setEditLabelId(id)}
+                  />
+                  <Button
+                    buttonStyle="NO_BORDER"
+                    iconInfo={{
+                      icon: 'Trash',
+                      stroke: COLORS.ERROR.RED,
+                    }}
+                    label="삭제"
+                    size="SMALL"
+                  />
+                </EditButton>
+              </LabelItem>
+            )}
           </TableItem>
         ))}
       />

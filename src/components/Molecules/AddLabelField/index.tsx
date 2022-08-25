@@ -12,26 +12,45 @@ import * as S from '@/components/Molecules/AddLabelField/index.styled';
 
 interface LabelAddFormTypes {
   type: 'NEW' | 'EDIT';
+  title?: string;
+  description?: string;
+  textColor?: 'WHITE' | 'BLACK';
+  backgroundColor?: string;
+  onClickCancleButton?: () => void;
+  onClickCompleteButton?: () => void;
 }
 
 const [MAX_TITLE_LENTH, MAX_DESCRIPTION_LENGTH, MAX_COLORCODE_LENGTH] = [30, 100, 7];
 
-const AddLabelField = ({ type }: LabelAddFormTypes) => {
-  const title = type === 'NEW' ? '새로운 레이블 추가' : '레이블 편집';
+const AddLabelField = ({
+  type,
+  title,
+  description,
+  backgroundColor,
+  textColor,
+  onClickCancleButton,
+  onClickCompleteButton,
+}: LabelAddFormTypes) => {
+  const formTitle = type === 'NEW' ? '새로운 레이블 추가' : '레이블 편집';
   const { isTyping: IsTitleTyping, onChangeInput: onChangeTitleInput } = useInput();
   const { isTyping: IsDescriptionTyping, onChangeInput: onChangeDescriptionInput } = useInput();
 
   return (
     <S.AddLabelField>
-      <S.Title>{title}</S.Title>
+      <S.Title>{formTitle}</S.Title>
       <S.EditField>
-        <Label backgroundColor={COLORS.INPUT_BACKGROUND} textColor="BLACK" title="레이블" />
+        <Label
+          backgroundColor={`${backgroundColor || COLORS.INPUT_BACKGROUND}`}
+          textColor={`${textColor || 'BLACK'}`}
+          title={`${title || '레이블'}`}
+        />
         <S.EditForm>
           <Input
             inputMaxLength={MAX_TITLE_LENTH}
             inputPlaceholder="레이블 이름"
             inputSize="SMALL"
             inputType="text"
+            inputValue={title}
             onChange={onChangeTitleInput}
             isTyping={IsTitleTyping}
           />
@@ -40,16 +59,13 @@ const AddLabelField = ({ type }: LabelAddFormTypes) => {
             inputPlaceholder="설명(선택)"
             inputSize="SMALL"
             inputType="text"
+            inputValue={description}
             onChange={onChangeDescriptionInput}
             isTyping={IsDescriptionTyping}
           />
           <S.BackgroundColor>
             <label>배경 색상</label>
-            <input
-              type="text"
-              defaultValue={`${type === 'NEW' ? '#EFF0F6' : 'none'}`}
-              maxLength={MAX_COLORCODE_LENGTH}
-            />
+            <input type="text" defaultValue={`${backgroundColor || '#EFF0F6'}`} maxLength={MAX_COLORCODE_LENGTH} />
             <Icon icon="RefreshCcw" stroke="#14142B" />
           </S.BackgroundColor>
           <S.TextColor>
@@ -58,8 +74,8 @@ const AddLabelField = ({ type }: LabelAddFormTypes) => {
               radioData={{
                 title: '텍스트 색상',
                 option: [
-                  { id: 1, title: '어두운 색', isChecked: true },
-                  { id: 2, title: '밝은 색' },
+                  { id: 1, title: '어두운 색', isChecked: !textColor || textColor === 'BLACK' },
+                  { id: 2, title: '밝은 색', isChecked: textColor === 'WHITE' },
                 ],
               }}
             />
@@ -76,6 +92,7 @@ const AddLabelField = ({ type }: LabelAddFormTypes) => {
             }}
             label="취소"
             size="SMALL"
+            handleOnClick={onClickCancleButton}
           />
         )}
         <Button
@@ -87,6 +104,7 @@ const AddLabelField = ({ type }: LabelAddFormTypes) => {
           }}
           label="완료"
           size="SMALL"
+          handleOnClick={onClickCompleteButton}
         />
       </S.EditButton>
     </S.AddLabelField>
