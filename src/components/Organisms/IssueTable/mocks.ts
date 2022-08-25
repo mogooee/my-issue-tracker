@@ -1,12 +1,13 @@
+import { IssueInfoTypes } from '@/components/Molecules/IssueItem';
 import { COLORS } from '@/styles/theme';
 
 const DEFAULT_COLORS = COLORS.PRIMARY.BLUE;
 
-export const issueListData = [
+export const issueListData: IssueInfoTypes[] = [
   {
     id: 0,
     title: '이슈 제목',
-    labels: [{ title: 'documentation', backgroundColor: DEFAULT_COLORS }],
+    labels: [{ title: 'documentation', backgroundColor: DEFAULT_COLORS, textColor: 'WHITE' }],
     writer: {
       id: 1,
       nickname: 'dotori',
@@ -40,7 +41,7 @@ export const issueListData = [
   {
     id: 1,
     title: '이슈 제목',
-    labels: [{ title: 'documentation', backgroundColor: DEFAULT_COLORS }],
+    labels: [{ title: 'documentation', backgroundColor: DEFAULT_COLORS, textColor: 'WHITE' }],
     writer: {
       id: 1,
       nickname: 'dotori',

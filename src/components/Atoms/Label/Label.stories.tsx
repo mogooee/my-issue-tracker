@@ -13,13 +13,14 @@ export const Initial = Template.bind({});
 Initial.args = {
   title: '레이블',
   labelStyle: 'LIGHT',
+  textColor: 'BLACK',
 };
 
 export const Light = Template.bind({});
 Light.args = {
-  title: '레이블',
-  labelStyle: 'LIGHT',
+  ...Initial.args,
   backgroundColor: '#F85149',
+  textColor: 'BLACK',
 };
 
 export const Dark = Template.bind({});
@@ -27,12 +28,13 @@ Dark.args = {
   title: '레이블',
   labelStyle: 'DARK',
   backgroundColor: '#F85149',
+  textColor: 'WHITE',
 };
 
-export const withIcon = Template.bind({
+export const WithIcon = Template.bind({
   backgrounds: 'black',
 });
-withIcon.args = {
+WithIcon.args = {
   ...Initial.args,
   icon: <Icon icon="Smile" stroke="#fff" />,
 };

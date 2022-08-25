@@ -41,7 +41,8 @@ export const StyledNavLink = styled(NavLink)`
   }
 
   &.active {
-    color: black;
+    color: ${({ theme }) => theme.COLORS.BODY};
+    background: ${({ theme }) => theme.COLORS.LINE};
     path {
       stroke: ${({ theme }) => theme.COLORS.TITLE_ACVITE};
     }

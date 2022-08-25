@@ -7,15 +7,16 @@ export interface LabelTypes {
   icon?: React.ReactNode;
   labelStyle?: 'LIGHT' | 'DARK';
   backgroundColor: string;
+  textColor: 'WHITE' | 'BLACK';
 }
 
 const DEFAULT_COLORS = COLORS.PRIMARY.BLUE;
 
 const Label = ({ labelStyle = 'LIGHT', backgroundColor = DEFAULT_COLORS, ...props }: LabelTypes) => {
-  const { title, icon } = props;
+  const { title, icon, textColor } = props;
 
   return (
-    <S.Label labelStyle={labelStyle} backgroundColor={backgroundColor}>
+    <S.Label labelStyle={labelStyle} backgroundColor={backgroundColor} textColor={textColor}>
       {icon}
       <span>{title}</span>
     </S.Label>
