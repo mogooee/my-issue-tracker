@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 import CheckBox from '@/components/Atoms/CheckBox';
-import Icon from '@/components/Atoms/Icon';
 import NavLink from '@/components/Molecules/NavLink';
 import IssueItem, { IssueInfoTypes } from '@/components/Molecules/IssueItem';
 import Dropdown from '@/components/Molecules/Dropdown';
@@ -13,24 +12,12 @@ import * as S from '@/components/Organisms/IssueTable/index.styles';
 import { DropdownTypes } from '@/components/Molecules/Dropdown/types';
 import { OPEN_CLOSE_DROPDOWN_ARGS } from '@/components/Molecules/Dropdown/mocks';
 import Table from '@/components/Molecules/Table';
+import { openCloseIssue } from '@/components/Molecules/NavLink/option';
 
 interface IssueTableTypes {
   issueListData: IssueInfoTypes[];
   filterTabs: DropdownTypes[];
 }
-
-const openCloseIssue = (openIssueNum: number, closeIssueNum: number) => [
-  {
-    icon: <Icon icon="AlertCircle" stroke="#007AFF" />,
-    title: `열린 이슈 (${openIssueNum})`,
-    link: '/issues/open',
-  },
-  {
-    icon: <Icon icon="Archive" stroke="#0025E7" />,
-    title: `닫힌 이슈 (${closeIssueNum})`,
-    link: '/issues/close',
-  },
-];
 
 const HEADER_COLUMNS = '60px 500px auto';
 
