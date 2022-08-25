@@ -1,4 +1,5 @@
 import { useRecoilValue } from 'recoil';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { COLORS } from '@/styles/theme';
 
@@ -8,11 +9,14 @@ import Table from '@/components/Molecules/Table';
 import TableItem from '@/components/Molecules/Table/TableItem';
 import NavLink from '@/components/Molecules/NavLink';
 import Header from '@/components/Organisms/Header';
+import AddLabelField from '@/components/Molecules/AddLabelField';
 
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
 
 import { labelMilestone } from '@/components/Molecules/NavLink/option';
 import { labelContents } from '@/components/Molecules/Table/mock';
+
+import * as StyledAddLabelFeild from '@/components/Molecules/AddLabelField/index.styled';
 
 const SubNav = styled.div`
   display: flex;
@@ -45,6 +49,20 @@ export const EditButton = styled.div`
   }
 `;
 
+const LabelItem = styled.div<{ templateColumns: string }>`
+  display: grid;
+  grid-template-columns: ${({ templateColumns }) => templateColumns};
+  align-items: center;
+  padding: 36px 32px;
+`;
+
+const StyledLabelList = styled.div<{ isAddButtonClicked: boolean; editLabelId: number | null }>`
+  & > ${StyledAddLabelFeild.AddLabelField} {
+    ${({ isAddButtonClicked }) => isAddButtonClicked && 'margin-bottom: 24px;'}
+    border:1px solid ${({ theme }) => theme.COLORS.LINE};
+  }
+`;
+
 export interface LabelContentsTypes {
   id: number;
   title: string;
@@ -58,12 +76,25 @@ const [HEADER_COLUMNS, ITEM_COLUMNS] = ['120px', '240px auto 240px'];
 const LabelList = () => {
   const LoginUserInfoStateValue = useRecoilValue(LoginUserInfoState);
   const [labelNum, milestoneNum] = [labelContents.length, 3];
+  const [isAddButtonClicked, setIsAddButtonClicked] = useState<boolean>(false);
 
   return (
-    <div>
+    <StyledLabelList isAddButtonClicked={isAddButtonClicked} editLabelId={editLabelId}>
       <Header user={LoginUserInfoStateValue} />
       <SubNav>
         <NavLink navData={labelMilestone(labelNum, milestoneNum)} navLinkStyle="LINE" />
+        {isAddButtonClicked ? (
+          <Button
+            buttonStyle="SECONDARY"
+            iconInfo={{
+              icon: 'XSquare',
+              stroke: COLORS.LABEL,
+            }}
+            label="닫기"
+            size="SMALL"
+            handleOnClick={() => setIsAddButtonClicked(false)}
+          />
+        ) : (
         <Button
           buttonStyle="STANDARD"
           iconInfo={{
@@ -73,8 +104,11 @@ const LabelList = () => {
           }}
           label="추가"
           size="SMALL"
+            handleOnClick={() => setIsAddButtonClicked(true)}
         />
+        )}
       </SubNav>
+      {isAddButtonClicked && <AddLabelField type="NEW" />}
       <Table
         header={<span>{`${labelNum}개의 레이블`}</span>}
         headerTemplateColumns={HEADER_COLUMNS}
@@ -105,7 +139,7 @@ const LabelList = () => {
           </TableItem>
         ))}
       />
-    </div>
+    </StyledLabelList>
   );
 };
 
