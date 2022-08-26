@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import styled from 'styled-components';
 import { COLORS } from '@/styles/theme';
@@ -33,7 +33,7 @@ const StyledLabelList = styled.div`
 `;
 
 const LabelList = () => {
-  const [labelNum, milestoneNum] = [labelContents.length, 3];
+  const { data: labelData } = useQuery<LabelContentsTypes[]>(['labels'], getLabelData);
   const LoginUserInfoStateValue = useRecoilValue(LoginUserInfoState);
   const setLabelListState = useSetRecoilState(LabelListState);
   const [labelEditState, setLabelEditState] = useRecoilState(LabelEditState);
