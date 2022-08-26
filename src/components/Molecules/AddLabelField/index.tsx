@@ -47,6 +47,11 @@ const AddLabelField = ({ type, onClickCancleButton, onClickCompleteButton }: Lab
     setLabelListState((prev) => ({ ...prev, description: value }));
   };
 
+  const hanldeRadioChange = (text: string) => {
+    const newTextColor = text === '어두운 색' ? 'BLACK' : 'WHITE';
+    setLabelListState((prev) => ({ ...prev, textColor: newTextColor }));
+  };
+
   return (
     <S.AddLabelField>
       <S.Title>{formTitle}</S.Title>
@@ -86,6 +91,7 @@ const AddLabelField = ({ type, onClickCancleButton, onClickCompleteButton }: Lab
                   { id: 2, title: '밝은 색', isChecked: textColor === 'WHITE' },
                 ],
               }}
+              onChange={hanldeRadioChange}
             />
           </S.TextColor>
         </S.EditForm>
