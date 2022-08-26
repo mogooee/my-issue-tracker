@@ -22,18 +22,19 @@ interface LabelAddFormTypes {
   onClickCompleteButton?: () => void;
 }
 
-const [MAX_TITLE_LENTH, MAX_DESCRIPTION_LENGTH, MAX_COLORCODE_LENGTH] = [30, 100, 7];
+const [MAX_TITLE_LENTH, MAX_DESCRIPTION_LENGTH] = [30, 100];
 const DEBOUNCE_DELAY = 200;
 
 const AddLabelField = ({ type, onClickCancleButton, onClickCompleteButton }: LabelAddFormTypes) => {
-  const formTitle = type === 'ADD' ? '새로운 레이블 추가' : '레이블 편집';
   const { isTyping: IsTitleTyping, onChangeInput: onChangeTitleInput } = useInput();
   const { isTyping: IsDescriptionTyping, onChangeInput: onChangeDescriptionInput } = useInput();
   const [labelListState, setLabelListState] = useRecoilState(LabelListState);
-  const { id, title, backgroundColorCode, description, textColor } = labelListState;
 
   const titleTimerId = useRef(0);
   const descriptionTimerId = useRef(0);
+
+  const formTitle = type === 'ADD' ? '새로운 레이블 추가' : '레이블 편집';
+  const { title, backgroundColorCode, description, textColor } = labelListState;
 
   const handleTitleTyping = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;

@@ -1,3 +1,4 @@
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import styled from 'styled-components';
@@ -11,9 +12,9 @@ import Header from '@/components/Organisms/Header';
 import LabelTable from '@/components/Organisms/LabelTable';
 
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
-import { initLabelListState, LabelEditState, LabelListState } from '@/stores/labelList';
+import { LabelContentsTypes, LabelEditState, LabelListState } from '@/stores/labelList';
 import { labelMilestone } from '@/components/Molecules/NavLink/option';
-import { labelContents } from '@/components/Molecules/Table/mock';
+import { addNewLabel, getLabelData } from '@/api/labelList';
 
 const SubNav = styled.div`
   display: flex;
@@ -34,11 +35,16 @@ const StyledLabelList = styled.div`
 
 const LabelList = () => {
   const { data: labelData } = useQuery<LabelContentsTypes[]>(['labels'], getLabelData);
+
+  const [labelNum, milestoneNum] = [labelData!.length, 3];
+
   const queryClient = useQueryClient();
   const LoginUserInfoStateValue = useRecoilValue(LoginUserInfoState);
-  const setLabelListState = useSetRecoilState(LabelListState);
+  const labelListState = useRecoilValue(LabelListState);
   const [labelEditState, setLabelEditState] = useRecoilState(LabelEditState);
 
+  const resetLabelListState = useResetRecoilState(LabelListState);
+  const resetLabelEditState = useResetRecoilState(LabelEditState);
 
   const { mutate: addLabelMutate } = useMutation(addNewLabel, {
     onSuccess: () => {
@@ -46,6 +52,19 @@ const LabelList = () => {
     },
   });
 
+  const initLabelEditState = () => {
+    resetLabelEditState();
+    resetLabelListState();
+  };
+
+  const handleCloseButtonClick = () => {
+    initLabelEditState();
+  };
+
+  const handleAddButtonClick = () => {
+    setLabelEditState({ type: 'ADD' });
+    resetLabelListState();
+  };
 
   const handleCompleteButtonClick = () => {
     addLabelMutate(labelListState);
@@ -65,10 +84,7 @@ const LabelList = () => {
             }}
             label="닫기"
             size="SMALL"
-            handleOnClick={() => {
-              setLabelEditState({ type: null });
-              setLabelListState(initLabelListState);
-            }}
+            handleOnClick={handleCloseButtonClick}
           />
         ) : (
           <Button
@@ -84,8 +100,8 @@ const LabelList = () => {
           />
         )}
       </SubNav>
-      {labelEditState.type === 'ADD' && <AddLabelField type="ADD" />}
-      <LabelTable labelContents={labelContents} />
+      {labelEditState.type === 'ADD' && <AddLabelField type="ADD" onClickCompleteButton={handleCompleteButtonClick} />}
+      <LabelTable labelContents={labelData!} />
     </StyledLabelList>
   );
 };

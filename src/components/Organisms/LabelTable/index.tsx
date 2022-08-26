@@ -1,6 +1,6 @@
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState } from 'recoil';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import styled from 'styled-components';
 import { COLORS } from '@/styles/theme';
 import * as S from '@/components/Organisms/LabelTable/index.styled';
 
@@ -10,35 +10,9 @@ import Table from '@/components/Molecules/Table';
 import TableItem from '@/components/Molecules/Table/TableItem';
 import AddLabelField from '@/components/Molecules/AddLabelField';
 
-import { initLabelListState, LabelContentsTypes, LabelEditState, LabelListState } from '@/stores/labelList';
+import { LabelContentsTypes, LabelEditState, LabelListState } from '@/stores/labelList';
 
-const LabelItem = styled.div<{ templateColumns: string }>`
-  display: grid;
-  grid-template-columns: ${({ templateColumns }) => templateColumns};
-  align-items: center;
-  padding: 36px 32px;
-`;
-
-export const Description = styled.span`
-  width: 800px;
-`;
-
-export const EditButton = styled.div`
-  ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'center' })};
-
-  button {
-    &:first-child {
-      color: ${({ theme }) => theme.COLORS.LABEL};
-    }
-    &:nth-child(2) {
-      color: ${({ theme }) => theme.COLORS.ERROR.RED};
-    }
-  }
-
-  button + button {
-    margin-left: 24px;
-  }
-`;
+import { deleteLabel, replaceLabel } from '@/api/labelList';
 
 const [HEADER_COLUMNS, ITEM_COLUMNS] = ['120px', '240px auto 240px'];
 
@@ -53,6 +27,8 @@ const LabelTable = ({ labelContents }: LabelTableTypes) => {
   const [labelListState, setLabelListState] = useRecoilState(LabelListState);
   const [labelEditState, setLabelEditState] = useRecoilState(LabelEditState);
 
+  const resetLabelListState = useResetRecoilState(LabelListState);
+  const resetLabelEditState = useResetRecoilState(LabelEditState);
 
   const { mutate: replaceLabelMutate } = useMutation(replaceLabel, {
     onSuccess: () => {
@@ -65,6 +41,16 @@ const LabelTable = ({ labelContents }: LabelTableTypes) => {
       queryClient.invalidateQueries(['labels']);
     },
   });
+
+  const initLabelEditState = () => {
+    resetLabelEditState();
+    resetLabelListState();
+  };
+
+  const handleEditButtonClick = (props: LabelContentsTypes) => {
+    setLabelEditState({ type: 'EDIT' });
+    setLabelListState(props);
+  };
 
   const handleCompleteButtonClick = (id: number) => {
     replaceLabelMutate({ id, replacedLabel: labelListState });
@@ -84,6 +70,7 @@ const LabelTable = ({ labelContents }: LabelTableTypes) => {
             {labelEditState.type === 'EDIT' && labelListState.id === id ? (
               <AddLabelField
                 type="EDIT"
+                onClickCancleButton={initLabelEditState}
                 onClickCompleteButton={() => handleCompleteButtonClick(id)}
               />
             ) : (
@@ -99,16 +86,9 @@ const LabelTable = ({ labelContents }: LabelTableTypes) => {
                     }}
                     label="편집"
                     size="SMALL"
-                    handleOnClick={() => {
-                      setLabelEditState({ type: 'EDIT' });
-                      setLabelListState({
-                        id,
-                        title,
-                        backgroundColorCode: backgroundColorCode.toUpperCase(),
-                        description,
-                        textColor,
-                      });
-                    }}
+                    handleOnClick={() =>
+                      handleEditButtonClick({ id, title, backgroundColorCode, description, textColor })
+                    }
                   />
                   <Button
                     buttonStyle="NO_BORDER"
