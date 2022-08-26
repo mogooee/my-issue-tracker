@@ -38,3 +38,12 @@ export const replaceLabel = async ({ id, replacedLabel }: ReplaceLabelTypes): Pr
   }
 };
 
+export const deleteLabel = async (id: number): Promise<{ message: string }> => {
+  try {
+    const { data } = await axios.delete<{ message: string }>(`/server/api/labels/${id}`);
+    return data;
+  } catch (error) {
+    const err = error as AxiosError;
+    throw err;
+  }
+};

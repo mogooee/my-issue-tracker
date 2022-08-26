@@ -60,10 +60,19 @@ const LabelTable = ({ labelContents }: LabelTableTypes) => {
     },
   });
 
+  const { mutate: deleteLabelMutate } = useMutation(deleteLabel, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['labels']);
+    },
+  });
+
   const handleCompleteButtonClick = (id: number) => {
     replaceLabelMutate({ id, replacedLabel: labelListState });
   };
 
+  const handleDeleteButtonClick = (id: number) => {
+    deleteLabelMutate(id);
+  };
 
   return (
     <S.LabelTable>
@@ -109,6 +118,7 @@ const LabelTable = ({ labelContents }: LabelTableTypes) => {
                     }}
                     label="삭제"
                     size="SMALL"
+                    handleOnClick={() => handleDeleteButtonClick(id)}
                   />
                 </EditButton>
               </LabelItem>
