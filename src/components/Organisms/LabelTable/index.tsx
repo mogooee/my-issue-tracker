@@ -47,9 +47,23 @@ interface LabelTableTypes {
 }
 
 const LabelTable = ({ labelContents }: LabelTableTypes) => {
+  const labelNum = labelContents.length;
+
+  const queryClient = useQueryClient();
   const [labelListState, setLabelListState] = useRecoilState(LabelListState);
   const [labelEditState, setLabelEditState] = useRecoilState(LabelEditState);
-  const labelNum = labelContents.length;
+
+
+  const { mutate: replaceLabelMutate } = useMutation(replaceLabel, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['labels']);
+    },
+  });
+
+  const handleCompleteButtonClick = (id: number) => {
+    replaceLabelMutate({ id, replacedLabel: labelListState });
+  };
+
 
   return (
     <S.LabelTable>
@@ -61,11 +75,7 @@ const LabelTable = ({ labelContents }: LabelTableTypes) => {
             {labelEditState.type === 'EDIT' && labelListState.id === id ? (
               <AddLabelField
                 type="EDIT"
-                onClickCancleButton={() => {
-                  setLabelEditState({ type: null });
-                  setLabelListState(initLabelListState);
-                }}
-                onClickCompleteButton={async () => setLabelListState(initLabelListState)}
+                onClickCompleteButton={() => handleCompleteButtonClick(id)}
               />
             ) : (
               <LabelItem templateColumns={ITEM_COLUMNS}>

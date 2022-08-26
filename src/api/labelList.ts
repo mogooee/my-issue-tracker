@@ -21,3 +21,20 @@ export const addNewLabel = async (newLabel: LabelContentsTypes): Promise<LabelCo
   }
 };
 
+interface ReplaceLabelTypes {
+  id: number;
+  replacedLabel: LabelContentsTypes;
+}
+
+type ResponseReplaceLabel = ReplaceLabelTypes & { id: number };
+
+export const replaceLabel = async ({ id, replacedLabel }: ReplaceLabelTypes): Promise<ResponseReplaceLabel> => {
+  try {
+    const { data } = await axios.patch<ResponseReplaceLabel>(`/server/api/labels/${id}`, replacedLabel);
+    return data;
+  } catch (error) {
+    const err = error as AxiosError;
+    throw err;
+  }
+};
+
