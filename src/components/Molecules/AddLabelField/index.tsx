@@ -17,7 +17,7 @@ import useInput from '@/hooks/useInput';
 import debounce from '@/utils/debounce';
 
 interface LabelAddFormTypes {
-  type: 'NEW' | 'EDIT';
+  type: 'ADD' | 'EDIT';
   onClickCancleButton?: () => void;
   onClickCompleteButton?: () => void;
 }
@@ -26,7 +26,7 @@ const [MAX_TITLE_LENTH, MAX_DESCRIPTION_LENGTH, MAX_COLORCODE_LENGTH] = [30, 100
 const DEBOUNCE_DELAY = 200;
 
 const AddLabelField = ({ type, onClickCancleButton, onClickCompleteButton }: LabelAddFormTypes) => {
-  const formTitle = type === 'NEW' ? '새로운 레이블 추가' : '레이블 편집';
+  const formTitle = type === 'ADD' ? '새로운 레이블 추가' : '레이블 편집';
   const { isTyping: IsTitleTyping, onChangeInput: onChangeTitleInput } = useInput();
   const { isTyping: IsDescriptionTyping, onChangeInput: onChangeDescriptionInput } = useInput();
   const [labelListState, setLabelListState] = useRecoilState(LabelListState);

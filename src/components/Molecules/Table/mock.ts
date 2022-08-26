@@ -1,4 +1,4 @@
-import { LabelContentsTypes } from '@/pages/Private/LabelList';
+import { LabelContentsTypes } from '@/stores/labelList';
 
 export const labelContents: LabelContentsTypes[] = [
   {
