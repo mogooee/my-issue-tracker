@@ -27,6 +27,7 @@ export const EditField = styled.div`
 
   & > div:first-child {
     justify-self: center;
+    margin: 10px;
   }
 `;
 
