@@ -34,9 +34,22 @@ const StyledLabelList = styled.div`
 
 const LabelList = () => {
   const { data: labelData } = useQuery<LabelContentsTypes[]>(['labels'], getLabelData);
+  const queryClient = useQueryClient();
   const LoginUserInfoStateValue = useRecoilValue(LoginUserInfoState);
   const setLabelListState = useSetRecoilState(LabelListState);
   const [labelEditState, setLabelEditState] = useRecoilState(LabelEditState);
+
+
+  const { mutate: addLabelMutate } = useMutation(addNewLabel, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['labels']);
+    },
+  });
+
+
+  const handleCompleteButtonClick = () => {
+    addLabelMutate(labelListState);
+  };
 
   return (
     <StyledLabelList>
@@ -67,10 +80,7 @@ const LabelList = () => {
             }}
             label="추가"
             size="SMALL"
-            handleOnClick={() => {
-              setLabelEditState({ type: 'ADD' });
-              setLabelListState(initLabelListState);
-            }}
+            handleOnClick={handleAddButtonClick}
           />
         )}
       </SubNav>

@@ -10,3 +10,14 @@ export const getLabelData = async (): Promise<LabelContentsTypes[]> => {
     throw err;
   }
 };
+
+export const addNewLabel = async (newLabel: LabelContentsTypes): Promise<LabelContentsTypes> => {
+  try {
+    const { data } = await axios.post<LabelContentsTypes>('/server/api/labels', newLabel);
+    return data;
+  } catch (error) {
+    const err = error as AxiosError;
+    throw err;
+  }
+};
+
