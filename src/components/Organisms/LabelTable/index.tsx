@@ -74,10 +74,10 @@ const LabelTable = ({ labelContents }: LabelTableTypes) => {
                 onClickCompleteButton={() => handleCompleteButtonClick(id)}
               />
             ) : (
-              <LabelItem templateColumns={ITEM_COLUMNS}>
+              <S.LabelItem templateColumns={ITEM_COLUMNS}>
                 <Label title={title} backgroundColor={backgroundColorCode} textColor={textColor} />
-                <Description>{description}</Description>
-                <EditButton>
+                <S.Description>{description}</S.Description>
+                <S.EditButton>
                   <Button
                     buttonStyle="NO_BORDER"
                     iconInfo={{
@@ -100,8 +100,8 @@ const LabelTable = ({ labelContents }: LabelTableTypes) => {
                     size="SMALL"
                     handleOnClick={() => handleDeleteButtonClick(id)}
                   />
-                </EditButton>
-              </LabelItem>
+                </S.EditButton>
+              </S.LabelItem>
             )}
           </TableItem>
         ))}
