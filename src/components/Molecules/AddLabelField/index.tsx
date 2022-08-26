@@ -52,6 +52,8 @@ const AddLabelField = ({ type, onClickCancleButton, onClickCompleteButton }: Lab
     setLabelListState((prev) => ({ ...prev, textColor: newTextColor }));
   };
 
+  const isCompleteButtonActivated = labelListState.title && labelListState.description;
+
   return (
     <S.AddLabelField>
       <S.Title>{formTitle}</S.Title>
@@ -119,6 +121,7 @@ const AddLabelField = ({ type, onClickCancleButton, onClickCompleteButton }: Lab
           label="완료"
           size="SMALL"
           handleOnClick={onClickCompleteButton}
+          disabled={!isCompleteButtonActivated}
         />
       </S.EditButton>
     </S.AddLabelField>
