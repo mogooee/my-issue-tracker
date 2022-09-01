@@ -10,52 +10,48 @@ import Table from '@/components/Molecules/Table';
 import TableItem from '@/components/Molecules/Table/TableItem';
 import AddLabelField from '@/components/Molecules/AddLabelField';
 
-import { LabelContentsTypes, LabelEditState, LabelListState } from '@/stores/labelList';
+import { LabelContentsTypes, LabelEditState, LabelState } from '@/stores/labelList';
 
-import { useNavigate } from 'react-router-dom';
+import useLabelFetch from '@/hooks/useLabelFetch';
 
 const [HEADER_COLUMNS, ITEM_COLUMNS] = ['120px', '240px auto 240px'];
 
-interface LabelTableTypes {
-  labelContents: LabelContentsTypes[];
-}
+const LabelTable = () => {
+  const { getLabel, replaceLabel, deleteLabel } = useLabelFetch();
 
-const LabelTable = ({ labelContents }: LabelTableTypes) => {
-  const labelNum = labelContents.length;
+  const { data: labelContents } = getLabel();
+
+  const labelNum = labelContents!.length;
 
   const navigate = useNavigate();
+  const [labelState, setLabelState] = useRecoilState(LabelState);
   const [labelEditState, setLabelEditState] = useRecoilState(LabelEditState);
 
-  const resetLabelListState = useResetRecoilState(LabelListState);
+  const resetLabelState = useResetRecoilState(LabelState);
   const resetLabelEditState = useResetRecoilState(LabelEditState);
 
-  const { mutate: replaceLabelMutate } = useMutation(replaceLabel, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['labels']);
-    },
-  });
-
-  const { mutate: deleteLabelMutate } = useMutation(deleteLabel, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['labels']);
-    },
-  });
-
-  const initLabelEditState = () => {
+  const initLabelState = () => {
     resetLabelEditState();
-    resetLabelListState();
+    resetLabelState();
   };
 
   const handleEditButtonClick = (props: LabelContentsTypes) => {
     setLabelEditState({ type: 'EDIT' });
-    setLabelListState(props);
+    setLabelState(props);
   };
 
   const handleCompleteButtonClick = (id: number) => {
-    replaceLabelMutate({ id, replacedLabel: labelListState });
+    replaceLabel({ id, replacedLabel: labelState });
+    initLabelState();
   };
 
   const handleDeleteButtonClick = (id: number) => {
+    deleteLabel(id);
+  };
+
+  const handleCancleButtonClick = () => {
+    initLabelState();
+  };
 
   const handleLabelClick = (title: string) => {
     navigate(`/issues?q=label%3A"${title}"`);
@@ -66,12 +62,12 @@ const LabelTable = ({ labelContents }: LabelTableTypes) => {
       <Table
         header={<span>{`${labelNum}개의 레이블`}</span>}
         headerTemplateColumns={HEADER_COLUMNS}
-        item={labelContents.map(({ id, title, backgroundColorCode, description, textColor }) => (
+        item={labelContents!.map(({ id, title, backgroundColorCode, description, textColor }) => (
           <TableItem key={id}>
-            {labelEditState.type === 'EDIT' && labelListState.id === id ? (
+            {labelEditState.type === 'EDIT' && labelState.id === id ? (
               <AddLabelField
                 type="EDIT"
-                onClickCancleButton={initLabelEditState}
+                onClickCancleButton={handleCancleButtonClick}
                 onClickCompleteButton={() => handleCompleteButtonClick(id)}
               />
             ) : (

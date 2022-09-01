@@ -3,7 +3,7 @@ import axios, { AxiosError } from 'axios';
 
 export const getLabelData = async (): Promise<LabelContentsTypes[]> => {
   try {
-    const { data } = await axios.get<LabelContentsTypes[]>('/server/api/labels');
+    const { data } = await axios.get<LabelContentsTypes[]>('api/labels');
     return data;
   } catch (error) {
     const err = error as AxiosError;
@@ -11,9 +11,9 @@ export const getLabelData = async (): Promise<LabelContentsTypes[]> => {
   }
 };
 
-export const addNewLabel = async (newLabel: LabelContentsTypes): Promise<LabelContentsTypes> => {
+export const addLabelData = async (newLabel: LabelContentsTypes): Promise<LabelContentsTypes> => {
   try {
-    const { data } = await axios.post<LabelContentsTypes>('/server/api/labels', newLabel);
+    const { data } = await axios.post<LabelContentsTypes>('api/labels', newLabel);
     return data;
   } catch (error) {
     const err = error as AxiosError;
@@ -28,9 +28,9 @@ interface ReplaceLabelTypes {
 
 type ResponseReplaceLabel = ReplaceLabelTypes & { id: number };
 
-export const replaceLabel = async ({ id, replacedLabel }: ReplaceLabelTypes): Promise<ResponseReplaceLabel> => {
+export const patchLabelData = async ({ id, replacedLabel }: ReplaceLabelTypes): Promise<ResponseReplaceLabel> => {
   try {
-    const { data } = await axios.patch<ResponseReplaceLabel>(`/server/api/labels/${id}`, replacedLabel);
+    const { data } = await axios.patch<ResponseReplaceLabel>(`api/labels/${id}`, replacedLabel);
     return data;
   } catch (error) {
     const err = error as AxiosError;
@@ -38,9 +38,9 @@ export const replaceLabel = async ({ id, replacedLabel }: ReplaceLabelTypes): Pr
   }
 };
 
-export const deleteLabel = async (id: number): Promise<{ message: string }> => {
+export const deleteLabelData = async (id: number): Promise<{ message: string }> => {
   try {
-    const { data } = await axios.delete<{ message: string }>(`/server/api/labels/${id}`);
+    const { data } = await axios.delete<{ message: string }>(`api/labels/${id}`);
     return data;
   } catch (error) {
     const err = error as AxiosError;
