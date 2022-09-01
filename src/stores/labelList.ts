@@ -8,17 +8,17 @@ export interface LabelContentsTypes {
   textColor: 'WHITE' | 'BLACK';
 }
 
-export const initLabelListState: LabelContentsTypes = {
+export const initLabelState: LabelContentsTypes = {
   id: 0,
   title: '',
-  backgroundColorCode: '',
+  backgroundColorCode: '#EFF0F6',
   description: '',
   textColor: 'BLACK',
 };
 
-export const LabelListState = atom<LabelContentsTypes>({
-  key: 'LabelListState',
-  default: initLabelListState,
+export const LabelState = atom<LabelContentsTypes>({
+  key: 'LabelState',
+  default: initLabelState,
 });
 
 interface LabelEditStateTypes {

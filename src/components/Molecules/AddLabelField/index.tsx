@@ -11,7 +11,7 @@ import Label from '@/components/Atoms/Label';
 import Radio from '@/components/Atoms/Radio';
 import ColorCode from '@/components/Atoms/ColorCode';
 
-import { LabelListState } from '@/stores/labelList';
+import { LabelState } from '@/stores/labelList';
 
 import useInput from '@/hooks/useInput';
 import debounce from '@/utils/debounce';
@@ -28,32 +28,33 @@ const DEBOUNCE_DELAY = 200;
 const AddLabelField = ({ type, onClickCancleButton, onClickCompleteButton }: LabelAddFormTypes) => {
   const { isTyping: IsTitleTyping, onChangeInput: onChangeTitleInput } = useInput();
   const { isTyping: IsDescriptionTyping, onChangeInput: onChangeDescriptionInput } = useInput();
-  const [labelListState, setLabelListState] = useRecoilState(LabelListState);
+  const [labelState, setLabelState] = useRecoilState(LabelState);
 
   const titleTimerId = useRef(0);
   const descriptionTimerId = useRef(0);
 
   const formTitle = type === 'ADD' ? '새로운 레이블 추가' : '레이블 편집';
-  const { title, backgroundColorCode, description, textColor } = labelListState;
+  const { title, backgroundColorCode, description, textColor } = labelState;
 
   const handleTitleTyping = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     onChangeTitleInput(event);
-    setLabelListState((prev) => ({ ...prev, title: value }));
+    setLabelState((prev) => ({ ...prev, title: value }));
   };
 
   const handleDescriptionTyping = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+
     onChangeDescriptionInput(event);
-    setLabelListState((prev) => ({ ...prev, description: value }));
+    setLabelState((prev) => ({ ...prev, description: value }));
   };
 
   const hanldeRadioChange = (text: string) => {
     const newTextColor = text === '어두운 색' ? 'BLACK' : 'WHITE';
-    setLabelListState((prev) => ({ ...prev, textColor: newTextColor }));
+    setLabelState((prev) => ({ ...prev, textColor: newTextColor }));
   };
 
-  const isCompleteButtonActivated = labelListState.title && labelListState.description;
+  const isCompleteButtonActivated = labelState.title && labelState.description;
 
   return (
     <S.AddLabelField>

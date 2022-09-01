@@ -5,7 +5,7 @@ import { useRecoilState } from 'recoil';
 import PanelPreviewLabel from '@/components/Molecules/Dropdown/Panel/Label';
 import Button from '@/components/Atoms/Button';
 
-import { LabelListState } from '@/stores/labelList';
+import { LabelState } from '@/stores/labelList';
 
 import * as S from '@/components/Atoms/ColorCode/index.styled';
 
@@ -15,23 +15,23 @@ interface ColorCodeTypes {
 
 const MAX_COLORCODE_LENGTH = 7;
 const DEFAULT_COLOR = '#EFF0F6';
-const HEAX_COLOR_CODE_REGEX = /(#([a-fA-F0-9]{3})([a-fA-F0-9]{3}?))/g;
+const HEAX_COLOR_CODE_REGEX = /(#([a-fA-F0-9]{6}))/g;
 
 const ColorCode = ({ defaultColor = DEFAULT_COLOR }: ColorCodeTypes) => {
-  const [labelListState, setLabelListState] = useRecoilState(LabelListState);
+  const [labelState, setLabelState] = useRecoilState(LabelState);
 
   const changeColorCode = () => {
     const r = Math.floor(Math.random() * 127 + 128).toString(16);
     const g = Math.floor(Math.random() * 127 + 128).toString(16);
     const b = Math.floor(Math.random() * 127 + 128).toString(16);
     const newRandomColor = `#${r}${g}${b}`.toUpperCase();
-    setLabelListState((prev) => ({ ...prev, backgroundColorCode: newRandomColor }));
+    setLabelState((prev) => ({ ...prev, backgroundColorCode: newRandomColor }));
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     if (!value.match(HEAX_COLOR_CODE_REGEX)) return;
-    setLabelListState((prev) => ({ ...prev, backgroundColorCode: value }));
+    setLabelState((prev) => ({ ...prev, backgroundColorCode: value }));
   };
 
   return (
@@ -39,11 +39,11 @@ const ColorCode = ({ defaultColor = DEFAULT_COLOR }: ColorCodeTypes) => {
       <label>배경 색상</label>
       <input
         type="text"
-        value={labelListState.backgroundColorCode || defaultColor}
+        value={labelState.backgroundColorCode || defaultColor}
         maxLength={MAX_COLORCODE_LENGTH}
         onChange={handleInputChange}
       />
-      <PanelPreviewLabel backgroundColor={labelListState.backgroundColorCode || defaultColor} />
+      <PanelPreviewLabel backgroundColor={labelState.backgroundColorCode || defaultColor} />
       <Button
         buttonStyle="NO_BORDER"
         iconInfo={{
