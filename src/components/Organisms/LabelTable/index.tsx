@@ -1,5 +1,5 @@
 import { useRecoilState, useResetRecoilState } from 'recoil';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 
 import { COLORS } from '@/styles/theme';
 import * as S from '@/components/Organisms/LabelTable/index.styled';
@@ -12,7 +12,7 @@ import AddLabelField from '@/components/Molecules/AddLabelField';
 
 import { LabelContentsTypes, LabelEditState, LabelListState } from '@/stores/labelList';
 
-import { deleteLabel, replaceLabel } from '@/api/labelList';
+import { useNavigate } from 'react-router-dom';
 
 const [HEADER_COLUMNS, ITEM_COLUMNS] = ['120px', '240px auto 240px'];
 
@@ -23,8 +23,7 @@ interface LabelTableTypes {
 const LabelTable = ({ labelContents }: LabelTableTypes) => {
   const labelNum = labelContents.length;
 
-  const queryClient = useQueryClient();
-  const [labelListState, setLabelListState] = useRecoilState(LabelListState);
+  const navigate = useNavigate();
   const [labelEditState, setLabelEditState] = useRecoilState(LabelEditState);
 
   const resetLabelListState = useResetRecoilState(LabelListState);
@@ -57,7 +56,9 @@ const LabelTable = ({ labelContents }: LabelTableTypes) => {
   };
 
   const handleDeleteButtonClick = (id: number) => {
-    deleteLabelMutate(id);
+
+  const handleLabelClick = (title: string) => {
+    navigate(`/issues?q=label%3A"${title}"`);
   };
 
   return (
@@ -75,7 +76,12 @@ const LabelTable = ({ labelContents }: LabelTableTypes) => {
               />
             ) : (
               <S.LabelItem templateColumns={ITEM_COLUMNS}>
-                <Label title={title} backgroundColor={backgroundColorCode} textColor={textColor} />
+                <Label
+                  title={title}
+                  backgroundColor={backgroundColorCode}
+                  textColor={textColor}
+                  onClick={() => handleLabelClick(title)}
+                />
                 <S.Description>{description}</S.Description>
                 <S.EditButton>
                   <Button

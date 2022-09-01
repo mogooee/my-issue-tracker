@@ -1,8 +1,9 @@
 import styled from 'styled-components';
-import * as StyledAddLabelField from '@/components/Molecules/AddLabelField/index.styled';
+import { AddLabelField } from '@/components/Molecules/AddLabelField/index.styled';
+import { Label } from '@/components/Atoms/Label/index.styles';
 
 export const LabelTable = styled.div`
-  ${StyledAddLabelField.AddLabelField} {
+  ${AddLabelField} {
     border: none;
   }
 `;
@@ -12,6 +13,11 @@ export const LabelItem = styled.div<{ templateColumns: string }>`
   grid-template-columns: ${({ templateColumns }) => templateColumns};
   align-items: center;
   padding: 36px 32px;
+  ${Label} {
+    &:hover {
+      cursor: pointer;
+    }
+  }
 `;
 
 export const Description = styled.span`
