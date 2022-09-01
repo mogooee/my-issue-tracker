@@ -1,80 +1,56 @@
+import { Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import useLabelFetch from '@/hooks/useLabelFetch';
 
-import styled from 'styled-components';
+import * as S from '@/pages/Private/LabelList/index.styled';
 import { COLORS } from '@/styles/theme';
-import * as StyledAddLabelField from '@/components/Molecules/AddLabelField/index.styled';
 
 import Button from '@/components/Atoms/Button';
-import NavLink from '@/components/Molecules/NavLink';
 import AddLabelField from '@/components/Molecules/AddLabelField';
+import NavLink from '@/components/Molecules/NavLink';
 import Header from '@/components/Organisms/Header';
 import LabelTable from '@/components/Organisms/LabelTable';
+import LabelTableSkeleton from '@/components/Skeleton/LabelTable';
 
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
-import { LabelContentsTypes, LabelEditState, LabelListState } from '@/stores/labelList';
+import { LabelEditState, LabelState } from '@/stores/labelList';
 import { labelMilestone } from '@/components/Molecules/NavLink/option';
-import { addNewLabel, getLabelData } from '@/api/labelList';
-
-const SubNav = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 24px;
-
-  div {
-    overflow: hidden;
-  }
-`;
-
-const StyledLabelList = styled.div`
-  & > ${StyledAddLabelField.AddLabelField} {
-    margin-bottom: 24px;
-    border: 1px solid ${({ theme }) => theme.COLORS.LINE};
-  }
-`;
 
 const LabelList = () => {
-  const { data: labelData } = useQuery<LabelContentsTypes[]>(['labels'], getLabelData);
+  const { addLabel } = useLabelFetch();
 
-  const [labelNum, milestoneNum] = [labelData!.length, 3];
-
-  const queryClient = useQueryClient();
   const LoginUserInfoStateValue = useRecoilValue(LoginUserInfoState);
-  const labelListState = useRecoilValue(LabelListState);
+  const labelState = useRecoilValue(LabelState);
   const [labelEditState, setLabelEditState] = useRecoilState(LabelEditState);
 
-  const resetLabelListState = useResetRecoilState(LabelListState);
+  const resetLabelState = useResetRecoilState(LabelState);
   const resetLabelEditState = useResetRecoilState(LabelEditState);
 
-  const { mutate: addLabelMutate } = useMutation(addNewLabel, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['labels']);
-    },
-  });
-
-  const initLabelEditState = () => {
+  const initLabelState = () => {
     resetLabelEditState();
-    resetLabelListState();
+    resetLabelState();
   };
 
   const handleCloseButtonClick = () => {
-    initLabelEditState();
+    initLabelState();
   };
 
   const handleAddButtonClick = () => {
     setLabelEditState({ type: 'ADD' });
-    resetLabelListState();
+    resetLabelState();
   };
 
   const handleCompleteButtonClick = () => {
-    addLabelMutate(labelListState);
+    addLabel(labelState);
+    initLabelState();
   };
 
   return (
-    <StyledLabelList>
+    <S.LabelList>
       <Header user={LoginUserInfoStateValue} />
-      <SubNav>
-        <NavLink navData={labelMilestone(labelNum, milestoneNum)} navLinkStyle="LINE" />
+      <S.SubNav>
+        <NavLink navData={labelMilestone} navLinkStyle="LINE" />
         {labelEditState.type === 'ADD' ? (
           <Button
             buttonStyle="SECONDARY"
@@ -99,11 +75,16 @@ const LabelList = () => {
             handleOnClick={handleAddButtonClick}
           />
         )}
-      </SubNav>
-      {labelEditState.type === 'ADD' && <AddLabelField type="ADD" onClickCompleteButton={handleCompleteButtonClick} />}
-      <LabelTable labelContents={labelData!} />
-    </StyledLabelList>
+        {labelEditState.type === 'ADD' && (
+          <AddLabelField type="ADD" onClickCompleteButton={handleCompleteButtonClick} />
+        )}
+      </S.SubNav>
+      <Suspense fallback={<LabelTableSkeleton />}>
+        <ErrorBoundary fallback={<div>에러입니다</div>}>
+          <LabelTable />
+        </ErrorBoundary>
+      </Suspense>
+    </S.LabelList>
   );
 };
-
 export default LabelList;

@@ -1,13 +1,13 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import LabelTable from '@/components/Organisms/LabelTable';
 import { labelHandlers } from '@/mocks/handler/label';
+import LabelList from '@/pages/Private/LabelList';
 
 export default {
-  title: 'Organisms/LabelTable',
-  component: LabelTable,
-} as ComponentMeta<typeof LabelTable>;
+  title: 'pages/LabelList',
+  component: LabelList,
+} as ComponentMeta<typeof LabelList>;
 
-const Template: ComponentStory<typeof LabelTable> = () => <LabelTable />;
+const Template: ComponentStory<typeof LabelList> = () => <LabelList />;
 
 export const Initial = Template.bind({});
 Initial.parameters = {

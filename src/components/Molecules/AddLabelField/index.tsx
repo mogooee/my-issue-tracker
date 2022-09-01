@@ -30,8 +30,7 @@ const AddLabelField = ({ type, onClickCancleButton, onClickCompleteButton }: Lab
   const { isTyping: IsDescriptionTyping, onChangeInput: onChangeDescriptionInput } = useInput();
   const [labelState, setLabelState] = useRecoilState(LabelState);
 
-  const titleTimerId = useRef(0);
-  const descriptionTimerId = useRef(0);
+  const timerId = useRef(0);
 
   const formTitle = type === 'ADD' ? '새로운 레이블 추가' : '레이블 편집';
   const { title, backgroundColorCode, description, textColor } = labelState;
@@ -72,7 +71,7 @@ const AddLabelField = ({ type, onClickCancleButton, onClickCompleteButton }: Lab
             inputSize="SMALL"
             inputType="text"
             inputValue={title}
-            onChange={debounce(titleTimerId, handleTitleTyping, DEBOUNCE_DELAY)}
+            onChange={debounce(timerId, handleTitleTyping, DEBOUNCE_DELAY)}
             isTyping={IsTitleTyping}
           />
           <Input
@@ -81,7 +80,7 @@ const AddLabelField = ({ type, onClickCancleButton, onClickCompleteButton }: Lab
             inputSize="SMALL"
             inputType="text"
             inputValue={description}
-            onChange={debounce(descriptionTimerId, handleDescriptionTyping, DEBOUNCE_DELAY)}
+            onChange={debounce(timerId, handleDescriptionTyping, DEBOUNCE_DELAY)}
             isTyping={IsDescriptionTyping}
           />
           <ColorCode />
