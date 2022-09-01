@@ -1,5 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import Header from '@/components/Organisms/Header';
+import { authHandlers } from '@/mocks/handler/auth';
 
 export default {
   title: 'Organisms/Header',
@@ -15,5 +16,10 @@ Initial.args = {
     email: 'dobby@gmail.com',
     nickname: 'dobby',
     profileImage: 'https://avatars.githubusercontent.com/u/85747667?s=96&v=4',
+  },
+};
+Initial.parameters = {
+  msw: {
+    handlers: authHandlers,
   },
 };
