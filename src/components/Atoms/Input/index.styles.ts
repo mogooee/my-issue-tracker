@@ -46,7 +46,7 @@ export const Form = styled.form<FormStyleTypes>`
   ${({ isActive }) =>
     isActive &&
     css`
-      color: ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
+      color: ${({ theme }) => theme.COLORS.PLACEHOLDER};
       background: ${({ theme }) => theme.COLORS.OFF_WHITE};
       border: 1px solid ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
     `}
@@ -63,7 +63,7 @@ export const Form = styled.form<FormStyleTypes>`
   &:focus {
     color: ${({ theme }) => theme.COLORS.PLACEHOLDER};
     background: ${({ theme }) => theme.COLORS.OFF_WHITE};
-    outline: 1px solid ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
+    outline: 1px solid ${({ theme }) => theme.COLORS.TITLE_ACVITE};
   }
 `;
 
@@ -75,7 +75,7 @@ export const Input = styled.input`
 
   ${({ theme }) => theme.FONTSTYLES.TEXT_SMALL};
 
-  color: ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
+  color: ${({ theme }) => theme.COLORS.TITLE_ACVITE};
 
   &:focus {
     outline: none;

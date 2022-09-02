@@ -3,7 +3,8 @@ import styled from 'styled-components';
 export const StyledIssueItem = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'flex-start' })};
   background: ${({ theme }) => theme.COLORS.OFF_WHITE};
-  padding: 24px 32px;
+  height: 100px;
+  padding: 32px 24px;
 
   .checkbox {
     margin-top: -35px;

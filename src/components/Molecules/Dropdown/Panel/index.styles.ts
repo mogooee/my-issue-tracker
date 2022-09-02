@@ -17,7 +17,7 @@ export const Panel = styled.menu`
     padding: 8px 40px 8px 16px;
     border-radius: 16px;
     background: ${({ theme }) => theme.COLORS.BACKGROUND};
-    color: ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
+    color: ${({ theme }) => theme.COLORS.TITLE_ACVITE};
     ${({ theme }) => theme.FONTSTYLES.TEXT_MEDIUM};
   }
 `;
@@ -27,7 +27,7 @@ export const PanelItem = styled.li`
   padding: 8px 16px;
   border-top: 1px solid ${({ theme }) => theme.COLORS.LINE};
   background: ${({ theme }) => theme.COLORS.OFF_WHITE};
-  color: ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
+  color: ${({ theme }) => theme.COLORS.TITLE_ACVITE};
   ${({ theme }) => theme.FONTSTYLES.TEXT_SMALL};
 
   &:last-child {

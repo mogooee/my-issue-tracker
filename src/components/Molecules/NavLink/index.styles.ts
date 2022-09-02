@@ -43,7 +43,7 @@ export const StyledNavLink = styled(NavLink)`
   &.active {
     color: black;
     path {
-      stroke: ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
+      stroke: ${({ theme }) => theme.COLORS.TITLE_ACVITE};
     }
   }
 `;

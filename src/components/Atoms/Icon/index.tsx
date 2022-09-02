@@ -9,7 +9,7 @@ interface IconTypes {
   fill?: string;
 }
 
-const DEFAULT_COLOR = COLORS.TITLE_ACTIVE;
+const DEFAULT_COLOR = COLORS.TITLE_ACVITE;
 
 const Icon = ({ icon, stroke = DEFAULT_COLOR, fill = 'none' }: IconTypes) => {
   const SVGIcon = icons[icon];

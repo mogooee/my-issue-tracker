@@ -1,5 +1,5 @@
 export const COLORS = {
-  TITLE_ACTIVE: '#14142B',
+  TITLE_ACVITE: '#14142B',
   BODY: '#4E4B66',
   LABEL: '#6E7191',
   PLACEHOLDER: '#A0A3BD',

@@ -1,6 +1,4 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import { setupServer } from 'msw/node';
-import { handlers } from '@/mocks/handlers';
-import { milestoneHandlers } from '@/mocks/handlers/milestones';
+import { handlers } from './handlers';
 
-export const server = setupServer(...handlers, ...milestoneHandlers);
+export const server = setupServer(...handlers);
