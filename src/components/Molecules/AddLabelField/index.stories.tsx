@@ -10,7 +10,7 @@ const Template: ComponentStory<typeof AddLabelField> = (args) => <AddLabelField 
 
 export const New = Template.bind({});
 New.args = {
-  type: 'ADD',
+  type: 'NEW',
 };
 
 export const Edit = Template.bind({});

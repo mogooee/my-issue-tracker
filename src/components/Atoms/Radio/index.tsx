@@ -13,28 +13,15 @@ interface RadioDataTypes {
 
 export interface RadioTypes {
   radioData: RadioDataTypes;
-  onChange?: (title: string) => void;
 }
 
-const Radio = ({ radioData, onChange }: RadioTypes) => {
+const Radio = ({ radioData }: RadioTypes) => {
   const { title: radioTitle, option } = radioData;
-
-  const hanldeRadioChange = (title: string) => {
-    if (!onChange) return;
-    onChange(title);
-  };
-
   return (
     <S.RadioList totalNum={option.length}>
       {option.map(({ id, title: optionTitle, isChecked = false }) => (
         <S.Radio key={id}>
-          <input
-            type="radio"
-            id={`${id}-${optionTitle}`}
-            name={radioTitle}
-            defaultChecked={isChecked}
-            onChange={() => hanldeRadioChange(optionTitle)}
-          />
+          <input type="radio" id={`${id}-${optionTitle}`} name={radioTitle} defaultChecked={isChecked} />
           <label htmlFor={`${id}-${optionTitle}`}>{optionTitle}</label>
         </S.Radio>
       ))}

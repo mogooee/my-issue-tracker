@@ -15,7 +15,7 @@ const message = {
   message: '뭔가 잘못됨',
 };
 
-export const authHandlers = [
+export const handlers = [
   // silent-refresh
   rest.get('api/auth/reissue', (req, res, ctx) => {
     const response = {

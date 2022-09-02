@@ -1,5 +1,4 @@
 import { setupServer } from 'msw/node';
-import { authHandlers } from './handler/auth';
-import { labelHandlers } from './handler/label';
+import { handlers } from './handlers';
 
-export const server = setupServer(...authHandlers, ...labelHandlers);
+export const server = setupServer(...handlers);

@@ -1,6 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { setupWorker } from 'msw';
-import { authHandlers } from './handler/auth';
-import { labelHandlers } from './handler/label';
+import { handlers } from './handlers';
 
-export const worker = setupWorker(...authHandlers, ...labelHandlers);
+export const worker = setupWorker(...handlers);
