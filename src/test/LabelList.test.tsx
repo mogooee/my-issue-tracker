@@ -1,7 +1,6 @@
 /* eslint-disable no-undef */
 /* eslint-disable import/no-extraneous-dependencies */
 import { server } from '@/mocks/server';
-import '@testing-library/jest-dom';
 
 import { screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
@@ -94,6 +93,14 @@ describe('라벨 페이지 테스트', () => {
       name: /삭제/i,
     })[0] as HTMLButtonElement;
     await user.click(deleteButton);
+
+    await waitFor(() => {
+      const completeButton = screen.getByRole('button', {
+        name: /확인/i,
+      }) as HTMLButtonElement;
+      screen.debug();
+      user.click(completeButton);
+    });
 
     await waitForElementToBeRemoved(deletedLabel);
     expect(deletedLabel).not.toBeInTheDocument();

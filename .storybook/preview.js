@@ -27,18 +27,26 @@ const queryClient = new QueryClient({
 });
 
 export const decorators = [
-  (Story) => (
-    <RecoilRoot>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <GlobalStyle />
-          <MemoryRouter>
-            <Story />
-          </MemoryRouter>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </RecoilRoot>
-  ),
+  (Story) => {
+    const modalRoot = document.createElement('div');
+    modalRoot.setAttribute('id', 'modal-root');
+    document.body.append(modalRoot);
+
+    return (
+      <RecoilRoot>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>
+            <GlobalStyle />
+            <MemoryRouter>
+              <div id="root">
+                <Story />
+              </div>
+            </MemoryRouter>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </RecoilRoot>
+    );
+  },
 ];
 
 initialize();
