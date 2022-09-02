@@ -8,16 +8,15 @@ export interface LabelTypes {
   labelStyle?: 'LIGHT' | 'DARK';
   backgroundColor: string;
   textColor: 'WHITE' | 'BLACK';
-  onClick?: () => void;
 }
 
 const DEFAULT_COLORS = COLORS.PRIMARY.BLUE;
 
 const Label = ({ labelStyle = 'LIGHT', backgroundColor = DEFAULT_COLORS, ...props }: LabelTypes) => {
-  const { title, icon, textColor, onClick } = props;
+  const { title, icon, textColor } = props;
 
   return (
-    <S.Label labelStyle={labelStyle} backgroundColor={backgroundColor} textColor={textColor} onClick={onClick}>
+    <S.Label labelStyle={labelStyle} backgroundColor={backgroundColor} textColor={textColor}>
       {icon}
       <span>{title}</span>
     </S.Label>

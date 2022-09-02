@@ -14,10 +14,10 @@ Initial.args = {
   header: <span>헤더</span>,
   item: (
     <>
-      <TableItem>
+      <TableItem templateColumns="240px">
         <span>내용</span>
       </TableItem>
-      <TableItem>
+      <TableItem templateColumns="240px auto 240px">
         <span>제목</span>
         <span>내용</span>
         <div style={{ marginLeft: 'auto' }}>날짜</div>

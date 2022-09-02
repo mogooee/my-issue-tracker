@@ -1,28 +1,34 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
+import { useRecoilValue } from 'recoil';
+import OAuthState from '@/stores/auth';
 import useLogin from '@/hooks/useLogin';
+
+import LoadingSpinner from '@/components/Atoms/LoadingSpinner';
 
 import PrivateRouter from '@/router/PrivateRouter';
 import PublicRouter from '@/router/PublicRouter';
 
 const Routers = (): JSX.Element => {
-  const { silentLogin, saveLoginUserInfo } = useLogin();
+  const isOAuth = useRecoilValue(OAuthState);
+  const [isLoading, setIsLoading] = useState(true);
+  const { silentLogin } = useLogin();
 
-  let isOAuth = false;
-
-  if (localStorage.getItem('Authentication')) {
-    const isLogined = silentLogin();
-    if (isLogined) isOAuth = true;
-  }
+  const silentRefresh = async () => {
+    if (localStorage.getItem('Authentication')) {
+      await silentLogin();
+    }
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-    if (isOAuth) {
-      saveLoginUserInfo();
-    }
+    silentRefresh();
   }, []);
 
-  return (
+  return isLoading ? (
+    <LoadingSpinner size={80} />
+  ) : (
     <BrowserRouter basename={process.env.PUBLIC_URL}>{isOAuth ? <PrivateRouter /> : <PublicRouter />}</BrowserRouter>
   );
 };
