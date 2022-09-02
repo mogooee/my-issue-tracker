@@ -13,6 +13,9 @@ import AddLabelField from '@/components/Molecules/AddLabelField';
 import { LabelState, LabelTypes } from '@/stores/labelList';
 
 import useLabelFetch from '@/hooks/useLabelFetch';
+import Modal, { ModalState } from '@/components/Modal';
+import ModalPortal from '@/Portal';
+import DeleteCheck from '@/components/Modal/DeleteCheck';
 
 const [HEADER_COLUMNS, ITEM_COLUMNS] = ['120px', '240px auto 240px'];
 
@@ -25,7 +28,7 @@ const LabelTable = () => {
 
   const navigate = useNavigate();
   const [labelState, setLabelState] = useRecoilState(LabelState);
-  const [labelEditState, setLabelEditState] = useRecoilState(LabelEditState);
+  const [isModal, setIsModal] = useRecoilState(ModalState);
 
   const resetLabelState = useResetRecoilState(LabelState);
 
@@ -40,6 +43,7 @@ const LabelTable = () => {
 
   const handleDeleteButtonClick = (id: number) => {
     setLabelState((prev) => ({ type: 'DELETE', label: { ...prev.label, id } }));
+    setIsModal(true);
   };
 
   const handleCancleButtonClick = () => {
@@ -101,6 +105,13 @@ const LabelTable = () => {
           </TableItem>
         ))}
       />
+      <ModalPortal>
+        {isModal && (
+          <Modal>
+            <DeleteCheck id={labelState.label.id} />
+          </Modal>
+        )}
+      </ModalPortal>
     </S.LabelTable>
   );
 };
