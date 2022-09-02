@@ -1,34 +1,36 @@
+import { useQuery } from '@tanstack/react-query';
 import { useRecoilState } from 'recoil';
-import OAuthState from '@/stores/auth';
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
 import { getUserInfo, silentRefresh } from '@/api/login_logout';
 import { MemeberResponseTypes } from '@/api/signUp';
 
 const useLogin = () => {
-  const [isOAuth, setIsOAuth] = useRecoilState(OAuthState);
   const [loginUserInfo, setLoginUserInfo] = useRecoilState(LoginUserInfoState);
 
   const onSuccessLogin = (userInfo: MemeberResponseTypes) => {
-    setLoginUserInfo(userInfo);
-    setIsOAuth(true);
     localStorage.setItem('Authentication', 'true');
+    setLoginUserInfo(userInfo);
   };
 
   const saveLoginUserInfo = async () => {
-    const MemeberResponse = await getUserInfo();
-    onSuccessLogin(MemeberResponse);
+    const userInfo = await getUserInfo();
+    localStorage.setItem('Authentication', 'true');
+    onSuccessLogin(userInfo);
   };
 
-  const silentLogin = async () => {
-    const data = await silentRefresh();
-    if (!data) {
+  const silentLogin = (): boolean => {
+    const { data: isAuthorized } = useQuery<any>(['silentLogin'], silentRefresh, {
+      cacheTime: Infinity,
+      staleTime: Infinity,
+    });
+    if (!isAuthorized) {
       localStorage.removeItem('Authentication');
-      return;
+      return false;
     }
-    await saveLoginUserInfo();
+    return true;
   };
 
-  return { isOAuth, setIsOAuth, loginUserInfo, setLoginUserInfo, silentLogin, onSuccessLogin };
+  return { loginUserInfo, saveLoginUserInfo, setLoginUserInfo, silentLogin, onSuccessLogin };
 };
 
 export default useLogin;
