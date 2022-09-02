@@ -33,27 +33,27 @@ const AddLabelField = ({ type, onClickCancleButton, onClickCompleteButton }: Lab
   const timerId = useRef(0);
 
   const formTitle = type === 'ADD' ? '새로운 레이블 추가' : '레이블 편집';
-  const { title, backgroundColorCode, description, textColor } = labelState;
+  const { title, backgroundColorCode, description, textColor } = labelState.label;
 
   const handleTitleTyping = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     onChangeTitleInput(event);
-    setLabelState((prev) => ({ ...prev, title: value }));
+    setLabelState((prev) => ({ ...prev, label: { ...prev.label, title: value } }));
   };
 
   const handleDescriptionTyping = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
 
     onChangeDescriptionInput(event);
-    setLabelState((prev) => ({ ...prev, description: value }));
+    setLabelState((prev) => ({ ...prev, label: { ...prev.label, description: value } }));
   };
 
   const hanldeRadioChange = (text: string) => {
     const newTextColor = text === '어두운 색' ? 'BLACK' : 'WHITE';
-    setLabelState((prev) => ({ ...prev, textColor: newTextColor }));
+    setLabelState((prev) => ({ ...prev, label: { ...prev.label, textColor: newTextColor } }));
   };
 
-  const isCompleteButtonActivated = labelState.title && labelState.description;
+  const isCompleteButtonActivated = labelState.label.title;
 
   return (
     <S.AddLabelField>

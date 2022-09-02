@@ -1,9 +1,9 @@
-import { LabelContentsTypes } from '@/stores/labelList';
+import { LabelTypes } from '@/stores/labelList';
 import axios, { AxiosError } from 'axios';
 
-export const getLabelData = async (): Promise<LabelContentsTypes[]> => {
+export const getLabelData = async (): Promise<LabelTypes[]> => {
   try {
-    const { data } = await axios.get<LabelContentsTypes[]>('api/labels');
+    const { data } = await axios.get<LabelTypes[]>('api/labels');
     return data;
   } catch (error) {
     const err = error as AxiosError;
@@ -11,9 +11,9 @@ export const getLabelData = async (): Promise<LabelContentsTypes[]> => {
   }
 };
 
-export const addLabelData = async (newLabel: LabelContentsTypes): Promise<LabelContentsTypes> => {
+export const addLabelData = async (newLabel: LabelTypes): Promise<LabelTypes> => {
   try {
-    const { data } = await axios.post<LabelContentsTypes>('api/labels', newLabel);
+    const { data } = await axios.post<LabelTypes>('api/labels', newLabel);
     return data;
   } catch (error) {
     const err = error as AxiosError;
@@ -23,7 +23,7 @@ export const addLabelData = async (newLabel: LabelContentsTypes): Promise<LabelC
 
 interface ReplaceLabelTypes {
   id: number;
-  replacedLabel: LabelContentsTypes;
+  replacedLabel: LabelTypes;
 }
 
 type ResponseReplaceLabel = ReplaceLabelTypes & { id: number };

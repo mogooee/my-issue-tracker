@@ -43,9 +43,9 @@ export const labelHandlers = [
   // 라벨 등록
   rest.post('api/labels', async (req, res, ctx) => {
     const newLabel = await req.json();
-    const { title, backgroundColorCode, description, textColor } = newLabel;
+    const { title, backgroundColorCode, textColor } = newLabel;
 
-    if (title && backgroundColorCode && description && textColor) {
+    if (title && backgroundColorCode && textColor) {
       labelTable.push(newLabel);
       return res(ctx.status(200), ctx.json(newLabel));
     }

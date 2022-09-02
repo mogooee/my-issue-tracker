@@ -10,14 +10,14 @@ import Table from '@/components/Molecules/Table';
 import TableItem from '@/components/Molecules/Table/TableItem';
 import AddLabelField from '@/components/Molecules/AddLabelField';
 
-import { LabelContentsTypes, LabelEditState, LabelState } from '@/stores/labelList';
+import { LabelState, LabelTypes } from '@/stores/labelList';
 
 import useLabelFetch from '@/hooks/useLabelFetch';
 
 const [HEADER_COLUMNS, ITEM_COLUMNS] = ['120px', '240px auto 240px'];
 
 const LabelTable = () => {
-  const { getLabel, replaceLabel, deleteLabel } = useLabelFetch();
+  const { getLabel, replaceLabel } = useLabelFetch();
 
   const { data: labelContents } = getLabel();
 
@@ -28,29 +28,22 @@ const LabelTable = () => {
   const [labelEditState, setLabelEditState] = useRecoilState(LabelEditState);
 
   const resetLabelState = useResetRecoilState(LabelState);
-  const resetLabelEditState = useResetRecoilState(LabelEditState);
 
-  const initLabelState = () => {
-    resetLabelEditState();
-    resetLabelState();
-  };
-
-  const handleEditButtonClick = (props: LabelContentsTypes) => {
-    setLabelEditState({ type: 'EDIT' });
-    setLabelState(props);
+  const handleEditButtonClick = (props: LabelTypes) => {
+    setLabelState({ type: 'EDIT', label: props });
   };
 
   const handleCompleteButtonClick = (id: number) => {
-    replaceLabel({ id, replacedLabel: labelState });
-    initLabelState();
+    replaceLabel({ id, replacedLabel: labelState.label });
+    resetLabelState();
   };
 
   const handleDeleteButtonClick = (id: number) => {
-    deleteLabel(id);
+    setLabelState((prev) => ({ type: 'DELETE', label: { ...prev.label, id } }));
   };
 
   const handleCancleButtonClick = () => {
-    initLabelState();
+    resetLabelState();
   };
 
   const handleLabelClick = (title: string) => {
@@ -64,7 +57,7 @@ const LabelTable = () => {
         headerTemplateColumns={HEADER_COLUMNS}
         item={labelContents!.map(({ id, title, backgroundColorCode, description, textColor }) => (
           <TableItem key={id}>
-            {labelEditState.type === 'EDIT' && labelState.id === id ? (
+            {labelState.type === 'EDIT' && labelState.label.id === id ? (
               <AddLabelField
                 type="EDIT"
                 onClickCancleButton={handleCancleButtonClick}

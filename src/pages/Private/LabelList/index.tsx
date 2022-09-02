@@ -21,29 +21,23 @@ const LabelList = () => {
   const { addLabel } = useLabelFetch();
 
   const LoginUserInfoStateValue = useRecoilValue(LoginUserInfoState);
-  const labelState = useRecoilValue(LabelState);
-  const [labelEditState, setLabelEditState] = useRecoilState(LabelEditState);
+  const [labelState, setLabelState] = useRecoilState(LabelState);
 
   const resetLabelState = useResetRecoilState(LabelState);
-  const resetLabelEditState = useResetRecoilState(LabelEditState);
-
-  const initLabelState = () => {
-    resetLabelEditState();
-    resetLabelState();
-  };
 
   const handleCloseButtonClick = () => {
-    initLabelState();
+    resetLabelState();
   };
 
   const handleAddButtonClick = () => {
     setLabelEditState({ type: 'ADD' });
     resetLabelState();
+    setLabelState((prev) => ({ ...prev, type: 'ADD' }));
   };
 
   const handleCompleteButtonClick = () => {
-    addLabel(labelState);
-    initLabelState();
+    addLabel(labelState.label);
+    resetLabelState();
   };
 
   return (
@@ -51,7 +45,7 @@ const LabelList = () => {
       <Header user={LoginUserInfoStateValue} />
       <S.SubNav>
         <NavLink navData={labelMilestone} navLinkStyle="LINE" />
-        {labelEditState.type === 'ADD' ? (
+        {labelState.type === 'ADD' ? (
           <Button
             buttonStyle="SECONDARY"
             iconInfo={{
@@ -79,6 +73,7 @@ const LabelList = () => {
           <AddLabelField type="ADD" onClickCompleteButton={handleCompleteButtonClick} />
         )}
       </S.SubNav>
+      {labelState.type === 'ADD' && <AddLabelField type="ADD" onClickCompleteButton={handleCompleteButtonClick} />}
       <Suspense fallback={<LabelTableSkeleton />}>
         <ErrorBoundary fallback={<div>에러입니다</div>}>
           <LabelTable />

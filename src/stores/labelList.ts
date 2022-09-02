@@ -1,6 +1,7 @@
 import { atom } from 'recoil';
 
-export interface LabelContentsTypes {
+type EditStateType = 'ADD' | 'EDIT' | 'DELETE' | null;
+export interface LabelTypes {
   id: number;
   title: string;
   backgroundColorCode: string;
@@ -8,7 +9,12 @@ export interface LabelContentsTypes {
   textColor: 'WHITE' | 'BLACK';
 }
 
-export const initLabelState: LabelContentsTypes = {
+interface LabelStateTypes {
+  type: EditStateType;
+  label: LabelTypes;
+}
+
+const initLabelState: LabelTypes = {
   id: 0,
   title: '',
   backgroundColorCode: '#EFF0F6',
@@ -16,16 +22,7 @@ export const initLabelState: LabelContentsTypes = {
   textColor: 'BLACK',
 };
 
-export const LabelState = atom<LabelContentsTypes>({
+export const LabelState = atom<LabelStateTypes>({
   key: 'LabelState',
-  default: initLabelState,
-});
-
-interface LabelEditStateTypes {
-  type: 'ADD' | 'EDIT' | null;
-}
-
-export const LabelEditState = atom<LabelEditStateTypes>({
-  key: 'LabelEditState',
-  default: { type: null },
+  default: { type: null, label: initLabelState },
 });

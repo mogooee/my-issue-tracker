@@ -25,13 +25,13 @@ const ColorCode = ({ defaultColor = DEFAULT_COLOR }: ColorCodeTypes) => {
     const g = Math.floor(Math.random() * 127 + 128).toString(16);
     const b = Math.floor(Math.random() * 127 + 128).toString(16);
     const newRandomColor = `#${r}${g}${b}`.toUpperCase();
-    setLabelState((prev) => ({ ...prev, backgroundColorCode: newRandomColor }));
+    setLabelState((prev) => ({ ...prev, label: { ...prev.label, backgroundColorCode: newRandomColor } }));
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     if (!value.match(HEAX_COLOR_CODE_REGEX)) return;
-    setLabelState((prev) => ({ ...prev, backgroundColorCode: value }));
+    setLabelState((prev) => ({ ...prev, label: { ...prev.label, backgroundColorCode: value } }));
   };
 
   return (
@@ -39,11 +39,11 @@ const ColorCode = ({ defaultColor = DEFAULT_COLOR }: ColorCodeTypes) => {
       <label>배경 색상</label>
       <input
         type="text"
-        value={labelState.backgroundColorCode || defaultColor}
+        value={labelState.label.backgroundColorCode || defaultColor}
         maxLength={MAX_COLORCODE_LENGTH}
         onChange={handleInputChange}
       />
-      <PanelPreviewLabel backgroundColor={labelState.backgroundColorCode || defaultColor} />
+      <PanelPreviewLabel backgroundColor={labelState.label.backgroundColorCode || defaultColor} />
       <Button
         buttonStyle="NO_BORDER"
         iconInfo={{

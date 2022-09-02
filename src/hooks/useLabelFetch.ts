@@ -1,14 +1,11 @@
 import { addLabelData, getLabelData, patchLabelData, deleteLabelData } from '@/api/labelList';
-import { LabelContentsTypes } from '@/stores/labelList';
+import { LabelTypes } from '@/stores/labelList';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const useLabelFetch = () => {
   const queryClient = useQueryClient();
 
-  const getLabel = () =>
-    useQuery<LabelContentsTypes[]>(['labels'], getLabelData, {
-      cacheTime: Infinity,
-    });
+  const getLabel = () => useQuery<LabelTypes[]>(['labels'], getLabelData);
 
   const { mutate: addLabel } = useMutation(addLabelData, {
     onSuccess: () => {
