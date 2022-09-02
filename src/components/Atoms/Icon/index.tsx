@@ -13,7 +13,7 @@ const DEFAULT_COLOR = COLORS.TITLE_ACVITE;
 
 const Icon = ({ icon, stroke = DEFAULT_COLOR, fill = 'none' }: IconTypes) => {
   const SVGIcon = icons[icon];
-  return <SVGIcon stroke={stroke} fill={fill} />;
+  return <SVGIcon data-testid={icon} stroke={stroke} fill={fill} />;
 };
 
 export default Icon;

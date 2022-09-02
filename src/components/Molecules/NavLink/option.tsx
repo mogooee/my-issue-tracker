@@ -1,15 +1,15 @@
 import Icon from '@/components/Atoms/Icon';
 
-export const labelMilestone = (labelNum: number, milestoneNum: number) => [
+export const labelMilestone = [
   {
     icon: <Icon icon="Tag" stroke="#14142B" />,
     link: '/label',
-    title: `레이블 (${labelNum})`,
+    title: '레이블',
   },
   {
     icon: <Icon fill="#14142B" icon="Milestone" />,
     link: '/milestone',
-    title: `마일스톤 (${milestoneNum})`,
+    title: '마일스톤',
   },
 ];
 

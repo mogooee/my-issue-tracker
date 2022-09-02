@@ -27,6 +27,7 @@ export const EditField = styled.div`
 
   & > div:first-child {
     justify-self: center;
+    margin: 10px;
   }
 `;
 
@@ -104,6 +105,7 @@ export const EditButton = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'center' })};
   grid-column: 6/6;
   grid-row: 3/3;
+  justify-self: end;
 
   button + button {
     margin-left: 8px;
