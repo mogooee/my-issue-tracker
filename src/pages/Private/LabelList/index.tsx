@@ -14,8 +14,25 @@ import LabelTable from '@/components/Organisms/LabelTable';
 import LabelTableSkeleton from '@/components/Skeleton/LabelTable';
 
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
-import { LabelEditState, LabelState } from '@/stores/labelList';
+import { LabelState } from '@/stores/labelList';
 import { labelMilestone } from '@/components/Molecules/NavLink/option';
+import { useQueryErrorResetBoundary } from '@tanstack/react-query';
+
+const LabelTableFallback = ({ error, resetErrorBoundary }: any) => (
+  <div>
+    <p> 에러: {error.message}</p>
+    <Button
+      buttonStyle="SECONDARY"
+      iconInfo={{
+        icon: 'RefreshCcw',
+        stroke: COLORS.LABEL,
+      }}
+      label="다시 시도"
+      size="SMALL"
+      handleOnClick={() => resetErrorBoundary()}
+    />
+  </div>
+);
 
 const LabelList = () => {
   const { addLabel } = useLabelFetch();
@@ -30,7 +47,6 @@ const LabelList = () => {
   };
 
   const handleAddButtonClick = () => {
-    setLabelEditState({ type: 'ADD' });
     resetLabelState();
     setLabelState((prev) => ({ ...prev, type: 'ADD' }));
   };
@@ -39,6 +55,8 @@ const LabelList = () => {
     addLabel(labelState.label);
     resetLabelState();
   };
+
+  const { reset } = useQueryErrorResetBoundary();
 
   return (
     <S.LabelList>
@@ -69,16 +87,13 @@ const LabelList = () => {
             handleOnClick={handleAddButtonClick}
           />
         )}
-        {labelEditState.type === 'ADD' && (
-          <AddLabelField type="ADD" onClickCompleteButton={handleCompleteButtonClick} />
-        )}
       </S.SubNav>
       {labelState.type === 'ADD' && <AddLabelField type="ADD" onClickCompleteButton={handleCompleteButtonClick} />}
-      <Suspense fallback={<LabelTableSkeleton />}>
-        <ErrorBoundary fallback={<div>에러입니다</div>}>
+      <ErrorBoundary onReset={reset} FallbackComponent={LabelTableFallback}>
+        <Suspense fallback={<LabelTableSkeleton />}>
           <LabelTable />
-        </ErrorBoundary>
-      </Suspense>
+        </Suspense>
+      </ErrorBoundary>
     </S.LabelList>
   );
 };
