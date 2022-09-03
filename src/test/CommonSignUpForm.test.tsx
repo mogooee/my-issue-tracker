@@ -3,16 +3,15 @@
 import { rest } from 'msw';
 import { server } from '@/mocks/server';
 
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render } from '@/test/utils';
+import { screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { composeStories } from '@storybook/react';
 
-import { RecoilRoot } from 'recoil';
+import { FORM_INFO } from '@/components/Organisms/CommonSignUpForm/constants';
+import * as CommonSignUpFormStories from '@/components/Molecules/CommonLoginForm/CommonLoginForm.stories';
 
-import { ThemeProvider } from 'styled-components';
-import THEME from '@/styles/theme';
-import CommonSignUpForm from '@/components/Organisms/CommonSignUpForm';
-
-import { FORM_INFO } from '../components/Organisms/CommonSignUpForm/constants';
+const { Initial } = composeStories(CommonSignUpFormStories);
 
 const mockedNavigate = jest.fn();
 const resolver = jest.fn();
@@ -31,13 +30,7 @@ describe('일반 가입 컴포넌트 테스트', () => {
   const user = userEvent.setup({ delay: null });
 
   const rendering = () => {
-    render(
-      <RecoilRoot>
-        <ThemeProvider theme={THEME}>
-          <CommonSignUpForm FORM_INFO={FORM_INFO} />
-        </ThemeProvider>
-      </RecoilRoot>,
-    );
+    render(<Initial />);
 
     const id = screen.getByPlaceholderText('아이디') as HTMLInputElement;
     const password = screen.getByPlaceholderText('비밀번호') as HTMLInputElement;

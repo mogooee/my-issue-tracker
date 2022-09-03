@@ -1,34 +1,38 @@
-import { useRecoilState } from 'recoil';
-import OAuthState from '@/stores/auth';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
 import { getUserInfo, silentRefresh } from '@/api/login_logout';
 import { MemeberResponseTypes } from '@/api/signUp';
+import OAuthState from '@/stores/auth';
+import useOnceQuery from '@/hooks/useOnceQuery';
 
 const useLogin = () => {
-  const [isOAuth, setIsOAuth] = useRecoilState(OAuthState);
   const [loginUserInfo, setLoginUserInfo] = useRecoilState(LoginUserInfoState);
+  const setIsOAuth = useSetRecoilState(OAuthState);
 
-  const onSuccessLogin = (userInfo: MemeberResponseTypes) => {
-    setLoginUserInfo(userInfo);
-    setIsOAuth(true);
+  const saveAuthLoginState = (userInfo: MemeberResponseTypes) => {
     localStorage.setItem('Authentication', 'true');
+    setLoginUserInfo(userInfo);
   };
 
-  const saveLoginUserInfo = async () => {
-    const MemeberResponse = await getUserInfo();
-    onSuccessLogin(MemeberResponse);
+  const onSuccessLogin = async () => {
+    setIsOAuth(true);
+    const userInfo = await getUserInfo();
+    saveAuthLoginState(userInfo);
   };
 
-  const silentLogin = async () => {
-    const data = await silentRefresh();
-    if (!data) {
-      localStorage.removeItem('Authentication');
-      return;
-    }
-    await saveLoginUserInfo();
+  const useSilentLogin = () => {
+    useOnceQuery(['silentLogin'], silentRefresh, {
+      enabled: !!localStorage.getItem('Authentication'),
+      onSuccess: () => {
+        onSuccessLogin();
+      },
+      onError: () => {
+        localStorage.removeItem('Authentication');
+      },
+    });
   };
 
-  return { isOAuth, setIsOAuth, loginUserInfo, setLoginUserInfo, silentLogin, onSuccessLogin };
+  return { loginUserInfo, saveAuthLoginState, setLoginUserInfo, useSilentLogin, onSuccessLogin };
 };
 
 export default useLogin;

@@ -5,4 +5,9 @@ const OAuthState = atom({
   default: false,
 });
 
+export const AppComponentMountState = atom({
+  key: 'AppComponentMountState',
+  default: false,
+});
+
 export default OAuthState;

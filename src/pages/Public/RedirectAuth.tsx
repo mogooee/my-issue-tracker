@@ -6,7 +6,7 @@ import { getAuthMemberData, RedirectAuthTypes } from '@/api/redirectAuth';
 import useLogin from '@/hooks/useLogin';
 
 const RedirectAuth = () => {
-  const { onSuccessLogin } = useLogin();
+  const { saveAuthLoginState } = useLogin();
   const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
@@ -21,7 +21,7 @@ const RedirectAuth = () => {
     const { signInMember } = data;
 
     if (signInMember) {
-      onSuccessLogin(signInMember);
+      saveAuthLoginState(signInMember);
       navigate('/issues');
     } else {
       navigate('/signup-oauth');

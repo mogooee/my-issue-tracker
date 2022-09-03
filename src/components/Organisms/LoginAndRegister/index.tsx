@@ -6,7 +6,7 @@ import OauthLoginForm from '@/components/Molecules/OauthLoginForm';
 const LoginAndRegister = (): JSX.Element => (
   <S.LoginAndRegister>
     <LoginForm />
-    <Link to="signup" className="sign-up_btn">
+    <Link to="/signup" className="sign-up_btn">
       회원가입
     </Link>
     <OauthLoginForm />

@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import { FORM_INFO } from '@/components/Organisms/CommonSignUpForm/constants';
 import CommonSignUpForm from '@/components/Organisms/CommonSignUpForm';
 
-import ModalPortal from '@/Portal';
 import Modal, { ModalState } from '@/components/Modal';
 import CompleteSignUp from '@/components/Modal/CompleteSignUp';
 
@@ -37,13 +36,11 @@ const CommonSignUp = () => {
   return (
     <StyledDiv>
       <CommonSignUpForm FORM_INFO={FORM_INFO} />
-      <ModalPortal>
-        {isModal && (
-          <Modal>
-            <CompleteSignUp id={id} />
-          </Modal>
-        )}
-      </ModalPortal>
+      {isModal && (
+        <Modal>
+          <CompleteSignUp id={id} />
+        </Modal>
+      )}
     </StyledDiv>
   );
 };

@@ -4,6 +4,7 @@ import * as S from '@/components/Atoms/Input/index.styles';
 
 export interface InputTypes {
   disabled?: boolean;
+  inputLabel?: string;
   inputSize: 'SMALL' | 'MEDIUM' | 'LARGE';
   inputType: string;
   inputValue?: string;
@@ -22,6 +23,7 @@ const Input = ({ disabled = false, inputMaxLength = defaultMaxLength, ...props }
   const {
     isActive = false,
     isTyping = false,
+    inputLabel,
     inputType,
     inputSize,
     inputValue,
@@ -33,12 +35,16 @@ const Input = ({ disabled = false, inputMaxLength = defaultMaxLength, ...props }
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {}, [inputValue]);
+  useEffect(() => {
+    if (inputRef.current !== null && inputValue !== undefined) {
+      inputRef.current!.value = inputValue;
+    }
+  }, [inputValue]);
 
   const handleOnClickForm = () => {
-    if (disabled) return;
+    if (!onClick || disabled) return;
     inputRef?.current?.focus();
-    onClick!();
+    onClick();
   };
 
   const handleOnChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +56,7 @@ const Input = ({ disabled = false, inputMaxLength = defaultMaxLength, ...props }
 
   return (
     <S.Form isActive={isActive} inputSize={inputSize} onClick={handleOnClickForm}>
-      {isTyping && <label>{inputPlaceholder}</label>}
+      {isTyping && <label>{inputLabel || inputPlaceholder}</label>}
       <S.Input
         type={inputType}
         disabled={disabled}

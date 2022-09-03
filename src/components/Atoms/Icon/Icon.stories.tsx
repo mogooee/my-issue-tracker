@@ -45,19 +45,19 @@ Milestone.args = {
 export const Plus = Template.bind({});
 Plus.args = {
   icon: 'Plus',
-  stroke: COLORS.TITLE_ACVITE,
+  stroke: COLORS.TITLE_ACTIVE,
 };
 
 export const RefreshCcw = Template.bind({});
 RefreshCcw.args = {
   icon: 'RefreshCcw',
-  stroke: COLORS.TITLE_ACVITE,
+  stroke: COLORS.TITLE_ACTIVE,
 };
 
 export const Search = Template.bind({});
 Search.args = {
   icon: 'Search',
-  stroke: COLORS.TITLE_ACVITE,
+  stroke: COLORS.TITLE_ACTIVE,
 };
 
 export const Smile = Template.bind({});

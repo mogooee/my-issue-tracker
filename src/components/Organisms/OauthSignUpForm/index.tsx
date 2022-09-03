@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import { isError, SignUpFormState } from '@/stores/signUp';
+import { useSignUpFormError, SignUpFormState } from '@/stores/signUp';
 
 import { postSignUpData, OAuthNewMemberTypes, OAuthResponse } from '@/api/signUp';
 import { SignUpFormDataTypes } from '@/api/redirectAuth';
@@ -23,7 +23,7 @@ const FORM_INFO = {
 };
 
 const OAuthSignUpForm = ({ SignUpFormData }: { SignUpFormData: SignUpFormDataTypes | null }) => {
-  const { onSuccessLogin } = useLogin();
+  const { saveAuthLoginState } = useLogin();
   const navigate = useNavigate();
   const signUpFormValue = useRecoilValue(SignUpFormState);
 
@@ -38,7 +38,7 @@ const OAuthSignUpForm = ({ SignUpFormData }: { SignUpFormData: SignUpFormDataTyp
     inputPlaceholder: '이메일',
   };
 
-  const disabled = isError() || !signUpFormValue.nickname;
+  const disabled = useSignUpFormError() || !signUpFormValue.nickname;
 
   const formData: OAuthNewMemberTypes = {
     email,
@@ -50,7 +50,7 @@ const OAuthSignUpForm = ({ SignUpFormData }: { SignUpFormData: SignUpFormDataTyp
 
   const signUp = async () => {
     const { memberResponse } = (await postSignUpData({ formData, type: 'auth' })) as OAuthResponse;
-    onSuccessLogin(memberResponse);
+    saveAuthLoginState(memberResponse);
     navigate('/issues');
   };
 

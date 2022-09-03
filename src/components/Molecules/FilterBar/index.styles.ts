@@ -28,9 +28,9 @@ export const FilterBarInput = styled.input<{ isActive: boolean }>`
   ${({ isActive }) =>
     isActive &&
     css`
-      color: ${({ theme }) => theme.COLORS.TITLE_ACVITE};
+      color: ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
 
       background: ${({ theme }) => theme.COLORS.OFF_WHITE};
-      border: 1px solid ${({ theme }) => theme.COLORS.TITLE_ACVITE};
+      border: 1px solid ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
     `}
 `;

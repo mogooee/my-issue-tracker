@@ -17,7 +17,7 @@ export const SignUpFormErrorState = atom<SignUpFormErrorTypes[]>({
   ],
 });
 
-export const isError = () => {
+export const useSignUpFormError = () => {
   let error = false;
 
   const signUpFormErrorValue = useRecoilValue(SignUpFormErrorState);
