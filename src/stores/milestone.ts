@@ -1,9 +1,17 @@
-import { MilestoneItemTypes } from '@/components/Molecules/MilestoneItem';
+import { MilestoneTypes } from '@/api/issue/types';
 import { atom } from 'recoil';
 
-const InitMilestone: MilestoneItemTypes = { id: 0, title: '', description: '', dueDate: '', closed: false };
+const InitMilestone: MilestoneTypes = {
+  id: 0,
+  title: '',
+  description: '',
+  dueDate: '',
+  closed: false,
+  openIssueCount: 0,
+  closedIssueCount: 0,
+};
 
-export const ClickMilestoneState = atom<MilestoneItemTypes>({
+export const ClickMilestoneState = atom<MilestoneTypes>({
   key: 'ClickMilestoneState',
   default: InitMilestone,
 });

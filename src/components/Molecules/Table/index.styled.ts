@@ -8,6 +8,7 @@ export const Table = styled.div`
 
   & > div {
     border-bottom: 1px solid ${({ theme }) => theme.COLORS.LINE};
+    padding: 18px 32px;
 
     &:last-child {
       border-radius: 0 0 10px 10px;

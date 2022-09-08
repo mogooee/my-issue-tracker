@@ -15,7 +15,8 @@ export const Form = styled.form<FormStyleTypes>`
   }
 
   label {
-    ${({ theme }) => theme.FONTSTYLES.TEXT_SMALL}
+    color: ${({ theme }) => theme.COLORS.LABEL};
+    ${({ theme }) => theme.FONTSTYLES.TEXT_XSMALL}
   }
 
   ${({ inputSize }) => {
@@ -49,6 +50,10 @@ export const Form = styled.form<FormStyleTypes>`
       color: ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
       background: ${({ theme }) => theme.COLORS.OFF_WHITE};
       border: 1px solid ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
+
+      label {
+        color: ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
+      }
     `}
   
   &:disabled {

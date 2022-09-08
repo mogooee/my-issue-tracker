@@ -12,28 +12,27 @@ import DeleteMilestoneModal from '@/components/Modal/DeleteMilestone';
 import Icon from '@/components/Atoms/Icon';
 import NavLink from '@/components/Molecules/NavLink';
 import Table from '@/components/Molecules/Table';
-import MilestoneItem, { MilestoneItemTypes } from '@/components/Molecules/MilestoneItem';
-import EmptyMilestoneItem from '@/components/Molecules/MilestoneItem/EmptyItem';
+import MilestoneItem from '@/components/Organisms/MilestoneTable/MilestoneItem';
+import EmptyMilestoneItem from '@/components/Organisms/MilestoneTable/MilestoneItem/EmptyItem';
+import { MilestoneTypes } from '@/api/issue/types';
 
 import SkeletonMilestoneTable from '@/components/Skeleton/MilestoneTable';
 import ErrorTable from '@/components/Organisms/ErrorTable';
 
-import useFetchMilestone from '@/hooks/useFetchMilestone';
+import useFetchMilestone from '@/api/milestone/useFetchMilestone';
+import { COLORS } from '@/styles/theme';
 
-export interface MilestoneListTypes {
-  closedMilestones: MilestoneItemTypes[];
-  openedMilestones: MilestoneItemTypes[];
-}
+import { MilestoneListTypes } from '@/api/milestone';
 
 const MILESTONE_STATE_TAB = (data: MilestoneListTypes) => [
   {
-    icon: <Icon icon="Milestone" fill="#14142B" stroke="#ffffff" />,
-    link: '/milestone?state=open',
+    icon: <Icon icon="Milestone" fill={COLORS.TITLE_ACTIVE} stroke={COLORS.OFF_WHITE} />,
+    link: '/milestones?state=open',
     title: `열린 마일스톤(${data.openedMilestones.length})`,
   },
   {
-    icon: <Icon icon="Archive" stroke="#14142B" />,
-    link: '/milestone?state=closed',
+    icon: <Icon icon="Archive" stroke={COLORS.TITLE_ACTIVE} />,
+    link: '/milestones?state=closed',
     title: `닫힌 마일스톤(${data.closedMilestones.length})`,
   },
 ];
@@ -51,12 +50,12 @@ const MilestoneTable = () => {
     if (stateParam === 'closed') return false;
   };
 
-  const renderMilestones = (milestoneList: MilestoneItemTypes[]) => {
+  const renderMilestones = (milestoneList: MilestoneTypes[]) => {
     if (milestoneList.length) {
       return milestoneList.map((info) => <MilestoneItem key={info.id} {...info} />);
     }
 
-    return <EmptyMilestoneItem />;
+    return [<EmptyMilestoneItem />];
   };
 
   useEffect(() => {}, [searchParams]);

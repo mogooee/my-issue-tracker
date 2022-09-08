@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { generalLogin } from '@/api/login_logout';
-import { OAuthResponse } from '@/api/signUp';
+import { signin, OAuthResponse } from '@/api/sign';
 import useInput from '@/hooks/useInput';
-import useLogin from '@/hooks/useLogin';
+import useLogin from '@/api/sign/useLogin';
 
 import styled from 'styled-components';
 import Button from '@/components/Atoms/Button';
@@ -50,7 +49,7 @@ const LoginForm = (): JSX.Element => {
 
   const login = async () => {
     try {
-      const { memberResponse } = (await generalLogin(loginForm)) as OAuthResponse;
+      const { memberResponse } = (await signin(loginForm)) as OAuthResponse;
       saveAuthLoginState(memberResponse);
       navigate('/issues');
     } catch (error) {

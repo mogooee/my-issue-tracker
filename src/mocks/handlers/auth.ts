@@ -1,8 +1,10 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { rest } from 'msw';
-import { RedirectAuthTypes, SignInMemberTypes } from '@/api/redirectAuth';
+import { RedirectAuthTypes } from '@/api/sign';
+import { USER_LIST } from '@/components/Molecules/Dropdown/mock';
+import { UserTypes } from '@/api/issue/types';
 
-const userTable: SignInMemberTypes[] = [
+const userTable: UserTypes[] = [
   {
     id: 123456789,
     email: 'dobby@gmail.com',
@@ -52,11 +54,7 @@ export const authHandlers = [
     };
 
     const response: RedirectAuthTypes = {
-      signUpFormData: {
-        resourceOwnerId: 'string',
-        email: 'hoo@gmail.com',
-        profileImage: 'string',
-      },
+      signUpFormData: null,
       signInMember: null,
       accessToken: {
         token: 'token',
@@ -163,4 +161,12 @@ export const authHandlers = [
 
   // 로그아웃
   rest.head('api/members/signout', (req, res, ctx) => res(ctx.status(200))),
+
+  rest.get('api/members', (req, res, ctx) =>
+    // if (!req.cookies['refresh-token']) {
+    //   return res(ctx.status(400), ctx.json(false));
+    // }
+
+    res(ctx.status(200), ctx.json(USER_LIST)),
+  ),
 ];

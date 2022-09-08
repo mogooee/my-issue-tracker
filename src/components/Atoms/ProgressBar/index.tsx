@@ -18,8 +18,10 @@ const PrograssBar = ({ open, close, showState, title }: PrograssBarTypes) => {
       {showState && (
         <S.PrograssState>
           <span>{progressValue}%</span>
-          <span>열린 이슈 {open}</span>
-          <span>닫힌 이슈 {close}</span>
+          <div>
+            <span>열린 이슈 {open}</span>
+            <span>닫힌 이슈 {close}</span>
+          </div>
         </S.PrograssState>
       )}
     </>

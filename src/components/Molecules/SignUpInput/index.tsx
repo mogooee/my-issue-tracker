@@ -5,7 +5,7 @@ import { SignUpFormErrorState, SignUpFormState } from '@/stores/signUp';
 import * as S from '@/components/Molecules/SignUpInput/index.styles';
 import Input from '@/components/Atoms/Input';
 import useInput from '@/hooks/useInput';
-import { getDuplicatesResult } from '@/api/signUp';
+import { getDuplicatesResult } from '@/api/sign/members';
 import debounce from '@/utils/debounce';
 
 export interface SignUpInputTypes {

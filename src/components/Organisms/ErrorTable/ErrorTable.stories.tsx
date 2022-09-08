@@ -1,5 +1,5 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import { milestoneHandlers } from '@/mocks/handlers/milestones';
+import { milestoneHandlers } from '@/mocks/handlers/milestone';
 import { labelHandlers } from '@/mocks/handlers/label';
 import ErrorTable from '@/components/Organisms/ErrorTable';
 

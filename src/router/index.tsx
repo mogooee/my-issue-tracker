@@ -1,6 +1,6 @@
 import { BrowserRouter } from 'react-router-dom';
 
-import useLogin from '@/hooks/useLogin';
+import useLogin from '@/api/sign/useLogin';
 
 import PrivateRouter from '@/router/PrivateRouter';
 import PublicRouter from '@/router/PublicRouter';

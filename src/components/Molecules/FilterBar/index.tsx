@@ -1,10 +1,10 @@
-import { DropdownTypes } from '@/components/Molecules/Dropdown/types';
+import { DropdownTypes, ListPanelTypes } from '@/components/Molecules/Dropdown/types';
 import * as S from '@/components/Molecules/FilterBar/index.styles';
 import Dropdown from '@/components/Molecules/Dropdown';
 import useInput from '@/hooks/useInput';
 
 export type FILTERBAR_INFO_TYPES = {
-  DROPDOWN: DropdownTypes;
+  DROPDOWN: DropdownTypes<ListPanelTypes>;
   INPUT: {
     placeholder: string;
     defaultValue: string;

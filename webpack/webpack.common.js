@@ -50,7 +50,7 @@ module.exports = {
       template: path.resolve(__dirname, '..', 'public', 'index.html'),
     }),
     new webpack.ProvidePlugin({
-      process: 'process/browser',
+      process: 'process/browser.js',
     }),
     new webpack.DefinePlugin({ 'process.env': JSON.stringify(process.env) }),
     new ESLintPlugin({ extensions: ['js', 'jsx', 'ts', 'tsx'] }),

@@ -45,6 +45,14 @@ export const Indicator = styled.summary<StyledDropdownIndicatorTypes>`
       }
     `};
 
+  ${({ indicatorStyle }) =>
+    indicatorStyle === 'SIDEBAR' &&
+    css`
+      span {
+        width: 224px;
+      }
+    `};
+
   ${({ indicatorStyle, isActive }) =>
     indicatorStyle &&
     isActive &&

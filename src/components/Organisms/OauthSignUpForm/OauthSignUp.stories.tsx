@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import OAuthSignUpForm from '@/components/Organisms/OauthSignUpForm/';
-import { SignUpFormDataTypes } from '@/api/redirectAuth';
+import { SignUpFormDataTypes } from '@/api/sign';
 
 export default {
   title: 'Organisms/OAuthSignUpForm',

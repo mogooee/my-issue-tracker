@@ -4,11 +4,14 @@ import Icon from '@/components/Atoms/Icon';
 import { COLORS } from '@/styles/theme';
 
 const DropdownIndicator = ({ ...props }: DropdownIndicatorTypes) => {
-  const { indicatorStyle, indicatorLabel, isActive } = props;
+  const { indicatorStyle, indicatorLabel, indicatorIcon, isActive } = props;
   return (
     <S.Indicator role="button" indicatorStyle={indicatorStyle} isActive={isActive}>
-      <span>{indicatorLabel}</span>
-      <Icon icon="Caret" stroke={COLORS.LABEL} />
+      {indicatorLabel && <span>{indicatorLabel}</span>}
+      {indicatorIcon}
+      {indicatorStyle !== 'ICON' && (
+        <Icon icon={indicatorStyle === 'SIDEBAR' ? 'Plus' : 'Caret'} stroke={COLORS.LABEL} />
+      )}
     </S.Indicator>
   );
 };

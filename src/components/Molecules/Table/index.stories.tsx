@@ -12,16 +12,14 @@ const Template: ComponentStory<typeof Table> = (args) => <Table {...args} />;
 export const Initial = Template.bind({});
 Initial.args = {
   header: <span>헤더</span>,
-  item: (
-    <>
-      <TableItem>
-        <span>내용</span>
-      </TableItem>
-      <TableItem>
-        <span>제목</span>
-        <span>내용</span>
-        <div style={{ marginLeft: 'auto' }}>날짜</div>
-      </TableItem>
-    </>
-  ),
+  item: [
+    <TableItem>
+      <span>내용</span>
+    </TableItem>,
+    <TableItem>
+      <span>제목</span>
+      <span>내용</span>
+      <div style={{ marginLeft: 'auto' }}>날짜</div>
+    </TableItem>,
+  ],
 };

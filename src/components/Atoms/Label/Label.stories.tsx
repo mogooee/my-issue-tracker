@@ -19,7 +19,7 @@ Initial.args = {
 export const Light = Template.bind({});
 Light.args = {
   ...Initial.args,
-  backgroundColor: '#F85149',
+  backgroundColorCode: '#F85149',
   textColor: 'BLACK',
 };
 
@@ -27,7 +27,7 @@ export const Dark = Template.bind({});
 Dark.args = {
   title: '레이블',
   labelStyle: 'DARK',
-  backgroundColor: '#F85149',
+  backgroundColorCode: '#F85149',
   textColor: 'WHITE',
 };
 

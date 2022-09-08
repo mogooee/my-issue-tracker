@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { useSignUpFormError, SignUpFormState } from '@/stores/signUp';
-import { postSignUpData, GeneralNewMemberTypes } from '@/api/signUp';
+import { signup, GeneralNewMemberTypes } from '@/api/sign';
 
 import * as S from '@/components/Organisms/CommonSignUpForm/index.styles';
 import Button from '@/components/Atoms/Button';
@@ -45,7 +45,7 @@ const CommonSignUpForm = ({ FORM_INFO }: { FORM_INFO: FormInfoTypes[] }) => {
   const disabled = useSignUpFormError() || isBlank();
 
   const signUp = async () => {
-    await postSignUpData({ formData, type: 'general' });
+    await signup({ formData, type: 'general' });
     setModalState(true);
   };
 

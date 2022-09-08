@@ -1,5 +1,5 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import { milestoneHandlers } from '@/mocks/handlers/milestones';
+import { milestoneHandlers } from '@/mocks/handlers/milestone';
 import Milestones from '.';
 
 export default {

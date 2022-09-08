@@ -9,7 +9,6 @@ export const Item = styled.div`
   align-content: center;
   align-items: center;
   height: fit-content;
-  overflow: hidden;
   background: ${({ theme }) => theme.COLORS.OFF_WHITE};
   ${({ theme }) => theme.FONTSTYLES.TEXT_SMALL};
 `;

@@ -1,7 +1,7 @@
-import { MemeberResponseTypes } from '@/api/signUp';
 import { atom } from 'recoil';
+import { UserTypes } from '@/api/issue/types';
 
-export const LoginUserInfoState = atom<MemeberResponseTypes>({
+export const LoginUserInfoState = atom<UserTypes>({
   key: 'LoginUserInfoState',
   default: {
     id: 0,

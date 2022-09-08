@@ -11,5 +11,5 @@ const Template: ComponentStory<typeof CommonSignUpForm> = (args) => <CommonSignU
 
 export const Initial = Template.bind({});
 Initial.args = {
-  FORM_INFO: FORM_INFO,
+  FORM_INFO,
 };

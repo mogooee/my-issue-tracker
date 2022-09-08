@@ -1,8 +1,8 @@
-import { LabelTypes } from '@/components/Atoms/Label';
+import { LabelType } from '@/components/Atoms/Label';
 import styled, { css } from 'styled-components';
 import { darken, lighten } from 'polished';
 
-type StyledLabelTypes = Pick<LabelTypes, 'labelStyle' | 'backgroundColor' | 'textColor'>;
+type StyledLabelTypes = Pick<LabelType, 'labelStyle' | 'backgroundColorCode' | 'textColor' | 'lineColor'>;
 
 export const Label = styled.div<StyledLabelTypes>`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'center' })};
@@ -10,25 +10,26 @@ export const Label = styled.div<StyledLabelTypes>`
   width: fit-content;
   padding: 4px 16px;
   border-radius: 30px;
-
-  ${({ labelStyle, backgroundColor, textColor }) => {
-    if (labelStyle === 'DARK') {
-      return css`
-        background: ${darken(0.5, backgroundColor)};
-        color: ${lighten(0.2, backgroundColor)};
-        border: 1px solid;
-        border-color: ${lighten(0.2, backgroundColor)};
-      `;
-    }
-    if (labelStyle === 'LIGHT') {
-      return css`
-        background: ${backgroundColor};
-        color: ${textColor === 'WHITE' ? '#FFF' : '#000'};
-      `;
-    }
-  }}
+  border: 1px solid ${({ lineColor }) => lineColor};
 
   svg {
     margin-right: 6px;
   }
+
+  ${({ labelStyle, backgroundColorCode, textColor }) => {
+    if (labelStyle === 'DARK') {
+      return css`
+        background: ${darken(0.5, backgroundColorCode)};
+        color: ${lighten(0.2, backgroundColorCode)};
+        border: 1px solid;
+        border-color: ${lighten(0.2, backgroundColorCode)};
+      `;
+    }
+    if (labelStyle === 'LIGHT') {
+      return css`
+        background: ${backgroundColorCode};
+        color: ${textColor === 'WHITE' ? '#FFF' : '#000'};
+      `;
+    }
+  }};
 `;

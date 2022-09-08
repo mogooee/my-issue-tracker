@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { MilestoneItem } from '@/components/Molecules/MilestoneItem/index.styles';
+import { MilestoneItem } from '@/components/Organisms/MilestoneTable/MilestoneItem/index.styles';
 import { COLORS } from '@/styles/theme';
 
 const skeletonRectangle = (width: number, height: number) => `

@@ -8,7 +8,6 @@ export interface TableHeaderTypes {
 export const Header = styled.div`
   display: grid;
   align-items: center;
-  padding: 18px 32px;
   border-radius: 10px 10px 0 0;
   ${({ theme }) => theme.FONTSTYLES.LINK_SMALL};
   background: ${({ theme }) => theme.COLORS.BACKGROUND};

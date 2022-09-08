@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { CommonMilestoneItem } from '@/components/Molecules/MilestoneItem/index.styles';
+import { CommonMilestoneItem } from '@/components/Organisms/MilestoneTable/MilestoneItem/index.styles';
 import { Header } from '@/components/Molecules/Table/TableHeader';
 
 export const ErrorHeader = styled(Header)`

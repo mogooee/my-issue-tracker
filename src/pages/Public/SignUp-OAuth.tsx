@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useResetRecoilState } from 'recoil';
 import { SignUpFormErrorState, SignUpFormState } from '@/stores/signUp';
 import { useQueryClient } from '@tanstack/react-query';
-import { RedirectAuthTypes } from '@/api/redirectAuth';
+import { RedirectAuthTypes } from '@/api/sign';
 import styled from 'styled-components';
 import OAuthSignUpForm from '@/components/Organisms/OauthSignUpForm';
 

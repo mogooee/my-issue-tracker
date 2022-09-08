@@ -2,18 +2,18 @@ import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useQuery } from '@tanstack/react-query';
-import { getAuthMemberData, RedirectAuthTypes } from '@/api/redirectAuth';
-import useLogin from '@/hooks/useLogin';
+import { getRedirectAuthData, RedirectAuthTypes } from '@/api/sign';
+import useLogin from '@/api/sign/useLogin';
 
 const RedirectAuth = () => {
-  const { saveAuthLoginState } = useLogin();
+  const { setSuccessLoginState, saveAuthLoginState } = useLogin();
   const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
   const provider = searchParams.get('provider')!;
   const code = searchParams.get('code')!;
 
-  const { data } = useQuery<RedirectAuthTypes>(['auth'], () => getAuthMemberData(provider, code));
+  const { data } = useQuery<RedirectAuthTypes>(['auth'], () => getRedirectAuthData(provider, code));
 
   useEffect(() => {
     if (!data) return;
@@ -21,6 +21,7 @@ const RedirectAuth = () => {
     const { signInMember } = data;
 
     if (signInMember) {
+      setSuccessLoginState();
       saveAuthLoginState(signInMember);
       navigate('/issues');
     } else {
