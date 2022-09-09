@@ -13,11 +13,16 @@ import Comment from '@/components/Molecules/Comment';
 import SideBar from '@/components/Molecules/SideBar';
 import IssueHeader from '@/components/Organisms/IssueHeader';
 
-import { issue } from '@/mocks/tables/issue';
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
+import useFetchIssue from '@/api/issue/useFetchIssue';
 
 const IssueDetail = (): JSX.Element => {
-  const { id, closed, title, createdAt, author, comments } = issue;
+  const { issueId } = useParams();
+  const { useIssueData } = useFetchIssue();
+  const { data: issue } = useIssueData(Number(issueId));
+
+  const { id, closed, title, createdAt, author, comments } = issue!;
+
   const userInfo = useRecoilValue(LoginUserInfoState);
   const [textareaValue, setTextAreaValue] = useState<string>('');
 

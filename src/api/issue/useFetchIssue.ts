@@ -1,13 +1,16 @@
-import { getIssuesData } from '@/api/issue';
-import { IssuesTypes } from '@/api/issue/types';
+import { getIssuesData, getIssueData } from '@/api/issue';
+import { IssuesTypes, ContentTypes } from '@/api/issue/types';
 
 import { useQuery } from '@tanstack/react-query';
 
 const useFetchIssue = () => {
-  const { data: issues } = useQuery<IssuesTypes>(['issues'], getIssuesData);
+  const useIssuesData = () => useQuery<IssuesTypes>(['issues'], getIssuesData);
+
+  const useIssueData = (issueId: number) => useQuery<ContentTypes>(['issue', issueId], () => getIssueData(issueId!));
 
   return {
-    issues,
+    useIssuesData,
+    useIssueData,
   };
 };
 

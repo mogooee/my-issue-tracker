@@ -28,7 +28,8 @@ const SubNav = styled.div`
 `;
 
 const Issues = () => {
-  const { issues } = useFetchIssue();
+  const { useIssuesData } = useFetchIssue();
+  const { data: issues } = useIssuesData();
 
   const [searchParams] = useSearchParams();
 
