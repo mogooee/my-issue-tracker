@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
-import { Home, NotFound, Issues, Labels, Milestones, NewIssue } from '@/pages';
+import { Home, NotFound, Issues, Labels, Milestones, NewIssue, IssueDetail } from '@/pages';
 
 const PrivateRouter = () => (
   <Routes>
@@ -7,6 +7,7 @@ const PrivateRouter = () => (
       <Route index element={<Issues />} />
       <Route path="/issues" element={<Issues />} />
       <Route path="/issues/new" element={<NewIssue />} />
+      <Route path="/issues/:issueId" element={<IssueDetail />} />
       <Route path="/labels" element={<Labels />} />
       <Route path="/milestones" element={<Milestones />} />
     </Route>

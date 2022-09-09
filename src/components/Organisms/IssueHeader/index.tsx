@@ -15,7 +15,7 @@ type IssueHeaderTypes = Pick<ContentTypes, 'id' | 'title' | 'closed' | 'createdA
 };
 
 const IssueHeader = ({ id, closed, title, createdAt, author, commentNum }: IssueHeaderTypes) => (
-  <>
+  <S.IssueHeader>
     <HeaderInline id={id} title={title} closed={closed} />
     <S.Info closed={closed}>
       <Label
@@ -29,7 +29,7 @@ const IssueHeader = ({ id, closed, title, createdAt, author, commentNum }: Issue
       <span className="splitLine">∙</span>
       <span>{`코멘트 ${commentNum}개`}</span>
     </S.Info>
-  </>
+  </S.IssueHeader>
 );
 
 export default IssueHeader;
