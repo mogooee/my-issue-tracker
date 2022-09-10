@@ -40,7 +40,6 @@ export const issueHandlers = [
     }
 
     const { title: newTitle } = await req.json();
-
     const newIssue = { ...issue, title: newTitle };
 
     let replacedContent = issue.closed ? issues.closedIssues.content : issues.openIssues.content;
@@ -55,6 +54,34 @@ export const issueHandlers = [
     return res(ctx.status(200), ctx.json(newIssue));
   }),
 
+  // 이슈 상태 변경
+  rest.patch('api/issues/update-status', async (req, res, ctx) => {
+    const { status, ids } = await req.json();
+
+    const { openIssues, closedIssues } = issueTable;
+    let contents = [...openIssues.content, ...closedIssues.content];
+
+    ids.forEach((id: number) => {
+      contents = contents.map((content) => {
+        if (content.id === id) {
+          return { ...content, closed: !status, lastModifiedAt: Date() };
+        }
+        return content;
+      });
+    });
+
+    const openIssuesContent = contents.filter(({ closed }) => closed === false);
+    const closedIssuesContent = contents.filter(({ closed }) => closed === true);
+
+    issueTable = {
+      ...issueTable,
+      openIssues: { ...openIssues, content: openIssuesContent },
+      openIssueCount: openIssuesContent.length,
+      closedIssues: { ...closedIssues, content: closedIssuesContent },
+      closedIssueCount: closedIssuesContent.length,
+    };
+
+    return res(ctx.status(204));
   }),
 
   // 이모티콘 전체 조회
