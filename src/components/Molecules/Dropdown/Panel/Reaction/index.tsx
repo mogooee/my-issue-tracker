@@ -25,7 +25,7 @@ const ReactionPanel = ({ reactions, usedEmojis, issueId, commentId }: ReactionPa
         {reactions.map(({ name, unicode }) => {
           const reactors = usedEmojis?.find(({ emoji }) => emoji === unicode)?.reactors!;
           const isUsed = reactors?.find(({ memberId }) => memberId === userInfo.id);
-          const emojiIcon = unicode.split(' ').reduce((acc, cur) => acc + replaceUnicodeWithIcon(cur), '');
+          const emojiIcon = replaceUnicodeWithIcon(unicode);
 
           const handleReaction = ({ type, memberId, reactionId, emojiName }: HandleReactionTypes) => {
             const router = type === 'ADD' ? emojiName : reactionId;

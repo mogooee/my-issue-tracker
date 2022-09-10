@@ -41,6 +41,7 @@ const ReactionContainer = ({ reactions, usedEmojis, issueId, commentId }: Reacti
       {usedEmojis.map(({ emoji, reactors }) => {
         const { name } = reactions.find(({ unicode }) => unicode === emoji)!;
         const isUsed = reactors.find(({ memberId }) => memberId === userInfo.id);
+        const emojiIcon = replaceUnicodeWithIcon(emoji);
 
         return (
           <S.Reaction key={emoji} nickname={reactors.map(({ nickname }) => nickname)} emoji={name}>
@@ -49,7 +50,7 @@ const ReactionContainer = ({ reactions, usedEmojis, issueId, commentId }: Reacti
               backgroundColorCode={isUsed ? COLORS.PRIMARY.LIGHT_BLUE : COLORS.BACKGROUND}
               lineColor={isUsed ? COLORS.PRIMARY.BLUE : COLORS.LABEL}
               textColor="BLACK"
-              title={`${replaceUnicodeWithIcon(emoji)} ${reactors.length}`}
+              title={`${emojiIcon} ${reactors.length}`}
               onClick={() => {
                 const memberId = userInfo.id;
                 const reactionId = reactors.find(({ memberId: id }) => id === userInfo.id)?.reactionId;
