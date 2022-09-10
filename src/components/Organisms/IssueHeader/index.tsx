@@ -14,22 +14,29 @@ type IssueHeaderTypes = Pick<ContentTypes, 'id' | 'title' | 'closed' | 'createdA
   commentNum: number;
 };
 
-const IssueHeader = ({ id, closed, title, createdAt, author, commentNum }: IssueHeaderTypes) => (
-  <S.IssueHeader>
-    <HeaderInline id={id} title={title} closed={closed} />
-    <S.Info closed={closed}>
-      <Label
-        icon={<Icon icon="AlertCircle" stroke={closed ? COLORS.SECONDORY.PURPLE : COLORS.PRIMARY.BLUE} />}
-        labelStyle="LIGHT"
-        backgroundColorCode={closed ? COLORS.SECONDORY.LIGHT_PURPLE : COLORS.PRIMARY.LIGHT_BLUE}
-        lineColor={closed ? COLORS.SECONDORY.PURPLE : COLORS.PRIMARY.BLUE}
-        title={closed ? '닫힌 이슈' : '열린 이슈'}
-      />
-      <span>{`이 이슈가 ${calcTimeForToday(createdAt)}에 ${author.nickname}님에 의해 열렸습니다.`}</span>
-      <span className="splitLine">∙</span>
-      <span>{`코멘트 ${commentNum}개`}</span>
-    </S.Info>
-  </S.IssueHeader>
-);
+const IssueHeader = ({ id, closed, title, createdAt, author, commentNum }: IssueHeaderTypes) => {
+  const issueState = closed ? '닫혔' : '열렸';
+  const issueStateSummary = `이 이슈가 ${calcTimeForToday(createdAt)}에 ${
+    author.nickname
+  }님에 의해 ${issueState}습니다.`;
+
+  return (
+    <S.IssueHeader>
+      <HeaderInline id={id} title={title} closed={closed} />
+      <S.Info closed={closed}>
+        <Label
+          icon={<Icon icon="AlertCircle" stroke={closed ? COLORS.SECONDORY.PURPLE : COLORS.PRIMARY.BLUE} />}
+          labelStyle="LIGHT"
+          backgroundColorCode={closed ? COLORS.SECONDORY.LIGHT_PURPLE : COLORS.PRIMARY.LIGHT_BLUE}
+          lineColor={closed ? COLORS.SECONDORY.PURPLE : COLORS.PRIMARY.BLUE}
+          title={closed ? '닫힌 이슈' : '열린 이슈'}
+        />
+        <span>{issueStateSummary}</span>
+        <span className="splitLine">∙</span>
+        <span>{`코멘트 ${commentNum}개`}</span>
+      </S.Info>
+    </S.IssueHeader>
+  );
+};
 
 export default IssueHeader;

@@ -49,3 +49,12 @@ interface PatchIssueStateTypes {
   ids: number[];
 }
 
+export const patchIssueState = async ({ newState, memberId }: { newState: PatchIssueStateTypes; memberId: number }) => {
+  try {
+    const { data: issueData } = await axios.patch(`api/issues/update-status?memberId=${memberId}`, newState);
+    return issueData;
+  } catch (error) {
+    const err = error as AxiosError;
+    throw err;
+  }
+};

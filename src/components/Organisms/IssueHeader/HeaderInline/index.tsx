@@ -31,8 +31,9 @@ const HeaderInline = ({ id: issueId, title, closed }: HeaderInlineTypes) => {
   const { isActive, onChangeInput, onClickInput, onBlurInput } = useInput();
   const userInfo = useRecoilValue(LoginUserInfoState);
 
-  const { usePatchIssueTitle } = useFetchIssue();
+  const { usePatchIssueTitle, usePatchIssueState } = useFetchIssue();
   const { mutate: patchIssueTitle } = usePatchIssueTitle(issueId);
+  const { mutate: patchIssueState } = usePatchIssueState([issueId]);
 
   const defineButtonLabel = (
     isEditing: boolean,
@@ -59,6 +60,11 @@ const HeaderInline = ({ id: issueId, title, closed }: HeaderInlineTypes) => {
       setIsEdit(false);
       return;
     }
+
+    const ids = [issueId];
+    const newState = { status: !!closed, ids };
+
+    patchIssueState({ newState, memberId });
   };
 
   const handleTitleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -15,13 +15,15 @@ import calcTimeForToday from '@/utils/calcForTimeToday';
 import { ContentTypes } from '@/api/issue/types';
 
 const IssueItem = (issueInfo: ContentTypes) => {
-  const { id, title, closed, issueLabels, author, issueAssignees, createdAt, milestone } = issueInfo;
+  const { id, title, closed, issueLabels, author, issueAssignees, createdAt, lastModifiedAt, milestone } = issueInfo;
   const checkState = useRecoilValue(CheckState);
   const navigate = useNavigate();
 
   const issueLink = `/issues/${id}`;
   const milestoneLink = `/milestone/${id}`;
-  const issueSummary = `이 이슈가 ${calcTimeForToday(createdAt)}, ${author.nickname}님에 의해 작성되었습니다`;
+  // eslint-disable-next-line no-nested-ternary
+  const issueState = createdAt === lastModifiedAt ? '작성되었습니다' : closed ? '닫혔습니다' : '열렸습니다';
+  const issueSummary = `이 이슈가 ${calcTimeForToday(createdAt)}, ${author.nickname}님에 의해 ${issueState}`;
 
   const handleLabelClick = (filterdLabelTitle: string) => {
     navigate(`/issues?q=label%3A"${filterdLabelTitle}"`);

@@ -1,4 +1,4 @@
-import { getIssuesData, getIssueData, patchIssueTitle } from '@/api/issue';
+import { getIssuesData, getIssueData, patchIssueTitle, patchIssueState } from '@/api/issue';
 import { IssuesTypes, ContentTypes } from '@/api/issue/types';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -17,10 +17,21 @@ const useFetchIssue = () => {
       },
     });
 
+  const usePatchIssueState = (issueId: number[]) =>
+    useMutation(patchIssueState, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['issues']);
+        issueId.forEach((id) => {
+          queryClient.invalidateQueries(['issue', id]);
+        });
+      },
+    });
+
   return {
     useIssuesData,
     useIssueData,
     usePatchIssueTitle,
+    usePatchIssueState,
   };
 };
 
