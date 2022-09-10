@@ -20,3 +20,32 @@ export const getIssueData = async (issueId: number): Promise<ContentTypes> => {
     throw err;
   }
 };
+
+interface PatchIssueTitleRequestTypes {
+  issueId: number;
+  memberId: number;
+  newTitle: { title: string };
+}
+
+export const patchIssueTitle = async ({
+  issueId,
+  memberId,
+  newTitle,
+}: PatchIssueTitleRequestTypes): Promise<ContentTypes> => {
+  try {
+    const { data: changedIssue } = await axios.patch<ContentTypes>(
+      `api/issues/${issueId}/title?memberId=${memberId}`,
+      newTitle,
+    );
+    return changedIssue;
+  } catch (error) {
+    const err = error as AxiosError;
+    throw err;
+  }
+};
+
+interface PatchIssueStateTypes {
+  status: boolean;
+  ids: number[];
+}
+
