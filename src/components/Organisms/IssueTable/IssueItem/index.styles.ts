@@ -15,7 +15,10 @@ export const StyledIssue = styled.div`
 `;
 
 export const IssueTitle = styled.div`
-  ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'flex-start' })};
+  display: grid;
+  align-items: center;
+  justify-content: start;
+  grid-template-columns: 20px auto max-content;
   margin-bottom: 8px;
 
   .title {
@@ -32,14 +35,18 @@ export const IssueTitle = styled.div`
   }
 `;
 
+export const Labels = styled.div`
+  ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'flex-start' })};
+`;
+
 export const IssueContent = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'flex-start' })};
+  color: ${({ theme }) => theme.COLORS.LABEL};
+
   span,
   a {
     ${({ theme }) => theme.FONTSTYLES.TEXT_SMALL};
   }
-
-  color: ${({ theme }) => theme.COLORS.LABEL};
 
   .summary {
     margin: 0px 16px;

@@ -9,7 +9,8 @@ export const Title = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'flex-start' })};
   ${({ theme }) => theme.FONTSTYLES.DISPLAY_REGULER};
   width: 940px;
-  height: 48px;
+  min-height: 48px;
+  max-height: max-content;
 
   form {
     width: inherit;

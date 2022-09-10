@@ -40,9 +40,11 @@ const IssueItem = (issueInfo: ContentTypes) => {
           <Link className="title" to={issueLink}>
             {title}
           </Link>
-          {issueLabels.issueLabels.map((labelProps) => (
-            <Label key={labelProps.title} {...labelProps} onClick={() => handleLabelClick(labelProps.title)} />
-          ))}
+          <S.Labels>
+            {issueLabels.issueLabels.map((labelProps) => (
+              <Label key={labelProps.title} {...labelProps} onClick={() => handleLabelClick(labelProps.title)} />
+            ))}
+          </S.Labels>
         </S.IssueTitle>
         <S.IssueContent>
           <span>{`#${id}`}</span>
