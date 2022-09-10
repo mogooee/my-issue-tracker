@@ -1,9 +1,8 @@
+/* eslint-disable no-nested-ternary */
 import React, { useState, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import useInput from '@/hooks/useInput';
 import useFetchIssue from '@/api/issue/useFetchIssue';
-
-import { COLORS } from '@/styles/theme';
 
 import Button from '@/components/Atoms/Button';
 import Input from '@/components/Atoms/Input';
@@ -12,16 +11,12 @@ import * as S from '@/components/Organisms/IssueHeader/HeaderInline/index.styled
 import { ContentTypes } from '@/api/issue/types';
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
 import debounce from '@/utils/debounce';
-
-const MAX_ISSUE_TITLE_NUM = 255;
-
-type LeftButtonIconType = 'XSquare' | 'Edit';
-type LeftButtonLabelType = '편집 취소' | '제목 편집';
-type RightButtonIconType = 'Archive' | 'AlertCircle' | 'Edit';
-type RightButtonLabelType = '이슈 닫기' | '다시 열기' | '편집 완료';
+import { BUTTON_PROPS } from '@/components/Atoms/Button/options';
+import { ISSUE_DETAIL_BUTTON_PROPS } from './constants';
 
 type HeaderInlineTypes = Pick<ContentTypes, 'id' | 'title' | 'closed'>;
 
+const MAX_ISSUE_TITLE_NUM = 255;
 const DEBOUNCE_DELAY = 200;
 
 const HeaderInline = ({ id: issueId, title, closed }: HeaderInlineTypes) => {
@@ -29,43 +24,11 @@ const HeaderInline = ({ id: issueId, title, closed }: HeaderInlineTypes) => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [issueTitle, setIssueTitle] = useState<string>(title);
   const { isActive, onChangeInput, onClickInput, onBlurInput } = useInput();
-  const userInfo = useRecoilValue(LoginUserInfoState);
+  const memberId = useRecoilValue(LoginUserInfoState).id;
 
   const { usePatchIssueTitle, usePatchIssueState } = useFetchIssue();
   const { mutate: patchIssueTitle } = usePatchIssueTitle(issueId);
   const { mutate: patchIssueState } = usePatchIssueState([issueId]);
-
-  const defineButtonLabel = (
-    isEditing: boolean,
-    isOpen: boolean,
-  ): [[LeftButtonIconType, LeftButtonLabelType], [RightButtonIconType, RightButtonLabelType]] => {
-    if (isEditing) {
-      return [
-        ['XSquare', '편집 취소'],
-        ['Edit', '편집 완료'],
-      ];
-    }
-
-    return [['Edit', '제목 편집'], isOpen ? ['Archive', '이슈 닫기'] : ['AlertCircle', '다시 열기']];
-  };
-
-  const [[leftButtonIcon, leftButtonLabel], [rightButtonIcon, rightButtonLabel]] = defineButtonLabel(isEdit, !closed);
-
-  const handleRightButtonClick = () => {
-    const memberId = userInfo.id;
-
-    if (isEdit) {
-      const newTitle = { title: issueTitle };
-      patchIssueTitle({ issueId, memberId, newTitle });
-      setIsEdit(false);
-      return;
-    }
-
-    const ids = [issueId];
-    const newState = { status: !!closed, ids };
-
-    patchIssueState({ newState, memberId });
-  };
 
   const handleTitleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChangeInput(e);
@@ -73,6 +36,26 @@ const HeaderInline = ({ id: issueId, title, closed }: HeaderInlineTypes) => {
   };
 
   const handleOnTitleTyping = debounce(timerId, handleTitleOnChange, DEBOUNCE_DELAY);
+
+  const handleOnSaveTitleButtonClick = () => {
+    const newTitle = { title: issueTitle };
+    patchIssueTitle({ issueId, memberId, newTitle });
+    setIsEdit(false);
+  };
+
+  const handleOnIssueStateButtonClick = () => {
+    const ids = [issueId];
+    const newState = { status: !!closed, ids };
+    patchIssueState({ newState, memberId });
+  };
+
+  const leftButtonProps = isEdit
+    ? { ...BUTTON_PROPS.CANCEL, label: '편집 취소', handleOnClick: () => setIsEdit(false) }
+    : { ...ISSUE_DETAIL_BUTTON_PROPS.Edit, handleOnClick: () => setIsEdit(true) };
+
+  const rightButtonProps = isEdit
+    ? { ...ISSUE_DETAIL_BUTTON_PROPS.SAVE, handleOnClick: handleOnSaveTitleButtonClick }
+    : { ...ISSUE_DETAIL_BUTTON_PROPS[closed ? 'OPEN' : 'CLOSE'], handleOnClick: handleOnIssueStateButtonClick };
 
   return (
     <S.HeaderInline>
@@ -98,31 +81,8 @@ const HeaderInline = ({ id: issueId, title, closed }: HeaderInlineTypes) => {
         )}
       </S.Title>
       <S.ButtonTab>
-        <Button
-          buttonStyle="SECONDARY"
-          iconInfo={{
-            icon: leftButtonIcon,
-          }}
-          label={leftButtonLabel}
-          size="SMALL"
-          handleOnClick={() => {
-            if (!isEdit) {
-              setIsEdit(true);
-            } else {
-              setIsEdit(false);
-            }
-          }}
-        />
-        <Button
-          buttonStyle={isEdit ? 'STANDARD' : 'SECONDARY'}
-          iconInfo={{
-            icon: rightButtonIcon,
-            stroke: isEdit ? COLORS.OFF_WHITE : COLORS.PRIMARY.BLUE,
-          }}
-          label={rightButtonLabel}
-          size="SMALL"
-          handleOnClick={handleRightButtonClick}
-        />
+        <Button {...leftButtonProps} />
+        <Button {...rightButtonProps} />
       </S.ButtonTab>
     </S.HeaderInline>
   );
