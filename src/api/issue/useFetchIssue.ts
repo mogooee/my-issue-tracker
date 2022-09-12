@@ -3,6 +3,7 @@ import {
   getIssueData,
   updateIssueTitle,
   updateIssueState,
+  addComment,
 } from '@/api/issue';
 import { IssuesTypes, ContentTypes } from '@/api/issue/types';
 
@@ -35,11 +36,19 @@ const useFetchIssue = () => {
       },
     });
 
+  const useAddIssueComment = (issueId: number) =>
+    useMutation(addComment, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['issue', issueId]);
+      },
+    });
+
   return {
     useIssuesData,
     useIssueData,
     useUpdateIssueTitle,
     useUpdateIssueState,
+    useAddIssueComment,
   };
 };
 

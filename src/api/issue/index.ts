@@ -65,3 +65,21 @@ export const updateIssueState = async ({ newState, memberId }: PatchIssueStateRe
     throw err;
   }
 };
+
+type CommentReqTypes = { content: string };
+
+type PostIssueCommentTypes = { newComment: CommentReqTypes } & Pick<Idtypes, 'issueId' | 'memberId'>;
+
+export const addComment = async ({ newComment, issueId, memberId }: PostIssueCommentTypes): Promise<ContentTypes> => {
+  try {
+    const { data: IssueChangedComment } = await axios.post<ContentTypes>(
+      `api/issues/${issueId}/comments?memberId=${memberId}`,
+      newComment,
+    );
+    return IssueChangedComment;
+  } catch (error) {
+    const err = error as AxiosError;
+    throw err;
+  }
+};
+

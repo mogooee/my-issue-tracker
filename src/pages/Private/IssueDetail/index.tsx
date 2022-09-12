@@ -18,13 +18,20 @@ import useFetchIssue from '@/api/issue/useFetchIssue';
 
 const IssueDetail = (): JSX.Element => {
   const { issueId } = useParams();
-  const { useIssueData } = useFetchIssue();
+  const { useIssueData, useAddIssueComment } = useFetchIssue();
   const { data: issue } = useIssueData(Number(issueId));
+  const { mutate: addIssueComment } = useAddIssueComment(Number(issueId));
 
   const { id, closed, title, createdAt, author, comments } = issue!;
 
   const userInfo = useRecoilValue(LoginUserInfoState);
-  const [textareaValue, setTextAreaValue] = useState<string>('');
+  const [textAreaValue, setTextAreaValue] = useState<string>('');
+  const handleAddCommentButton = () => {
+    const newComment = { content: textAreaValue };
+    addIssueComment({ newComment, memberId, issueId: Number(issueId) });
+    setTextAreaValue('');
+  };
+
 
   const isAuthor = JSON.stringify(userInfo) === JSON.stringify(author);
 
@@ -48,9 +55,9 @@ const IssueDetail = (): JSX.Element => {
           ))}
           <S.NewComment>
             <UserImage {...userInfo} imgSize="MEDIUM" />
-            <TextArea textAreaValue={textareaValue} setAreaValue={setTextAreaValue} />
+            <TextArea textAreaValue={textAreaValue} setAreaValue={setTextAreaValue} />
           </S.NewComment>
-          <Button {...BUTTON_PROPS.ADD} />
+          <Button {...BUTTON_PROPS.ADD} handleOnClick={handleAddCommentButton} />
         </S.IssueComments>
         <S.Aside>
           <SideBar
