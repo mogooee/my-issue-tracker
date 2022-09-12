@@ -12,7 +12,7 @@ import { ContentTypes } from '@/api/issue/types';
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
 import debounce from '@/utils/debounce';
 import { BUTTON_PROPS } from '@/components/Atoms/Button/options';
-import { ISSUE_DETAIL_BUTTON_PROPS } from './constants';
+import { ISSUE_DETAIL_BUTTON_PROPS } from '@/components/Organisms/IssueHeader/HeaderInline/constants';
 
 type HeaderInlineTypes = Pick<ContentTypes, 'id' | 'title' | 'closed'>;
 
@@ -26,9 +26,9 @@ const HeaderInline = ({ id: issueId, title, closed }: HeaderInlineTypes) => {
   const { isActive, onChangeInput, onClickInput, onBlurInput } = useInput();
   const memberId = useRecoilValue(LoginUserInfoState).id;
 
-  const { usePatchIssueTitle, usePatchIssueState } = useFetchIssue();
-  const { mutate: patchIssueTitle } = usePatchIssueTitle(issueId);
-  const { mutate: patchIssueState } = usePatchIssueState([issueId]);
+  const { useUpdateIssueTitle, useUpdateIssueState } = useFetchIssue();
+  const { mutate: updateIssueTitle } = useUpdateIssueTitle(issueId);
+  const { mutate: updateIssueState } = useUpdateIssueState([issueId]);
 
   const handleTitleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChangeInput(e);
@@ -39,22 +39,22 @@ const HeaderInline = ({ id: issueId, title, closed }: HeaderInlineTypes) => {
 
   const handleOnSaveTitleButtonClick = () => {
     const newTitle = { title: issueTitle };
-    patchIssueTitle({ issueId, memberId, newTitle });
+    updateIssueTitle({ issueId, memberId, newTitle });
     setIsEdit(false);
   };
 
   const handleOnIssueStateButtonClick = () => {
     const ids = [issueId];
     const newState = { status: !!closed, ids };
-    patchIssueState({ newState, memberId });
+    updateIssueState({ newState, memberId });
   };
 
   const leftButtonProps = isEdit
     ? { ...BUTTON_PROPS.CANCEL, label: '편집 취소', handleOnClick: () => setIsEdit(false) }
-    : { ...ISSUE_DETAIL_BUTTON_PROPS.Edit, handleOnClick: () => setIsEdit(true) };
+    : { ...ISSUE_DETAIL_BUTTON_PROPS.EDIT, handleOnClick: () => setIsEdit(true) };
 
   const rightButtonProps = isEdit
-    ? { ...ISSUE_DETAIL_BUTTON_PROPS.SAVE, handleOnClick: handleOnSaveTitleButtonClick }
+    ? { ...BUTTON_PROPS.EDIT_SAVE, handleOnClick: handleOnSaveTitleButtonClick }
     : { ...ISSUE_DETAIL_BUTTON_PROPS[closed ? 'OPEN' : 'CLOSE'], handleOnClick: handleOnIssueStateButtonClick };
 
   return (

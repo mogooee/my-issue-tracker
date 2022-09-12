@@ -2,7 +2,7 @@ import { BUTTON_PROPS_TYPES } from '@/components/Atoms/Button/options';
 import { COLORS } from '@/styles/theme';
 
 export const ISSUE_DETAIL_BUTTON_PROPS: BUTTON_PROPS_TYPES = {
-  Edit: {
+  EDIT: {
     label: '제목 편집',
     size: 'SMALL',
     buttonStyle: 'SECONDARY',
@@ -27,15 +27,6 @@ export const ISSUE_DETAIL_BUTTON_PROPS: BUTTON_PROPS_TYPES = {
     iconInfo: {
       icon: 'Archive',
       stroke: COLORS.PRIMARY.BLUE,
-    },
-  },
-  SAVE: {
-    label: '편집 완료',
-    size: 'SMALL',
-    buttonStyle: 'STANDARD',
-    iconInfo: {
-      icon: 'Edit',
-      stroke: COLORS.OFF_WHITE,
     },
   },
 };

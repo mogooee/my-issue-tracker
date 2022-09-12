@@ -1,6 +1,13 @@
 import axios, { AxiosError } from 'axios';
 import { IssuesTypes, ContentTypes } from '@/api/issue/types';
 
+interface Idtypes {
+  issueId: number;
+  commentId: number;
+  reactionId: number;
+  memberId: number;
+}
+
 export const getIssuesData = async (): Promise<IssuesTypes> => {
   try {
     const { data: issuesData } = await axios.get<IssuesTypes>('api/issues');
@@ -21,35 +28,35 @@ export const getIssueData = async (issueId: number): Promise<ContentTypes> => {
   }
 };
 
-interface PatchIssueTitleRequestTypes {
-  issueId: number;
-  memberId: number;
-  newTitle: { title: string };
-}
+type IssueReqType = { title: string };
 
-export const patchIssueTitle = async ({
+type PatchIssueTitleReqTypes = { newTitle: IssueReqType } & Pick<Idtypes, 'issueId' | 'memberId'>;
+
+export const updateIssueTitle = async ({
   issueId,
   memberId,
   newTitle,
-}: PatchIssueTitleRequestTypes): Promise<ContentTypes> => {
+}: PatchIssueTitleReqTypes): Promise<ContentTypes> => {
   try {
-    const { data: changedIssue } = await axios.patch<ContentTypes>(
+    const { data: IssueChangedTitle } = await axios.patch<ContentTypes>(
       `api/issues/${issueId}/title?memberId=${memberId}`,
       newTitle,
     );
-    return changedIssue;
+    return IssueChangedTitle;
   } catch (error) {
     const err = error as AxiosError;
     throw err;
   }
 };
 
-interface PatchIssueStateTypes {
+interface IssueStateReqTypes {
   status: boolean;
   ids: number[];
 }
 
-export const patchIssueState = async ({ newState, memberId }: { newState: PatchIssueStateTypes; memberId: number }) => {
+type PatchIssueStateReqTypes = { newState: IssueStateReqTypes } & Pick<Idtypes, 'memberId'>;
+
+export const updateIssueState = async ({ newState, memberId }: PatchIssueStateReqTypes) => {
   try {
     const { data: issueData } = await axios.patch(`api/issues/update-status?memberId=${memberId}`, newState);
     return issueData;
