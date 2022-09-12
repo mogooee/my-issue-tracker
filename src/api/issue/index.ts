@@ -103,3 +103,17 @@ export const updateComment = async ({
   }
 };
 
+type DeleteCommentTypes = Omit<Idtypes, 'reactionId'>;
+
+export const deleteComment = async ({ issueId, commentId, memberId }: DeleteCommentTypes): Promise<ContentTypes> => {
+  try {
+    const { data: IssueChangedComment } = await axios.delete<ContentTypes>(
+      `api/issues/${issueId}/comments/${commentId}?memberId=${memberId}`,
+    );
+    return IssueChangedComment;
+  } catch (error) {
+    const err = error as AxiosError;
+    throw err;
+  }
+};
+

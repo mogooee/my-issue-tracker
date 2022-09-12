@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useState, useEffect } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { useParams } from 'react-router-dom';
 
 import { COLORS } from '@/styles/theme';
@@ -10,28 +10,40 @@ import { BUTTON_PROPS } from '@/components/Atoms/Button/options';
 import TextArea from '@/components/Atoms/TextArea';
 import UserImage from '@/components/Atoms/UserImage';
 import Comment from '@/components/Molecules/Comment';
+
 import SideBar from '@/components/Molecules/SideBar';
 import IssueHeader from '@/components/Organisms/IssueHeader';
+import Modal, { ModalState } from '@/components/Modal';
+import DeleteCheck from '@/components/Modal/DeleteCheck';
 
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
 import useFetchIssue from '@/api/issue/useFetchIssue';
 
 const IssueDetail = (): JSX.Element => {
   const { issueId } = useParams();
-  const { useIssueData, useAddIssueComment } = useFetchIssue();
+  const { useIssueData, useAddIssueComment, useDeleteIssueComment } = useFetchIssue();
   const { data: issue } = useIssueData(Number(issueId));
   const { mutate: addIssueComment } = useAddIssueComment(Number(issueId));
+  const { mutate: deleteIssueComment } = useDeleteIssueComment(Number(issueId));
 
   const { id, closed, title, createdAt, lastModifiedAt, author, comments } = issue!;
 
   const userInfo = useRecoilValue(LoginUserInfoState);
+  const memberId = userInfo.id;
   const [textAreaValue, setTextAreaValue] = useState<string>('');
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useRecoilState(ModalState);
+  const [selectCommentId, setSelectCommentId] = useState<number>(0);
+
   const handleAddCommentButton = () => {
     const newComment = { content: textAreaValue };
     addIssueComment({ newComment, memberId, issueId: Number(issueId) });
     setTextAreaValue('');
   };
 
+  const handleDeleteCommentButton = () => {
+    deleteIssueComment({ issueId: id, commentId: selectCommentId, memberId });
+    setIsDeleteModalOpen(false);
+  };
 
   const isAuthor = JSON.stringify(userInfo) === JSON.stringify(author);
 
@@ -54,7 +66,7 @@ const IssueDetail = (): JSX.Element => {
             return (
               <S.Comment key={comment.id}>
                 <UserImage {...comment.author} imgSize="MEDIUM" />
-                <Comment issueId={id} isAuthor={isAuthor} comment={comment} />
+                <Comment issueId={id} isAuthor={isAuthor} comment={comment} setSelectCommentId={setSelectCommentId} />
               </S.Comment>
             );
           })}
@@ -187,6 +199,11 @@ const IssueDetail = (): JSX.Element => {
           />
         </S.Aside>
       </S.IssueContent>
+      {isDeleteModalOpen && (
+        <Modal>
+          <DeleteCheck handleDeleteButtonClick={handleDeleteCommentButton} />
+        </Modal>
+      )}
     </>
   );
 };

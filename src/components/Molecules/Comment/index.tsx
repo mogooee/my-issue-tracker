@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import useFetchReaction from '@/api/issue/useFetchReaction';
 import useFetchIssue from '@/api/issue/useFetchIssue';
+import { LoginUserInfoState } from '@/stores/loginUserInfo';
+
 import * as S from '@/components/Molecules/Comment/index.styled';
 import { COLORS } from '@/styles/theme';
 
@@ -10,12 +14,12 @@ import Button from '@/components/Atoms/Button';
 import Table from '@/components/Molecules/Table';
 import Dropdown from '@/components/Molecules/Dropdown';
 import ReactionContainer from '@/components/Molecules/Comment/ReactionContainer';
-import HeaderTab from '@/components/Molecules/Comment/HeaderTab';
 
 import calcTimeForToday from '@/utils/calcForTimeToday';
 import { CommentsTypes, ReactionResponseTypes } from '@/api/issue/types';
 import { BUTTON_PROPS, TABLE_ITEM_BUTTON_INFO } from '@/components/Atoms/Button/options';
 import { AUTHOR_LABEL_PROPS, EDIT_BUTTON_PROPS } from '@/components/Molecules/Comment/constants';
+import { ModalState } from '@/components/Modal';
 
 interface CommentTypes {
   issueId: number;
@@ -33,6 +37,8 @@ export interface UsedEmojisTypes {
   emoji: string;
   reactors: ReactorsTypes[];
 }
+
+type MoleculesCommentType = { setSelectCommentId: React.Dispatch<React.SetStateAction<number>> };
 
 export const definedUsedEmojis = (issueCommentReactionsResponse: ReactionResponseTypes[] | []) => {
   const usedEmojis: UsedEmojisTypes[] = [];
@@ -53,13 +59,23 @@ export const definedUsedEmojis = (issueCommentReactionsResponse: ReactionRespons
   return usedEmojis;
 };
 
+const Comment = ({
+  issueId,
+  isAuthor,
+  comment,
+  setSelectCommentId,
+}: CommentTypes & MoleculesCommentType): JSX.Element => {
+  const { id: commentId, author, content, createdAt, issueCommentReactionsResponse } = comment;
+
   const [textAreaValue, setTextAreaValue] = useState<string>(content);
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const setIsDeleteModalOpen = useSetRecoilState(ModalState);
+
   const { reactions } = useFetchReaction();
   const { useUpdateIssueComment } = useFetchIssue();
   const { mutate: updateIssueComment } = useUpdateIssueComment(issueId);
 
-  const { id: commentId, author, content, createdAt, issueCommentReactionsResponse } = comment;
+  const memberId = useRecoilValue(LoginUserInfoState).id;
   const hasReaction = issueCommentReactionsResponse.length > 0;
   const usedEmojis = definedUsedEmojis(issueCommentReactionsResponse);
 
@@ -72,6 +88,12 @@ export const definedUsedEmojis = (issueCommentReactionsResponse: ReactionRespons
   const handleEditCancelButtonClick = () => setIsEdit(false);
 
   const handleEditButtonClick = () => setIsEdit(true);
+
+  const handleDeleteButtonClick = () => {
+    setIsDeleteModalOpen(true);
+    setSelectCommentId(commentId);
+  };
+
   return isEdit ? (
     <S.TextArea>
       <TextArea textAreaValue={textAreaValue} setAreaValue={setTextAreaValue} />
@@ -91,6 +113,7 @@ export const definedUsedEmojis = (issueCommentReactionsResponse: ReactionRespons
               <>
                 <Label {...AUTHOR_LABEL_PROPS} />
                 <Button {...EDIT_BUTTON_PROPS} handleOnClick={handleEditButtonClick} />
+                <Button {...TABLE_ITEM_BUTTON_INFO.DELETE} handleOnClick={handleDeleteButtonClick} />
               </>
             )}
             <Dropdown

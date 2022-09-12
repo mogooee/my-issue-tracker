@@ -5,6 +5,7 @@ import {
   updateIssueState,
   addComment,
   updateComment,
+  deleteComment,
 } from '@/api/issue';
 import { IssuesTypes, ContentTypes } from '@/api/issue/types';
 
@@ -51,6 +52,13 @@ const useFetchIssue = () => {
       },
     });
 
+  const useDeleteIssueComment = (issueId: number) =>
+    useMutation(deleteComment, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['issue', issueId]);
+      },
+    });
+
   return {
     useIssuesData,
     useIssueData,
@@ -58,6 +66,7 @@ const useFetchIssue = () => {
     useUpdateIssueState,
     useAddIssueComment,
     useUpdateIssueComment,
+    useDeleteIssueComment,
   };
 };
 
