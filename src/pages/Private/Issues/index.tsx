@@ -1,57 +1,41 @@
 import { useSearchParams } from 'react-router-dom';
+import useFetchIssue from '@/api/issue/useFetchIssue';
 
-import styled from 'styled-components';
+import * as S from '@/pages/Private/Issues/index.styled';
 import { COLORS } from '@/styles/theme';
 
 import Icon from '@/components/Atoms/Icon';
 import Button from '@/components/Atoms/Button';
-
 import FilterBar from '@/components/Molecules/FilterBar';
-import { FILTERBAR_INFO } from '@/components/Molecules/FilterBar/mocks';
-import { FILTER_TABS_INFO as FILTER_TABS } from '@/components/Molecules/Dropdown/mock';
 import NavLink from '@/components/Molecules/NavLink';
 import IssueTable from '@/components/Organisms/IssueTable';
 
-import useFetchIssue from '@/api/issue/useFetchIssue';
+import { FILTERBAR_INFO } from '@/components/Molecules/FilterBar/mocks';
+import { FILTER_TABS_INFO as FILTER_TABS } from '@/components/Molecules/Dropdown/mock';
 
-const DivContainer = styled.div`
-  ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'space-between' })};
-  margin-bottom: 24px;
-`;
-
-const SubNav = styled.div`
-  ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'center' })};
-
-  button {
-    margin-left: 16px;
+const definedIssueState = (queries: string[]) => {
+  if (queries?.find((query) => query.includes('is:open'))) {
+    return 'OPEN';
   }
-`;
+  if (queries?.find((query) => query.includes('is:closed'))) {
+    return 'CLOSED';
+  }
+  return 'ALL';
+};
 
 const Issues = () => {
   const { useIssuesData } = useFetchIssue();
   const { data: issues } = useIssuesData();
 
   const [searchParams] = useSearchParams();
-
-  const definedIssueState = () => {
-    const queries = searchParams.get('q')?.split('+');
-
-    if (queries?.find((query) => query.includes('is:open'))) {
-      return 'OPEN';
-    }
-    if (queries?.find((query) => query.includes('is:closed'))) {
-      return 'CLOSED';
-    }
-    return 'ALL';
-  };
-
-  const issueState = definedIssueState();
+  const queries = searchParams.get('q')?.split('+')!;
+  const issueState = definedIssueState(queries);
 
   return (
     <>
-      <DivContainer>
+      <S.NavInline>
         <FilterBar {...FILTERBAR_INFO} />
-        <SubNav>
+        <S.SubNav>
           <NavLink
             navData={[
               { icon: <Icon icon="Tag" stroke={COLORS.TITLE_ACTIVE} />, title: '레이블 (3)', link: '/labels' },
@@ -69,8 +53,8 @@ const Issues = () => {
             size="SMALL"
             iconInfo={{ icon: 'Plus', stroke: COLORS.OFF_WHITE }}
           />
-        </SubNav>
-      </DivContainer>
+        </S.SubNav>
+      </S.NavInline>
       <IssueTable issues={issues!} filterTabs={FILTER_TABS} issueState={issueState} />
     </>
   );
