@@ -48,6 +48,7 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, '..', 'public', 'index.html'),
+      publicPath: '/',
     }),
     new webpack.ProvidePlugin({
       process: 'process/browser.js',
