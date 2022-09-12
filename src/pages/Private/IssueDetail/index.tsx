@@ -22,7 +22,7 @@ const IssueDetail = (): JSX.Element => {
   const { data: issue } = useIssueData(Number(issueId));
   const { mutate: addIssueComment } = useAddIssueComment(Number(issueId));
 
-  const { id, closed, title, createdAt, author, comments } = issue!;
+  const { id, closed, title, createdAt, lastModifiedAt, author, comments } = issue!;
 
   const userInfo = useRecoilValue(LoginUserInfoState);
   const [textAreaValue, setTextAreaValue] = useState<string>('');
@@ -42,6 +42,7 @@ const IssueDetail = (): JSX.Element => {
         closed={closed}
         title={title}
         createdAt={createdAt}
+        lastModifiedAt={lastModifiedAt}
         author={author}
         commentNum={comments.length}
       />

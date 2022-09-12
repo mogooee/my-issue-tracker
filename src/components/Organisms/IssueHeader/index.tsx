@@ -10,13 +10,14 @@ import HeaderInline from '@/components/Organisms/IssueHeader/HeaderInline';
 import calcTimeForToday from '@/utils/calcForTimeToday';
 import { ContentTypes } from '@/api/issue/types';
 
-type IssueHeaderTypes = Pick<ContentTypes, 'id' | 'title' | 'closed' | 'createdAt' | 'author'> & {
+type IssueHeaderTypes = Pick<ContentTypes, 'id' | 'title' | 'closed' | 'createdAt' | 'lastModifiedAt' | 'author'> & {
   commentNum: number;
 };
 
-const IssueHeader = ({ id, closed, title, createdAt, author, commentNum }: IssueHeaderTypes) => {
+const IssueHeader = ({ id, closed, title, createdAt, lastModifiedAt, author, commentNum }: IssueHeaderTypes) => {
   const issueState = closed ? '닫혔' : '열렸';
-  const issueStateSummary = `이 이슈가 ${calcTimeForToday(createdAt)}에 ${
+  const timeStamp = createdAt === lastModifiedAt ? createdAt : lastModifiedAt;
+  const issueStateSummary = `이 이슈가 ${calcTimeForToday(timeStamp)}에 ${
     author.nickname
   }님에 의해 ${issueState}습니다.`;
 

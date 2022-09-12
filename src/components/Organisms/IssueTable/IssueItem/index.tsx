@@ -23,7 +23,8 @@ const IssueItem = (issueInfo: ContentTypes) => {
   const milestoneLink = `/milestone/${id}`;
   // eslint-disable-next-line no-nested-ternary
   const issueState = createdAt === lastModifiedAt ? '작성되었습니다' : closed ? '닫혔습니다' : '열렸습니다';
-  const issueSummary = `이 이슈가 ${calcTimeForToday(createdAt)}, ${author.nickname}님에 의해 ${issueState}`;
+  const timeStamp = createdAt === lastModifiedAt ? createdAt : lastModifiedAt;
+  const issueSummary = `이 이슈가 ${calcTimeForToday(timeStamp)}, ${author.nickname}님에 의해 ${issueState}`;
 
   const handleLabelClick = (filterdLabelTitle: string) => {
     navigate(`/issues?q=label%3A"${filterdLabelTitle}"`);
