@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useParams } from 'react-router-dom';
+import { LoginUserInfoState } from '@/stores/loginUserInfo';
+import useFetchIssue from '@/api/issue/useFetchIssue';
 
 import { COLORS } from '@/styles/theme';
 import * as S from '@/pages/Private/IssueDetail/index.styled';
@@ -10,14 +12,10 @@ import { BUTTON_PROPS } from '@/components/Atoms/Button/options';
 import TextArea from '@/components/Atoms/TextArea';
 import UserImage from '@/components/Atoms/UserImage';
 import Comment from '@/components/Molecules/Comment';
-
 import SideBar from '@/components/Molecules/SideBar';
 import IssueHeader from '@/components/Organisms/IssueHeader';
 import Modal, { ModalState } from '@/components/Modal';
 import DeleteCheck from '@/components/Modal/DeleteCheck';
-
-import { LoginUserInfoState } from '@/stores/loginUserInfo';
-import useFetchIssue from '@/api/issue/useFetchIssue';
 
 const IssueDetail = (): JSX.Element => {
   const { issueId } = useParams();
@@ -44,8 +42,6 @@ const IssueDetail = (): JSX.Element => {
     deleteIssueComment({ issueId: id, commentId: selectCommentId, memberId });
     setIsDeleteModalOpen(false);
   };
-
-  const isAuthor = JSON.stringify(userInfo) === JSON.stringify(author);
 
   return (
     <>

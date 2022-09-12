@@ -1,14 +1,3 @@
-export interface ReactorResponseTypes {
-  id: number;
-  nickname: string;
-}
-
-export interface ReactionResponseTypes {
-  id: number;
-  emoji: string;
-  issueCommentReactorResponse: ReactorResponseTypes;
-}
-
 export interface UserTypes {
   id: number;
   email: string;
@@ -42,6 +31,17 @@ export interface IssueAssigneesTypes {
   issueAssignees: UserTypes[];
 }
 
+export interface ReactorResponseTypes {
+  id: number;
+  nickname: string;
+}
+
+export interface ReactionResponseTypes {
+  id: number;
+  emoji: string;
+  issueCommentReactorResponse: ReactorResponseTypes;
+}
+
 export interface CommentsTypes {
   id: number;
   author: UserTypes;
@@ -63,6 +63,10 @@ export interface ContentTypes {
   milestone: MilestoneTypes;
   issueHistories: [];
 }
+
+export type IssueTypes = {
+  content: ContentTypes[];
+};
 
 interface SortTypes {
   empty: boolean;
@@ -91,10 +95,6 @@ interface PageTypes {
   numberOfElements: number;
   empty: boolean;
 }
-
-export type IssueTypes = {
-  content: ContentTypes[];
-};
 
 export type IssuesTypes = {
   openIssueCount: number;
