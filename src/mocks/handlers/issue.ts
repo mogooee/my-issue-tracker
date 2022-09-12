@@ -144,6 +144,30 @@ export const issueHandlers = [
     return res(ctx.status(204));
   }),
 
+  // 이슈 코멘트 수정
+  rest.patch('api/issues/:issueId/comments/:commentId', async (req, res, ctx) => {
+    const { issueId, commentId } = req.params;
+    const { content } = await req.json();
+
+    const issue = findIssue(Number(issueId));
+
+    if (!issue) {
+      message.message = '해당하는 이슈 데이터가 없습니다.';
+      return res(ctx.status(400), ctx.json(message));
+    }
+
+    const newComment: CommentsTypes[] = issue.comments.map((comment) => {
+      if (comment.id === Number(commentId)) {
+        return { ...comment, content };
+      }
+      return comment;
+    });
+
+    const newIssue = { ...issue, comments: newComment };
+    updateIssueTable(newIssue);
+
+    return res(ctx.status(200), ctx.json(newIssue));
+  }),
   // 이모티콘 전체 조회
   rest.get('api/issues/comments/reactions/emojis', (req, res, ctx) => res(ctx.status(200), ctx.json(REACTIONS))),
 ];
