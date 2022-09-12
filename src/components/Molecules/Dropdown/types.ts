@@ -50,6 +50,7 @@ export interface ReactionPanelTypes {
   usedEmojis: UsedEmojisTypes[];
   issueId: number;
   commentId: number;
+  memberId: number;
 }
 
 export type PanelType = keyof typeof panels;

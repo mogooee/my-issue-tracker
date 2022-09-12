@@ -132,7 +132,13 @@ const Comment = ({
         <S.CommentContent>
           <span>{content}</span>
           {hasReaction && (
-            <ReactionContainer reactions={reactions!} usedEmojis={usedEmojis} issueId={issueId} commentId={commentId} />
+            <ReactionContainer
+              reactions={reactions!}
+              usedEmojis={usedEmojis}
+              issueId={issueId}
+              commentId={commentId}
+              memberId={memberId}
+            />
           )}
         </S.CommentContent>,
       ]}

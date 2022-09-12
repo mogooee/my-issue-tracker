@@ -117,3 +117,38 @@ export const deleteComment = async ({ issueId, commentId, memberId }: DeleteComm
   }
 };
 
+type PostCommentReactionTypes = { emojiName: string } & Pick<Idtypes, 'issueId' | 'commentId' | 'memberId'>;
+
+export const addCommentReaction = async ({
+  issueId,
+  commentId,
+  memberId,
+  emojiName,
+}: PostCommentReactionTypes): Promise<ContentTypes> => {
+  try {
+    const { data: IssueChangedCommentReaction } = await axios.post<ContentTypes>(
+      `api/issues/${issueId}/comments/${commentId}/reactions/${emojiName}?memberId=${memberId}`,
+    );
+    return IssueChangedCommentReaction;
+  } catch (error) {
+    const err = error as AxiosError;
+    throw err;
+  }
+};
+
+export const deleteCommentReaction = async ({
+  issueId,
+  memberId,
+  commentId,
+  reactionId,
+}: Idtypes): Promise<ContentTypes> => {
+  try {
+    const { data: IssueChangedCommentReaction } = await axios.delete<ContentTypes>(
+      `api/issues/${issueId}/comments/${commentId}/reactions/${reactionId}?memberId=${memberId}`,
+    );
+    return IssueChangedCommentReaction;
+  } catch (error) {
+    const err = error as AxiosError;
+    throw err;
+  }
+};
