@@ -83,3 +83,23 @@ export const addComment = async ({ newComment, issueId, memberId }: PostIssueCom
   }
 };
 
+type PatchCommentTypes = { newContent: CommentReqTypes } & Pick<Idtypes, 'issueId' | 'commentId' | 'memberId'>;
+
+export const updateComment = async ({
+  newContent,
+  issueId,
+  commentId,
+  memberId,
+}: PatchCommentTypes): Promise<ContentTypes> => {
+  try {
+    const { data: IssueChangedComment } = await axios.patch<ContentTypes>(
+      `api/issues/${issueId}/comments/${commentId}?memberId=${memberId}`,
+      newContent,
+    );
+    return IssueChangedComment;
+  } catch (error) {
+    const err = error as AxiosError;
+    throw err;
+  }
+};
+

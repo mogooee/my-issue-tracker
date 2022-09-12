@@ -48,12 +48,16 @@ const IssueDetail = (): JSX.Element => {
       />
       <S.IssueContent>
         <S.IssueComments>
-          {comments.map((comment) => (
-            <S.Comment key={comment.id}>
-              <UserImage {...comment.author} imgSize="MEDIUM" />
-              <Comment issueId={id} isAuthor={isAuthor} comment={comment} />
-            </S.Comment>
-          ))}
+          {comments.map((comment) => {
+            const isAuthor = JSON.stringify(userInfo) === JSON.stringify(comment.author);
+
+            return (
+              <S.Comment key={comment.id}>
+                <UserImage {...comment.author} imgSize="MEDIUM" />
+                <Comment issueId={id} isAuthor={isAuthor} comment={comment} />
+              </S.Comment>
+            );
+          })}
           <S.NewComment>
             <UserImage {...userInfo} imgSize="MEDIUM" />
             <TextArea textAreaValue={textAreaValue} setAreaValue={setTextAreaValue} />
