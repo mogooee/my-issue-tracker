@@ -1,12 +1,17 @@
 import * as S from '@/components/Molecules/Comment/index.styled';
 
+import Label from '@/components/Atoms/Label';
+import Icon from '@/components/Atoms/Icon';
+import Button from '@/components/Atoms/Button';
 import Table from '@/components/Molecules/Table';
+import Dropdown from '@/components/Molecules/Dropdown';
 import ReactionContainer from '@/components/Molecules/Comment/ReactionContainer';
 import HeaderTab from '@/components/Molecules/Comment/HeaderTab';
 
 import calcTimeForToday from '@/utils/calcForTimeToday';
 import { CommentsTypes, ReactionResponseTypes } from '@/api/issue/types';
-import useFetchReaction from '@/api/issue/useFetchReaction';
+import { BUTTON_PROPS, TABLE_ITEM_BUTTON_INFO } from '@/components/Atoms/Button/options';
+import { AUTHOR_LABEL_PROPS, EDIT_BUTTON_PROPS } from '@/components/Molecules/Comment/constants';
 
 interface CommentTypes {
   issueId: number;
@@ -57,13 +62,24 @@ const Comment = ({ issueId, isAuthor, comment }: CommentTypes): JSX.Element => {
         <S.CommentHeader>
           <span className="author">{author.nickname}</span>
           <span className="timeStamp">{calcTimeForToday(createdAt)}</span>
-          <HeaderTab
-            isAuthor={isAuthor}
-            reactions={reactions!}
-            usedEmojis={usedEmojis}
-            issueId={issueId}
-            commentId={commentId}
-          />
+          <S.CommentTab>
+            {isAuthor && (
+              <>
+                <Label {...AUTHOR_LABEL_PROPS} />
+                <Button {...EDIT_BUTTON_PROPS} />
+                <Button {...TABLE_ITEM_BUTTON_INFO.DELETE} />
+              </>
+            )}
+            <Dropdown
+              indicatorProps={{
+                indicatorStyle: 'ICON',
+                indicatorLabel: '',
+                indicatorIcon: <Icon icon="Smile" stroke={COLORS.LABEL} />,
+              }}
+              type="Reaction"
+              panelProps={{ issueId, commentId, memberId, reactions: reactions!, usedEmojis }}
+            />
+          </S.CommentTab>
         </S.CommentHeader>
       }
       item={[
