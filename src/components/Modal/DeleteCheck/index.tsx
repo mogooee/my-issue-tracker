@@ -3,7 +3,6 @@ import { useSetRecoilState } from 'recoil';
 import Button from '@/components/Atoms/Button';
 import { ModalState } from '@/components/Modal';
 import styled from 'styled-components';
-import useFetchLabel from '@/api/label/useFetchLabel';
 
 const Title = styled.h1`
   ${({ theme }) => theme.FONTSTYLES.TEXT_LARGE};
@@ -16,8 +15,11 @@ const ButtonTab = styled.div`
   }
 `;
 
-const DeleteCheck = ({ id }: { id: number }) => {
-  const { deleteLabel } = useFetchLabel();
+interface DeleteModalTypes {
+  handleDeleteButtonClick: () => void;
+}
+
+const DeleteCheck = ({ handleDeleteButtonClick }: DeleteModalTypes) => {
   const setModalState = useSetRecoilState(ModalState);
 
   const handleCancleButton = () => {
@@ -26,7 +28,7 @@ const DeleteCheck = ({ id }: { id: number }) => {
 
   const handleDeleteButton = () => {
     setModalState(false);
-    deleteLabel(id);
+    handleDeleteButtonClick();
   };
 
   return (

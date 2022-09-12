@@ -19,13 +19,12 @@ import LabelTableSkeleton from '@/components/Skeleton/LabelTable';
 import LabelItem from '@/components/Organisms/LabelTable/LabelItem';
 
 const LabelTable = () => {
-  const { labelData, replaceLabel } = useFetchLabel();
+  const { labelData, replaceLabel, deleteLabel } = useFetchLabel();
 
   const labelNum = labelData!.length;
 
   const labelState = useRecoilValue(LabelState);
   const isModal = useRecoilValue(ModalState);
-
   const resetLabelState = useResetRecoilState(LabelState);
 
   const handleCompleteButtonClick = (id: number) => {
@@ -35,6 +34,10 @@ const LabelTable = () => {
 
   const handleCancleButtonClick = () => {
     resetLabelState();
+  };
+
+  const handleDeleteButtonClick = () => {
+    deleteLabel(labelState.label.id);
   };
 
   return (
@@ -57,7 +60,7 @@ const LabelTable = () => {
       />
       {isModal && (
         <Modal>
-          <DeleteCheck id={labelState.label.id} />
+          <DeleteCheck handleDeleteButtonClick={handleDeleteButtonClick} />
         </Modal>
       )}
     </S.LabelTable>
