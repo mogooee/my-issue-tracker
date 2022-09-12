@@ -2,6 +2,7 @@
 import { rest } from 'msw';
 import { issues } from '@/mocks/tables/issue';
 import { REACTIONS } from '@/components/Molecules/Dropdown/Panel/Reaction/mock';
+import { userTable } from '@/mocks/handlers/auth';
 
 const message = {
   message: '',
@@ -29,6 +30,20 @@ const updateIssueTable = (newIssue: ContentTypes) => {
     issueTable = { ...issueTable, closedIssues: { ...issueTable.closedIssues, content: replacedIssuesContent } };
   else issueTable = { ...issueTable, openIssues: { ...issueTable.openIssues, content: replacedIssuesContent } };
 };
+
+const addIdCount = (type: 'comments') => {
+  const contents = [...issueTable.openIssues.content, ...issueTable.closedIssues.content];
+
+  let commentsCount = contents.reduce((acc, cur) => acc + cur.comments.length, 0);
+
+  return () => {
+    if (type === 'comments') {
+      commentsCount += 1;
+      return commentsCount;
+    }
+};
+
+const addCommentsId = addIdCount('comments');
 export const issueHandlers = [
   // 이슈 전체 조회
   rest.get('api/issues', (req, res, ctx) => res(ctx.status(200), ctx.json(issueTable))),
@@ -94,6 +109,37 @@ export const issueHandlers = [
       closedIssues: { ...closedIssues, content: closedIssuesContent },
       closedIssueCount: closedIssuesContent.length,
     };
+
+    return res(ctx.status(204));
+  }),
+
+  // 이슈 코멘트 등록
+  rest.post('api/issues/:issueId/comments', async (req, res, ctx) => {
+    const { issueId } = req.params;
+    const memberId = req.url.searchParams.get('memberId');
+
+    const issue = findIssue(Number(issueId));
+
+    if (!issue) {
+      message.message = '해당하는 이슈 데이터가 없습니다.';
+      return res(ctx.status(400), ctx.json(message));
+    }
+
+    const { content } = await req.json();
+
+    const newCommentId = addCommentsId();
+    const author = userTable.find(({ id }) => id === Number(memberId))!;
+
+    const newComment: CommentsTypes = {
+      id: newCommentId,
+      author,
+      content,
+      createdAt: Date(),
+      issueCommentReactionsResponse: [],
+    };
+
+    const newIssue = { ...issue, comments: [...issue.comments, newComment] };
+    updateIssueTable(newIssue);
 
     return res(ctx.status(204));
   }),
