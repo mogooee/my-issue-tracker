@@ -60,7 +60,7 @@ export interface ContentTypes {
   comments: CommentsTypes[];
   issueAssignees: IssueAssigneesTypes;
   issueLabels: IssueLabelsTypes;
-  milestone: MilestoneTypes;
+  milestone: MilestoneTypes | null;
   issueHistories: [];
 }
 
@@ -69,30 +69,30 @@ export type IssueTypes = {
 };
 
 interface SortTypes {
-  empty: boolean;
   unsorted: boolean;
+  empty: boolean;
   sorted: boolean;
 }
 
 interface PageableTypes {
   sort: SortTypes;
-  offset: number;
   pageNumber: number;
   pageSize: number;
+  offset: number;
   paged: boolean;
   unpaged: boolean;
 }
 
 interface PageTypes {
   pageable: PageableTypes;
-  sort: SortTypes;
   last: boolean;
   totalPages: number;
   totalElements: number;
+  sort: SortTypes;
   first: boolean;
-  size: number;
   number: number;
   numberOfElements: number;
+  size: number;
   empty: boolean;
 }
 
@@ -101,4 +101,4 @@ export type IssuesTypes = {
   openIssues: IssueTypes & PageTypes;
   closedIssueCount: number;
   closedIssues: IssueTypes & PageTypes;
-} & PageTypes;
+};

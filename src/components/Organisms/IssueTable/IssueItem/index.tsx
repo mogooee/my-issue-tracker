@@ -16,6 +16,7 @@ import { ContentTypes } from '@/api/issue/types';
 
 const IssueItem = (issueInfo: ContentTypes) => {
   const { id, title, closed, issueLabels, author, issueAssignees, createdAt, lastModifiedAt, milestone } = issueInfo;
+
   const checkState = useRecoilValue(CheckState);
   const navigate = useNavigate();
 
@@ -54,12 +55,14 @@ const IssueItem = (issueInfo: ContentTypes) => {
         <S.IssueContent>
           <span>{`#${id}`}</span>
           <span className="summary">{issueSummary}</span>
-          <Link className="milestone" to={milestoneLink}>
-            <>
-              <Icon icon="Milestone" fill={COLORS.SECONDORY.PURPLE} />
-              {milestone.title}
-            </>
-          </Link>
+          {milestone && (
+            <Link className="milestone" to={milestoneLink}>
+              <>
+                <Icon icon="Milestone" fill={COLORS.SECONDORY.PURPLE} />
+                {milestone.title}
+              </>
+            </Link>
+          )}
         </S.IssueContent>
       </div>
       <S.Assignee>

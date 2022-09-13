@@ -171,7 +171,7 @@ export const issue: ContentTypes = {
 };
 
 export const issues: IssuesTypes = {
-  openIssueCount: 5,
+  openIssueCount: 6,
   openIssues: {
     content: [
       {
@@ -193,7 +193,7 @@ export const issues: IssuesTypes = {
               profileImage: 'https://avatars.githubusercontent.com/u/68011320?v=4',
             },
             content: '주문할 메뉴는 오리지널과 비프립플레이트입니다.',
-            createdAt: '2022-09-11T00:00:00',
+            createdAt: '2022-08-18T00:00:00',
             issueCommentReactionsResponse: [
               {
                 id: 1,
@@ -222,7 +222,7 @@ export const issues: IssuesTypes = {
               profileImage: 'https://avatars.githubusercontent.com/u/29879110?v=4',
             },
             content: '너무 좋아요 소고기뭇국도 기대됩니다.',
-            createdAt: '2022-09-11T00:00:00',
+            createdAt: '2022-08-18T03:00:00',
             issueCommentReactionsResponse: [
               {
                 id: 4,
@@ -293,8 +293,8 @@ export const issues: IssuesTypes = {
           closed: false,
         },
         issueHistories: [],
-        createdAt: '2022-09-11T00:00:00',
-        lastModifiedAt: '2022-09-11T00:00:00',
+        createdAt: '2022-09-01T00:00:00',
+        lastModifiedAt: '2022-09-01T00:00:00',
         closed: false,
       },
       {
@@ -316,7 +316,7 @@ export const issues: IssuesTypes = {
               profileImage: 'https://avatars.githubusercontent.com/u/29879110?v=4',
             },
             content: '물회에는 역시 오이가 들어가야죠!',
-            createdAt: '2022-09-11T00:00:00',
+            createdAt: '2022-08-20T00:00:00',
             issueCommentReactionsResponse: [
               {
                 id: 3,
@@ -383,8 +383,8 @@ export const issues: IssuesTypes = {
           closed: false,
         },
         issueHistories: [],
-        createdAt: '2022-09-11T00:00:00',
-        lastModifiedAt: '2022-09-11T00:00:00',
+        createdAt: '2022-09-02T00:00:00',
+        lastModifiedAt: '2022-09-02T00:00:00',
         closed: false,
       },
       {
@@ -406,7 +406,7 @@ export const issues: IssuesTypes = {
               profileImage: 'https://avatars.githubusercontent.com/u/68011320?v=4',
             },
             content: '해진뒤 한 번 실패 뒤 재도전!!',
-            createdAt: '2022-09-11T00:00:00',
+            createdAt: '2022-08-30T00:00:00',
             issueCommentReactionsResponse: [
               {
                 id: 5,
@@ -472,8 +472,8 @@ export const issues: IssuesTypes = {
           closed: false,
         },
         issueHistories: [],
-        createdAt: '2022-09-11T00:00:00',
-        lastModifiedAt: '2022-09-11T00:00:00',
+        createdAt: '2022-09-03T00:00:00',
+        lastModifiedAt: '2022-09-03T00:00:00',
         closed: false,
       },
       {
@@ -495,7 +495,7 @@ export const issues: IssuesTypes = {
               profileImage: 'https://avatars.githubusercontent.com/u/29879110?v=4',
             },
             content: '아타리 가는날은 무슨날?',
-            createdAt: '2022-09-11T00:00:00',
+            createdAt: '2022-09-10T00:00:00',
             issueCommentReactionsResponse: [],
           },
         ],
@@ -543,8 +543,8 @@ export const issues: IssuesTypes = {
           closed: false,
         },
         issueHistories: [],
-        createdAt: '2022-09-11T00:00:00',
-        lastModifiedAt: '2022-09-11T00:00:00',
+        createdAt: '2022-09-04T00:00:00',
+        lastModifiedAt: '2022-09-04T00:00:00',
         closed: false,
       },
       {
@@ -556,7 +556,32 @@ export const issues: IssuesTypes = {
           nickname: 'hoo',
           profileImage: 'https://avatars.githubusercontent.com/u/68011320?v=4',
         },
-        comments: [],
+        comments: [
+          {
+            id: 10,
+            author: {
+              id: 1,
+              email: 'who.ho3ov@gmail.com',
+              nickname: 'hoo',
+              profileImage: 'https://avatars.githubusercontent.com/u/68011320?v=4',
+            },
+            content: '다음엔 저도 데려가세요.',
+            createdAt: '2022-09-12T00:00:00',
+            issueCommentReactionsResponse: [],
+          },
+          {
+            id: 11,
+            author: {
+              id: 2,
+              email: 'ak2j38@gmail.com',
+              nickname: 'ader',
+              profileImage: 'https://avatars.githubusercontent.com/u/29879110?v=4',
+            },
+            content: '꼭 파티구해서 같이가요!',
+            createdAt: '2022-09-12T02:00:00',
+            issueCommentReactionsResponse: [],
+          },
+        ],
         issueAssignees: {
           issueAssignees: [
             {
@@ -586,8 +611,58 @@ export const issues: IssuesTypes = {
           closed: false,
         },
         issueHistories: [],
-        createdAt: '2022-09-11T00:00:00',
-        lastModifiedAt: '2022-09-11T00:00:00',
+        createdAt: '2022-09-08T00:00:00',
+        lastModifiedAt: '2022-09-08T00:00:00',
+        closed: false,
+      },
+      {
+        id: 9,
+        title: 'test',
+        author: {
+          id: 3,
+          email: 'jm.dev.study@gmail.com',
+          nickname: '도비',
+          profileImage: 'https://avatars.githubusercontent.com/u/85747667?v=4',
+        },
+        comments: [
+          {
+            id: 12,
+            author: {
+              id: 3,
+              email: 'jm.dev.study@gmail.com',
+              nickname: '도비',
+              profileImage: 'https://avatars.githubusercontent.com/u/85747667?v=4',
+            },
+            content: '# test',
+            createdAt: '2022-09-13T11:47:11.408015',
+            issueCommentReactionsResponse: [],
+          },
+        ],
+        issueAssignees: {
+          issueAssignees: [
+            {
+              id: 3,
+              email: 'jm.dev.study@gmail.com',
+              nickname: '도비',
+              profileImage: 'https://avatars.githubusercontent.com/u/85747667?v=4',
+            },
+          ],
+        },
+        issueLabels: {
+          issueLabels: [
+            {
+              id: 2,
+              title: 'Docs',
+              backgroundColorCode: '#d4c510',
+              description: '문서 추가용 라벨입니다.',
+              textColor: 'WHITE',
+            },
+          ],
+        },
+        milestone: null,
+        issueHistories: [],
+        createdAt: '2022-09-13T11:47:11.372872',
+        lastModifiedAt: '2022-09-13T11:47:11.372872',
         closed: false,
       },
     ],
@@ -603,17 +678,17 @@ export const issues: IssuesTypes = {
       paged: true,
       unpaged: false,
     },
-    last: true,
-    totalPages: 1,
-    totalElements: 5,
+    last: false,
+    totalPages: 2,
+    totalElements: 6,
     sort: {
       unsorted: true,
       sorted: false,
       empty: true,
     },
-    first: true,
     number: 0,
-    numberOfElements: 5,
+    first: true,
+    numberOfElements: 6,
     size: 5,
     empty: false,
   },
@@ -629,7 +704,32 @@ export const issues: IssuesTypes = {
           nickname: 'hoo',
           profileImage: 'https://avatars.githubusercontent.com/u/68011320?v=4',
         },
-        comments: [],
+        comments: [
+          {
+            id: 6,
+            author: {
+              id: 1,
+              email: 'who.ho3ov@gmail.com',
+              nickname: 'hoo',
+              profileImage: 'https://avatars.githubusercontent.com/u/68011320?v=4',
+            },
+            content: '또 오셔야겠죠?',
+            createdAt: '2022-09-11T00:00:00',
+            issueCommentReactionsResponse: [],
+          },
+          {
+            id: 7,
+            author: {
+              id: 2,
+              email: 'ak2j38@gmail.com',
+              nickname: 'ader',
+              profileImage: 'https://avatars.githubusercontent.com/u/29879110?v=4',
+            },
+            content: '오제제의 안심과 자루우동은 아주 나이스!',
+            createdAt: '2022-09-11T05:00:00',
+            issueCommentReactionsResponse: [],
+          },
+        ],
         issueAssignees: {
           issueAssignees: [
             {
@@ -653,8 +753,8 @@ export const issues: IssuesTypes = {
           closed: false,
         },
         issueHistories: [],
-        createdAt: '2022-09-11T00:00:00',
-        lastModifiedAt: '2022-09-11T00:00:00',
+        createdAt: '2022-09-05T00:00:00',
+        lastModifiedAt: '2022-09-05T00:00:00',
         closed: true,
       },
       {
@@ -666,7 +766,20 @@ export const issues: IssuesTypes = {
           nickname: 'hoo',
           profileImage: 'https://avatars.githubusercontent.com/u/68011320?v=4',
         },
-        comments: [],
+        comments: [
+          {
+            id: 8,
+            author: {
+              id: 1,
+              email: 'who.ho3ov@gmail.com',
+              nickname: 'hoo',
+              profileImage: 'https://avatars.githubusercontent.com/u/68011320?v=4',
+            },
+            content: '추사백은 금지입니다.',
+            createdAt: '2022-09-11T06:00:00',
+            issueCommentReactionsResponse: [],
+          },
+        ],
         issueAssignees: {
           issueAssignees: [
             {
@@ -690,8 +803,8 @@ export const issues: IssuesTypes = {
           closed: false,
         },
         issueHistories: [],
-        createdAt: '2022-09-11T00:00:00',
-        lastModifiedAt: '2022-09-11T00:00:00',
+        createdAt: '2022-09-06T00:00:00',
+        lastModifiedAt: '2022-09-06T00:00:00',
         closed: true,
       },
       {
@@ -703,7 +816,20 @@ export const issues: IssuesTypes = {
           nickname: 'hoo',
           profileImage: 'https://avatars.githubusercontent.com/u/68011320?v=4',
         },
-        comments: [],
+        comments: [
+          {
+            id: 9,
+            author: {
+              id: 2,
+              email: 'ak2j38@gmail.com',
+              nickname: 'ader',
+              profileImage: 'https://avatars.githubusercontent.com/u/29879110?v=4',
+            },
+            content: '두 번가서 결국 끝까지 먹어봤네요.',
+            createdAt: '2022-09-11T12:00:00',
+            issueCommentReactionsResponse: [],
+          },
+        ],
         issueAssignees: {
           issueAssignees: [
             {
@@ -733,20 +859,20 @@ export const issues: IssuesTypes = {
           closed: false,
         },
         issueHistories: [],
-        createdAt: '2022-09-11T00:00:00',
-        lastModifiedAt: '2022-09-11T00:00:00',
+        createdAt: '2022-09-07T00:00:00',
+        lastModifiedAt: '2022-09-07T00:00:00',
         closed: true,
       },
     ],
     pageable: {
       sort: {
-        empty: true,
         unsorted: true,
         sorted: false,
+        empty: true,
       },
-      offset: 0,
       pageNumber: 0,
       pageSize: 5,
+      offset: 0,
       paged: true,
       unpaged: false,
     },
@@ -754,39 +880,14 @@ export const issues: IssuesTypes = {
     totalPages: 1,
     totalElements: 3,
     sort: {
-      empty: true,
       unsorted: true,
       sorted: false,
+      empty: true,
     },
-    first: true,
-    size: 5,
     number: 0,
+    first: true,
     numberOfElements: 3,
+    size: 5,
     empty: false,
   },
-  pageable: {
-    sort: {
-      empty: true,
-      unsorted: true,
-      sorted: false,
-    },
-    offset: 0,
-    pageNumber: 0,
-    pageSize: 5,
-    paged: true,
-    unpaged: false,
-  },
-  last: true,
-  totalPages: 1,
-  totalElements: 5,
-  sort: {
-    empty: true,
-    unsorted: true,
-    sorted: false,
-  },
-  first: true,
-  size: 5,
-  number: 0,
-  numberOfElements: 5,
-  empty: false,
 };
