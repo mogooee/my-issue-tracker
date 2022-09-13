@@ -111,7 +111,7 @@ export const issueHandlers = [
     ids.forEach((id: number) => {
       contents = contents.map((content) => {
         if (content.id === id) {
-          return { ...content, closed: !status, lastModifiedAt: Date() };
+          return { ...content, closed: status, lastModifiedAt: Date() };
         }
         return content;
       });

@@ -45,7 +45,7 @@ const HeaderInline = ({ id: issueId, title, closed, isAuthor }: HeaderInlineType
 
   const handleOnIssueStateButtonClick = () => {
     const ids = [issueId];
-    const newState = { status: !!closed, ids };
+    const newState = { status: !closed, ids };
     updateIssueState({ newState, memberId });
   };
 
