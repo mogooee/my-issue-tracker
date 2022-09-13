@@ -29,10 +29,11 @@ const useFetchIssue = () => {
       },
     });
 
-  const useUpdateIssueState = (issueId: number[]) =>
+  const useUpdateIssueState = (issueIds: number[]) =>
     useMutation(updateIssueState, {
       onSuccess: () => {
-        issueId.forEach((id) => {
+        queryClient.invalidateQueries(['issues']);
+        issueIds.forEach((id) => {
           queryClient.invalidateQueries(['issue', id]);
         });
       },
