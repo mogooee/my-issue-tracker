@@ -37,6 +37,15 @@ const HeaderInline = ({ id: issueId, title, closed, isAuthor }: HeaderInlineType
 
   const handleOnTitleTyping = debounce(timerId, handleTitleOnChange, DEBOUNCE_DELAY);
 
+  const handleOnEditButtonClick = () => {
+    setIsEdit(true);
+  };
+
+  const handleOnEditCancelButtonClick = () => {
+    setIsEdit(false);
+    setIssueTitle(title);
+  };
+
   const handleOnSaveTitleButtonClick = () => {
     const newTitle = { title: issueTitle };
     updateIssueTitle({ issueId, memberId, newTitle });
@@ -50,11 +59,17 @@ const HeaderInline = ({ id: issueId, title, closed, isAuthor }: HeaderInlineType
   };
 
   const leftButtonProps = isEdit
-    ? { ...BUTTON_PROPS.CANCEL, label: '편집 취소', handleOnClick: () => setIsEdit(false) }
-    : { ...ISSUE_DETAIL_BUTTON_PROPS.EDIT, handleOnClick: () => setIsEdit(true) };
+    ? {
+        ...BUTTON_PROPS.CANCEL,
+        label: '편집 취소',
+        handleOnClick: handleOnEditCancelButtonClick,
+      }
+    : { ...ISSUE_DETAIL_BUTTON_PROPS.EDIT, handleOnClick: handleOnEditButtonClick };
+
+  const isDisabledEditSave = !issueTitle || issueTitle === title;
 
   const rightButtonProps = isEdit
-    ? { ...BUTTON_PROPS.EDIT_SAVE, handleOnClick: handleOnSaveTitleButtonClick }
+    ? { ...BUTTON_PROPS.EDIT_SAVE, disabled: isDisabledEditSave, handleOnClick: handleOnSaveTitleButtonClick }
     : { ...ISSUE_DETAIL_BUTTON_PROPS[closed ? 'OPEN' : 'CLOSE'], handleOnClick: handleOnIssueStateButtonClick };
 
   return (

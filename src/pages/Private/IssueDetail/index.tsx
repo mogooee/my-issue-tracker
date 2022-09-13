@@ -32,6 +32,8 @@ const IssueDetail = (): JSX.Element => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useRecoilState(ModalState);
   const [selectCommentId, setSelectCommentId] = useState<number>(0);
 
+  const isTypingNewComment = !textAreaValue;
+
   const handleAddCommentButton = () => {
     const newComment = { content: textAreaValue };
     addIssueComment({ newComment, memberId, issueId: Number(issueId) });
@@ -70,7 +72,7 @@ const IssueDetail = (): JSX.Element => {
             <UserImage {...userInfo} imgSize="MEDIUM" />
             <TextArea textAreaValue={textAreaValue} setAreaValue={setTextAreaValue} />
           </S.NewComment>
-          <Button {...BUTTON_PROPS.ADD} handleOnClick={handleAddCommentButton} />
+          <Button {...BUTTON_PROPS.ADD} disabled={isTypingNewComment} handleOnClick={handleAddCommentButton} />
         </S.IssueComments>
         <S.Aside>
           <SideBar

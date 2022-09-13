@@ -79,13 +79,18 @@ const Comment = ({
   const hasReaction = issueCommentReactionsResponse.length > 0;
   const usedEmojis = definedUsedEmojis(issueCommentReactionsResponse);
 
+  const isDisabledEditSaveButton = !textAreaValue || textAreaValue === content;
+
   const handleUpdateCommentButtonClick = () => {
     const newContent = { content: textAreaValue };
     updateIssueComment({ issueId, commentId, memberId, newContent });
     setIsEdit(false);
   };
 
-  const handleEditCancelButtonClick = () => setIsEdit(false);
+  const handleEditCancelButtonClick = () => {
+    setTextAreaValue(content);
+    setIsEdit(false);
+  };
 
   const handleEditButtonClick = () => setIsEdit(true);
 
@@ -99,7 +104,11 @@ const Comment = ({
       <TextArea textAreaValue={textAreaValue} setAreaValue={setTextAreaValue} />
       <S.TextAreaButtonTab>
         <Button {...{ ...BUTTON_PROPS.CANCEL, label: '편집 취소' }} handleOnClick={handleEditCancelButtonClick} />
-        <Button {...BUTTON_PROPS.EDIT_SAVE} handleOnClick={handleUpdateCommentButtonClick} />
+        <Button
+          {...BUTTON_PROPS.EDIT_SAVE}
+          disabled={isDisabledEditSaveButton}
+          handleOnClick={handleUpdateCommentButtonClick}
+        />
       </S.TextAreaButtonTab>
     </S.TextArea>
   ) : (
