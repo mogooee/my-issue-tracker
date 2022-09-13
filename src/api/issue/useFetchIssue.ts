@@ -14,10 +14,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 const useFetchIssue = () => {
   const queryClient = useQueryClient();
 
-  const useIssuesData = () => useQuery<IssuesTypes>(['issues'], getIssuesData);
+  const useIssuesData = (page: number) => useQuery<IssuesTypes>(['issues'], () => getIssuesData(page));
 
   const useIssueData = (issueId: number) =>
-    useQuery<ContentTypes>(['issue', issueId], () => getIssueData(issueId!), {
+    useQuery<ContentTypes>(['issue', issueId], () => getIssueData(issueId), {
       cacheTime: 10000,
       staleTime: 0,
     });

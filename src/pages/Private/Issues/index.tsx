@@ -28,7 +28,7 @@ const definedIssueState = (queries: string[]) => {
 
 const Issues = () => {
   const { useIssuesData } = useFetchIssue();
-  const { data: issues } = useIssuesData();
+  const { data: issues } = useIssuesData(0);
 
   const [searchParams] = useSearchParams();
   const setCheckState = useSetRecoilState(CheckState);
