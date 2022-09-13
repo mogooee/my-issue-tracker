@@ -8,9 +8,9 @@ interface Idtypes {
   memberId: number;
 }
 
-export const getIssuesData = async (): Promise<IssuesTypes> => {
+export const getIssuesData = async (page: number): Promise<IssuesTypes> => {
   try {
-    const { data: issuesData } = await axios.get<IssuesTypes>('api/issues');
+    const { data: issuesData } = await axios.get<IssuesTypes>(`api/issues?page=${page}`);
     return issuesData;
   } catch (error) {
     const err = error as AxiosError;
