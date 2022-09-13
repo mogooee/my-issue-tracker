@@ -1,32 +1,22 @@
-import { atom, selector } from 'recoil';
+import { atom } from 'recoil';
 
 export interface CheckStateTypes {
+  issueState: 'OPEN' | 'CLOSED' | 'ALL';
   parent: boolean;
-  child: boolean[];
+  child: number[];
 }
 
 export const CheckState = atom<CheckStateTypes>({
   key: 'CheckState',
-  default: { parent: false, child: [] },
+  default: { issueState: 'ALL', parent: false, child: [] },
 });
 
-export const IssueTableCheckState = selector({
-  key: 'IssueTableCheckState',
-  get: ({ get }) => {
-    const issueCheckState = get(CheckState);
-    const totalIssueNum = issueCheckState.child.length;
-    const checkedIssueNum = issueCheckState.child.filter((e) => e === true).length;
+interface DefaultCheckIdsTypes {
+  openIds: number[];
+  closedIds: number[];
+}
 
-    let checkStatsState = '';
-    if (!checkedIssueNum) checkStatsState = 'none';
-    else {
-      checkStatsState = checkedIssueNum === totalIssueNum ? 'every' : 'some';
-    }
-
-    return {
-      totalIssueNum,
-      checkedIssueNum,
-      checkStatsState,
-    };
-  },
+export const DefaultCheckIds = atom<DefaultCheckIdsTypes>({
+  key: 'DefaultCheckIds',
+  default: { openIds: [], closedIds: [] },
 });

@@ -1,12 +1,14 @@
 /* eslint-disable react/prop-types */
 import { useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import useFetchIssue from '@/api/issue/useFetchIssue';
+import { LoginUserInfoState } from '@/stores/loginUserInfo';
+import { CheckState, DefaultCheckIds } from '@/stores/checkBox';
 
 import CheckBox from '@/components/Atoms/CheckBox';
 import NavLink from '@/components/Molecules/NavLink';
 import IssueItem from '@/components/Organisms/IssueTable/IssueItem';
 import Dropdown from '@/components/Molecules/Dropdown';
-import { CheckState, IssueTableCheckState } from '@/stores/checkBox';
 
 import * as S from '@/components/Organisms/IssueTable/index.styles';
 import { DropdownTypes, ListPanelTypes } from '@/components/Molecules/Dropdown/types';
@@ -23,29 +25,52 @@ interface IssueTableTypes {
   issueState: IssueStateType;
 }
 
+const definedItem = (
+  state: IssueStateType,
+  openIssuesContent: ContentTypes[],
+  closedIssuesContent: ContentTypes[],
+): ContentTypes[] => {
+  if (state === 'OPEN') {
+    return openIssuesContent;
+  }
+  if (state === 'CLOSED') {
+    return closedIssuesContent;
+  }
+
+  return [...openIssuesContent, ...closedIssuesContent];
+};
+
 const IssueTable = ({ issues, filterTabs, issueState }: IssueTableTypes) => {
-  const [checkState, setCheckState] = useRecoilState(CheckState);
-  const { checkedIssueNum } = useRecoilValue(IssueTableCheckState);
   const { openIssueCount, openIssues, closedIssueCount, closedIssues } = issues;
 
-  const definedItem = (state: IssueStateType): [ContentTypes[], number] => {
-    if (state === 'OPEN') {
-      return [openIssues.content, openIssueCount];
-    }
-    if (state === 'CLOSED') {
-      return [closedIssues.content, closedIssueCount];
-    }
-    return [[...openIssues.content, ...closedIssues.content], openIssueCount + closedIssueCount];
+  const [checkState, setCheckState] = useRecoilState(CheckState);
+  const setDefaultCheckIds = useSetRecoilState(DefaultCheckIds);
+  const checkedBoxNum = checkState.child.length;
+
+  const { useUpdateIssueState } = useFetchIssue();
+  const { mutate: updateIssueState } = useUpdateIssueState(checkState.child);
+  const memberId = useRecoilValue(LoginUserInfoState).id;
+
+  const items = definedItem(issueState, openIssues.content, closedIssues.content);
+
+  const changeIssueState = (target: HTMLInputElement) => {
+    const clickedPanelStatus = target.dataset.id;
+    const status = clickedPanelStatus === 'open';
+    const newState = { status, ids: checkState.child };
+    updateIssueState({ newState, memberId });
+    setCheckState({ ...checkState, parent: false, child: [] });
   };
 
-  const [items, itemsCount] = definedItem(issueState);
+  const IssueStateDropdownProps = {
+    ...OPEN_CLOSE_DROPDOWN_ARGS,
+    panelProps: { ...OPEN_CLOSE_DROPDOWN_ARGS.panelProps, handleOnClick: changeIssueState },
+  };
 
   useEffect(() => {
-    setCheckState({
-      ...checkState,
-      child: Array.from({ length: itemsCount }, () => false),
-    });
-  }, []);
+    const openIds: number[] = issues.openIssues.content.map((openIssue) => openIssue.id);
+    const closedIds: number[] = issues.closedIssues.content.map((closedIssue) => closedIssue.id);
+    setDefaultCheckIds({ openIds, closedIds });
+  }, [issues.openIssueCount]);
 
   return (
     <Table
@@ -53,15 +78,15 @@ const IssueTable = ({ issues, filterTabs, issueState }: IssueTableTypes) => {
         <S.IssueTableHeader>
           <CheckBox id={-1} type="parent" checked={checkState.parent} />
           <S.IssueStates>
-            {checkedIssueNum ? (
-              <span>{`${checkedIssueNum}개 이슈 선택`}</span>
+            {checkedBoxNum > 0 ? (
+              <span>{`${checkedBoxNum}개 이슈 선택`}</span>
             ) : (
               <NavLink navData={openCloseIssue(openIssueCount, closedIssueCount)} />
             )}
           </S.IssueStates>
           <S.IssueInfoTabs>
-            {checkedIssueNum ? (
-              <Dropdown {...OPEN_CLOSE_DROPDOWN_ARGS} />
+            {checkedBoxNum > 0 ? (
+              <Dropdown {...IssueStateDropdownProps} />
             ) : (
               filterTabs.map((info) => <Dropdown key={info.panelProps.panelTitle} {...info} />)
             )}

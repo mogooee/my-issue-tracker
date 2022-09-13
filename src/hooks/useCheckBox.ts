@@ -1,28 +1,44 @@
-import { CheckState, IssueTableCheckState } from '@/stores/checkBox';
+import { CheckState, DefaultCheckIds } from '@/stores/checkBox';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 function useCheckBox() {
   const [checkState, setCheckState] = useRecoilState(CheckState);
-  const { checkStatsState } = useRecoilValue(IssueTableCheckState);
+  const defaultCheckIds = useRecoilValue(DefaultCheckIds);
+  const newCheckState: { parent: boolean; child: number[] } = { parent: false, child: [] };
 
-  const clickParentCheckBox = (checked: boolean) => {
-    let newCheckState = { ...checkState };
+  const clickParentCheckBox = () => {
+    const totalCheckIds =
+      // eslint-disable-next-line no-nested-ternary
+      checkState.issueState === 'ALL'
+        ? [...defaultCheckIds.openIds, ...defaultCheckIds.closedIds]
+        : checkState.issueState === 'OPEN'
+        ? defaultCheckIds.openIds
+        : defaultCheckIds.closedIds;
+    const isAllCheckedChildBox = checkState.child.length === totalCheckIds.length;
 
-    if (checkStatsState === 'some') {
-      const newChildCheckState = newCheckState.child.map((e) => true);
-      newCheckState = { ...newCheckState, child: newChildCheckState };
+    if (isAllCheckedChildBox) {
+      newCheckState.parent = false;
+      newCheckState.child = [];
     } else {
-      const newChildCheckState = newCheckState.child.map((e) => checked);
-      newCheckState = { parent: checked, child: newChildCheckState };
+      newCheckState.parent = true;
+      newCheckState.child = totalCheckIds;
     }
-    setCheckState(newCheckState);
+
+    setCheckState({ ...checkState, ...newCheckState });
   };
 
-  const clickChildCheckBox = (id: number, checked: boolean) => {
-    const newChildCheckState = [...checkState.child];
-    newChildCheckState[id] = checked;
-    const newCheckState = { parent: newChildCheckState.includes(true), child: newChildCheckState };
-    setCheckState(newCheckState);
+  const clickChildCheckBox = (id: number) => {
+    const isCheckedCheckBox = checkState.child.find((checked) => checked === id);
+
+    if (isCheckedCheckBox) {
+      newCheckState.child = checkState.child.filter((checked) => checked !== id);
+    } else {
+      newCheckState.child = [...checkState.child, id];
+    }
+
+    newCheckState.parent = newCheckState.child.length > 0;
+
+    setCheckState({ ...checkState, ...newCheckState });
   };
 
   return { clickParentCheckBox, clickChildCheckBox };

@@ -1,5 +1,8 @@
+import { useEffect } from 'react';
+import { useSetRecoilState } from 'recoil';
 import { useSearchParams } from 'react-router-dom';
 import useFetchIssue from '@/api/issue/useFetchIssue';
+import { CheckState } from '@/stores/checkBox';
 
 import * as S from '@/pages/Private/Issues/index.styled';
 import { COLORS } from '@/styles/theme';
@@ -28,8 +31,13 @@ const Issues = () => {
   const { data: issues } = useIssuesData();
 
   const [searchParams] = useSearchParams();
+  const setCheckState = useSetRecoilState(CheckState);
   const queries = searchParams.get('q')?.split('+')!;
   const issueState = definedIssueState(queries);
+
+  useEffect(() => {
+    setCheckState((checkState) => ({ ...checkState, issueState }));
+  }, [issueState]);
 
   return (
     <>

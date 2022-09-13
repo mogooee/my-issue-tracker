@@ -26,13 +26,15 @@ const IssueItem = (issueInfo: ContentTypes) => {
   const timeStamp = createdAt === lastModifiedAt ? createdAt : lastModifiedAt;
   const issueSummary = `이 이슈가 ${calcTimeForToday(timeStamp)}, ${author.nickname}님에 의해 ${issueState}`;
 
+  const isChecked = !!checkState.child.find((checkboxId) => checkboxId === id);
+
   const handleLabelClick = (filterdLabelTitle: string) => {
     navigate(`/issues?q=label%3A"${filterdLabelTitle}"`);
   };
 
   return (
     <S.Template>
-      <CheckBox id={id} type="child" checked={checkState.child[id]} />
+      <CheckBox id={id} type="child" checked={isChecked} />
       <div>
         <S.IssueTitle>
           <Icon

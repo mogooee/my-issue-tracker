@@ -3,8 +3,8 @@ import { useRecoilValue } from 'recoil';
 
 import * as S from '@/components/Atoms/CheckBox/index.styles';
 
-import { IssueTableCheckState } from '@/stores/checkBox';
 import useCheckBox from '@/hooks/useCheckBox';
+import { CheckState, DefaultCheckIds } from '@/stores/checkBox';
 
 export interface CheckboxTypes {
   id: number;
@@ -13,20 +13,22 @@ export interface CheckboxTypes {
 }
 
 const CheckBox = ({ id, type, checked = false }: CheckboxTypes) => {
-  const { checkStatsState } = useRecoilValue(IssueTableCheckState);
+  const checkState = useRecoilValue(CheckState);
+  const defaultCheckIds = useRecoilValue(DefaultCheckIds);
   const { clickParentCheckBox, clickChildCheckBox } = useCheckBox();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   if (type === 'parent' && inputRef?.current) {
-    inputRef.current.indeterminate = checkStatsState === 'some';
+    const totalChildBoxNum = [...defaultCheckIds.openIds, ...defaultCheckIds.closedIds].length;
+    inputRef.current.indeterminate = checkState.child.length > 0 && checkState.child.length < totalChildBoxNum;
   }
 
-  const onChangeCheckbox = (event: { target: HTMLInputElement }) => {
+  const onChangeCheckbox = () => {
     if (type === 'parent') {
-      clickParentCheckBox(event.target.checked);
+      clickParentCheckBox();
     } else {
-      clickChildCheckBox(id, event.target.checked);
+      clickChildCheckBox(id);
     }
   };
 
