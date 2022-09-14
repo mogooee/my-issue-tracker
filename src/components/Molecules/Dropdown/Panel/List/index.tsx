@@ -34,43 +34,44 @@ const ListPanel = ({ ...props }: ListPanelTypes) => {
             </label>
           </S.PanelItem>
         )}
-        {panelList.map(({ ...listProps }) => {
-          const { id: issueId, title: issueTitle, dataId } = listProps as IssueTypes;
-          const { id: labelId, title: labelTitle, backgroundColorCode } = listProps as LabelTypes;
-          const { id: milestoneId, title: milestoneTitle } = listProps as MilestoneTypes;
-          const { id: userImgId, nickname, profileImage, email } = listProps as UserTypes;
+        {panelList &&
+          panelList.map(({ ...listProps }) => {
+            const { id: issueId, title: issueTitle, dataId } = listProps as IssueTypes;
+            const { id: labelId, title: labelTitle, backgroundColorCode } = listProps as LabelTypes;
+            const { id: milestoneId, title: milestoneTitle } = listProps as MilestoneTypes;
+            const { id: userImgId, nickname, profileImage, email } = listProps as UserTypes;
 
-          const ITEM_KEY = `${panelTitle}-${issueId || labelId || milestoneId || userImgId}`;
-          const INPUT_NAME = issueTitle || labelTitle || milestoneTitle || nickname;
-          const DATASET_ID = dataId || labelTitle || milestoneTitle || nickname;
+            const ITEM_KEY = `${panelTitle}-${issueId || labelId || milestoneId || userImgId}`;
+            const INPUT_NAME = issueTitle || labelTitle || milestoneTitle || nickname;
+            const DATASET_ID = dataId || labelTitle || milestoneTitle || nickname;
 
-          return (
-            <S.PanelItem key={ITEM_KEY}>
-              <input
-                id={ITEM_KEY}
-                type={panelType}
-                name={panelTitle}
-                data-id={DATASET_ID}
-                data-panel={panelId}
-                checked={isChecked?.(INPUT_NAME) || false}
-                onChange={handelOnChange}
-              />
-              <label htmlFor={ITEM_KEY}>
-                {backgroundColorCode && <PanelPreviewLabel backgroundColor={backgroundColorCode} />}
-                {profileImage && (
-                  <UserImage
-                    id={userImgId}
-                    email={email}
-                    profileImage={profileImage}
-                    nickname={nickname}
-                    imgSize="SMALL"
-                  />
-                )}
-                <span>{INPUT_NAME}</span>
-              </label>
-            </S.PanelItem>
-          );
-        })}
+            return (
+              <S.PanelItem key={ITEM_KEY}>
+                <input
+                  id={ITEM_KEY}
+                  type={panelType}
+                  name={panelTitle}
+                  data-id={DATASET_ID}
+                  data-panel={panelId}
+                  checked={isChecked?.(INPUT_NAME) || false}
+                  onChange={handelOnChange}
+                />
+                <label htmlFor={ITEM_KEY}>
+                  {backgroundColorCode && <PanelPreviewLabel backgroundColor={backgroundColorCode} />}
+                  {profileImage && (
+                    <UserImage
+                      id={userImgId}
+                      email={email}
+                      profileImage={profileImage}
+                      nickname={nickname}
+                      imgSize="SMALL"
+                    />
+                  )}
+                  <span>{INPUT_NAME}</span>
+                </label>
+              </S.PanelItem>
+            );
+          })}
       </ul>
     </S.Panel>
   );

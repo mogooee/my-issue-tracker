@@ -18,3 +18,37 @@ export const ModalBlock = styled.div`
   border-radius: 20px;
   background: #fff;
 `;
+
+export const ModalTitle = styled.h1`
+  ${({ theme }) => theme.FONTSTYLES.TEXT_LARGE};
+  margin-bottom: 4px;
+`;
+
+export const ModalComment = styled.p`
+  ${({ theme }) => theme.FONTSTYLES.TEXT_SMALL};
+  margin-bottom: 12px;
+`;
+
+export const ModalCaption = styled.p`
+  ${({ theme }) => theme.FONTSTYLES.TEXT_XSMALL};
+  margin-bottom: 12px;
+`;
+
+export const ModalAlertButtons = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+
+  button:first-child {
+    background: ${({ theme }) => theme.COLORS.LINE};
+    color: ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
+
+    &:hover:not([disabled]) {
+      background: ${({ theme }) => theme.COLORS.PLACEHOLDER};
+    }
+  }
+
+  button:last-child {
+    background: ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
+  }
+`;

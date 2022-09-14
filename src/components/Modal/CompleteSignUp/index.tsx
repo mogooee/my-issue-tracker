@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
-
-import * as S from '@/components/Modal/CompleteSignUp/index.styles';
-import Button from '@/components/Atoms/Button';
+import { useSetRecoilState } from 'recoil';
 import { ModalState } from '@/components/Modal';
+
+import * as S from '@/components/Modal/index.styled';
+import Button from '@/components/Atoms/Button';
+import { MODAL_BUTTON_INFO } from '@/components/Atoms/Button/options';
 
 const CompleteSignUp = ({ id }: { id: string }) => {
   const setModalState = useSetRecoilState(ModalState);
@@ -30,10 +31,10 @@ const CompleteSignUp = ({ id }: { id: string }) => {
 
   return (
     <>
-      <S.Title>회원가입이 완료되었습니다!</S.Title>
-      <S.Comment>{id}님 가입을 축하드립니다.</S.Comment>
-      <S.MoveComment>{count}초뒤에 자동으로 메인 화면으로 이동합니다.</S.MoveComment>
-      <Button buttonStyle="STANDARD" label="메인으로" size="LARGE" handleOnClick={navigateMainPage} />
+      <S.ModalTitle>회원가입이 완료되었습니다!</S.ModalTitle>
+      <S.ModalComment>{id}님 가입을 축하드립니다.</S.ModalComment>
+      <S.ModalCaption>{count}초뒤에 자동으로 메인 화면으로 이동합니다.</S.ModalCaption>
+      <Button {...MODAL_BUTTON_INFO.TO_MAIN} handleOnClick={navigateMainPage} />
     </>
   );
 };

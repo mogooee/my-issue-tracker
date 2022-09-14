@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 import { COLORS } from '@/styles/theme';
@@ -13,6 +13,7 @@ import NavLink from '@/components/Molecules/NavLink';
 import IssueTable from '@/components/Organisms/IssueTable';
 
 import useFetchIssue from '@/api/issue/useFetchIssue';
+import { NEW_ISSUE_BUTTON_INFO } from '@/components/Atoms/Button/options';
 
 const DivContainer = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'space-between' })};
@@ -62,12 +63,9 @@ const Issues = () => {
             ]}
             navLinkStyle="LINE"
           />
-          <Button
-            buttonStyle="STANDARD"
-            label="이슈작성"
-            size="SMALL"
-            iconInfo={{ icon: 'Plus', stroke: COLORS.OFF_WHITE }}
-          />
+          <Link to="/issues/new">
+            <Button {...NEW_ISSUE_BUTTON_INFO.WRITE} />
+          </Link>
         </SubNav>
       </DivContainer>
       <IssueTable issues={issues!} filterTabs={FILTER_TABS} issueState={issueState} />

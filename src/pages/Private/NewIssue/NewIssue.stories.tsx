@@ -1,5 +1,9 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import NewIssue from '@/pages/Private/NewIssue';
+import { milestoneHandlers } from '@/mocks/handlers/milestone';
+import { labelHandlers } from '@/mocks/handlers/label';
+import { authHandlers } from '@/mocks/handlers/auth';
+import { issueHandlers } from '@/mocks/handlers/issue';
 
 export default {
   title: 'pages/NewIssue',
@@ -9,3 +13,8 @@ export default {
 const Template: ComponentStory<typeof NewIssue> = () => <NewIssue />;
 
 export const Initial = Template.bind({});
+Initial.parameters = {
+  msw: {
+    handlers: [...milestoneHandlers, ...labelHandlers, ...authHandlers, ...issueHandlers],
+  },
+};

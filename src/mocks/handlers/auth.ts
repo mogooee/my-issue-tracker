@@ -6,7 +6,7 @@ import { UserTypes } from '@/api/issue/types';
 
 const userTable: UserTypes[] = [
   {
-    id: 123456789,
+    id: 0,
     email: 'dobby@gmail.com',
     nickname: '도비',
     profileImage: 'https://avatars.githubusercontent.com/u/85747667?s=96&v=4',
@@ -33,7 +33,7 @@ export const authHandlers = [
   // 유저 정보 요청 API
   rest.get('api/members/info', (req, res, ctx) => {
     const userInfo = {
-      id: '123456789',
+      id: '0',
       email: 'dobby@gmail.com',
       nickname: '도비',
       profileImage: 'https://avatars.githubusercontent.com/u/85747667?s=96&v=4',

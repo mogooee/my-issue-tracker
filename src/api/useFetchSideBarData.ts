@@ -4,11 +4,13 @@ import { getLabelData } from '@/api/label';
 import { getMilestoneData } from '@/api/milestone';
 
 const useFetchSideBarData = () => {
-  const { data: memberData } = useQuery(['members'], getMemberList);
-  const { data: labelData } = useQuery(['labels'], getLabelData);
-  const { data: milestoneData } = useQuery(['milestones'], getMilestoneData);
+  const { data: memberData, refetch: memberDataRefetch } = useQuery(['members'], getMemberList, { enabled: false });
+  const { data: labelData, refetch: labelDataRefetch } = useQuery(['labels'], getLabelData, { enabled: false });
+  const { data: milestoneData, refetch: milestoneDataRefetch } = useQuery(['milestones'], getMilestoneData, {
+    enabled: false,
+  });
 
-  return { memberData, labelData, milestoneData };
+  return { memberData, memberDataRefetch, labelData, labelDataRefetch, milestoneData, milestoneDataRefetch };
 };
 
 export default useFetchSideBarData;

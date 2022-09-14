@@ -1,18 +1,29 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import TextAreaEditer from '.';
+import React, { useState } from 'react';
+import TextAreaEditer from '@/components/Molecules/TextAreaEditer';
 
 export default {
   title: 'Molecules/TextAreaEditer',
   component: TextAreaEditer,
 } as ComponentMeta<typeof TextAreaEditer>;
 
-const Template: ComponentStory<typeof TextAreaEditer> = (args) => <TextAreaEditer {...args} />;
+const AddTemplate: ComponentStory<typeof TextAreaEditer> = () => {
+  const [textAreaValue, setTextAreaValue] = useState('');
 
-export const Initial = Template.bind({});
+  const handleOnChange = (event: React.FormEvent<HTMLTextAreaElement>) => {
+    const { value } = event.currentTarget;
 
-export const InnerText = Template.bind({});
-InnerText.args = {
-  textAreaValue: `# 큰 제목
+    if (!value) return setTextAreaValue('');
+    return setTextAreaValue(value);
+  };
+
+  return <TextAreaEditer textAreaValue={textAreaValue} handleOnChange={handleOnChange} />;
+};
+
+export const Initial = AddTemplate.bind({});
+
+const ModifyTemplate: ComponentStory<typeof TextAreaEditer> = () => {
+  const [textAreaValue, setTextAreaValue] = useState(`# 큰 제목
   본문
   - 할 일
       - 세부사항 1
@@ -23,5 +34,16 @@ InnerText.args = {
   
   ### 이미지
   ![프사](https://avatars.githubusercontent.com/u/85747667?v=4)
-  `,
+  `);
+
+  const handleOnChange = (event: React.FormEvent<HTMLTextAreaElement>) => {
+    const { value } = event.currentTarget;
+
+    if (!value) return setTextAreaValue('');
+    return setTextAreaValue(value);
+  };
+
+  return <TextAreaEditer textAreaValue={textAreaValue} handleOnChange={handleOnChange} />;
 };
+
+export const Modify = ModifyTemplate.bind({});

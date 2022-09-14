@@ -47,12 +47,14 @@ const IssueItem = (issueInfo: ContentTypes) => {
         <S.IssueContent>
           <span>{`#${id}`}</span>
           <span className="summary">{issueSummary}</span>
-          <Link className="milestone" to={milestoneLink}>
-            <>
-              <Icon icon="Milestone" fill={COLORS.SECONDORY.PURPLE} />
-              {milestone.title}
-            </>
-          </Link>
+          {milestone && (
+            <Link className="milestone" to={milestoneLink}>
+              <>
+                <Icon icon="Milestone" fill={COLORS.SECONDORY.PURPLE} />
+                {milestone.title}
+              </>
+            </Link>
+          )}
         </S.IssueContent>
       </div>
       <S.Assignee>

@@ -4,15 +4,15 @@ import * as S from '@/components/Atoms/TextArea/index.styles';
 import Icon from '@/components/Atoms/Icon';
 import { COLORS } from '@/styles/theme';
 
-interface TextAreaTypes {
+export interface TextAreaTypes {
   textAreaValue: string;
-  setAreaValue: React.Dispatch<React.SetStateAction<string>>;
+  handleOnChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 const DEFAULT_TEXTAREA_MAX_LENGTH = 1000;
 const PLACEHOLDER = '코멘트를 입력하세요';
 
-const TextArea = ({ textAreaValue, setAreaValue }: TextAreaTypes) => {
+const TextArea = ({ textAreaValue, handleOnChange }: TextAreaTypes) => {
   const [isActive, setIsActive] = useState<boolean>(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -21,16 +21,6 @@ const TextArea = ({ textAreaValue, setAreaValue }: TextAreaTypes) => {
   const handleFormClick = () => {
     textAreaRef.current?.focus();
     setIsActive(true);
-  };
-
-  const handleTextareaChange = (event: React.FormEvent<HTMLTextAreaElement>) => {
-    const { value } = event.currentTarget;
-    if (!value) return setAreaValue('');
-    if (Number(value) >= DEFAULT_TEXTAREA_MAX_LENGTH) {
-      // eslint-disable-next-line no-param-reassign
-      event.currentTarget.value = value.slice(0, DEFAULT_TEXTAREA_MAX_LENGTH);
-    }
-    return setAreaValue(value);
   };
 
   return (
@@ -47,10 +37,9 @@ const TextArea = ({ textAreaValue, setAreaValue }: TextAreaTypes) => {
         maxLength={DEFAULT_TEXTAREA_MAX_LENGTH}
         placeholder={PLACEHOLDER}
         ref={textAreaRef}
-        onChange={handleTextareaChange}
-      >
-        {textAreaValue || undefined}
-      </S.TextArea>
+        onChange={(event) => handleOnChange(event)}
+        value={textAreaValue}
+      />
       <S.TextAreaAddFile className="textArea_addFile" isActive={isActive}>
         <label htmlFor="textArea_addFile">
           <input id="textArea_addFile" type="file" />

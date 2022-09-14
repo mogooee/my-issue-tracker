@@ -5,7 +5,7 @@ import { MilestoneListTypes } from '@/api/milestone';
 
 const tokenErrorMessage = { message: '토큰이 유효하지 않습니다.' };
 
-const milestones: MilestoneListTypes = {
+export const milestones: MilestoneListTypes = {
   openedMilestones: [
     {
       id: 0,

@@ -60,7 +60,7 @@ export interface ContentTypes {
   comments: CommentsTypes[];
   issueAssignees: IssueAssigneesTypes;
   issueLabels: IssueLabelsTypes;
-  milestone: MilestoneTypes;
+  milestone: MilestoneTypes | null;
   issueHistories: [];
 }
 
@@ -94,11 +94,11 @@ interface PageTypes {
 
 export type IssueTypes = {
   content: ContentTypes[];
-} & PageTypes;
+};
 
 export type IssuesTypes = {
   openIssueCount: number;
-  openIssues: IssueTypes;
+  openIssues: IssueTypes & PageTypes;
   closedIssueCount: number;
-  closedIssues: IssueTypes;
-} & PageTypes;
+  closedIssues: IssueTypes & PageTypes;
+};

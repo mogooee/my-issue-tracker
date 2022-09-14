@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import * as S from '@/components/Atoms/ProgressBar/index.styles';
 
 export interface PrograssBarTypes {
@@ -9,7 +10,7 @@ export interface PrograssBarTypes {
 
 const PrograssBar = ({ open, close, showState, title }: PrograssBarTypes) => {
   const percent = 100;
-  const progressValue = Math.floor((close / (open + close)) * 100);
+  const progressValue = Math.floor((close / (open + close)) * 100) || 0;
 
   return (
     <>

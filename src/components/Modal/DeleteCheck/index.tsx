@@ -1,20 +1,11 @@
 import { useSetRecoilState } from 'recoil';
-
-import Button from '@/components/Atoms/Button';
 import { ModalState } from '@/components/Modal';
-import styled from 'styled-components';
+
+import * as S from '@/components/Modal/index.styled';
+import Button from '@/components/Atoms/Button';
+import { MODAL_BUTTON_INFO } from '@/components/Atoms/Button/options';
+
 import useFetchLabel from '@/api/label/useFetchLabel';
-
-const Title = styled.h1`
-  ${({ theme }) => theme.FONTSTYLES.TEXT_LARGE};
-`;
-
-const ButtonTab = styled.div`
-  display: flex;
-  button + button {
-    margin-left: 10px;
-  }
-`;
 
 const DeleteCheck = ({ id }: { id: number }) => {
   const { deleteLabel } = useFetchLabel();
@@ -31,11 +22,12 @@ const DeleteCheck = ({ id }: { id: number }) => {
 
   return (
     <>
-      <Title>정말 삭제하시겠습니까?</Title>
-      <ButtonTab>
-        <Button buttonStyle="STANDARD" label="취소" size="SMALL" handleOnClick={handleCancleButton} />
-        <Button buttonStyle="STANDARD" label="확인" size="SMALL" handleOnClick={handleDeleteButton} />
-      </ButtonTab>
+      <S.ModalTitle>정말 삭제하시겠습니까?</S.ModalTitle>
+      <S.ModalComment>삭제한 레이블은 되돌릴 수 없습니다.</S.ModalComment>
+      <S.ModalAlertButtons>
+        <Button {...MODAL_BUTTON_INFO.NO} handleOnClick={handleCancleButton} />
+        <Button {...MODAL_BUTTON_INFO.YES} handleOnClick={handleDeleteButton} />
+      </S.ModalAlertButtons>
     </>
   );
 };

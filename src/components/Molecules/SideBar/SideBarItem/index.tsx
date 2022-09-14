@@ -1,5 +1,5 @@
 /* eslint-disable array-callback-return */
-import { Fragment } from 'react';
+import React, { Fragment } from 'react';
 import * as S from '@/components/Molecules/SideBar/index.styles';
 import Label from '@/components/Atoms/Label';
 import PrograssBar from '@/components/Atoms/ProgressBar';
@@ -16,8 +16,14 @@ import {
 
 import { LabelTypes, UserTypes, MilestoneTypes } from '@/api/issue/types';
 
-const SideBarItem = ({ ...props }: SideBarItemType & ContentItemTypes) => {
-  const { id, dropdownTitle, dropdownListTitle, dropdownList, dropdownType, content, handleOnChange } = props;
+interface handleOnChangeTypes {
+  handleOnChange: (target: HTMLInputElement) => void;
+  handleOnClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+}
+
+const SideBarItem = ({ ...props }: SideBarItemType & ContentItemTypes & handleOnChangeTypes) => {
+  const { id, dropdownTitle, dropdownListTitle, dropdownList, dropdownType, content, handleOnChange, handleOnClick } =
+    props;
 
   const isChecked = (title: string) => {
     const contentList: (UserTypes | LabelTypes | MilestoneTypes)[] = content;
@@ -30,7 +36,7 @@ const SideBarItem = ({ ...props }: SideBarItemType & ContentItemTypes) => {
   };
 
   return (
-    <S.SideBarItem key={`sidebar-${id}`} className="sidebar_item">
+    <S.SideBarItem key={`sidebar-${id}`} className="sidebar_item" onClick={handleOnClick} data-id={id}>
       <Dropdown
         indicatorProps={{
           indicatorStyle: 'SIDEBAR',
@@ -47,7 +53,8 @@ const SideBarItem = ({ ...props }: SideBarItemType & ContentItemTypes) => {
           unusedOption: id === 'milestone' ? { dataId: 'none', title: '마일스톤 없음' } : undefined,
         }}
       />
-      <S.SideBarContent isEmpty={!content.length}>
+
+      <S.SideBarContent isEmpty={!content.length} className="content_list">
         {content.map((contentItem) => {
           if (isAssignTypes(contentItem)) {
             return (

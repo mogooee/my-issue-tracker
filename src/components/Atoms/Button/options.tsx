@@ -70,3 +70,41 @@ export const TABLE_ITEM_BUTTON_INFO: BUTTON_PROPS_TYPES = {
     size: 'SMALL',
   },
 };
+
+export const NEW_ISSUE_BUTTON_INFO: BUTTON_PROPS_TYPES = {
+  WRITE: {
+    buttonStyle: 'STANDARD',
+    label: '이슈 작성',
+    size: 'SMALL',
+    iconInfo: { icon: 'Plus', stroke: COLORS.OFF_WHITE },
+  },
+  CANCEL: {
+    buttonStyle: 'NO_BORDER',
+    iconInfo: { icon: 'XSquare' },
+    label: '작성 취소',
+    size: 'SMALL',
+  },
+  COMPLETE: {
+    buttonStyle: 'STANDARD',
+    label: '완료',
+    size: 'MEDIUM',
+  },
+};
+
+export const MODAL_BUTTON_INFO: BUTTON_PROPS_TYPES = {
+  YES: {
+    buttonStyle: 'STANDARD',
+    label: '확인',
+    size: 'SMALL',
+  },
+  NO: {
+    buttonStyle: 'STANDARD',
+    label: '취소',
+    size: 'SMALL',
+  },
+  TO_MAIN: {
+    buttonStyle: 'STANDARD',
+    label: '메인으로',
+    size: 'LARGE',
+  },
+};

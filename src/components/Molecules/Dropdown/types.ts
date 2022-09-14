@@ -31,7 +31,7 @@ export interface ListPanelTypes {
   panelId: 'assignee' | 'label' | 'milestone' | 'issue' | 'auther' | 'state';
   panelTitle: string;
   panelType: 'checkbox' | 'radio';
-  panelList: LabelTypes[] | UserTypes[] | IssueTypes[] | MilestoneTypes[];
+  panelList?: LabelTypes[] | UserTypes[] | IssueTypes[] | MilestoneTypes[];
   unusedOption?: UNUSED_OPTIONS_TYPES;
   handleOnClick?: (target: HTMLInputElement) => void;
   isChecked?: (title: string) => boolean;
