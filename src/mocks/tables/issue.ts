@@ -619,10 +619,10 @@ export const issues: IssuesTypes = {
         id: 9,
         title: 'test',
         author: {
-          id: 3,
-          email: 'jm.dev.study@gmail.com',
+          id: 0,
+          email: 'dobby@gmail.com',
           nickname: '도비',
-          profileImage: 'https://avatars.githubusercontent.com/u/85747667?v=4',
+          profileImage: 'https://avatars.githubusercontent.com/u/85747667?s=96&v=4',
         },
         comments: [
           {
@@ -635,7 +635,16 @@ export const issues: IssuesTypes = {
             },
             content: '# test',
             createdAt: '2022-09-13T11:47:11.408015',
-            issueCommentReactionsResponse: [],
+            issueCommentReactionsResponse: [
+              {
+                id: 10,
+                emoji: 'U+1F44D',
+                issueCommentReactorResponse: {
+                  id: 1,
+                  nickname: 'hoo',
+                },
+              },
+            ],
           },
         ],
         issueAssignees: {
