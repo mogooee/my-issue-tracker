@@ -23,12 +23,12 @@ const TextArea = ({ textAreaValue, setAreaValue }: TextAreaTypes) => {
     setIsActive(true);
   };
 
-  const handleTextareaChange = (event: React.FormEvent<HTMLTextAreaElement>) => {
-    const { value } = event.currentTarget;
+  const handleTextAreaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { value } = event.target;
     if (!value) return setAreaValue('');
     if (Number(value) >= DEFAULT_TEXTAREA_MAX_LENGTH) {
       // eslint-disable-next-line no-param-reassign
-      event.currentTarget.value = value.slice(0, DEFAULT_TEXTAREA_MAX_LENGTH);
+      event.target.value = value.slice(0, DEFAULT_TEXTAREA_MAX_LENGTH);
     }
     return setAreaValue(value);
   };
@@ -47,10 +47,9 @@ const TextArea = ({ textAreaValue, setAreaValue }: TextAreaTypes) => {
         maxLength={DEFAULT_TEXTAREA_MAX_LENGTH}
         placeholder={PLACEHOLDER}
         ref={textAreaRef}
-        onChange={handleTextareaChange}
-      >
-        {textAreaValue || undefined}
-      </S.TextArea>
+        onChange={handleTextAreaChange}
+        value={textAreaValue}
+      />
       <S.TextAreaAddFile className="textArea_addFile" isActive={isActive}>
         <label htmlFor="textArea_addFile">
           <input id="textArea_addFile" type="file" />
