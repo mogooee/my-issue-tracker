@@ -55,7 +55,7 @@ const IssueTable = ({ issues, filterTabs, issueState }: IssueTableTypes) => {
 
   const changeIssueState = (target: HTMLInputElement) => {
     const clickedPanelStatus = target.dataset.id;
-    const status = clickedPanelStatus === 'closed';
+    const status = clickedPanelStatus === 'close';
     const newState = { status, ids: checkState.child };
     updateIssueState({ newState, memberId });
     setCheckState({ ...checkState, parent: false, child: [] });
