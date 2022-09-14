@@ -15,7 +15,7 @@ Initial.args = {
     id: 1,
     email: 'dobby@gmail.com',
     nickname: 'dobby',
-    profileImage: 'https://avatars.githubusercontent.com/u/85747667?s=96&v=4',
+    profileImage: 'https://avatars.githubusercontent.com/u/85747667?v=4',
   },
 };
 Initial.parameters = {

@@ -622,7 +622,7 @@ export const issues: IssuesTypes = {
           id: 0,
           email: 'dobby@gmail.com',
           nickname: '도비',
-          profileImage: 'https://avatars.githubusercontent.com/u/85747667?s=96&v=4',
+          profileImage: 'https://avatars.githubusercontent.com/u/85747667?v=4',
         },
         comments: [
           {
