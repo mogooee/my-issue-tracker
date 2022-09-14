@@ -9,7 +9,7 @@ export const userTable: UserTypes[] = [
     id: 0,
     email: 'dobby@gmail.com',
     nickname: '도비',
-    profileImage: 'https://avatars.githubusercontent.com/u/85747667?s=96&v=4',
+    profileImage: 'https://avatars.githubusercontent.com/u/85747667?v=4',
   },
 ];
 
@@ -36,7 +36,7 @@ export const authHandlers = [
       id: 0,
       email: 'dobby@gmail.com',
       nickname: '도비',
-      profileImage: 'https://avatars.githubusercontent.com/u/85747667?s=96&v=4',
+      profileImage: 'https://avatars.githubusercontent.com/u/85747667?v=4',
     };
     return res(ctx.status(200), ctx.json(userInfo));
   }),
@@ -50,7 +50,7 @@ export const authHandlers = [
       id: 'dobby',
       email: 'dobby@gmail.com',
       nickname: '도비',
-      profileImage: 'https://avatars.githubusercontent.com/u/85747667?s=96&v=4',
+      profileImage: 'https://avatars.githubusercontent.com/u/85747667?v=4',
     };
 
     const response: RedirectAuthTypes = {
