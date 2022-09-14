@@ -233,6 +233,7 @@ export const REACTION_ARGS: DropdownTypes<ReactionPanelTypes> = {
     usedEmojis: [],
     issueId: 1,
     commentId: 1,
+    memberId: 123456789,
   },
 };
 

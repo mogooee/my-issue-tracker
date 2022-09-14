@@ -4,7 +4,7 @@ import { RedirectAuthTypes } from '@/api/sign';
 import { USER_LIST } from '@/components/Molecules/Dropdown/mock';
 import { UserTypes } from '@/api/issue/types';
 
-const userTable: UserTypes[] = [
+export const userTable: UserTypes[] = [
   {
     id: 0,
     email: 'dobby@gmail.com',
@@ -33,7 +33,7 @@ export const authHandlers = [
   // 유저 정보 요청 API
   rest.get('api/members/info', (req, res, ctx) => {
     const userInfo = {
-      id: '0',
+      id: 0,
       email: 'dobby@gmail.com',
       nickname: '도비',
       profileImage: 'https://avatars.githubusercontent.com/u/85747667?s=96&v=4',
@@ -113,11 +113,15 @@ export const authHandlers = [
     userTable.push(newMember);
 
     const response = {
-      id: 0,
-      email: newMember.email,
-      nickname: newMember.nickname,
-      profileImage: newMember.profileImage,
-      accessToken: 'access123',
+      memberResponse: {
+        id: 0,
+        email: newMember.email,
+        nickname: newMember.nickname,
+        profileImage: newMember.profileImage,
+      },
+      accessToken: {
+        token: 'access123',
+      },
     };
 
     return res(ctx.status(201), ctx.json(response), ctx.cookie('refresh-token', 'refresh123'));

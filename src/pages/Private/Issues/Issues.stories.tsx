@@ -1,28 +1,33 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { Route, Routes } from 'react-router-dom';
+import IssueDetail from '@/pages/Private/IssueDetail';
 import Labels from '@/pages/Private/Labels';
+import Issues from '@/pages/Private/Issues';
 import Milestones from '@/pages/Private/Milestones';
+import { issueHandlers } from '@/mocks/handlers/issue';
 import { labelHandlers } from '@/mocks/handlers/label';
 import { milestoneHandlers } from '@/mocks/handlers/milestone';
 
 export default {
-  title: 'pages/Labels',
-  component: Labels,
+  title: 'pages/Issues',
+  component: Issues,
   decorators: [
     (Story) => (
       <Routes>
-        <Route path="/labels" element={<Story />} />
+        <Route path="/issues" element={<Story />} />
+        <Route path="/issues/:issueId" element={<IssueDetail />} />
+        <Route path="/labels" element={<Labels />} />
         <Route path="/milestones" element={<Milestones />} />
       </Routes>
     ),
   ],
-} as ComponentMeta<typeof Labels>;
+} as ComponentMeta<typeof Issues>;
 
-const Template: ComponentStory<typeof Labels> = () => <Labels />;
+const Template: ComponentStory<typeof Issues> = () => <Issues />;
 
 export const Initial = Template.bind({});
 Initial.parameters = {
   msw: {
-    handlers: [...labelHandlers, ...milestoneHandlers],
+    handlers: [...issueHandlers, ...labelHandlers, ...milestoneHandlers],
   },
 };

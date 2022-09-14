@@ -8,7 +8,20 @@ import CommonSignUp from '@/pages/Public/SignUp-Common';
 
 import Issues from '@/pages/Private/Issues';
 import NewIssue from '@/pages/Private/NewIssue';
+import IssueDetail from '@/pages/Private/IssueDetail';
 import Labels from '@/pages/Private/Labels';
 import Milestones from '@/pages/Private/Milestones';
 
-export { Home, NotFound, RedirectAuth, Login, OAuthSignUp, CommonSignUp, Issues, NewIssue, Labels, Milestones };
+export {
+  Home,
+  NotFound,
+  RedirectAuth,
+  Login,
+  OAuthSignUp,
+  CommonSignUp,
+  Issues,
+  NewIssue,
+  IssueDetail,
+  Labels,
+  Milestones,
+};

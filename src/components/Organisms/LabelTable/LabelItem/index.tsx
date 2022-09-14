@@ -1,13 +1,14 @@
+import { useSetRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
+import { LabelState } from '@/stores/label';
+
+import * as S from '@/components/Organisms/LabelTable/LabelItem/index.styled';
+
 import Button from '@/components/Atoms/Button';
 import Label from '@/components/Atoms/Label';
-import * as S from '@/components/Organisms/LabelTable/LabelItem/index.styled';
-import { COLORS } from '@/styles/theme';
-import { LabelState } from '@/stores/label';
-import { LabelTypes } from '@/api/issue/types';
-import { useNavigate } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
 import { ModalState } from '@/components/Modal';
 
+import { LabelTypes } from '@/api/issue/types';
 import { TABLE_ITEM_BUTTON_INFO } from '@/components/Atoms/Button/options';
 
 const LabelItem = ({ id, title, backgroundColorCode, description, textColor }: LabelTypes) => {

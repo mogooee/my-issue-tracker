@@ -2,7 +2,7 @@ const calcTimeForToday = (timeStampValue: string) => {
   const today = new Date();
   const timeStamp = new Date(timeStampValue);
   const timeDifference = today.getTime() - timeStamp.getTime();
-  const [milliSecond, second, minute, hour, day, month, year] = [1000, 1, 60, 60, 24, 12, 365];
+  const [milliSecond, second, minute, hour, day, month, year] = [1000, 1, 60, 60, 24, 30, 12];
 
   const minuteDifference = Math.floor(timeDifference / milliSecond / minute);
   if (minuteDifference < second) return '방금전';
@@ -14,10 +14,10 @@ const calcTimeForToday = (timeStampValue: string) => {
   const dayDifference = Math.floor(hourDifference / day);
   if (dayDifference < month) return `${dayDifference}일전`;
 
-  const monthDifference = Math.floor(dayDifference / day);
-  if (monthDifference < month) return `${monthDifference}개월전`;
+  const monthDifference = Math.floor(dayDifference / month);
+  if (monthDifference < year) return `${monthDifference}개월전`;
 
-  const yearDifference = monthDifference / year;
+  const yearDifference = Math.floor(monthDifference / year);
   return `${yearDifference}년전`;
 };
 

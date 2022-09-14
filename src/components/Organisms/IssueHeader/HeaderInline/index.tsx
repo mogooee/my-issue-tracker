@@ -1,42 +1,76 @@
-import { useState } from 'react';
+/* eslint-disable no-nested-ternary */
+import React, { useState, useRef } from 'react';
+import { useRecoilValue } from 'recoil';
 import useInput from '@/hooks/useInput';
-
-import { COLORS } from '@/styles/theme';
+import useFetchIssue from '@/api/issue/useFetchIssue';
 
 import Button from '@/components/Atoms/Button';
 import Input from '@/components/Atoms/Input';
 import * as S from '@/components/Organisms/IssueHeader/HeaderInline/index.styled';
 
 import { ContentTypes } from '@/api/issue/types';
+import { LoginUserInfoState } from '@/stores/loginUserInfo';
+import debounce from '@/utils/debounce';
+import { BUTTON_PROPS } from '@/components/Atoms/Button/options';
+import { ISSUE_DETAIL_BUTTON_PROPS } from '@/components/Organisms/IssueHeader/HeaderInline/constants';
+
+type HeaderInlineTypes = Pick<ContentTypes, 'id' | 'title' | 'closed'> & { isAuthor: boolean };
 
 const MAX_ISSUE_TITLE_NUM = 255;
+const DEBOUNCE_DELAY = 200;
 
-type LeftButtonIconType = 'XSquare' | 'Edit';
-type LeftButtonLabelType = '편집 취소' | '제목 편집';
-type RightButtonIconType = 'Archive' | 'AlertCircle' | 'Edit';
-type RightButtonLabelType = '이슈 닫기' | '다시 열기' | '편집 완료';
-
-type HeaderInlineTypes = Pick<ContentTypes, 'id' | 'title' | 'closed'>;
-
-const HeaderInline = ({ id, title, closed }: HeaderInlineTypes) => {
+const HeaderInline = ({ id: issueId, title, closed, isAuthor }: HeaderInlineTypes) => {
+  const timerId = useRef(0);
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [issueTitle, setIssueTitle] = useState<string>(title);
   const { isActive, onChangeInput, onClickInput, onBlurInput } = useInput();
+  const memberId = useRecoilValue(LoginUserInfoState).id;
 
-  const defineButtonLabel = (
-    isEditing: boolean,
-    isOpen: boolean,
-  ): [[LeftButtonIconType, LeftButtonLabelType], [RightButtonIconType, RightButtonLabelType]] => {
-    if (isEditing) {
-      return [
-        ['XSquare', '편집 취소'],
-        ['Edit', '편집 완료'],
-      ];
-    }
+  const { useUpdateIssueTitle, useUpdateIssueState } = useFetchIssue();
+  const { mutate: updateIssueTitle } = useUpdateIssueTitle(issueId);
+  const { mutate: updateIssueState } = useUpdateIssueState([issueId]);
 
-    return [['Edit', '제목 편집'], isOpen ? ['Archive', '이슈 닫기'] : ['AlertCircle', '다시 열기']];
+  const handleTitleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChangeInput(e);
+    setIssueTitle(e.target.value);
   };
 
-  const [[leftButtonIcon, leftButtonLabel], [rightButtonIcon, rightButtonLabel]] = defineButtonLabel(isEdit, !closed);
+  const handleOnTitleTyping = debounce(timerId, handleTitleOnChange, DEBOUNCE_DELAY);
+
+  const handleOnEditButtonClick = () => {
+    setIsEdit(true);
+  };
+
+  const handleOnEditCancelButtonClick = () => {
+    setIsEdit(false);
+    setIssueTitle(title);
+  };
+
+  const handleOnSaveTitleButtonClick = () => {
+    const newTitle = { title: issueTitle };
+    updateIssueTitle({ issueId, memberId, newTitle });
+    setIsEdit(false);
+  };
+
+  const handleOnIssueStateButtonClick = () => {
+    const ids = [issueId];
+    const newState = { status: !closed, ids };
+    updateIssueState({ newState, memberId });
+  };
+
+  const leftButtonProps = isEdit
+    ? {
+        ...BUTTON_PROPS.CANCEL,
+        label: '편집 취소',
+        handleOnClick: handleOnEditCancelButtonClick,
+      }
+    : { ...ISSUE_DETAIL_BUTTON_PROPS.EDIT, handleOnClick: handleOnEditButtonClick };
+
+  const isDisabledEditSave = !issueTitle || issueTitle === title;
+
+  const rightButtonProps = isEdit
+    ? { ...BUTTON_PROPS.EDIT_SAVE, disabled: isDisabledEditSave, handleOnClick: handleOnSaveTitleButtonClick }
+    : { ...ISSUE_DETAIL_BUTTON_PROPS[closed ? 'OPEN' : 'CLOSE'], handleOnClick: handleOnIssueStateButtonClick };
 
   return (
     <S.HeaderInline>
@@ -51,53 +85,22 @@ const HeaderInline = ({ id, title, closed }: HeaderInlineTypes) => {
             isTyping
             inputValue={title}
             onBlur={onBlurInput}
-            onChange={onChangeInput}
+            onChange={handleOnTitleTyping}
             onClick={onClickInput}
           />
         ) : (
           <>
             <h1>{title}</h1>
-            <span className="issueNumber">{`#${id}`}</span>
+            <span className="issueNumber">{`#${issueId}`}</span>
           </>
         )}
       </S.Title>
-      <S.ButtonTab>
-        <Button
-          buttonStyle="SECONDARY"
-          iconInfo={{
-            icon: leftButtonIcon,
-          }}
-          label={leftButtonLabel}
-          size="SMALL"
-          handleOnClick={() => {
-            if (!isEdit) {
-              setIsEdit(true);
-            } else {
-              setIsEdit(false);
-            }
-          }}
-        />
-        <Button
-          buttonStyle={isEdit ? 'STANDARD' : 'SECONDARY'}
-          iconInfo={{
-            icon: rightButtonIcon,
-            stroke: isEdit ? COLORS.OFF_WHITE : COLORS.PRIMARY.BLUE,
-          }}
-          label={rightButtonLabel}
-          size="SMALL"
-          handleOnClick={() => {
-            if (isEdit) {
-              // 이슈 제목 수정 API
-              setIsEdit(false);
-            }
-            if (!closed) {
-              // 이슈 닫기 API
-            } else {
-              // 이슈 열기 API
-            }
-          }}
-        />
-      </S.ButtonTab>
+      {isAuthor && (
+        <S.ButtonTab>
+          <Button {...leftButtonProps} />
+          <Button {...rightButtonProps} />
+        </S.ButtonTab>
+      )}
     </S.HeaderInline>
   );
 };

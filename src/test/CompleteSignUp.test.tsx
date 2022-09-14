@@ -19,7 +19,7 @@ jest.mock('react-router-dom', () => ({
 
 let container = null;
 
-beforeEach(() => {
+beforeAll(() => {
   // setup a DOM element as a render target
   container = document.createElement('div');
   document.body.appendChild(container);

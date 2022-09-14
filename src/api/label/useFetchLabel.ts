@@ -5,7 +5,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 const useFetchLabel = () => {
   const queryClient = useQueryClient();
 
-  const { data: labelData } = useQuery<LabelTypes[]>(['labels'], getLabelData);
+  const { data: labelData } = useQuery<LabelTypes[]>(['labels'], getLabelData, {
+    cacheTime: 10000,
+    staleTime: 0,
+  });
 
   const { mutate: addLabel } = useMutation(addLabelData, {
     onSuccess: () => {

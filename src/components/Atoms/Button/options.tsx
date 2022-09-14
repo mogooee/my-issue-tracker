@@ -42,6 +42,15 @@ export const BUTTON_PROPS: BUTTON_PROPS_TYPES = {
       stroke: COLORS.PRIMARY.BLUE,
     },
   },
+  EDIT_SAVE: {
+    label: '편집 완료',
+    size: 'SMALL',
+    buttonStyle: 'STANDARD',
+    iconInfo: {
+      icon: 'Edit',
+      stroke: COLORS.OFF_WHITE,
+    },
+  },
 };
 
 export const TABLE_ITEM_BUTTON_INFO: BUTTON_PROPS_TYPES = {

@@ -1,6 +1,16 @@
 import styled from 'styled-components';
 import { Label } from '@/components/Atoms/Label/index.styles';
 
+export const IssueHeader = styled.div`
+  &::after {
+    display: block;
+    content: '';
+    border-bottom: 1px solid;
+    border-color: ${({ theme }) => theme.COLORS.LINE};
+    margin: 32px 0px;
+  }
+`;
+
 export const HeaderInline = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'space-between' })};
   margin-bottom: 16px;

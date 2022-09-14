@@ -3,13 +3,13 @@ import React, { useRef, useState } from 'react';
 import * as S from '@/components/Atoms/TextArea/index.styles';
 import Icon from '@/components/Atoms/Icon';
 import { COLORS } from '@/styles/theme';
+import { DEFAULT_TEXTAREA_MAX_LENGTH } from '@/components/Molecules/TextAreaEditer/constants';
 
 export interface TextAreaTypes {
   textAreaValue: string;
   handleOnChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
-const DEFAULT_TEXTAREA_MAX_LENGTH = 1000;
 const PLACEHOLDER = '코멘트를 입력하세요';
 
 const TextArea = ({ textAreaValue, handleOnChange }: TextAreaTypes) => {

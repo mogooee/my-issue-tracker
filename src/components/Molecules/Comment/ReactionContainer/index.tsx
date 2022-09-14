@@ -1,5 +1,3 @@
-import { useRecoilValue } from 'recoil';
-
 import * as S from '@/components/Molecules/Comment/ReactionContainer/index.styled';
 import { COLORS } from '@/styles/theme';
 
@@ -9,18 +7,21 @@ import Dropdown from '@/components/Molecules/Dropdown';
 import { UsedEmojisTypes } from '@/components/Molecules/Comment';
 
 import replaceUnicodeWithIcon from '@/utils/replaceUnicodeWithIcon';
-import { LoginUserInfoState } from '@/stores/loginUserInfo';
 import { ReactionTypes } from '@/api/issue/reaction';
+import useFetchReaction from '@/api/issue/useFetchReaction';
 
 export interface ReactionContainerTypes {
   reactions: ReactionTypes[];
   usedEmojis: UsedEmojisTypes[];
   issueId: number;
   commentId: number;
+  memberId: number;
 }
 
-const ReactionContainer = ({ reactions, usedEmojis, issueId, commentId }: ReactionContainerTypes) => {
-  const userInfo = useRecoilValue(LoginUserInfoState);
+const ReactionContainer = ({ reactions, usedEmojis, issueId, commentId, memberId }: ReactionContainerTypes) => {
+  const { useAddIssueCommentReaction, useDeleteIssueCommentReaction } = useFetchReaction();
+  const { mutate: addIssueCommentReaction } = useAddIssueCommentReaction(issueId);
+  const { mutate: deleteIssueCommentReaction } = useDeleteIssueCommentReaction(issueId);
 
   return (
     <S.ReactionTab>
@@ -36,26 +37,32 @@ const ReactionContainer = ({ reactions, usedEmojis, issueId, commentId }: Reacti
           usedEmojis,
           issueId,
           commentId,
+          memberId,
         }}
       />
       {usedEmojis.map(({ emoji, reactors }) => {
-        const { name } = reactions.find(({ unicode }) => unicode === emoji)!;
-        const isUsed = reactors.find(({ memberId }) => memberId === userInfo.id);
+        const { name: emojiName } = reactions.find(({ unicode }) => unicode === emoji)!;
+        const isUsed = reactors.find((reactor) => reactor.memberId === memberId);
+        const emojiIcon = replaceUnicodeWithIcon(emoji);
+
+        const handleReactionContainerClick = () => {
+          if (isUsed) {
+            const reactionId = reactors.find((reactor) => reactor.memberId === memberId)?.reactionId!;
+            deleteIssueCommentReaction({ issueId, commentId, memberId, reactionId });
+          } else {
+            addIssueCommentReaction({ issueId, commentId, memberId, emojiName });
+          }
+        };
 
         return (
-          <S.Reaction key={emoji} nickname={reactors.map(({ nickname }) => nickname)} emoji={name}>
+          <S.Reaction key={emoji} nickname={reactors.map(({ nickname }) => nickname)} emoji={emojiName}>
             <Label
               labelStyle="LIGHT"
               backgroundColorCode={isUsed ? COLORS.PRIMARY.LIGHT_BLUE : COLORS.BACKGROUND}
               lineColor={isUsed ? COLORS.PRIMARY.BLUE : COLORS.LABEL}
               textColor="BLACK"
-              title={`${replaceUnicodeWithIcon(emoji)} ${reactors.length}`}
-              onClick={() => {
-                const memberId = userInfo.id;
-                const reactionId = reactors.find(({ memberId: id }) => id === userInfo.id)?.reactionId;
-
-                return { issueId, commentId, reactionId, memberId };
-              }}
+              title={`${emojiIcon} ${reactors.length}`}
+              onClick={handleReactionContainerClick}
             />
           </S.Reaction>
         );
