@@ -33,6 +33,7 @@ const IssueDetail = (): JSX.Element => {
   const [selectCommentId, setSelectCommentId] = useState<number>(0);
 
   const isTypingNewComment = !textAreaValue;
+  const isIssueAuthor = JSON.stringify(userInfo) === JSON.stringify(author);
 
   const handleAddCommentButton = () => {
     const newComment = { content: textAreaValue };
@@ -59,12 +60,17 @@ const IssueDetail = (): JSX.Element => {
       <S.IssueContent>
         <S.IssueComments>
           {comments.map((comment) => {
-            const isAuthor = JSON.stringify(userInfo) === JSON.stringify(comment.author);
+            const isCommentAuthor = JSON.stringify(userInfo) === JSON.stringify(comment.author);
 
             return (
               <S.Comment key={comment.id}>
                 <UserImage {...comment.author} imgSize="MEDIUM" />
-                <Comment issueId={id} isAuthor={isAuthor} comment={comment} setSelectCommentId={setSelectCommentId} />
+                <Comment
+                  issueId={id}
+                  isAuthor={isCommentAuthor}
+                  comment={comment}
+                  setSelectCommentId={setSelectCommentId}
+                />
               </S.Comment>
             );
           })}
@@ -186,15 +192,17 @@ const IssueDetail = (): JSX.Element => {
               },
             ]}
           />
-          <Button
-            buttonStyle="NO_BORDER"
-            iconInfo={{
-              icon: 'Trash',
-              stroke: COLORS.ERROR.RED,
-            }}
-            label="이슈 삭제"
-            size="SMALL"
-          />
+          {isIssueAuthor && (
+            <Button
+              buttonStyle="NO_BORDER"
+              iconInfo={{
+                icon: 'Trash',
+                stroke: COLORS.ERROR.RED,
+              }}
+              label="이슈 삭제"
+              size="SMALL"
+            />
+          )}
         </S.Aside>
       </S.IssueContent>
       {isDeleteModalOpen && (
