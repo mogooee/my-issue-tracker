@@ -21,17 +21,17 @@ const AllTheProviders = ({ children }: { children: JSX.Element }) => {
   modalRoot.setAttribute('id', 'modal-root');
   document.body.append(modalRoot);
 
-  return (
-    <RecoilRoot>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={THEME}>
-          <MemoryRouter initialEntries={['/']}>{children}</MemoryRouter>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </RecoilRoot>
-  );
-};
-
+const AllTheProviders = ({ children }: { children: JSX.Element }) => (
+  <RecoilRoot>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={THEME}>
+        {/* <MemoryRouter initialEntries={['/']}> */}
+        {children}
+        {/* </MemoryRouter> */}
+      </ThemeProvider>
+    </QueryClientProvider>
+  </RecoilRoot>
+);
 const mockStoryHandlers = (story: JSX.Element) => server.use(...(story.type.parameters?.msw?.handlers || []));
 
 const customRender = (ui: JSX.Element, options?: any) => {
