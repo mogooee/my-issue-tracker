@@ -274,6 +274,8 @@ export const issueHandlers = [
 
     const newIssue: ContentTypes = { ...issue, comments: newComments };
     updateIssueTable(newIssue);
+
+    return res(ctx.status(200), ctx.json(newIssue));
   }),
 
   // 이슈 등록
