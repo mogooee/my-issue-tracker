@@ -16,11 +16,6 @@ const queryClient = new QueryClient({
   },
 });
 
-const AllTheProviders = ({ children }: { children: JSX.Element }) => {
-  const modalRoot = document.createElement('div');
-  modalRoot.setAttribute('id', 'modal-root');
-  document.body.append(modalRoot);
-
 const AllTheProviders = ({ children }: { children: JSX.Element }) => (
   <RecoilRoot>
     <QueryClientProvider client={queryClient}>

@@ -4,6 +4,8 @@ import { issues } from '@/mocks/tables/issue';
 import { REACTIONS } from '@/components/Molecules/Dropdown/Panel/Reaction/mock';
 import { CommentsTypes, ContentTypes, ReactionResponseTypes } from '@/api/issue/types';
 import { userTable } from '@/mocks/handlers/auth';
+import { USER_LIST } from '@/components/Molecules/Dropdown/mock';
+import { responseNewIssueData } from '@/mocks/tables/newIssueHelper';
 
 const message = {
   message: '',
@@ -272,6 +274,26 @@ export const issueHandlers = [
 
     const newIssue: ContentTypes = { ...issue, comments: newComments };
     updateIssueTable(newIssue);
+  }),
+
+  // 이슈 등록
+  rest.post('api/issues?member', async (req, res, ctx) => {
+    const requestData = await req.json();
+    const userId = req.url.searchParams.get('memberId');
+    const { title } = requestData;
+
+    const findAuthor = (memberId: string) => USER_LIST.find((el) => el.id === Number(memberId));
+
+    if (!title) {
+      return res(ctx.status(400), ctx.json('필수 입력값을 입력해주세요'));
+    }
+
+    if (!findAuthor(userId!)) {
+      return res(ctx.status(400), ctx.json('유효하지 않은 요청입니다.'));
+    }
+
+    const newIssue = responseNewIssueData({ memberId: userId, ...requestData });
+    issues.openIssues.content.push(newIssue);
 
     return res(ctx.status(200), ctx.json(newIssue));
   }),

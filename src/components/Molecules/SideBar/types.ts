@@ -8,7 +8,6 @@ export interface ContentListTypes {
 
 export interface ContentItemTypes {
   content: UserTypes[] | LabelTypes[] | MilestoneTypes[];
-  handleOnChange: (target: HTMLInputElement) => void;
 }
 
 export interface SideBarItemType {
@@ -19,9 +18,16 @@ export interface SideBarItemType {
   dropdownType: 'checkbox' | 'radio';
 }
 
+export interface UpdateSideBarFuncTypes {
+  id: keyof ContentListTypes | 'none';
+  panel: string;
+  checked: boolean;
+  dropdownList: (UserTypes | LabelTypes | MilestoneTypes)[];
+}
+
 export interface SideBarTypes {
-  sideBarList: SideBarItemType[];
   content: ContentListTypes;
+  handleOnChange: ({ ...props }: UpdateSideBarFuncTypes) => void;
 }
 
 // Type Guard

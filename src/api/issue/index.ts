@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios';
-import { IssuesTypes, ContentTypes } from '@/api/issue/types';
+import { ContentTypes, IssuesTypes } from '@/api/issue/types';
+import { NEW_ISSUE_FORM_TYPES } from '@/stores/newIssue';
 
 interface Idtypes {
   issueId: number;
@@ -147,6 +148,21 @@ export const deleteCommentReaction = async ({
       `api/issues/${issueId}/comments/${commentId}/reactions/${reactionId}?memberId=${memberId}`,
     );
     return IssueChangedCommentReaction;
+  } catch (error) {
+    const err = error as AxiosError;
+    throw err;
+  }
+};
+
+interface CreateNewIssueTypes {
+  newIssueFormData: NEW_ISSUE_FORM_TYPES;
+  memberId: number;
+}
+
+export const createNewIssue = async ({ newIssueFormData, memberId }: CreateNewIssueTypes): Promise<ContentTypes> => {
+  try {
+    const { data } = await axios.post<ContentTypes>(`api/issues?memberId=${memberId}`, newIssueFormData);
+    return data;
   } catch (error) {
     const err = error as AxiosError;
     throw err;

@@ -1,38 +1,11 @@
-import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
-import { ModalState } from '@/components/Modal';
-import Button from '@/components/Atoms/Button';
+import { useResetRecoilState, useSetRecoilState } from 'recoil';
 import useFetchMilestone from '@/api/milestone/useFetchMilestone';
-import styled from 'styled-components';
 import { ClickMilestoneState } from '@/stores/milestone';
+import { ModalState } from '@/components/Modal';
 
-const StyledDeleteModal = styled.div`
-  h1 {
-    ${({ theme }) => theme.FONTSTYLES.TEXT_LARGE};
-    margin-bottom: 12px;
-  }
-
-  p {
-    ${({ theme }) => theme.FONTSTYLES.TEXT_SMALL};
-    margin-bottom: 20px;
-  }
-
-  p + button {
-    margin-bottom: 4px;
-    background: ${({ theme }) => theme.COLORS.PLACEHOLDER};
-
-    &:hover:not([disabled]) {
-      background: ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
-    }
-  }
-
-  button + button {
-    background: ${({ theme }) => theme.COLORS.ERROR.RED};
-
-    &:hover:not([disabled]) {
-      background: ${({ theme }) => theme.COLORS.ERROR.DARK_RED};
-    }
-  }
-`;
+import * as S from '@/components/Modal/index.styled';
+import Button from '@/components/Atoms/Button';
+import { MODAL_BUTTON_INFO } from '@/components/Atoms/Button/options';
 
 const DeleteMilestoneModal = ({ id }: { id: number }) => {
   const { deleteMilestoneMutate } = useFetchMilestone();
@@ -40,28 +13,26 @@ const DeleteMilestoneModal = ({ id }: { id: number }) => {
   const resetClickMilestoneState = useResetRecoilState(ClickMilestoneState);
 
   return (
-    <StyledDeleteModal>
-      <h1>해당 마일스톤을 삭제하겠습니까?</h1>
-      <p>삭제한 마일스톤은 되돌릴 수 없습니다.</p>
-      <Button
-        buttonStyle="STANDARD"
-        label="아니오"
-        size="LARGE"
-        handleOnClick={() => {
-          setIsOpenModalState((state) => !state);
-          resetClickMilestoneState();
-        }}
-      />
-      <Button
-        buttonStyle="STANDARD"
-        label="예"
-        size="LARGE"
-        handleOnClick={() => {
-          deleteMilestoneMutate(id);
-          setIsOpenModalState((state) => !state);
-        }}
-      />
-    </StyledDeleteModal>
+    <>
+      <S.ModalTitle>해당 마일스톤을 삭제하겠습니까?</S.ModalTitle>
+      <S.ModalComment>삭제한 마일스톤은 되돌릴 수 없습니다.</S.ModalComment>
+      <S.ModalAlertButtons>
+        <Button
+          {...MODAL_BUTTON_INFO.NO}
+          handleOnClick={() => {
+            setIsOpenModalState((state) => !state);
+            resetClickMilestoneState();
+          }}
+        />
+        <Button
+          {...MODAL_BUTTON_INFO.YES}
+          handleOnClick={() => {
+            deleteMilestoneMutate(id);
+            setIsOpenModalState((state) => !state);
+          }}
+        />
+      </S.ModalAlertButtons>
+    </>
   );
 };
 

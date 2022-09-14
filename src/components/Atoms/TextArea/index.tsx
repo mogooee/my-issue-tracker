@@ -3,16 +3,16 @@ import React, { useRef, useState } from 'react';
 import * as S from '@/components/Atoms/TextArea/index.styles';
 import Icon from '@/components/Atoms/Icon';
 import { COLORS } from '@/styles/theme';
+import { DEFAULT_TEXTAREA_MAX_LENGTH } from '@/components/Molecules/TextAreaEditer/constants';
 
-interface TextAreaTypes {
+export interface TextAreaTypes {
   textAreaValue: string;
-  setAreaValue: React.Dispatch<React.SetStateAction<string>>;
+  handleOnChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
-const DEFAULT_TEXTAREA_MAX_LENGTH = 1000;
 const PLACEHOLDER = '코멘트를 입력하세요';
 
-const TextArea = ({ textAreaValue, setAreaValue }: TextAreaTypes) => {
+const TextArea = ({ textAreaValue, handleOnChange }: TextAreaTypes) => {
   const [isActive, setIsActive] = useState<boolean>(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -21,16 +21,6 @@ const TextArea = ({ textAreaValue, setAreaValue }: TextAreaTypes) => {
   const handleFormClick = () => {
     textAreaRef.current?.focus();
     setIsActive(true);
-  };
-
-  const handleTextAreaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { value } = event.target;
-    if (!value) return setAreaValue('');
-    if (Number(value) >= DEFAULT_TEXTAREA_MAX_LENGTH) {
-      // eslint-disable-next-line no-param-reassign
-      event.target.value = value.slice(0, DEFAULT_TEXTAREA_MAX_LENGTH);
-    }
-    return setAreaValue(value);
   };
 
   return (
@@ -47,7 +37,7 @@ const TextArea = ({ textAreaValue, setAreaValue }: TextAreaTypes) => {
         maxLength={DEFAULT_TEXTAREA_MAX_LENGTH}
         placeholder={PLACEHOLDER}
         ref={textAreaRef}
-        onChange={handleTextAreaChange}
+        onChange={(event) => handleOnChange(event)}
         value={textAreaValue}
       />
       <S.TextAreaAddFile className="textArea_addFile" isActive={isActive}>

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import useFetchIssue from '@/api/issue/useFetchIssue';
 import { CheckState } from '@/stores/checkBox';
 
@@ -15,6 +15,7 @@ import IssueTable from '@/components/Organisms/IssueTable';
 
 import { FILTERBAR_INFO } from '@/components/Molecules/FilterBar/mocks';
 import { FILTER_TABS_INFO as FILTER_TABS } from '@/components/Molecules/Dropdown/mock';
+import { NEW_ISSUE_BUTTON_INFO } from '@/components/Atoms/Button/options';
 
 const definedIssueState = (queries: string[]) => {
   if (queries?.find((query) => query.includes('is:open'))) {
@@ -55,12 +56,9 @@ const Issues = () => {
             ]}
             navLinkStyle="LINE"
           />
-          <Button
-            buttonStyle="STANDARD"
-            label="이슈작성"
-            size="SMALL"
-            iconInfo={{ icon: 'Plus', stroke: COLORS.OFF_WHITE }}
-          />
+          <Link to="/issues/new">
+            <Button {...NEW_ISSUE_BUTTON_INFO.WRITE} />
+          </Link>
         </S.SubNav>
       </S.NavInline>
       <IssueTable issues={issues!} filterTabs={FILTER_TABS} issueState={issueState} />

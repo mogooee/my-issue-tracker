@@ -100,7 +100,7 @@ describe('마일스톤 페이지 테스트', () => {
 
     await waitFor(() => {
       const modalDeleteButton = screen.getByRole('button', {
-        name: /예/i,
+        name: /확인/i,
       }) as HTMLButtonElement;
       screen.debug();
       user.click(modalDeleteButton);

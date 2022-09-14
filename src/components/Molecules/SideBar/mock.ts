@@ -11,10 +11,10 @@ export const MOCK_CONTENT_LIST: ContentListTypes = {
   assignee: [],
   label: [
     {
-      id: 0,
-      title: 'feature',
-      backgroundColorCode: '#007AFF',
-      description: '',
+      id: 1,
+      title: 'Feature',
+      backgroundColorCode: '#d4c5f9',
+      description: '기능 개발용 라벨입니다.',
       textColor: 'BLACK',
     },
   ],

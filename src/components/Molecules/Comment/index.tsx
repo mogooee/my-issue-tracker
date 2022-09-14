@@ -20,6 +20,7 @@ import { CommentsTypes, ReactionResponseTypes } from '@/api/issue/types';
 import { BUTTON_PROPS, TABLE_ITEM_BUTTON_INFO } from '@/components/Atoms/Button/options';
 import { AUTHOR_LABEL_PROPS, EDIT_BUTTON_PROPS } from '@/components/Molecules/Comment/constants';
 import { ModalState } from '@/components/Modal';
+import { DEFAULT_TEXTAREA_MAX_LENGTH } from '@/components/Molecules/TextAreaEditer/constants';
 
 interface CommentTypes {
   issueId: number;
@@ -99,9 +100,19 @@ const Comment = ({
     setSelectCommentId(commentId);
   };
 
+  const handleOnChangeComment = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { value } = event.target;
+    if (!value) return setTextAreaValue('');
+    if (Number(value) >= DEFAULT_TEXTAREA_MAX_LENGTH) {
+      // eslint-disable-next-line no-param-reassign
+      event.target.value = value.slice(0, DEFAULT_TEXTAREA_MAX_LENGTH);
+    }
+    return setTextAreaValue(value);
+  };
+
   return isEdit ? (
     <S.TextArea>
-      <TextArea textAreaValue={textAreaValue} setAreaValue={setTextAreaValue} />
+      <TextArea textAreaValue={textAreaValue} handleOnChange={handleOnChangeComment} />
       <S.TextAreaButtonTab>
         <Button {...{ ...BUTTON_PROPS.CANCEL, label: '편집 취소' }} handleOnClick={handleEditCancelButtonClick} />
         <Button

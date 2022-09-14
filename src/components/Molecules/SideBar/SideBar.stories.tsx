@@ -1,65 +1,79 @@
+import { useState } from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
+
 import SideBar from '@/components/Molecules/SideBar';
-import { SideBarItemType } from '@/components/Molecules/SideBar/types';
+import { ContentListTypes, isMilestoneTypes, UpdateSideBarFuncTypes } from '@/components/Molecules/SideBar/types';
+import { filterUncheckedItem, getFindDropdownItem } from '@/components/Molecules/SideBar/utils';
 
 import { milestoneHandlers } from '@/mocks/handlers/milestone';
 import { labelHandlers } from '@/mocks/handlers/label';
 import { authHandlers } from '@/mocks/handlers/auth';
 
-import { DEFAULT_CONTENT_LIST, MOCK_CONTENT_LIST, SIDEBAR_PROPS } from '@/components/Molecules/SideBar/mock';
-
-import useFetchSideBarData from '@/api/useFetchSideBarData';
+import { DEFAULT_CONTENT_LIST, MOCK_CONTENT_LIST } from '@/components/Molecules/SideBar/mock';
 
 export default {
   title: 'Molecules/SideBar',
   component: SideBar,
 } as ComponentMeta<typeof SideBar>;
 
-const Content = () => {
-  const { memberData, labelData, milestoneData } = useFetchSideBarData();
+interface contentTypes {
+  mockContentList: ContentListTypes;
+}
 
-  const MOCK_SIDEBAR_PROPS: SideBarItemType[] = [
-    {
-      id: 'assignee',
-      dropdownTitle: '담당자',
-      dropdownListTitle: '담당자 필터',
-      dropdownList: memberData!,
-      dropdownType: 'checkbox',
-    },
-    {
-      id: 'label',
-      dropdownTitle: '레이블',
-      dropdownListTitle: '레이블 필터',
-      dropdownList: labelData!,
-      dropdownType: 'checkbox',
-    },
-    {
-      id: 'milestone',
-      dropdownTitle: '마일스톤',
-      dropdownListTitle: '마일스톤 필터',
-      dropdownList: milestoneData!.openedMilestones,
-      dropdownType: 'radio',
-    },
-  ];
-  return (
-    <div>
-      <SideBar sideBarList={MOCK_SIDEBAR_PROPS} content={DEFAULT_CONTENT_LIST} />
-    </div>
-  );
+const Content = ({ mockContentList }: contentTypes) => {
+  const [contentList, setContentList] = useState(mockContentList);
+
+  const handleOnChange = ({ ...props }: UpdateSideBarFuncTypes) => {
+    // eslint-disable-next-line react/prop-types
+    const { id, panel, checked, dropdownList } = props;
+
+    const findDropdownItem = getFindDropdownItem({ id: id!, dropdownList });
+    const contentKey = panel as keyof ContentListTypes;
+
+    if (contentKey === 'milestone' && checked) {
+      if (id !== 'none' && isMilestoneTypes(findDropdownItem!)) {
+        return setContentList({ ...contentList, [contentKey]: [findDropdownItem] });
+      }
+      return setContentList({ ...contentList, [contentKey]: [] });
+    }
+
+    if (contentKey !== 'milestone' && checked) {
+      return setContentList({ ...contentList, [contentKey]: [...contentList[contentKey], findDropdownItem] });
+    }
+
+    if (contentKey !== 'milestone' && !checked) {
+      const filterContentList = filterUncheckedItem({ id: id!, contentKey, contentList });
+      setContentList({ ...contentList, [contentKey]: [...filterContentList] });
+    }
+  };
+
+  return <SideBar content={contentList} handleOnChange={handleOnChange} />;
 };
 
-const Template: ComponentStory<typeof Content> = () => <Content />;
-const MockTemplate: ComponentStory<typeof SideBar> = (args) => <SideBar {...args} />;
+const EmptyContentListTemplate: ComponentStory<typeof SideBar> = () => {
+  const args = {
+    mockContentList: DEFAULT_CONTENT_LIST,
+  };
+  return <Content {...args} />;
+};
 
-export const Initial = Template.bind({});
+export const Initial = EmptyContentListTemplate.bind({});
+
 Initial.parameters = {
   msw: {
     handlers: [...milestoneHandlers, ...labelHandlers, ...authHandlers],
   },
 };
 
-export const Checked = MockTemplate.bind({});
-Checked.args = {
-  sideBarList: SIDEBAR_PROPS,
-  content: MOCK_CONTENT_LIST,
+const MockContentListTemplate: ComponentStory<typeof SideBar> = () => {
+  const args = {
+    mockContentList: MOCK_CONTENT_LIST,
+  };
+  return <Content {...args} />;
+};
+export const Checked = MockContentListTemplate.bind({});
+Checked.parameters = {
+  msw: {
+    handlers: [...milestoneHandlers, ...labelHandlers, ...authHandlers],
+  },
 };

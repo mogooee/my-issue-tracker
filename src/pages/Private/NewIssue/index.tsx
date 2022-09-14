@@ -1,5 +1,8 @@
-import { useRecoilValue } from 'recoil';
+/* eslint-disable react/prop-types */
+import React, { useState } from 'react';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
+import { NewIssueFormState } from '@/stores/newIssue';
 
 import * as S from '@/pages/Private/NewIssue/index.styles';
 import Button from '@/components/Atoms/Button';
@@ -7,42 +10,140 @@ import Input from '@/components/Atoms/Input';
 import UserImage from '@/components/Atoms/UserImage';
 import SideBar from '@/components/Molecules/SideBar';
 import TextAreaEditer from '@/components/Molecules/TextAreaEditer';
-import { DEFAULT_CONTENT_LIST, SIDEBAR_PROPS } from '@/components/Molecules/SideBar/mock';
+import { DEFAULT_CONTENT_LIST } from '@/components/Molecules/SideBar/mock';
 
 import useInput from '@/hooks/useInput';
+import { NEW_ISSUE_BUTTON_INFO } from '@/components/Atoms/Button/options';
+import { DEFAULT_TEXTAREA_MAX_LENGTH } from '@/components/Molecules/TextAreaEditer/constants';
+
+import Modal, { ModalState } from '@/components/Modal';
+import CancelNewIssueModal from '@/components/Modal/CancelNewIssue';
+
+import { filterUncheckedItem, getFindDropdownItem } from '@/components/Molecules/SideBar/utils';
+import { ContentListTypes, isMilestoneTypes, UpdateSideBarFuncTypes } from '@/components/Molecules/SideBar/types';
+
+import useFetchIssue from '@/api/issue/useFetchIssue';
 
 const NewIssue = () => {
   const LoginUserInfoStateValue = useRecoilValue(LoginUserInfoState);
+  const [isOpenModal, setIsOpenModal] = useRecoilState(ModalState);
+  const [newIssueFormState, setNewIssueFormState] = useRecoilState(NewIssueFormState);
+
+  const [contentList, setContentList] = useState(DEFAULT_CONTENT_LIST);
+
+  const { createNewIssueMutate } = useFetchIssue();
   const { isActive, isTyping, onChangeInput, onClickInput, onBlurInput } = useInput();
 
+  const OnClickCancelButton = () => setIsOpenModal(true);
+
+  const isDisabeldCreateIssueButton = () => newIssueFormState.title === '';
+
+  const updateTitleState = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { target } = event;
+    onChangeInput(event);
+    setNewIssueFormState({ ...newIssueFormState, title: target.value });
+  };
+
+  const updateCommentStateHandler = (event: React.FormEvent<HTMLTextAreaElement>) => {
+    const { value } = event.currentTarget;
+
+    if (!value) return setNewIssueFormState({ ...newIssueFormState, comment: '' });
+    if (Number(value) >= DEFAULT_TEXTAREA_MAX_LENGTH) {
+      // eslint-disable-next-line no-param-reassign
+      event.currentTarget.value = value.slice(0, DEFAULT_TEXTAREA_MAX_LENGTH);
+    }
+    return setNewIssueFormState({ ...newIssueFormState, comment: value });
+  };
+
+  const updateSideBarItemState = ({ ...props }: UpdateSideBarFuncTypes) => {
+    const { id, panel, checked, dropdownList } = props;
+
+    // 드롭다운 리스트에서 체크한 아이템의 정보를 찾는다.
+    const findDropdownItem = getFindDropdownItem({ id: id!, dropdownList });
+
+    const contentKey = panel as keyof ContentListTypes;
+
+    // 마일스톤의 드롭다운 아이템 체크시
+    if (contentKey === 'milestone' && checked) {
+      if (id !== 'none' && isMilestoneTypes(findDropdownItem!)) {
+        // 하나의 요소만 들어갈 수 있도록 한다.
+        setContentList({ ...contentList, [contentKey]: [findDropdownItem] });
+        setNewIssueFormState({ ...newIssueFormState, milestoneId: findDropdownItem.id });
+        return;
+      }
+      // 마일스톤 없음을 체크하면 아무 값도 들어가지 않는다.
+      setContentList({ ...contentList, [contentKey]: [] });
+      setNewIssueFormState({ ...newIssueFormState, milestoneId: null });
+      return;
+    }
+
+    // 담당자, 레이블 드롭다운 아이템 체크시 findDropdownItem한 요소를 content 리스트에 추가한다.
+    if (contentKey !== 'milestone' && checked) {
+      setContentList({ ...contentList, [contentKey]: [...contentList[contentKey], findDropdownItem] });
+      setNewIssueFormState({
+        ...newIssueFormState,
+        [`${contentKey}Ids`]: [...newIssueFormState[`${contentKey}Ids`], findDropdownItem!.id],
+      });
+      return;
+    }
+
+    if (contentKey !== 'milestone' && !checked) {
+      // 드롭다운 리스트에서 체크 해제하면, content 리스트에서 해당하는 요소를 제외한다.
+      const filterContentList = filterUncheckedItem({ id: id!, contentKey, contentList });
+      setContentList({ ...contentList, [contentKey]: [...filterContentList] });
+      setNewIssueFormState({
+        ...newIssueFormState,
+        [`${contentKey}Ids`]: [...newIssueFormState[`${contentKey}Ids`], findDropdownItem!.id],
+      });
+    }
+  };
+
+  const onClickCreateNewIssueButton = () => {
+    createNewIssueMutate({
+      newIssueFormData: newIssueFormState,
+      memberId: LoginUserInfoStateValue.id,
+    });
+  };
+
   return (
-    <S.NewIssue>
-      <h1>새로운 이슈 작성</h1>
-      <S.Divider />
-      <S.NewIssueEditer>
-        <UserImage imgSize="MEDIUM" {...LoginUserInfoStateValue} />
-        <S.NewIssueForm isActive={isActive}>
-          <Input
-            inputMaxLength={255}
-            inputPlaceholder="제목"
-            inputSize="MEDIUM"
-            inputType="text"
-            isActive={isActive}
-            isTyping={isTyping}
-            onChange={onChangeInput}
-            onClick={onClickInput}
-            onBlur={onBlurInput}
+    <>
+      <S.NewIssue>
+        <h1>새로운 이슈 작성</h1>
+        <S.Divider />
+        <S.NewIssueEditer>
+          <UserImage imgSize="MEDIUM" {...LoginUserInfoStateValue} />
+          <S.NewIssueForm isActive={isActive}>
+            <Input
+              inputMaxLength={255}
+              inputPlaceholder="제목"
+              inputSize="MEDIUM"
+              inputType="text"
+              isActive={isActive}
+              isTyping={isTyping}
+              onChange={updateTitleState}
+              onClick={onClickInput}
+              onBlur={onBlurInput}
+            />
+            <TextAreaEditer textAreaValue={newIssueFormState.comment} handleOnChange={updateCommentStateHandler} />
+          </S.NewIssueForm>
+          <SideBar content={contentList} handleOnChange={updateSideBarItemState} />
+        </S.NewIssueEditer>
+        <S.Divider />
+        <S.NewIssueButtons>
+          <Button {...NEW_ISSUE_BUTTON_INFO.CANCEL} handleOnClick={OnClickCancelButton} />
+          <Button
+            {...NEW_ISSUE_BUTTON_INFO.COMPLETE}
+            disabled={isDisabeldCreateIssueButton()}
+            handleOnClick={onClickCreateNewIssueButton}
           />
-          <TextAreaEditer />
-        </S.NewIssueForm>
-        <SideBar content={DEFAULT_CONTENT_LIST} sideBarList={SIDEBAR_PROPS} />
-      </S.NewIssueEditer>
-      <S.Divider />
-      <S.NewIssueButtons>
-        <Button buttonStyle="NO_BORDER" iconInfo={{ icon: 'XSquare' }} label="작성 취소" size="SMALL" />
-        <Button buttonStyle="STANDARD" label="완료" size="MEDIUM" />
-      </S.NewIssueButtons>
-    </S.NewIssue>
+        </S.NewIssueButtons>
+      </S.NewIssue>
+      {isOpenModal && (
+        <Modal>
+          <CancelNewIssueModal />
+        </Modal>
+      )}
+    </>
   );
 };
 

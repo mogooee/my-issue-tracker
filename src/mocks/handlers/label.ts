@@ -1,11 +1,13 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { rest } from 'msw';
+import { LabelTypes } from '@/api/issue/types';
 
 const message = {
   message: '',
 };
 
-let labelTable = [
+// eslint-disable-next-line import/no-mutable-exports
+export let labelTable: LabelTypes[] = [
   {
     id: 1,
     title: 'Feature',
