@@ -6,8 +6,19 @@ import { composeStories } from '@storybook/testing-react';
 import { act } from 'react-dom/test-utils';
 
 import * as MilestonesPageStories from '@/pages/Private/Milestones/MilestonesPage.stories';
+import { MemoryRouter } from 'react-router-dom';
+import { server } from '@/mocks/server';
 
 const { Initial } = composeStories(MilestonesPageStories);
+
+let DOMContainer = null;
+
+beforeAll(() => {
+  DOMContainer = document.createElement('div');
+  document.body.appendChild(DOMContainer);
+  DOMContainer.id = 'modal-root';
+  server.listen();
+});
 
 describe('마일스톤 페이지 테스트', () => {
   afterEach(() => {
@@ -15,16 +26,22 @@ describe('마일스톤 페이지 테스트', () => {
   });
 
   const user = userEvent.setup({ delay: null });
+  const renderMilestonePageComponent = () =>
+    render(
+      <MemoryRouter initialEntries={['/milestones']}>
+        <Initial />
+      </MemoryRouter>,
+    );
 
   it('마일스톤 페이지를 조회한다.', async () => {
-    const { container } = render(<Initial />);
+    const { container } = renderMilestonePageComponent();
     await waitFor(() => expect(container).toHaveTextContent('열린 마일스톤'));
     await waitFor(() => expect(container).toHaveTextContent('닫힌 마일스톤'));
   });
 
   it(`제목이 '새로운 마일스톤'인 마일스톤을 추가한다.`, async () => {
     jest.useFakeTimers();
-    render(<Initial />);
+    renderMilestonePageComponent();
 
     const addMilestoneButton = screen.getByRole('button', {
       name: /추가/i,
@@ -53,7 +70,7 @@ describe('마일스톤 페이지 테스트', () => {
 
   it(`마일스톤의 제목을 '마일스톤 1'에서 '마일스톤 123'으로 수정한다.`, async () => {
     jest.useFakeTimers();
-    render(<Initial />);
+    renderMilestonePageComponent();
 
     const modifyMilestoneButton = screen.getAllByText('편집')[0];
     await user.click(modifyMilestoneButton);
@@ -79,7 +96,7 @@ describe('마일스톤 페이지 테스트', () => {
   });
 
   it(`열린 상태인 '마일스톤 123'을 닫는다.`, async () => {
-    render(<Initial />);
+    renderMilestonePageComponent();
     const target = await screen.findByText('마일스톤 123');
     expect(target).toBeInTheDocument();
 
@@ -90,7 +107,7 @@ describe('마일스톤 페이지 테스트', () => {
   });
 
   it(`제목이 '마일스톤 3'인 마일스톤을 삭제한다.`, async () => {
-    render(<Initial />);
+    renderMilestonePageComponent();
 
     const target = await screen.findByText('마일스톤 3');
     expect(target).toBeInTheDocument();

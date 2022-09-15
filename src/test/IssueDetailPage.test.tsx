@@ -116,9 +116,7 @@ describe('이슈 상세페이지 테스트', () => {
   test('이슈 코멘트 수정', async () => {
     renderIssueDetailComponent();
 
-    const editCommentButton = screen.getByRole('button', {
-      name: /^편집$/i,
-    }) as HTMLButtonElement;
+    const editCommentButton = screen.getAllByText('편집')[1];
     await user.click(editCommentButton);
 
     const comment = screen.getByText('새로운 코멘트를 추가합니다.');
@@ -141,9 +139,7 @@ describe('이슈 상세페이지 테스트', () => {
 
     const comment = screen.getByText('코멘트를 수정합니다.');
 
-    const deleteCommentButton = screen.getByRole('button', {
-      name: /^삭제$/i,
-    }) as HTMLButtonElement;
+    const deleteCommentButton = screen.getAllByText('삭제')[1];
     await user.click(deleteCommentButton);
 
     await waitFor(() => {

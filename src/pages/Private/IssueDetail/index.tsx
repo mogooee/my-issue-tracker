@@ -34,7 +34,7 @@ const IssueDetail = (): JSX.Element => {
   const [selectCommentId, setSelectCommentId] = useState<number>(0);
 
   const isTypingNewComment = !textAreaValue;
-  const isIssueAuthor = JSON.stringify(userInfo) === JSON.stringify(author);
+  const isIssueAuthor = memberId === author.id;
 
   const handleAddCommentButton = () => {
     const newComment = { content: textAreaValue };
@@ -71,7 +71,7 @@ const IssueDetail = (): JSX.Element => {
       <S.IssueContent>
         <S.IssueComments>
           {comments.map((comment) => {
-            const isCommentAuthor = JSON.stringify(userInfo) === JSON.stringify(comment.author);
+            const isCommentAuthor = memberId === comment.author.id;
 
             return (
               <S.Comment key={comment.id}>

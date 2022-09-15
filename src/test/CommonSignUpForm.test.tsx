@@ -6,10 +6,11 @@ import { server } from '@/mocks/server';
 import { render } from '@/test/utils';
 import { screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { composeStories } from '@storybook/react';
+import { composeStories } from '@storybook/testing-react';
 
+import * as CommonSignUpFormStories from '@/components/Organisms/CommonSignUpForm/CommonSignUpForm.stories';
+import { MemoryRouter } from 'react-router-dom';
 import { FORM_INFO } from '@/components/Organisms/CommonSignUpForm/constants';
-import * as CommonSignUpFormStories from '@/components/Molecules/CommonLoginForm/CommonLoginForm.stories';
 
 const { Initial } = composeStories(CommonSignUpFormStories);
 
@@ -30,7 +31,11 @@ describe('일반 가입 컴포넌트 테스트', () => {
   const user = userEvent.setup({ delay: null });
 
   const rendering = () => {
-    render(<Initial />);
+    render(
+      <MemoryRouter initialEntries={['/signup']}>
+        <Initial />
+      </MemoryRouter>,
+    );
 
     const id = screen.getByPlaceholderText('아이디') as HTMLInputElement;
     const password = screen.getByPlaceholderText('비밀번호') as HTMLInputElement;

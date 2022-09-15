@@ -9,10 +9,18 @@ import userEvent from '@testing-library/user-event';
 import { composeStories } from '@storybook/testing-react';
 import * as SampleLabelList from '@/pages/Private/Labels/Labels.stories';
 import { render } from '@/test/utils';
+import { MemoryRouter } from 'react-router-dom';
 
 const { Initial } = composeStories(SampleLabelList);
 
-beforeAll(() => server.listen());
+let DOMContainer = null;
+
+beforeAll(() => {
+  DOMContainer = document.createElement('div');
+  document.body.appendChild(DOMContainer);
+  DOMContainer.id = 'modal-root';
+  server.listen();
+});
 
 afterEach(() => server.resetHandlers());
 
@@ -33,15 +41,21 @@ describe('라벨 페이지 테스트', () => {
   });
 
   const user = userEvent.setup({ delay: null });
+  const renderLablePageComponent = () =>
+    render(
+      <MemoryRouter initialEntries={['/labels']}>
+        <Initial />
+      </MemoryRouter>,
+    );
 
   test('페이지 렌더링(레이블 조회)', async () => {
-    const { container } = render(<Initial />);
+    const { container } = renderLablePageComponent();
     await waitFor(() => expect(container).toHaveTextContent('개의 레이블'));
   });
 
   test('레이블 등록', async () => {
     jest.useFakeTimers();
-    render(<Initial />);
+    renderLablePageComponent();
 
     // 추가버튼을 누르면 새로운 레이블 추가 폼이 나타난다.
     const addButton = screen.getByRole('button', {
@@ -85,7 +99,7 @@ describe('라벨 페이지 테스트', () => {
   });
 
   test('레이블 삭제', async () => {
-    render(<Initial />);
+    renderLablePageComponent();
     const deletedLabel = screen.getByText(/Feature/i);
     expect(deletedLabel).toBeInTheDocument();
 
@@ -108,7 +122,7 @@ describe('라벨 페이지 테스트', () => {
 
   test('레이블 수정', async () => {
     jest.useFakeTimers();
-    render(<Initial />);
+    renderLablePageComponent();
 
     // 편집버튼을 누르면 레이블 편집폼이 나타난다.
     const editButton = screen.getAllByRole('button', {
@@ -147,7 +161,7 @@ describe('라벨 페이지 테스트', () => {
   });
 
   test('레이블을 클릭하면 이슈페이지로 이동', async () => {
-    render(<Initial />);
+    renderLablePageComponent();
     const label = screen.getByText(/Docs/i);
     await user.click(label);
     expect(mockedNavigate).toBeCalledTimes(1);

@@ -6,8 +6,19 @@ import userEvent from '@testing-library/user-event';
 
 import { composeStories } from '@storybook/testing-react';
 import * as SampleHeader from '@/components/Organisms/Header/Header.stories';
+import { server } from '@/mocks/server';
+import { MemoryRouter } from 'react-router-dom';
 
 const { Initial } = composeStories(SampleHeader);
+
+let DOMContainer = null;
+
+beforeAll(() => {
+  DOMContainer = document.createElement('div');
+  document.body.appendChild(DOMContainer);
+  DOMContainer.id = 'modal-root';
+  server.listen();
+});
 
 const mockedNavigate = jest.fn();
 
@@ -17,8 +28,15 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('헤더 컴포넌트 테스트', () => {
+  const renderHeaderComponent = () =>
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <Initial />
+      </MemoryRouter>,
+    );
+
   const rendering = () => {
-    render(<Initial />);
+    renderHeaderComponent();
 
     const profileImage = screen.getByRole('img', {
       name: /dobby의 프로필 사진/i,
