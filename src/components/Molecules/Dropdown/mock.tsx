@@ -143,7 +143,7 @@ const OPEN_CLOSE_STATE_LIST: IssueTypes[] = [
   },
   {
     id: 1,
-    dataId: 'close',
+    dataId: 'closed',
     title: '선택한 이슈 닫기',
   },
 ];
