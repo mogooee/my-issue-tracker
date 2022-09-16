@@ -43,13 +43,14 @@ const LoginForm = (): JSX.Element => {
   } = useInput();
 
   const navigate = useNavigate();
-  const { saveAuthLoginState } = useLogin();
+  const { setSuccessLoginState, saveAuthLoginState } = useLogin();
   const [loginForm, setLoginForm] = useState(initLoginForm);
   const [isError, setIsError] = useState<boolean>(false);
 
   const login = async () => {
     try {
       const { memberResponse } = (await signin(loginForm)) as OAuthResponse;
+      setSuccessLoginState();
       saveAuthLoginState(memberResponse);
       navigate('/issues');
     } catch (error) {
