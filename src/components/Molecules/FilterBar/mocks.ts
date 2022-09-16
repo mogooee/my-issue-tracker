@@ -10,13 +10,15 @@ export const FILTERBAR_INFO: FILTERBAR_INFO_TYPES = {
     type: 'List',
     panelProps: {
       panelId: 'issue',
-      panelTitle: '체크박스 필터',
-      panelType: 'radio',
+      panelTitle: '이슈 필터',
+      panelType: 'checkbox',
       panelList: ISSUE_FILTER_LIST,
     },
   },
   INPUT: {
-    placeholder: 'Search all issues',
-    defaultValue: 'is:issue is:open',
+    inputSize: 'MEDIUM',
+    inputType: 'text',
+    inputMaxLength: 100,
+    inputPlaceholder: 'Search all issues',
   },
 };
