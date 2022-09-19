@@ -14,17 +14,17 @@ export const TotalIssue = Template.bind({});
 TotalIssue.args = {
   issues,
   filterTabs: FILTER_TABS_INFO,
-  issueState: 'ALL',
+  issueState: 'all',
 };
 
 export const OpenIssue = Template.bind({});
 OpenIssue.args = {
   ...TotalIssue.args,
-  issueState: 'OPEN',
+  issueState: 'open',
 };
 
 export const ClosedIssue = Template.bind({});
 ClosedIssue.args = {
   ...TotalIssue.args,
-  issueState: 'CLOSED',
+  issueState: 'closed',
 };

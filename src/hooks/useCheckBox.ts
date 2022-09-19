@@ -9,9 +9,9 @@ function useCheckBox() {
   const clickParentCheckBox = () => {
     const totalCheckIds =
       // eslint-disable-next-line no-nested-ternary
-      checkState.issueState === 'ALL'
+      checkState.issueState === 'all'
         ? [...defaultCheckIds.openIds, ...defaultCheckIds.closedIds]
-        : checkState.issueState === 'OPEN'
+        : checkState.issueState === 'open'
         ? defaultCheckIds.openIds
         : defaultCheckIds.closedIds;
     const isAllCheckedChildBox = checkState.child.length === totalCheckIds.length;

@@ -30,10 +30,10 @@ const definedItem = (
   openIssuesContent: ContentTypes[],
   closedIssuesContent: ContentTypes[],
 ): ContentTypes[] => {
-  if (state === 'OPEN') {
+  if (state === 'open') {
     return openIssuesContent;
   }
-  if (state === 'CLOSED') {
+  if (state === 'closed') {
     return closedIssuesContent;
   }
 
