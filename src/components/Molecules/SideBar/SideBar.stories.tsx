@@ -31,7 +31,7 @@ const Content = ({ mockContentList }: contentTypes) => {
     const contentKey = panel as keyof ContentListTypes;
 
     if (contentKey === 'milestone' && checked) {
-      if (id !== 'none' && isMilestoneTypes(findDropdownItem!)) {
+      if (id !== 'no:milestone' && isMilestoneTypes(findDropdownItem!)) {
         return setContentList({ ...contentList, [contentKey]: [findDropdownItem] });
       }
       return setContentList({ ...contentList, [contentKey]: [] });
