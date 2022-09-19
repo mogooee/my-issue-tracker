@@ -28,7 +28,7 @@ export interface UNUSED_OPTIONS_TYPES {
 }
 
 export interface ListPanelTypes {
-  panelId: 'assignee' | 'label' | 'milestone' | 'issue' | 'auther' | 'state';
+  panelId: 'assignee' | 'label' | 'milestone' | 'issue' | 'author' | 'state';
   panelTitle: string;
   panelType: 'checkbox' | 'radio';
   panelList?: LabelTypes[] | UserTypes[] | IssueTypes[] | MilestoneTypes[];

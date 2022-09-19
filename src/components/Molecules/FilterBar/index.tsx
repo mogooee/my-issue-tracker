@@ -101,7 +101,7 @@ const FilterBar = ({ ...props }: FILTERBAR_INFO_TYPES) => {
           onSubmit={handleSubmitFilterBar}
         />
       </S.FilterBar>
-       {isFiltering && <Button {...FILTERBAR_CLEAR_BUTTON_PROPS} handleOnClick={resetFilterValue} />}
+      {isFiltering && <Button {...FILTERBAR_CLEAR_BUTTON_PROPS} handleOnClick={resetFilterValue} />}
     </S.FilterBarContainer>
   );
 };
