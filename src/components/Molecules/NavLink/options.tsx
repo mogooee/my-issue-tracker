@@ -14,15 +14,23 @@ export const labelMilestone = [
   },
 ];
 
-export const openCloseIssue = (openIssueNum: number, closedIssueNum: number) => [
-  {
-    icon: <Icon icon="AlertCircle" stroke={COLORS.PRIMARY.BLUE} />,
-    title: `열린 이슈 (${openIssueNum})`,
-    link: '/issues?q=+is%3Aopen+',
-  },
-  {
-    icon: <Icon icon="Archive" stroke={COLORS.SECONDORY.PURPLE} />,
-    title: `닫힌 이슈 (${closedIssueNum})`,
-    link: '/issues?q=+is%3Aclosed+',
-  },
-];
+const filterStateReg = /(is%3A%22)(closed|open)%22/g;
+
+export const openCloseIssue = (openIssueNum: number, closedIssueNum: number, page: number, queryString: string) => {
+  const pageQuery = `/issues?page=${page}`;
+  const filterStateQuery = queryString.replace(filterStateReg, '');
+  return [
+    {
+      dataId: 'is:open',
+      icon: <Icon icon="AlertCircle" stroke={COLORS.PRIMARY.BLUE} />,
+      title: `열린 이슈 (${openIssueNum})`,
+      link: `${pageQuery}&q=${encodeURIComponent('is:"open"')}${filterStateQuery}`,
+    },
+    {
+      dataId: 'is:closed',
+      icon: <Icon icon="Archive" stroke={COLORS.SECONDORY.PURPLE} />,
+      title: `닫힌 이슈 (${closedIssueNum})`,
+      link: `${pageQuery}&q=${encodeURIComponent('is:"closed"')}${filterStateQuery}`,
+    },
+  ];
+};

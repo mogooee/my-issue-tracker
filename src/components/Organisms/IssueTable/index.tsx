@@ -81,7 +81,10 @@ const IssueTable = ({ issues, filterTabs, issueState }: IssueTableTypes) => {
             {checkedBoxNum > 0 ? (
               <span>{`${checkedBoxNum}개 이슈 선택`}</span>
             ) : (
-              <NavLink navData={openCloseIssue(openIssueCount, closedIssueCount)} />
+              <NavLink
+                navData={openCloseIssue(openIssueCount, closedIssueCount)}
+                defaultActive="is:open"
+              />
             )}
           </S.IssueStates>
           <S.IssueInfoTabs>
