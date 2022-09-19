@@ -8,8 +8,9 @@ const Dropdown = <Panel extends ReactionPanelTypes | ListPanelTypes>({
   type,
   panelProps,
   isActive,
+  handleOnDropdownClick,
 }: DropdownTypes<Panel>): JSX.Element => (
-  <S.Dropdown dropdownStyle={indicatorProps.indicatorStyle}>
+  <S.Dropdown dropdownStyle={indicatorProps.indicatorStyle} onClick={handleOnDropdownClick}>
     <DropdownIndicator isActive={isActive} {...indicatorProps} />
     <DropdownPanel type={type} prop={panelProps} />
   </S.Dropdown>

@@ -18,6 +18,7 @@ import Table from '@/components/Molecules/Table';
 import { ContentTypes, IssuesTypes } from '@/api/issue/types';
 import { FilterStatsState, FilterState, IssueStateType, NoFilterKeysType } from '@/stores/filter';
 import { openCloseIssue } from '@/components/Molecules/NavLink/options';
+import useFetchSideBarData from '@/api/useFetchSideBarData';
 
 interface IssueTableTypes {
   issues: IssuesTypes;
@@ -53,6 +54,7 @@ const IssueTable = ({ issues, filterTabs, issueState }: IssueTableTypes) => {
 
   const { useUpdateIssueState } = useFetchIssue();
   const { mutate: updateIssueState } = useUpdateIssueState(checkState.child);
+  const { memberData, memberDataRefetch } = useFetchSideBarData();
   const memberId = useRecoilValue(LoginUserInfoState).id;
   const items = definedItem(issueState, openIssues.content, closedIssues.content);
 
@@ -76,6 +78,11 @@ const IssueTable = ({ issues, filterTabs, issueState }: IssueTableTypes) => {
     const clickedNavDataId = event.currentTarget.dataset.id;
     const [stateKey, stateValue] = clickedNavDataId!.split(':');
     setFilterState((prev) => ({ ...prev, [stateKey]: stateValue }));
+  };
+
+  const handleOnDropdownClick = (filterKey: string) => {
+    const isMemberListData = filterKey === 'assignee' || filterKey === 'author';
+    if (isMemberListData && !memberData) memberDataRefetch();
   };
 
   const handleOnFilterTabsClick = (target: HTMLInputElement) => {
@@ -154,16 +161,24 @@ const IssueTable = ({ issues, filterTabs, issueState }: IssueTableTypes) => {
               <Dropdown {...IssueStateDropdownProps} />
             ) : (
               filterTabs.map((info) => {
+                const { panelId: filterKey, panelTitle } = info.panelProps;
+
                 const DROPDOWN_PROPS = {
                   ...info,
                   panelProps: {
                     ...info.panelProps,
                     handleOnClick: handleOnFilterTabsClick,
-                    isChecked: isFilterTabsChecked(info.panelProps.panelId),
+                    isChecked: isFilterTabsChecked(filterKey),
                   },
                 };
 
-                return <Dropdown key={info.panelProps.panelTitle} {...DROPDOWN_PROPS} />;
+                return (
+                  <Dropdown
+                    key={panelTitle}
+                    {...DROPDOWN_PROPS}
+                    handleOnDropdownClick={(e) => handleOnDropdownClick(filterKey)}
+                  />
+                );
               })
             )}
           </S.IssueInfoTabs>

@@ -66,4 +66,5 @@ export interface DropdownTypes<Panel> {
   indicatorProps: DropdownIndicatorTypes;
   panelProps: Panel;
   isActive?: boolean;
+  handleOnDropdownClick?: (event: React.MouseEvent<HTMLDetailsElement>) => void;
 }

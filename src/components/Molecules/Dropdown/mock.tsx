@@ -148,7 +148,7 @@ const OPEN_CLOSE_STATE_LIST: IssueTypes[] = [
   },
 ];
 
-export const ASSIGNEE_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
+export const ASSIGNEE_DROPDOWN_ARGS = (memberList: UserTypes[]): DropdownTypes<ListPanelTypes> => ({
   type: 'List',
   indicatorProps: {
     indicatorLabel: '담당자',
@@ -158,12 +158,12 @@ export const ASSIGNEE_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
     panelId: 'assignee',
     panelTitle: '담당자 필터',
     panelType: 'checkbox',
-    panelList: USER_LIST,
+    panelList: memberList,
     unusedOption: UNUSED_OPTIONS.ASSIGNEE,
   },
-};
+});
 
-export const LABEL_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
+export const LABEL_DROPDOWN_ARGS = (labelList: LabelTypes[]): DropdownTypes<ListPanelTypes> => ({
   type: 'List',
   indicatorProps: {
     indicatorLabel: '레이블',
@@ -173,12 +173,12 @@ export const LABEL_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
     panelId: 'label',
     panelTitle: '레이블 필터',
     panelType: 'checkbox',
-    panelList: LABEL_LIST,
+    panelList: labelList,
     unusedOption: UNUSED_OPTIONS.LABEL,
   },
-};
+});
 
-export const MILESTONE_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
+export const MILESTONE_DROPDOWN_ARGS = (milestoneList: MilestoneTypes[]): DropdownTypes<ListPanelTypes> => ({
   type: 'List',
   indicatorProps: {
     indicatorLabel: '마일스톤',
@@ -188,12 +188,12 @@ export const MILESTONE_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
     panelId: 'milestone',
     panelTitle: '마일스톤 필터',
     panelType: 'checkbox',
-    panelList: LABEL_LIST,
+    panelList: milestoneList,
     unusedOption: UNUSED_OPTIONS.MILESTONE,
   },
-};
+});
 
-export const AUTHOR_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
+export const AUTHOR_DROPDOWN_ARGS = (memberList: UserTypes[]): DropdownTypes<ListPanelTypes> => ({
   type: 'List',
   indicatorProps: {
     indicatorLabel: '작성자',
@@ -203,9 +203,9 @@ export const AUTHOR_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
     panelId: 'author',
     panelTitle: '작성자 필터',
     panelType: 'checkbox',
-    panelList: USER_LIST,
+    panelList: memberList,
   },
-};
+});
 
 export const OPEN_CLOSE_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
   type: 'List',
