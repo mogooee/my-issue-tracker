@@ -23,7 +23,11 @@ const Issues = () => {
   const { labelData } = useFetchLabel();
   const { milestoneData } = useFetchMilestone();
   const { useIssuesData } = useFetchIssue();
-  const { data: issues } = useIssuesData(0);
+
+  useEffect(() => {
+    setCheckState((checkState) => ({ ...checkState, issueState: filterState.is }));
+  }, [filterState.state]);
+
 
   const [searchParams] = useSearchParams();
   const setCheckState = useSetRecoilState(CheckState);
@@ -59,7 +63,7 @@ const Issues = () => {
           </Link>
         </S.SubNav>
       </S.NavInline>
-      <IssueTable issues={issues!} filterTabs={FILTER_TABS} issueState={issueState} />
+      <IssueTable issues={issues!} filterTabs={FILTER_TABS} issueState={filterState.is} />
     </>
   );
 };
