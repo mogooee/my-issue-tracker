@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import useFetchIssue from '@/api/issue/useFetchIssue';
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
@@ -14,6 +14,9 @@ import * as S from '@/components/Organisms/IssueTable/index.styles';
 import { DropdownTypes, ListPanelTypes } from '@/components/Molecules/Dropdown/types';
 import { OPEN_CLOSE_DROPDOWN_ARGS } from '@/components/Molecules/Dropdown/mock';
 import Table from '@/components/Molecules/Table';
+
+import { ContentTypes, IssuesTypes } from '@/api/issue/types';
+import { FilterStatsState, FilterState, IssueStateType } from '@/stores/filter';
 import { openCloseIssue } from '@/components/Molecules/NavLink/options';
 import { ContentTypes, IssuesTypes } from '@/api/issue/types';
 
@@ -53,6 +56,9 @@ const IssueTable = ({ issues, filterTabs, issueState }: IssueTableTypes) => {
 
   const items = definedItem(issueState, openIssues.content, closedIssues.content);
 
+  const [filterState, setFilterState] = useRecoilState(FilterState);
+  const { page, quries } = useRecoilValue(FilterStatsState);
+
   const changeIssueState = (target: HTMLInputElement) => {
     const clickedPanelStatus = target.dataset.id;
     const status = clickedPanelStatus === 'close';
@@ -66,6 +72,11 @@ const IssueTable = ({ issues, filterTabs, issueState }: IssueTableTypes) => {
     panelProps: { ...OPEN_CLOSE_DROPDOWN_ARGS.panelProps, handleOnClick: changeIssueState },
   };
 
+  const handleOnOpenClosedNavClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    const clickedNavDataId = event.currentTarget.dataset.id;
+    const [stateKey, stateValue] = clickedNavDataId!.split(':');
+    setFilterState((prev) => ({ ...prev, [stateKey]: stateValue }));
+  };
   useEffect(() => {
     const openIds: number[] = issues.openIssues.content.map((openIssue) => openIssue.id);
     const closedIds: number[] = issues.closedIssues.content.map((closedIssue) => closedIssue.id);
@@ -82,7 +93,8 @@ const IssueTable = ({ issues, filterTabs, issueState }: IssueTableTypes) => {
               <span>{`${checkedBoxNum}개 이슈 선택`}</span>
             ) : (
               <NavLink
-                navData={openCloseIssue(openIssueCount, closedIssueCount)}
+                navData={openCloseIssue(openIssueCount, closedIssueCount, page, quries)}
+                handleOnClick={handleOnOpenClosedNavClick}
                 defaultActive="is:open"
               />
             )}
