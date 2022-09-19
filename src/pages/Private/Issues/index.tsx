@@ -14,11 +14,17 @@ import NavLink from '@/components/Molecules/NavLink';
 import IssueTable from '@/components/Organisms/IssueTable';
 
 import { FILTERBAR_INFO } from '@/components/Molecules/FilterBar/mocks';
-import { FILTER_TABS_INFO as FILTER_TABS } from '@/components/Molecules/Dropdown/mock';
+import {
+  ASSIGNEE_DROPDOWN_ARGS,
+  AUTHOR_DROPDOWN_ARGS,
+  LABEL_DROPDOWN_ARGS,
+  MILESTONE_DROPDOWN_ARGS,
+} from '@/components/Molecules/Dropdown/mock';
 import { NEW_ISSUE_BUTTON_INFO } from '@/components/Atoms/Button/options';
 import { FilterState, FilterStatsState, PageState } from '@/stores/filter';
 import useFetchLabel from '@/api/label/useFetchLabel';
 import useFetchMilestone from '@/api/milestone/useFetchMilestone';
+import useFetchSideBarData from '@/api/useFetchSideBarData';
 
 const Issues = () => {
   const naviagate = useNavigate();
@@ -33,8 +39,16 @@ const Issues = () => {
 
   const { labelData } = useFetchLabel();
   const { milestoneData } = useFetchMilestone();
+  const { memberData } = useFetchSideBarData();
   const { useIssuesData } = useFetchIssue();
   const { data: issues } = useIssuesData(pageParams, quriesParams);
+
+  const filterTabs = [
+    ASSIGNEE_DROPDOWN_ARGS(memberData!),
+    LABEL_DROPDOWN_ARGS(labelData!),
+    MILESTONE_DROPDOWN_ARGS(milestoneData?.openedMilestones!),
+    AUTHOR_DROPDOWN_ARGS(memberData!),
+  ];
 
   useEffect(() => {
     setCheckState((checkState) => ({ ...checkState, issueState: filterState.is }));
@@ -87,7 +101,7 @@ const Issues = () => {
           </Link>
         </S.SubNav>
       </S.NavInline>
-      <IssueTable issues={issues!} filterTabs={FILTER_TABS} issueState={filterState.is} />
+      <IssueTable issues={issues!} filterTabs={filterTabs} issueState={filterState.is} />
     </>
   );
 };
