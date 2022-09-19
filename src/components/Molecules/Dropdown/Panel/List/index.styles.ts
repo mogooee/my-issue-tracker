@@ -42,16 +42,21 @@ export const PanelItem = styled.li`
 
   input {
     display: none;
-
-    &:checked ~ label::after {
-      margin-top: 4px;
-      content: url(${checkOnCircle});
-    }
   }
 
   label {
     ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'space-between' })};
     cursor: pointer;
+  }
+`;
+
+export const CheckBoxItem = styled.input`
+  &:checked ~ label::after {
+    margin-top: 4px;
+    content: url(${checkOnCircle});
+  }
+
+  & ~ label {
     height: 28px;
 
     span {

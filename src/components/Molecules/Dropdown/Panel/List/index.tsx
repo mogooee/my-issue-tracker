@@ -47,7 +47,7 @@ const ListPanel = ({ ...props }: ListPanelTypes) => {
 
             return (
               <S.PanelItem key={ITEM_KEY}>
-                <input
+                <S.CheckBoxItem
                   id={ITEM_KEY}
                   type={panelType}
                   name={panelTitle}
