@@ -16,18 +16,12 @@ import IssueTable from '@/components/Organisms/IssueTable';
 import { FILTERBAR_INFO } from '@/components/Molecules/FilterBar/mocks';
 import { FILTER_TABS_INFO as FILTER_TABS } from '@/components/Molecules/Dropdown/mock';
 import { NEW_ISSUE_BUTTON_INFO } from '@/components/Atoms/Button/options';
-
-const definedIssueState = (queries: string[]) => {
-  if (queries?.find((query) => query.includes('is:open'))) {
-    return 'OPEN';
-  }
-  if (queries?.find((query) => query.includes('is:closed'))) {
-    return 'CLOSED';
-  }
-  return 'ALL';
-};
+import useFetchLabel from '@/api/label/useFetchLabel';
+import useFetchMilestone from '@/api/milestone/useFetchMilestone';
 
 const Issues = () => {
+  const { labelData } = useFetchLabel();
+  const { milestoneData } = useFetchMilestone();
   const { useIssuesData } = useFetchIssue();
   const { data: issues } = useIssuesData(0);
 
@@ -47,10 +41,14 @@ const Issues = () => {
         <S.SubNav>
           <NavLink
             navData={[
-              { icon: <Icon icon="Tag" stroke={COLORS.TITLE_ACTIVE} />, title: '레이블 (3)', link: '/labels' },
+              {
+                icon: <Icon icon="Tag" stroke={COLORS.TITLE_ACTIVE} />,
+                title: `레이블 (${labelData!.length})`,
+                link: '/labels',
+              },
               {
                 icon: <Icon icon="Milestone" fill={COLORS.TITLE_ACTIVE} />,
-                title: '마일스톤 (2)',
+                title: `마일스톤 (${milestoneData!.openedMilestones.length})`,
                 link: '/milestones',
               },
             ]}
