@@ -37,7 +37,7 @@ export const ISSUE_FILTER_LIST: IssueTypes[] = [
   },
   {
     id: 3,
-    dataId: 'mentions:@me ',
+    dataId: 'mentions:@me',
     title: '내가 댓글을 남긴 이슈',
   },
   {
@@ -157,7 +157,7 @@ export const ASSIGNEE_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
   panelProps: {
     panelId: 'assignee',
     panelTitle: '담당자 필터',
-    panelType: 'radio',
+    panelType: 'checkbox',
     panelList: USER_LIST,
     unusedOption: UNUSED_OPTIONS.ASSIGNEE,
   },
@@ -193,16 +193,16 @@ export const MILESTONE_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
   },
 };
 
-export const AUTHER_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
+export const AUTHOR_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
   type: 'List',
   indicatorProps: {
     indicatorLabel: '작성자',
     indicatorStyle: 'STANDARD',
   },
   panelProps: {
-    panelId: 'auther',
+    panelId: 'author',
     panelTitle: '작성자 필터',
-    panelType: 'radio',
+    panelType: 'checkbox',
     panelList: USER_LIST,
   },
 };
@@ -216,7 +216,7 @@ export const OPEN_CLOSE_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
   panelProps: {
     panelId: 'state',
     panelTitle: '상태 변경',
-    panelType: 'checkbox',
+    panelType: 'radio',
     panelList: OPEN_CLOSE_STATE_LIST,
   },
 };
@@ -256,5 +256,5 @@ export const FILTER_TABS_INFO = [
   ASSIGNEE_DROPDOWN_ARGS,
   LABEL_DROPDOWN_ARGS,
   MILESTONE_DROPDOWN_ARGS,
-  AUTHER_DROPDOWN_ARGS,
+  AUTHOR_DROPDOWN_ARGS,
 ];

@@ -68,7 +68,7 @@ const SideBar = ({ ...props }: SideBarTypes) => {
         id="milestone"
         dropdownTitle="마일스톤"
         dropdownListTitle="마일스톤 필터"
-        dropdownList={milestoneData === undefined ? [] : milestoneData!.openedMilestones} // 어쩔수없었습니다...
+        dropdownList={milestoneData?.openedMilestones!}
         dropdownType="radio"
         content={content.milestone}
         handleOnChange={handleOnChangeFunc}
