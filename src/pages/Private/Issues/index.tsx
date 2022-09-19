@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import useFetchIssue from '@/api/issue/useFetchIssue';
 import { CheckState } from '@/stores/checkBox';
 
@@ -21,10 +21,13 @@ import useFetchLabel from '@/api/label/useFetchLabel';
 import useFetchMilestone from '@/api/milestone/useFetchMilestone';
 
 const Issues = () => {
+  const naviagate = useNavigate();
   const [searchParams] = useSearchParams();
   const quriesParams = searchParams.get('q') || '';
   const pageParams = Number(searchParams.get('page')) || 0;
+
   const [filterState, setFilterState] = useRecoilState(FilterState);
+  const { page, quries } = useRecoilValue(FilterStatsState);
   const setPageState = useSetRecoilState(PageState);
   const setCheckState = useSetRecoilState(CheckState);
 
@@ -37,11 +40,10 @@ const Issues = () => {
     setCheckState((checkState) => ({ ...checkState, issueState: filterState.is }));
   }, [filterState.state]);
 
+  useEffect(() => {
 
-  const [searchParams] = useSearchParams();
-  const setCheckState = useSetRecoilState(CheckState);
-  const queries = searchParams.get('q')?.split('+')!;
-  const issueState = definedIssueState(queries);
+    naviagate(`/issues?page=${page}&q=${quries}`);
+  }, [quries]);
 
   useEffect(() => {
     setPageState(pageParams);
