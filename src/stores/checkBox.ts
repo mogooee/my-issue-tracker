@@ -1,14 +1,15 @@
 import { atom } from 'recoil';
+import { IssueStateType } from '@/stores/filter';
 
 export interface CheckStateTypes {
-  issueState: 'OPEN' | 'CLOSED' | 'ALL';
+  issueState: IssueStateType;
   parent: boolean;
   child: number[];
 }
 
 export const CheckState = atom<CheckStateTypes>({
   key: 'CheckState',
-  default: { issueState: 'ALL', parent: false, child: [] },
+  default: { issueState: 'all', parent: false, child: [] },
 });
 
 interface DefaultCheckIdsTypes {
