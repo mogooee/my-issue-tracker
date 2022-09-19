@@ -16,17 +16,18 @@ import { OPEN_CLOSE_DROPDOWN_ARGS } from '@/components/Molecules/Dropdown/mock';
 import Table from '@/components/Molecules/Table';
 
 import { ContentTypes, IssuesTypes } from '@/api/issue/types';
-import { FilterStatsState, FilterState, IssueStateType } from '@/stores/filter';
+import { FilterStatsState, FilterState, IssueStateType, NoFilterKeysType } from '@/stores/filter';
 import { openCloseIssue } from '@/components/Molecules/NavLink/options';
-import { ContentTypes, IssuesTypes } from '@/api/issue/types';
-
-type IssueStateType = 'ALL' | 'OPEN' | 'CLOSED';
 
 interface IssueTableTypes {
   issues: IssuesTypes;
   filterTabs: DropdownTypes<ListPanelTypes>[];
   issueState: IssueStateType;
 }
+
+const noneFilterReg = /^no:/g;
+const labelFilterReg = /^label/g;
+const PARENT_CHECKBOX_ID = -1;
 
 const definedItem = (
   state: IssueStateType,
@@ -53,7 +54,6 @@ const IssueTable = ({ issues, filterTabs, issueState }: IssueTableTypes) => {
   const { useUpdateIssueState } = useFetchIssue();
   const { mutate: updateIssueState } = useUpdateIssueState(checkState.child);
   const memberId = useRecoilValue(LoginUserInfoState).id;
-
   const items = definedItem(issueState, openIssues.content, closedIssues.content);
 
   const [filterState, setFilterState] = useRecoilState(FilterState);
@@ -61,7 +61,7 @@ const IssueTable = ({ issues, filterTabs, issueState }: IssueTableTypes) => {
 
   const changeIssueState = (target: HTMLInputElement) => {
     const clickedPanelStatus = target.dataset.id;
-    const status = clickedPanelStatus === 'close';
+    const status = clickedPanelStatus === 'closed';
     const newState = { status, ids: checkState.child };
     updateIssueState({ newState, memberId });
     setCheckState({ ...checkState, parent: false, child: [] });
@@ -77,6 +77,56 @@ const IssueTable = ({ issues, filterTabs, issueState }: IssueTableTypes) => {
     const [stateKey, stateValue] = clickedNavDataId!.split(':');
     setFilterState((prev) => ({ ...prev, [stateKey]: stateValue }));
   };
+
+  const handleOnFilterTabsClick = (target: HTMLInputElement) => {
+    const key = target.dataset.panel!;
+    const value: string | string[] = target.dataset.id!;
+
+    const isExistedFilter = (): boolean => {
+      if (value.match(noneFilterReg)) return !!filterState.no.find((e) => e === key);
+      if (key.match(labelFilterReg)) return !!filterState.label.find((e) => e === value);
+      return filterState[key] === value;
+    };
+
+    // 필터 해제
+    if (isExistedFilter()) {
+      if (value.match(noneFilterReg)) return;
+
+      setFilterState((prevState) => {
+        const checkOffValue = key.match(labelFilterReg) ? prevState.label.filter((e) => e !== value) : '';
+        return { ...prevState, [key]: checkOffValue };
+      });
+      return;
+    }
+
+    // 필터 설정
+    setFilterState((prevState) => {
+      if (value.match(noneFilterReg)) {
+        const initPrevState = key.match(labelFilterReg) ? [] : '';
+        const newNoFilterKey = key as NoFilterKeysType;
+        return {
+          ...prevState,
+          [key]: initPrevState,
+          no: [...prevState.no, newNoFilterKey],
+        };
+      }
+
+      const checkOnValue = key.match(labelFilterReg) ? [...prevState.label, value] : value;
+      return { ...prevState, [key]: checkOnValue, no: [...prevState.no.filter((e) => e !== key)] };
+    });
+  };
+
+  const isFilterTabsChecked = (panelId: string) => {
+    const content = filterState[panelId];
+
+    return (dataId: string): boolean => {
+      if (Array.isArray(content)) {
+        return !!content.find((e) => e === dataId);
+      }
+      return content === dataId;
+    };
+  };
+
   useEffect(() => {
     const openIds: number[] = issues.openIssues.content.map((openIssue) => openIssue.id);
     const closedIds: number[] = issues.closedIssues.content.map((closedIssue) => closedIssue.id);
@@ -87,7 +137,7 @@ const IssueTable = ({ issues, filterTabs, issueState }: IssueTableTypes) => {
     <Table
       header={
         <S.IssueTableHeader>
-          <CheckBox id={-1} type="parent" checked={checkState.parent} />
+          <CheckBox id={PARENT_CHECKBOX_ID} type="parent" checked={checkState.parent} />
           <S.IssueStates>
             {checkedBoxNum > 0 ? (
               <span>{`${checkedBoxNum}개 이슈 선택`}</span>
@@ -103,7 +153,18 @@ const IssueTable = ({ issues, filterTabs, issueState }: IssueTableTypes) => {
             {checkedBoxNum > 0 ? (
               <Dropdown {...IssueStateDropdownProps} />
             ) : (
-              filterTabs.map((info) => <Dropdown key={info.panelProps.panelTitle} {...info} />)
+              filterTabs.map((info) => {
+                const DROPDOWN_PROPS = {
+                  ...info,
+                  panelProps: {
+                    ...info.panelProps,
+                    handleOnClick: handleOnFilterTabsClick,
+                    isChecked: isFilterTabsChecked(info.panelProps.panelId),
+                  },
+                };
+
+                return <Dropdown key={info.panelProps.panelTitle} {...DROPDOWN_PROPS} />;
+              })
             )}
           </S.IssueInfoTabs>
         </S.IssueTableHeader>
