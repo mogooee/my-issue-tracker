@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
-import { Link, useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { Link } from 'react-router-dom';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import * as S from '@/components/Organisms/IssueTable/IssueItem/index.styles';
 import { COLORS } from '@/styles/theme';
@@ -13,12 +13,13 @@ import UserImage from '@/components/Atoms/UserImage';
 import { CheckState } from '@/stores/checkBox';
 import calcTimeForToday from '@/utils/calcForTimeToday';
 import { ContentTypes } from '@/api/issue/types';
+import { FilterState } from '@/stores/filter';
 
 const IssueItem = (issueInfo: ContentTypes) => {
   const { id, title, closed, issueLabels, author, issueAssignees, createdAt, lastModifiedAt, milestone } = issueInfo;
 
   const checkState = useRecoilValue(CheckState);
-  const navigate = useNavigate();
+  const setFilterState = useSetRecoilState(FilterState);
 
   const issueLink = `/issues/${id}`;
   const milestoneLink = `/milestone/${id}`;
@@ -30,7 +31,7 @@ const IssueItem = (issueInfo: ContentTypes) => {
   const isChecked = !!checkState.child.find((checkboxId) => checkboxId === id);
 
   const handleLabelClick = (filterdLabelTitle: string) => {
-    navigate(`/issues?q=label%3A"${filterdLabelTitle}"`);
+    setFilterState((prev) => ({ ...prev, label: [filterdLabelTitle] }));
   };
 
   return (
