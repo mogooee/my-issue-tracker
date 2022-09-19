@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
 import { NewIssueFormState } from '@/stores/newIssue';
 
@@ -65,7 +65,7 @@ const NewIssue = () => {
 
     // 마일스톤의 드롭다운 아이템 체크시
     if (contentKey === 'milestone' && checked) {
-      if (id !== 'none' && isMilestoneTypes(findDropdownItem!)) {
+      if (id !== 'no:milestone' && isMilestoneTypes(findDropdownItem!)) {
         // 하나의 요소만 들어갈 수 있도록 한다.
         setContentList({ ...contentList, [contentKey]: [findDropdownItem] });
         setNewIssueFormState({ ...newIssueFormState, milestoneId: findDropdownItem.id });

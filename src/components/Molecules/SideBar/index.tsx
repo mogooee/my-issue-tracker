@@ -24,7 +24,7 @@ const SideBar = ({ ...props }: SideBarTypes) => {
     const { id, panel } = target.dataset;
     const { checked } = target;
 
-    const key = id as keyof ContentListTypes | 'none';
+    const key = id as keyof ContentListTypes | 'no:milestone';
 
     const findDropdownList = () => {
       switch (panel) {

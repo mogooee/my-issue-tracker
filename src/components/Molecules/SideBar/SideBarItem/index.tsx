@@ -50,7 +50,7 @@ const SideBarItem = ({ ...props }: SideBarItemType & ContentItemTypes & handleOn
           panelType: dropdownType,
           handleOnClick: handleOnChange,
           isChecked,
-          unusedOption: id === 'milestone' ? { dataId: 'none', title: '마일스톤 없음' } : undefined,
+          unusedOption: id === 'milestone' ? { dataId: 'no:milestone', title: '마일스톤 없음' } : undefined,
         }}
       />
 

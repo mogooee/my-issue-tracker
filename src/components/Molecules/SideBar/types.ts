@@ -19,7 +19,7 @@ export interface SideBarItemType {
 }
 
 export interface UpdateSideBarFuncTypes {
-  id: keyof ContentListTypes | 'none';
+  id: keyof ContentListTypes | 'no:milestone';
   panel: string;
   checked: boolean;
   dropdownList: (UserTypes | LabelTypes | MilestoneTypes)[];
