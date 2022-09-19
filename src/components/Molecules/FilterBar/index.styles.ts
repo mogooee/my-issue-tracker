@@ -7,8 +7,21 @@ export const FilterBarContainer = styled.div`
   flex-direction: column;
   height: 82px;
 
-  input {
-    border-left: none;
+  ${Button} {
+    svg {
+      border-radius: 4px;
+      margin: 0px 10px;
+      background: ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
+    }
+
+    &:hover:not([disabled]) {
+      color: ${({ theme }) => theme.COLORS.PRIMARY.DARK_BLUE};
+
+      svg {
+        stroke: ${({ theme }) => theme.COLORS.OFF_WHITE};
+        background: ${({ theme }) => theme.COLORS.PRIMARY.DARK_BLUE};
+      }
+    }
   }
 `;
 
