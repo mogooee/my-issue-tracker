@@ -57,30 +57,49 @@ export const FilterStatsState = selector({
 
     const isFiltering = JSON.stringify(filterState) !== JSON.stringify(initFilterState);
 
-    const filterQueryString = Object.keys(filterState)
-      .reduce((acc, key) => {
-        const value = filterState[key];
+    const defineFilterString = (type: 'FILTER_BAR' | 'QUERY') =>
+      Object.keys(filterState)
+        .reduce((acc, key) => {
+          const value = filterState[key];
 
-        if (Array.isArray(value)) {
-            return (
-              acc +
-              value.reduce((accState: string, curValue: string) => {
-                const newQuery = key === 'label' ? `${key}:"${curValue}"` : `${curValue}:"${''}"`;
-                return `${accState} ${encodeQueryString(newQuery)}`;
-              }, '')
-            );
-        }
-        if (value) {
-          if (key === 'is' && value === 'all') return acc;
-            const filterValue = value === '@me' ? userInfo.nickname : value;
-            const newQuery = `${key}:"${filterValue}"`;
-            return `${acc} ${encodeQueryString(newQuery)}`;
+          if (Array.isArray(value)) {
+            if (type === 'FILTER_BAR')
+              return acc + value.reduce((accState: string, curValue: string) => `${accState} ${key}:${curValue}`, '');
+
+            if (type === 'QUERY') {
+              return (
+                acc +
+                value.reduce((accState: string, curValue: string) => {
+                  const newQuery = key === 'label' ? `${key}:"${curValue}"` : `${curValue}:"${''}"`;
+                  return `${accState} ${encodeQueryString(newQuery)}`;
+                }, '')
+              );
+            }
           }
-        return acc;
-      }, '')
-      .trim();
+
+          if (value) {
+            if (key === 'is' && value === 'all') return acc;
+
+            if (type === 'FILTER_BAR') {
+              const filterValue = value === 'me' ? '@me' : value;
+              return `${acc} ${key}:${filterValue}`;
+            }
+
+            if (type === 'QUERY') {
+              const filterValue = value === '@me' ? userInfo.nickname : value;
+              const newQuery = `${key}:"${filterValue}"`;
+              return `${acc} ${encodeQueryString(newQuery)}`;
+            }
+          }
+
+          return acc;
+        }, '')
+        .trim();
+
+    const filterBarState = defineFilterString('FILTER_BAR');
+    const filterQueryString = defineFilterString('QUERY');
     const quries = filterQueryString.replaceAll(' ', '+');
 
-    return { isFiltering, page, quries };
+    return { isFiltering, page, filterBarState, quries };
   },
 });
