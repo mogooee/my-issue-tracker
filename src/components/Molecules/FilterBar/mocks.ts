@@ -13,7 +13,7 @@ export const FILTERBAR_INFO: FILTERBAR_INFO_TYPES = {
     panelProps: {
       panelId: 'issue',
       panelTitle: '이슈 필터',
-      panelType: 'checkbox',
+      panelType: 'radio',
       panelList: ISSUE_FILTER_LIST,
     },
   },

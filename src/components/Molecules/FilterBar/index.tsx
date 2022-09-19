@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
-import { FilterState, FilterStatsState } from '@/stores/filter';
+import { FilterState, FilterStatsState, initFilterState } from '@/stores/filter';
 
 import * as S from '@/components/Molecules/FilterBar/index.styles';
 
@@ -18,6 +18,7 @@ export type FILTERBAR_INFO_TYPES = {
 };
 
 const noReg = /^no/g;
+const stateReg = /^is:/g;
 const openQuery = 'is:open';
 const closedQuery = 'is:closed';
 
@@ -31,6 +32,17 @@ const FilterBar = ({ ...props }: FILTERBAR_INFO_TYPES) => {
 
   const [filterBarInputValue, setFilterBarInputValue] = useState<string>(filterBarState);
 
+  const isChecked = (dataId: string) => {
+    if (dataId.match(stateReg)) return filterBarState === dataId;
+    return filterBarState === `${openQuery} ${dataId}`;
+  };
+
+  const filterIssues = (target: HTMLInputElement) => {
+    const clickedPanelDataId = target.dataset.id!;
+    const [key, value] = clickedPanelDataId!.split(':');
+
+    setFilterState({ ...initFilterState, [key]: value });
+  };
 
   const handleChangeFilterBar = (event: React.ChangeEvent<HTMLInputElement>) => {
     const quries = event.target.value;
@@ -66,6 +78,11 @@ const FilterBar = ({ ...props }: FILTERBAR_INFO_TYPES) => {
     });
   };
 
+  const DROPDOWN_PROPS = {
+    ...DROPDOWN,
+    panelProps: { ...DROPDOWN.panelProps, handleOnClick: filterIssues, isChecked },
+  };
+
   useEffect(() => {
     setFilterBarInputValue(filterBarState);
   }, [filterBarState]);
@@ -73,6 +90,7 @@ const FilterBar = ({ ...props }: FILTERBAR_INFO_TYPES) => {
   return (
     <S.FilterBarContainer>
       <S.FilterBar isActive={isActive}>
+        <Dropdown {...DROPDOWN_PROPS} isActive={isActive} />
         <Input
           {...INPUT}
           inputValue={filterBarState}
