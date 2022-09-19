@@ -17,7 +17,7 @@ export type FILTERBAR_INFO_TYPES = {
   INPUT: InputTypes;
 };
 
-const noReg = /^no/g;
+const noneFilterReg = /^no/g;
 const stateReg = /^is:/g;
 const openQuery = 'is:open';
 const closedQuery = 'is:closed';
@@ -66,7 +66,7 @@ const FilterBar = ({ ...props }: FILTERBAR_INFO_TYPES) => {
       const [key, value] = qurey.split(':');
 
       setFilterState((prev) => {
-        if (key.match(noReg)) {
+        if (key.match(noneFilterReg)) {
           const initState = value === 'label' ? [] : '';
           return { ...prev, no: [...prev.no, value as 'label' | 'assignee' | 'milestone'], [value]: initState };
         }
