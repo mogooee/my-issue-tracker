@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Link, useSearchParams } from 'react-router-dom';
 import useFetchIssue from '@/api/issue/useFetchIssue';
 import { CheckState } from '@/stores/checkBox';
@@ -16,13 +16,22 @@ import IssueTable from '@/components/Organisms/IssueTable';
 import { FILTERBAR_INFO } from '@/components/Molecules/FilterBar/mocks';
 import { FILTER_TABS_INFO as FILTER_TABS } from '@/components/Molecules/Dropdown/mock';
 import { NEW_ISSUE_BUTTON_INFO } from '@/components/Atoms/Button/options';
+import { FilterState, FilterStatsState, PageState } from '@/stores/filter';
 import useFetchLabel from '@/api/label/useFetchLabel';
 import useFetchMilestone from '@/api/milestone/useFetchMilestone';
 
 const Issues = () => {
+  const [searchParams] = useSearchParams();
+  const quriesParams = searchParams.get('q') || '';
+  const pageParams = Number(searchParams.get('page')) || 0;
+  const [filterState, setFilterState] = useRecoilState(FilterState);
+  const setPageState = useSetRecoilState(PageState);
+  const setCheckState = useSetRecoilState(CheckState);
+
   const { labelData } = useFetchLabel();
   const { milestoneData } = useFetchMilestone();
   const { useIssuesData } = useFetchIssue();
+  const { data: issues } = useIssuesData(pageParams, quriesParams);
 
   useEffect(() => {
     setCheckState((checkState) => ({ ...checkState, issueState: filterState.is }));
@@ -35,8 +44,21 @@ const Issues = () => {
   const issueState = definedIssueState(queries);
 
   useEffect(() => {
-    setCheckState((checkState) => ({ ...checkState, issueState }));
-  }, [issueState]);
+    setPageState(pageParams);
+    if (quriesParams) {
+      const queriesArr = quriesParams.split(' ');
+      queriesArr.forEach((qurey) => {
+        const [key, value] = qurey.split(':');
+        const filterValue = value.replace(/(^"|"$)/g, '');
+        setFilterState((prev) => {
+          if (!filterValue) return { ...prev, no: [...prev.no, key as 'label' | 'milestone' | 'assignee'] };
+
+          const newValue = key === 'label' ? [...prev[key], filterValue] : filterValue;
+          return { ...prev, [key]: newValue };
+        });
+      });
+    }
+  }, []);
 
   return (
     <>
