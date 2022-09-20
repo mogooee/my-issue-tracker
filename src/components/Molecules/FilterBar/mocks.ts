@@ -4,7 +4,7 @@ import { ISSUE_FILTER_LIST } from '@/components/Molecules/Dropdown/mock';
 import { ButtonTypes } from '@/components/Atoms/Button';
 
 export const FILTERBAR_INFO: FILTERBAR_INFO_TYPES = {
-  DROPDOWN: {
+  DROPDOWN: (handleOnClick: (target: HTMLInputElement) => void, isChecked: (dataId: string) => boolean) => ({
     indicatorProps: {
       indicatorLabel: '필터',
       indicatorStyle: 'FILTERBAR',
@@ -15,8 +15,10 @@ export const FILTERBAR_INFO: FILTERBAR_INFO_TYPES = {
       panelTitle: '이슈 필터',
       panelType: 'radio',
       panelList: ISSUE_FILTER_LIST,
+      handleOnClick,
+      isChecked,
     },
-  },
+  }),
   INPUT: {
     inputSize: 'MEDIUM',
     inputType: 'text',

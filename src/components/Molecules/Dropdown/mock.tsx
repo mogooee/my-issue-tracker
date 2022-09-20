@@ -207,7 +207,9 @@ export const AUTHOR_DROPDOWN_ARGS = (memberList: UserTypes[]): DropdownTypes<Lis
   },
 });
 
-export const OPEN_CLOSE_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
+export const OPEN_CLOSE_DROPDOWN_ARGS = (
+  handleOnClick: (target: HTMLInputElement) => void,
+): DropdownTypes<ListPanelTypes> => ({
   type: 'List',
   indicatorProps: {
     indicatorLabel: '상태 수정',
@@ -218,8 +220,9 @@ export const OPEN_CLOSE_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
     panelTitle: '상태 변경',
     panelType: 'radio',
     panelList: OPEN_CLOSE_STATE_LIST,
+    handleOnClick,
   },
-};
+});
 
 export const REACTION_ARGS: DropdownTypes<ReactionPanelTypes> = {
   type: 'Reaction',
