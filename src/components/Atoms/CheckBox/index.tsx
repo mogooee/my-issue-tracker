@@ -20,7 +20,7 @@ const CheckBox = ({ id, type, checked = false }: CheckboxTypes) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   if (type === 'parent' && inputRef?.current) {
-    const totalChildBoxNum = [...defaultCheckIds.openIds, ...defaultCheckIds.closedIds].length;
+    const totalChildBoxNum = defaultCheckIds.length;
     inputRef.current.indeterminate = checkState.child.length > 0 && checkState.child.length < totalChildBoxNum;
   }
 

@@ -7,13 +7,7 @@ function useCheckBox() {
   const newCheckState: { parent: boolean; child: number[] } = { parent: false, child: [] };
 
   const clickParentCheckBox = () => {
-    const totalCheckIds =
-      // eslint-disable-next-line no-nested-ternary
-      checkState.issueState === 'all'
-        ? [...defaultCheckIds.openIds, ...defaultCheckIds.closedIds]
-        : checkState.issueState === 'open'
-        ? defaultCheckIds.openIds
-        : defaultCheckIds.closedIds;
+    const totalCheckIds = defaultCheckIds;
     const isAllCheckedChildBox = checkState.child.length === totalCheckIds.length;
 
     if (isAllCheckedChildBox) {

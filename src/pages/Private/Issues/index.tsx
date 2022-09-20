@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import useFetchIssue from '@/api/issue/useFetchIssue';
-import { CheckState } from '@/stores/checkBox';
 
 import * as S from '@/pages/Private/Issues/index.styled';
 import { COLORS } from '@/styles/theme';
@@ -35,7 +34,6 @@ const Issues = () => {
   const [filterState, setFilterState] = useRecoilState(FilterState);
   const { page, quries } = useRecoilValue(FilterStatsState);
   const setPageState = useSetRecoilState(PageState);
-  const setCheckState = useSetRecoilState(CheckState);
 
   const { labelData } = useFetchLabel();
   const { milestoneData } = useFetchMilestone();

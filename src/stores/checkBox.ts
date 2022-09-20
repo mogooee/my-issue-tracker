@@ -1,23 +1,20 @@
 import { atom } from 'recoil';
-import { IssueStateType } from '@/stores/filter';
 
 export interface CheckStateTypes {
-  issueState: IssueStateType;
   parent: boolean;
   child: number[];
 }
 
 export const CheckState = atom<CheckStateTypes>({
   key: 'CheckState',
-  default: { issueState: 'all', parent: false, child: [] },
+  default: { parent: false, child: [] },
 });
 
 interface DefaultCheckIdsTypes {
-  openIds: number[];
-  closedIds: number[];
+  ids: number[];
 }
 
-export const DefaultCheckIds = atom<DefaultCheckIdsTypes>({
+export const DefaultCheckIds = atom<number[]>({
   key: 'DefaultCheckIds',
-  default: { openIds: [], closedIds: [] },
+  default: [],
 });

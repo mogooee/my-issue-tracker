@@ -117,10 +117,9 @@ const IssueTable = ({ issuesData, filterTabs }: IssueTableTypes) => {
   };
 
   useEffect(() => {
-    const openIds: number[] = issues.openIssues.content.map((openIssue) => openIssue.id);
-    const closedIds: number[] = issues.closedIssues.content.map((closedIssue) => closedIssue.id);
-    setDefaultCheckIds({ openIds, closedIds });
-  }, [issues.openIssueCount]);
+    const ids: number[] = issues.content.map((issue) => issue.id);
+    setDefaultCheckIds(ids);
+  }, [issues.content.length]);
 
   return (
     <Table
