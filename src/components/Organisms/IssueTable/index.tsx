@@ -51,11 +51,6 @@ const IssueTable = ({ issuesData, filterTabs }: IssueTableTypes) => {
     setCheckState({ ...checkState, parent: false, child: [] });
   };
 
-  const IssueStateDropdownProps = {
-    ...OPEN_CLOSE_DROPDOWN_ARGS,
-    panelProps: { ...OPEN_CLOSE_DROPDOWN_ARGS.panelProps, handleOnClick: changeIssueState },
-  };
-
   const handleOnOpenClosedNavClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     const clickedNavDataId = event.currentTarget.dataset.id;
     const [stateKey, stateValue] = clickedNavDataId!.split(':');
@@ -139,7 +134,7 @@ const IssueTable = ({ issuesData, filterTabs }: IssueTableTypes) => {
           </S.IssueStates>
           <S.IssueInfoTabs>
             {checkedBoxNum > 0 ? (
-              <Dropdown {...IssueStateDropdownProps} />
+              <Dropdown {...OPEN_CLOSE_DROPDOWN_ARGS(changeIssueState)} />
             ) : (
               filterTabs.map((info) => {
                 const { panelId: filterKey, panelTitle } = info.panelProps;

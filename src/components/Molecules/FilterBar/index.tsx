@@ -13,7 +13,10 @@ import { FILTERBAR_CLEAR_BUTTON_PROPS } from '@/components/Molecules/FilterBar/m
 import { DropdownTypes, ListPanelTypes } from '@/components/Molecules/Dropdown/types';
 
 export type FILTERBAR_INFO_TYPES = {
-  DROPDOWN: DropdownTypes<ListPanelTypes>;
+  DROPDOWN: (
+    handleOnClick: (target: HTMLInputElement) => void,
+    isChecked: (dataId: string) => boolean,
+  ) => DropdownTypes<ListPanelTypes>;
   INPUT: InputTypes;
 };
 
@@ -78,11 +81,6 @@ const FilterBar = ({ ...props }: FILTERBAR_INFO_TYPES) => {
     });
   };
 
-  const DROPDOWN_PROPS = {
-    ...DROPDOWN,
-    panelProps: { ...DROPDOWN.panelProps, handleOnClick: filterIssues, isChecked },
-  };
-
   useEffect(() => {
     setFilterBarInputValue(filterBarState);
   }, [filterBarState]);
@@ -90,7 +88,7 @@ const FilterBar = ({ ...props }: FILTERBAR_INFO_TYPES) => {
   return (
     <S.FilterBarContainer>
       <S.FilterBar isActive={isActive}>
-        <Dropdown {...DROPDOWN_PROPS} isActive={isActive} />
+        <Dropdown {...DROPDOWN(filterIssues, isChecked)} isActive={isActive} />
         <Input
           {...INPUT}
           inputValue={filterBarState}
