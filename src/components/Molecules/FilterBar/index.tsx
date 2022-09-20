@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
-import { FilterState, FilterStatsState, initFilterState } from '@/stores/filter';
+import { FilterState, FilterStatsState, initFilterState, NoFilterKeysType } from '@/stores/filter';
 
 import * as S from '@/components/Molecules/FilterBar/index.styles';
 
@@ -71,7 +71,7 @@ const FilterBar = ({ ...props }: FILTERBAR_INFO_TYPES) => {
       setFilterState((prev) => {
         if (key.match(noneFilterReg)) {
           const initState = value === 'label' ? [] : '';
-          return { ...prev, no: [...prev.no, value as 'label' | 'assignee' | 'milestone'], [value]: initState };
+          return { ...prev, no: [...prev.no, value as NoFilterKeysType], [value]: initState };
         }
 
         const newValue = key === 'label' && Array.isArray(prev.label) ? [...prev.label, value] : value;

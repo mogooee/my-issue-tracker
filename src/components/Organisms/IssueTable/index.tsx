@@ -16,6 +16,7 @@ import { OPEN_CLOSE_DROPDOWN_ARGS } from '@/components/Molecules/Dropdown/mock';
 import Table from '@/components/Molecules/Table';
 
 import { IssuesTypes } from '@/api/issue/types';
+import { FilterStatsState, FilterState, NoFilterKeysType } from '@/stores/filter';
 import { openCloseIssue } from '@/components/Molecules/NavLink/options';
 import useFetchSideBarData from '@/api/useFetchSideBarData';
 
@@ -57,7 +58,7 @@ const IssueTable = ({ issuesData, filterTabs }: IssueTableTypes) => {
     setFilterState((prev) => ({ ...prev, [stateKey]: stateValue }));
   };
 
-  const handleOnDropdownClick = (filterKey: string) => {
+  const handleOnMemberDropdownClick = (filterKey: string) => {
     const isMemberListData = filterKey === 'assignee' || filterKey === 'author';
     if (isMemberListData && !memberData) memberDataRefetch();
   };
@@ -152,7 +153,7 @@ const IssueTable = ({ issuesData, filterTabs }: IssueTableTypes) => {
                   <Dropdown
                     key={panelTitle}
                     {...DROPDOWN_PROPS}
-                    handleOnDropdownClick={(e) => handleOnDropdownClick(filterKey)}
+                    handleOnDropdownClick={(e) => handleOnMemberDropdownClick(filterKey)}
                   />
                 );
               })
