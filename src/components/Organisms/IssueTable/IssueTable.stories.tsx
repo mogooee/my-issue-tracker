@@ -3,7 +3,6 @@ import IssueTable from '@/components/Organisms/IssueTable';
 import {
   ASSIGNEE_DROPDOWN_ARGS,
   AUTHOR_DROPDOWN_ARGS,
-  FILTER_TABS_INFO,
   LABEL_DROPDOWN_ARGS,
   LABEL_LIST,
   MILESTONE_DROPDOWN_ARGS,
@@ -21,24 +20,21 @@ const Template: ComponentStory<typeof IssueTable> = (args) => <IssueTable {...ar
 
 export const TotalIssue = Template.bind({});
 TotalIssue.args = {
-  issues,
+  issuesData: issues,
   filterTabs: [
     ASSIGNEE_DROPDOWN_ARGS(USER_LIST),
     LABEL_DROPDOWN_ARGS(LABEL_LIST),
     MILESTONE_DROPDOWN_ARGS(MILESTONE_LIST),
     AUTHOR_DROPDOWN_ARGS(USER_LIST),
   ],
-  issueState: 'all',
 };
 
 export const OpenIssue = Template.bind({});
 OpenIssue.args = {
   ...TotalIssue.args,
-  issueState: 'open',
 };
 
 export const ClosedIssue = Template.bind({});
 ClosedIssue.args = {
   ...TotalIssue.args,
-  issueState: 'closed',
 };
