@@ -101,7 +101,7 @@ const Issues = () => {
           </Link>
         </S.SubNav>
       </S.NavInline>
-      <IssueTable issues={issues!} filterTabs={filterTabs} issueState={filterState.is} />
+      <IssueTable issuesData={issues!} filterTabs={filterTabs} />
     </>
   );
 };

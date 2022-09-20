@@ -15,38 +15,21 @@ import { DropdownTypes, ListPanelTypes } from '@/components/Molecules/Dropdown/t
 import { OPEN_CLOSE_DROPDOWN_ARGS } from '@/components/Molecules/Dropdown/mock';
 import Table from '@/components/Molecules/Table';
 
-import { ContentTypes, IssuesTypes } from '@/api/issue/types';
-import { FilterStatsState, FilterState, IssueStateType, NoFilterKeysType } from '@/stores/filter';
+import { IssuesTypes } from '@/api/issue/types';
 import { openCloseIssue } from '@/components/Molecules/NavLink/options';
 import useFetchSideBarData from '@/api/useFetchSideBarData';
 
 interface IssueTableTypes {
-  issues: IssuesTypes;
+  issuesData: IssuesTypes;
   filterTabs: DropdownTypes<ListPanelTypes>[];
-  issueState: IssueStateType;
 }
 
 const noneFilterReg = /^no:/g;
 const labelFilterReg = /^label/g;
 const PARENT_CHECKBOX_ID = -1;
 
-const definedItem = (
-  state: IssueStateType,
-  openIssuesContent: ContentTypes[],
-  closedIssuesContent: ContentTypes[],
-): ContentTypes[] => {
-  if (state === 'open') {
-    return openIssuesContent;
-  }
-  if (state === 'closed') {
-    return closedIssuesContent;
-  }
-
-  return [...openIssuesContent, ...closedIssuesContent];
-};
-
-const IssueTable = ({ issues, filterTabs, issueState }: IssueTableTypes) => {
-  const { openIssueCount, openIssues, closedIssueCount, closedIssues } = issues;
+const IssueTable = ({ issuesData, filterTabs }: IssueTableTypes) => {
+  const { openIssueCount, closedIssueCount, issues } = issuesData;
 
   const [checkState, setCheckState] = useRecoilState(CheckState);
   const setDefaultCheckIds = useSetRecoilState(DefaultCheckIds);
@@ -56,7 +39,6 @@ const IssueTable = ({ issues, filterTabs, issueState }: IssueTableTypes) => {
   const { mutate: updateIssueState } = useUpdateIssueState(checkState.child);
   const { memberData, memberDataRefetch } = useFetchSideBarData();
   const memberId = useRecoilValue(LoginUserInfoState).id;
-  const items = definedItem(issueState, openIssues.content, closedIssues.content);
 
   const [filterState, setFilterState] = useRecoilState(FilterState);
   const { page, quries } = useRecoilValue(FilterStatsState);
@@ -184,7 +166,7 @@ const IssueTable = ({ issues, filterTabs, issueState }: IssueTableTypes) => {
           </S.IssueInfoTabs>
         </S.IssueTableHeader>
       }
-      item={items.map((itemProps) => (
+      item={issues.content.map((itemProps) => (
         <IssueItem key={itemProps.id} {...itemProps} />
       ))}
     />
