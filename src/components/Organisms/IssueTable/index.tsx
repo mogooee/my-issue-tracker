@@ -165,9 +165,11 @@ const IssueTable = ({ issuesData, filterTabs }: IssueTableTypes) => {
           </S.IssueInfoTabs>
         </S.IssueTableHeader>
       }
-      item={issues.content.map((itemProps) => (
-        <IssueItem key={itemProps.id} {...itemProps} />
-      ))}
+      item={
+        issues.content.length
+          ? issues.content.map((itemProps) => <IssueItem key={itemProps.id} {...itemProps} />)
+          : [<S.NoSearchResult>No results matched your search. 👀</S.NoSearchResult>]
+      }
     />
   );
 };
