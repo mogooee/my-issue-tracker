@@ -98,7 +98,6 @@ interface PageTypes {
 
 export type IssuesTypes = {
   openIssueCount: number;
-  openIssues: IssueTypes & PageTypes;
   closedIssueCount: number;
-  closedIssues: IssueTypes & PageTypes;
+  issues: IssueTypes & PageTypes;
 };
