@@ -1,8 +1,9 @@
 import { atom, selector } from 'recoil';
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
+import { parsingFilterReg } from '@/hooks/useFilter';
 
 export type IssueStateType = 'open' | 'closed' | 'all';
-export type IssueAboutMyselfType = 'me';
+export type IssueAboutMyselfType = '@me';
 export type NoFilterKeysType = 'assignee' | 'label' | 'milestone';
 
 export interface FilterStateTypes {
@@ -36,17 +37,7 @@ export const PageState = atom<number>({
   default: 0,
 });
 
-const encodeSpace = (string: string): string => {
-  const spaceReg = /\s/g;
-
-  if (string.match(spaceReg)) {
-    return `${string.replaceAll(' ', '+')}`;
-  }
-
-  return string;
-};
-
-const encodeQueryString = (value: string): string => encodeURIComponent(encodeSpace(value));
+const engReg = /^[a-zA-Z]*$/g;
 
 export const FilterStatsState = selector({
   key: 'FilterStatsState',
@@ -63,33 +54,23 @@ export const FilterStatsState = selector({
           const value = filterState[key];
 
           if (Array.isArray(value)) {
-            if (type === 'FILTER_BAR')
-              return acc + value.reduce((accState: string, curValue: string) => `${accState} ${key}:${curValue}`, '');
+            return (
+              acc +
+              value.reduce((accQuery: string, curValue: string) => {
+                if (type === 'FILTER_BAR' && curValue.match(engReg)) return `${accQuery} ${key}:${curValue}`;
+                if (type === 'QUERY' && key === 'no') return `${accQuery} ${curValue}:""`;
 
-            if (type === 'QUERY') {
-              return (
-                acc +
-                value.reduce((accState: string, curValue: string) => {
-                  const newQuery = key === 'label' ? `${key}:"${curValue}"` : `${curValue}:"${''}"`;
-                  return `${accState} ${encodeQueryString(newQuery)}`;
-                }, '')
-              );
-            }
+                return `${accQuery} ${key}:"${curValue}"`;
+              }, '')
+            );
           }
 
-          if (value) {
+          if (typeof value === 'string' && value) {
             if (key === 'is' && value === 'all') return acc;
+            if (type === 'FILTER_BAR' && (value.match(engReg) || value === '@me')) return `${acc} ${key}:${value}`;
+            if (type === 'QUERY' && value === '@me') return `${acc} ${key}:"${userInfo.nickname}"`;
 
-            if (type === 'FILTER_BAR') {
-              const filterValue = value === 'me' ? '@me' : value;
-              return `${acc} ${key}:${filterValue}`;
-            }
-
-            if (type === 'QUERY') {
-              const filterValue = value === '@me' ? userInfo.nickname : value;
-              const newQuery = `${key}:"${filterValue}"`;
-              return `${acc} ${encodeQueryString(newQuery)}`;
-            }
+            return `${acc} ${key}:"${value}"`;
           }
 
           return acc;
@@ -98,8 +79,12 @@ export const FilterStatsState = selector({
 
     const filterBarState = defineFilterString('FILTER_BAR');
     const filterQueryString = defineFilterString('QUERY');
-    const quries = filterQueryString.replaceAll(' ', '+');
+    const queries =
+      filterQueryString
+        .match(parsingFilterReg)
+        ?.map((e) => encodeURIComponent(e))
+        .join('+') || '';
 
-    return { isFiltering, page, filterBarState, quries };
+    return { isFiltering, page, filterBarState, queries };
   },
 });
