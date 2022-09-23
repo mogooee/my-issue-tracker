@@ -383,7 +383,7 @@ export const issueHandlers = [
     }
 
     const newIssue = responseNewIssueData({ memberId: userId, ...requestData });
-    issues.openIssues.content.push(newIssue);
+    issueTable.openIssues.push(newIssue);
 
     return res(ctx.status(200), ctx.json(newIssue));
   }),
