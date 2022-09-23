@@ -38,6 +38,17 @@ export let labelTable: LabelTypes[] = [
   },
 ];
 
+const addIdCount = () => {
+  let count = labelTable.length;
+
+  return () => {
+    count += 1;
+    return count;
+  };
+};
+
+const countId = addIdCount();
+
 export const labelHandlers = [
   // 라벨 리스트 조회
   rest.get('api/labels', (req, res, ctx) => res(ctx.status(200), ctx.json(labelTable))),
@@ -45,10 +56,11 @@ export const labelHandlers = [
   // 라벨 등록
   rest.post('api/labels', async (req, res, ctx) => {
     const newLabel = await req.json();
-    const { title, backgroundColorCode, textColor } = newLabel;
+    const { title, backgroundColorCode, textColor, description } = newLabel;
 
     if (title && backgroundColorCode && textColor) {
-      labelTable.push(newLabel);
+      const id = countId();
+      labelTable.push({ ...newLabel, description, id });
       return res(ctx.status(200), ctx.json(newLabel));
     }
 
