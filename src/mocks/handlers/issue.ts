@@ -35,11 +35,11 @@ const updateIssueTable = (newIssue: ContentTypes) => {
 };
 
 const addIdCount = (type: 'comments' | 'reactions') => {
-  const contents = [...issueTable.openIssues.content, ...issueTable.closedIssues.content];
+  const count = { comments: 0, reactions: 0 };
 
-  let commentsCount = contents.reduce((acc, cur) => acc + cur.comments.length, 0);
+  count.comments = contents.reduce((acc, cur) => acc + cur.comments.length, 0);
 
-  let reactionsCount: number = contents.reduce(
+  count.reactions = contents.reduce(
     (accContentReactions, { comments }) =>
       accContentReactions +
       comments.reduce(
@@ -50,15 +50,17 @@ const addIdCount = (type: 'comments' | 'reactions') => {
     0,
   );
 
-  return () => {
+  const addId = () => {
     if (type === 'comments') {
-      commentsCount += 1;
-      return commentsCount;
+      count.comments += 1;
+      return count.comments;
     }
 
-    reactionsCount += 1;
-    return reactionsCount;
+    count.reactions += 1;
+    return count.reactions;
   };
+
+  return addId;
 };
 
 const addCommentsId = addIdCount('comments');
