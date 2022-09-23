@@ -77,7 +77,7 @@ export const FilterStatsState = selector({
         }, '')
         .trim();
 
-    const filterBarState = defineFilterString('FILTER_BAR');
+    const filterBarString = defineFilterString('FILTER_BAR');
     const filterQueryString = defineFilterString('QUERY');
     const queries =
       filterQueryString
@@ -85,6 +85,6 @@ export const FilterStatsState = selector({
         ?.map((e) => encodeURIComponent(e))
         .join('+') || '';
 
-    return { isFiltering, page, filterBarState, queries };
+    return { isFiltering, page, filterBarString, queries };
   },
 });
