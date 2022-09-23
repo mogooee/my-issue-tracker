@@ -22,10 +22,9 @@ const useFetchIssue = () => {
 
   const useIssuesData = (page: number, queryString: string | null) => {
     const issueStateQuery = !document.location.search ? OPEN_QUERY : '';
+    const queries = queryString || issueStateQuery;
 
-    return useQuery<IssuesTypes>(['issues', `${page}-${queryString}`], () =>
-      getIssuesData(page, queryString || issueStateQuery),
-    );
+    return useQuery<IssuesTypes>(['issues', page, queries], () => getIssuesData(page, queries));
   };
 
   const useIssueData = (issueId: number) =>
