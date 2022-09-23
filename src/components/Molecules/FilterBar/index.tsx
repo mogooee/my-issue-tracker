@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { FilterState, FilterStatsState } from '@/stores/filter';
 
@@ -12,6 +12,7 @@ import useInput from '@/hooks/useInput';
 import { FILTERBAR_CLEAR_BUTTON_PROPS } from '@/components/Molecules/FilterBar/mocks';
 import { DropdownTypes, ListPanelTypes } from '@/components/Molecules/Dropdown/types';
 import useFilter, { parsingFilterReg, stateFilterReg } from '@/hooks/useFilter';
+import debounce from '@/utils/debounce';
 
 export type FILTERBAR_INFO_TYPES = {
   DROPDOWN: (
@@ -21,9 +22,12 @@ export type FILTERBAR_INFO_TYPES = {
   INPUT: InputTypes;
 };
 
+const DELAY = 100;
+
 const FilterBar = ({ ...props }: FILTERBAR_INFO_TYPES) => {
   const { DROPDOWN, INPUT } = props;
 
+  const timerId = useRef<number>(0);
   const { filterBarString, isFiltering } = useRecoilValue(FilterStatsState);
   const setFilterState = useSetRecoilState(FilterState);
   const resetFilterValue = useResetRecoilState(FilterState);
@@ -49,6 +53,8 @@ const FilterBar = ({ ...props }: FILTERBAR_INFO_TYPES) => {
 
     setFilterBarInputValue(quries);
   };
+
+  const handleTypingFilterBar = debounce(timerId, handleChangeFilterBar, DELAY);
 
   const handleSubmitFilterBar = (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -82,7 +88,7 @@ const FilterBar = ({ ...props }: FILTERBAR_INFO_TYPES) => {
           isActive={isActive}
           onClick={onClickInput}
           onBlur={onBlurInput}
-          onChange={handleChangeFilterBar}
+          onChange={handleTypingFilterBar}
           onSubmit={handleSubmitFilterBar}
         />
       </S.FilterBar>
