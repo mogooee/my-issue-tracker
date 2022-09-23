@@ -24,17 +24,17 @@ export type FILTERBAR_INFO_TYPES = {
 const FilterBar = ({ ...props }: FILTERBAR_INFO_TYPES) => {
   const { DROPDOWN, INPUT } = props;
 
-  const { filterBarState, isFiltering } = useRecoilValue(FilterStatsState);
+  const { filterBarString, isFiltering } = useRecoilValue(FilterStatsState);
   const setFilterState = useSetRecoilState(FilterState);
   const resetFilterValue = useResetRecoilState(FilterState);
   const { isActive, onClickInput, onBlurInput } = useInput();
 
-  const [filterBarInputValue, setFilterBarInputValue] = useState<string>(filterBarState);
+  const [filterBarInputValue, setFilterBarInputValue] = useState<string>(filterBarString);
   const { setIssueState, setParsingFilterState } = useFilter();
 
   const isChecked = (dataId: string) => {
-    if (dataId.match(stateReg)) return filterBarState === dataId;
-    return filterBarState === `is:open ${dataId}`;
+    if (dataId.match(stateReg)) return filterBarString === dataId;
+    return filterBarString === `is:open ${dataId}`;
   };
 
   const filterIssues = (target: HTMLInputElement) => {
@@ -69,8 +69,8 @@ const FilterBar = ({ ...props }: FILTERBAR_INFO_TYPES) => {
   };
 
   useEffect(() => {
-    setFilterBarInputValue(filterBarState);
-  }, [filterBarState]);
+    setFilterBarInputValue(filterBarString);
+  }, [filterBarString]);
 
   return (
     <S.FilterBarContainer>
@@ -78,7 +78,7 @@ const FilterBar = ({ ...props }: FILTERBAR_INFO_TYPES) => {
         <Dropdown {...DROPDOWN(filterIssues, isChecked)} isActive={isActive} />
         <Input
           {...INPUT}
-          inputValue={filterBarState}
+          inputValue={filterBarString}
           isActive={isActive}
           onClick={onClickInput}
           onBlur={onBlurInput}
