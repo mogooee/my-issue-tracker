@@ -62,9 +62,10 @@ const Issues = () => {
   };
 
   useEffect(() => {
+    if (!document.location.search && filterState === initFilterState) return;
 
-    naviagate(`/issues?page=${page}&q=${quries}`);
-  }, [quries]);
+    naviagate(`/issues?page=${page}&q=${queries}`);
+  }, [queries]);
 
   useEffect(() => {
     setPageState(pageParams);
