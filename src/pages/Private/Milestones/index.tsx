@@ -35,7 +35,7 @@ const Milestones = () => {
   return (
     <>
       <NavContainer>
-        <NavLink navData={labelMilestone} navLinkStyle="LINE" />
+        <NavLink navData={labelMilestone()} navLinkStyle="LINE" />
         <Button {...(!isOpenAddEdit ? BUTTON_PROPS.ADD : BUTTON_PROPS.CLOSE)} handleOnClick={openAddEdit} />
       </NavContainer>
       {isOpenAddEdit && <MilestoneEditForm editMode="ADD" setOpenState={setIsOpenAddEdit} />}

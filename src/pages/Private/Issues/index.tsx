@@ -80,18 +80,7 @@ const Issues = () => {
         <FilterBar {...FILTERBAR_INFO} />
         <S.SubNav>
           <NavLink
-            navData={[
-              {
-                icon: <Icon icon="Tag" stroke={COLORS.TITLE_ACTIVE} />,
-                title: `레이블 (${labelData!.length})`,
-                link: '/labels',
-              },
-              {
-                icon: <Icon icon="Milestone" fill={COLORS.TITLE_ACTIVE} />,
-                title: `마일스톤 (${milestoneData!.openedMilestones.length})`,
-                link: '/milestones',
-              },
-            ]}
+            navData={labelMilestone(labelData!.length, milestoneData!.openedMilestones.length)}
             navLinkStyle="LINE"
           />
           <Link to="/issues/new">
