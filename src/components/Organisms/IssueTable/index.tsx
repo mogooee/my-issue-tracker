@@ -98,7 +98,7 @@ const IssueTable = ({ issuesData, filterTabs }: IssueTableTypes) => {
         <S.IssueTableHeader>
           <CheckBox id={PARENT_CHECKBOX_ID} type="parent" checked={checkState.parent} />
           <S.IssueStates>
-            {checkedBoxNum > 0 ? (
+            {checkedBoxNum ? (
               <span>{`${checkedBoxNum}개 이슈 선택`}</span>
             ) : (
               <NavLink
@@ -109,16 +109,16 @@ const IssueTable = ({ issuesData, filterTabs }: IssueTableTypes) => {
             )}
           </S.IssueStates>
           <S.IssueInfoTabs>
-            {checkedBoxNum > 0 ? (
+            {checkedBoxNum ? (
               <Dropdown {...OPEN_CLOSE_DROPDOWN_ARGS(changeIssueState)} />
             ) : (
-              filterTabs.map((info) => {
-                const { panelId: filterKey, panelTitle } = info.panelProps;
+              filterTabs.map((filterTab: DropdownTypes<ListPanelTypes>) => {
+                const { panelId: filterKey, panelTitle } = filterTab.panelProps;
 
                 const DROPDOWN_PROPS = {
-                  ...info,
+                  ...filterTab,
                   panelProps: {
-                    ...info.panelProps,
+                    ...filterTab.panelProps,
                     handleOnClick: handleOnFilterTabsClick,
                     isChecked: isFilterTabsChecked(filterKey),
                   },
