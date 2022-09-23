@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState } from 'recoil';
 import useFetchLabel from '@/api/label/useFetchLabel';
 
 import * as S from '@/pages/Private/Labels/index.styled';
@@ -8,7 +8,6 @@ import LabelEditForm from '@/components/Molecules/LabelEditForm';
 import NavLink from '@/components/Molecules/NavLink';
 import { FallbackLabelTable } from '@/components/Organisms/LabelTable';
 
-import { LoginUserInfoState } from '@/stores/loginUserInfo';
 import { labelMilestone } from '@/components/Molecules/NavLink/options';
 import { LabelState } from '@/stores/label';
 import { BUTTON_PROPS } from '@/components/Atoms/Button/options';
@@ -37,7 +36,7 @@ const Labels = () => {
   return (
     <S.Labels>
       <S.SubNav>
-        <NavLink navData={labelMilestone} navLinkStyle="LINE" />
+        <NavLink navData={labelMilestone()} navLinkStyle="LINE" />
         {labelState.type === 'ADD' ? (
           <Button {...BUTTON_PROPS.CLOSE} handleOnClick={handleCloseButtonClick} />
         ) : (
