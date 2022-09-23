@@ -16,17 +16,16 @@ import { OPEN_CLOSE_DROPDOWN_ARGS } from '@/components/Molecules/Dropdown/mock';
 import Table from '@/components/Molecules/Table';
 
 import { IssuesTypes } from '@/api/issue/types';
-import { FilterStatsState, FilterState, NoFilterKeysType } from '@/stores/filter';
+import { FilterStatsState, FilterState } from '@/stores/filter';
 import { openCloseIssue } from '@/components/Molecules/NavLink/options';
 import useFetchSideBarData from '@/api/useFetchSideBarData';
+import useFilter, { noneFilterReg } from '@/hooks/useFilter';
 
 interface IssueTableTypes {
   issuesData: IssuesTypes;
   filterTabs: DropdownTypes<ListPanelTypes>[];
 }
 
-const noneFilterReg = /^no:/g;
-const labelFilterReg = /^label/g;
 const PARENT_CHECKBOX_ID = -1;
 
 const IssueTable = ({ issuesData, filterTabs }: IssueTableTypes) => {
@@ -41,8 +40,10 @@ const IssueTable = ({ issuesData, filterTabs }: IssueTableTypes) => {
   const { memberData, memberDataRefetch } = useFetchSideBarData();
   const memberId = useRecoilValue(LoginUserInfoState).id;
 
-  const [filterState, setFilterState] = useRecoilState(FilterState);
-  const { page, quries } = useRecoilValue(FilterStatsState);
+  const filterState = useRecoilValue(FilterState);
+  const { page, queries } = useRecoilValue(FilterStatsState);
+
+  const { isExistedFilter, setParsingFilterState, setRemovedFilterState } = useFilter();
 
   const changeIssueState = (target: HTMLInputElement) => {
     const clickedPanelStatus = target.dataset.id;
@@ -54,8 +55,7 @@ const IssueTable = ({ issuesData, filterTabs }: IssueTableTypes) => {
 
   const handleOnOpenClosedNavClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     const clickedNavDataId = event.currentTarget.dataset.id;
-    const [stateKey, stateValue] = clickedNavDataId!.split(':');
-    setFilterState((prev) => ({ ...prev, [stateKey]: stateValue }));
+    setParsingFilterState(clickedNavDataId!);
   };
 
   const handleOnMemberDropdownClick = (filterKey: string) => {
@@ -65,40 +65,15 @@ const IssueTable = ({ issuesData, filterTabs }: IssueTableTypes) => {
 
   const handleOnFilterTabsClick = (target: HTMLInputElement) => {
     const key = target.dataset.panel!;
-    const value: string | string[] = target.dataset.id!;
+    const value: string = target.dataset.id!;
+    const filter = value.match(noneFilterReg) ? value : `${key}:${value}`;
 
-    const isExistedFilter = (): boolean => {
-      if (value.match(noneFilterReg)) return !!filterState.no.find((e) => e === key);
-      if (key.match(labelFilterReg)) return !!filterState.label.find((e) => e === value);
-      return filterState[key] === value;
-    };
-
-    // 필터 해제
-    if (isExistedFilter()) {
-      if (value.match(noneFilterReg)) return;
-
-      setFilterState((prevState) => {
-        const checkOffValue = key.match(labelFilterReg) ? prevState.label.filter((e) => e !== value) : '';
-        return { ...prevState, [key]: checkOffValue };
-      });
+    if (isExistedFilter(filter)) {
+      setRemovedFilterState(filter);
       return;
     }
 
-    // 필터 설정
-    setFilterState((prevState) => {
-      if (value.match(noneFilterReg)) {
-        const initPrevState = key.match(labelFilterReg) ? [] : '';
-        const newNoFilterKey = key as NoFilterKeysType;
-        return {
-          ...prevState,
-          [key]: initPrevState,
-          no: [...prevState.no, newNoFilterKey],
-        };
-      }
-
-      const checkOnValue = key.match(labelFilterReg) ? [...prevState.label, value] : value;
-      return { ...prevState, [key]: checkOnValue, no: [...prevState.no.filter((e) => e !== key)] };
-    });
+    setParsingFilterState(filter);
   };
 
   const isFilterTabsChecked = (panelId: string) => {
@@ -127,7 +102,7 @@ const IssueTable = ({ issuesData, filterTabs }: IssueTableTypes) => {
               <span>{`${checkedBoxNum}개 이슈 선택`}</span>
             ) : (
               <NavLink
-                navData={openCloseIssue(openIssueCount, closedIssueCount, page, quries)}
+                navData={openCloseIssue(openIssueCount, closedIssueCount, page, queries)}
                 handleOnClick={handleOnOpenClosedNavClick}
                 defaultActive="is:open"
               />

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
-import { FilterState, FilterStatsState, initFilterState, NoFilterKeysType } from '@/stores/filter';
+import { FilterState, FilterStatsState } from '@/stores/filter';
 
 import * as S from '@/components/Molecules/FilterBar/index.styles';
 
@@ -11,6 +11,7 @@ import Dropdown from '@/components/Molecules/Dropdown';
 import useInput from '@/hooks/useInput';
 import { FILTERBAR_CLEAR_BUTTON_PROPS } from '@/components/Molecules/FilterBar/mocks';
 import { DropdownTypes, ListPanelTypes } from '@/components/Molecules/Dropdown/types';
+import useFilter, { parsingFilterReg, stateReg } from '@/hooks/useFilter';
 
 export type FILTERBAR_INFO_TYPES = {
   DROPDOWN: (
@@ -19,11 +20,6 @@ export type FILTERBAR_INFO_TYPES = {
   ) => DropdownTypes<ListPanelTypes>;
   INPUT: InputTypes;
 };
-
-const noneFilterReg = /^no/g;
-const stateReg = /^is:/g;
-const openQuery = 'is:open';
-const closedQuery = 'is:closed';
 
 const FilterBar = ({ ...props }: FILTERBAR_INFO_TYPES) => {
   const { DROPDOWN, INPUT } = props;
@@ -34,17 +30,17 @@ const FilterBar = ({ ...props }: FILTERBAR_INFO_TYPES) => {
   const { isActive, onClickInput, onBlurInput } = useInput();
 
   const [filterBarInputValue, setFilterBarInputValue] = useState<string>(filterBarState);
+  const { setIssueState, setParsingFilterState } = useFilter();
 
   const isChecked = (dataId: string) => {
     if (dataId.match(stateReg)) return filterBarState === dataId;
-    return filterBarState === `${openQuery} ${dataId}`;
+    return filterBarState === `is:open ${dataId}`;
   };
 
   const filterIssues = (target: HTMLInputElement) => {
     const clickedPanelDataId = target.dataset.id!;
-    const [key, value] = clickedPanelDataId!.split(':');
-
-    setFilterState({ ...initFilterState, [key]: value });
+    resetFilterValue();
+    setParsingFilterState(clickedPanelDataId!);
   };
 
   const handleChangeFilterBar = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,25 +55,16 @@ const FilterBar = ({ ...props }: FILTERBAR_INFO_TYPES) => {
 
     resetFilterValue();
 
-    if (!filterBarInputValue.includes(openQuery) && !filterBarInputValue.includes(closedQuery))
+    if (!filterBarInputValue) {
       setFilterState((prev) => ({ ...prev, is: 'all' }));
+      return;
+    }
 
-    if (!filterBarInputValue) return;
+    setIssueState(filterBarInputValue);
 
-    const quriesArr = filterBarInputValue.split(' ');
-    quriesArr.forEach((qurey: string) => {
-      const [key, value] = qurey.split(':');
-
-      setFilterState((prev) => {
-        if (key.match(noneFilterReg)) {
-          const initState = value === 'label' ? [] : '';
-          return { ...prev, no: [...prev.no, value as NoFilterKeysType], [value]: initState };
-        }
-
-        const newValue = key === 'label' && Array.isArray(prev.label) ? [...prev.label, value] : value;
-        const filterExsitedKey = prev.no.filter((e) => e !== key);
-        return { ...prev, [key]: newValue, no: filterExsitedKey };
-      });
+    const quriesArr = filterBarInputValue.match(parsingFilterReg);
+    quriesArr?.forEach((query: string) => {
+      setParsingFilterState(query);
     });
   };
 
