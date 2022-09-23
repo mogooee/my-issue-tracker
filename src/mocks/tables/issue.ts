@@ -171,8 +171,9 @@ export const issue: ContentTypes = {
 };
 
 export const issues: IssuesTypes = {
-  openIssueCount: 6,
-  openIssues: {
+  openIssueCount: 5,
+  closedIssueCount: 3,
+  issues: {
     content: [
       {
         id: 1,
@@ -548,6 +549,174 @@ export const issues: IssuesTypes = {
         closed: false,
       },
       {
+        id: 5,
+        title: '오제제',
+        author: {
+          id: 1,
+          email: 'who.ho3ov@gmail.com',
+          nickname: 'hoo',
+          profileImage: 'https://avatars.githubusercontent.com/u/68011320?v=4',
+        },
+        comments: [
+          {
+            id: 6,
+            author: {
+              id: 1,
+              email: 'who.ho3ov@gmail.com',
+              nickname: 'hoo',
+              profileImage: 'https://avatars.githubusercontent.com/u/68011320?v=4',
+            },
+            content: '또 오셔야겠죠?',
+            createdAt: '2022-09-11T00:00:00',
+            issueCommentReactionsResponse: [],
+          },
+          {
+            id: 7,
+            author: {
+              id: 2,
+              email: 'ak2j38@gmail.com',
+              nickname: 'ader',
+              profileImage: 'https://avatars.githubusercontent.com/u/29879110?v=4',
+            },
+            content: '오제제의 안심과 자루우동은 아주 나이스!',
+            createdAt: '2022-09-11T05:00:00',
+            issueCommentReactionsResponse: [],
+          },
+        ],
+        issueAssignees: {
+          issueAssignees: [
+            {
+              id: 1,
+              email: 'who.ho3ov@gmail.com',
+              nickname: 'hoo',
+              profileImage: 'https://avatars.githubusercontent.com/u/68011320?v=4',
+            },
+          ],
+        },
+        issueLabels: {
+          issueLabels: [],
+        },
+        milestone: {
+          id: 2,
+          title: '제목과 설명이 있는 마일스톤',
+          description: '하지만 완료일은 없다',
+          dueDate: null,
+          openIssueCount: 1,
+          closedIssueCount: 3,
+          closed: false,
+        },
+        issueHistories: [],
+        createdAt: '2022-09-05T00:00:00',
+        lastModifiedAt: '2022-09-05T00:00:00',
+        closed: true,
+      },
+      {
+        id: 6,
+        title: '오달',
+        author: {
+          id: 1,
+          email: 'who.ho3ov@gmail.com',
+          nickname: 'hoo',
+          profileImage: 'https://avatars.githubusercontent.com/u/68011320?v=4',
+        },
+        comments: [
+          {
+            id: 8,
+            author: {
+              id: 1,
+              email: 'who.ho3ov@gmail.com',
+              nickname: 'hoo',
+              profileImage: 'https://avatars.githubusercontent.com/u/68011320?v=4',
+            },
+            content: '추사백은 금지입니다.',
+            createdAt: '2022-09-11T06:00:00',
+            issueCommentReactionsResponse: [],
+          },
+        ],
+        issueAssignees: {
+          issueAssignees: [
+            {
+              id: 2,
+              email: 'ak2j38@gmail.com',
+              nickname: 'ader',
+              profileImage: 'https://avatars.githubusercontent.com/u/29879110?v=4',
+            },
+          ],
+        },
+        issueLabels: {
+          issueLabels: [],
+        },
+        milestone: {
+          id: 2,
+          title: '제목과 설명이 있는 마일스톤',
+          description: '하지만 완료일은 없다',
+          dueDate: null,
+          openIssueCount: 1,
+          closedIssueCount: 3,
+          closed: false,
+        },
+        issueHistories: [],
+        createdAt: '2022-09-06T00:00:00',
+        lastModifiedAt: '2022-09-06T00:00:00',
+        closed: true,
+      },
+      {
+        id: 7,
+        title: '뱃놈',
+        author: {
+          id: 1,
+          email: 'who.ho3ov@gmail.com',
+          nickname: 'hoo',
+          profileImage: 'https://avatars.githubusercontent.com/u/68011320?v=4',
+        },
+        comments: [
+          {
+            id: 9,
+            author: {
+              id: 2,
+              email: 'ak2j38@gmail.com',
+              nickname: 'ader',
+              profileImage: 'https://avatars.githubusercontent.com/u/29879110?v=4',
+            },
+            content: '두 번가서 결국 끝까지 먹어봤네요.',
+            createdAt: '2022-09-11T12:00:00',
+            issueCommentReactionsResponse: [],
+          },
+        ],
+        issueAssignees: {
+          issueAssignees: [
+            {
+              id: 1,
+              email: 'who.ho3ov@gmail.com',
+              nickname: 'hoo',
+              profileImage: 'https://avatars.githubusercontent.com/u/68011320?v=4',
+            },
+            {
+              id: 2,
+              email: 'ak2j38@gmail.com',
+              nickname: 'ader',
+              profileImage: 'https://avatars.githubusercontent.com/u/29879110?v=4',
+            },
+          ],
+        },
+        issueLabels: {
+          issueLabels: [],
+        },
+        milestone: {
+          id: 2,
+          title: '제목과 설명이 있는 마일스톤',
+          description: '하지만 완료일은 없다',
+          dueDate: null,
+          openIssueCount: 1,
+          closedIssueCount: 3,
+          closed: false,
+        },
+        issueHistories: [],
+        createdAt: '2022-09-07T00:00:00',
+        lastModifiedAt: '2022-09-07T00:00:00',
+        closed: true,
+      },
+      {
         id: 8,
         title: '한국횟집',
         author: {
@@ -615,6 +784,35 @@ export const issues: IssuesTypes = {
         lastModifiedAt: '2022-09-08T00:00:00',
         closed: false,
       },
+    ],
+    pageable: {
+      sort: {
+        empty: true,
+        sorted: false,
+        unsorted: true,
+      },
+      offset: 0,
+      pageNumber: 0,
+      pageSize: 10,
+      paged: true,
+      unpaged: false,
+    },
+    last: true,
+    totalPages: 1,
+    totalElements: 8,
+    sort: {
+      empty: true,
+      sorted: false,
+      unsorted: true,
+    },
+    first: true,
+    size: 10,
+    number: 0,
+    numberOfElements: 8,
+    empty: false,
+  },
+};
+
       {
         id: 9,
         title: 'test',
