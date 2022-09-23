@@ -1,14 +1,17 @@
 import { FilterState, NoFilterKeysType } from '@/stores/filter';
 import { useRecoilState } from 'recoil';
 
-export const stateReg = /^is:/g;
+export const stateFilterReg = /^is:/g;
 export const noneFilterReg = /^no:/g;
 const labelFilterReg = /^label:/g;
 export const parsingFilterReg = /\w+:(@?\w+|".*?")/g;
 export const doubleQuotationReg = /(^"|"$)/g;
-export const issueStateReg = /is:("open"|"closed")/g;
 
 export const OPEN_QUERY = 'is:"open"';
+export const CLOSED_QUERY = 'is:"closed"';
+
+export const issueStateReg = new RegExp(`${OPEN_QUERY}|${CLOSED_QUERY}`);
+export const URLIssueStateReg = new RegExp(`${encodeURIComponent(OPEN_QUERY)}|${encodeURIComponent(CLOSED_QUERY)}`);
 
 const useFilter = () => {
   const [filterState, setFilterState] = useRecoilState(FilterState);

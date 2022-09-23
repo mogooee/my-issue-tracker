@@ -11,7 +11,7 @@ import Dropdown from '@/components/Molecules/Dropdown';
 import useInput from '@/hooks/useInput';
 import { FILTERBAR_CLEAR_BUTTON_PROPS } from '@/components/Molecules/FilterBar/mocks';
 import { DropdownTypes, ListPanelTypes } from '@/components/Molecules/Dropdown/types';
-import useFilter, { parsingFilterReg, stateReg } from '@/hooks/useFilter';
+import useFilter, { parsingFilterReg, stateFilterReg } from '@/hooks/useFilter';
 
 export type FILTERBAR_INFO_TYPES = {
   DROPDOWN: (
@@ -33,7 +33,7 @@ const FilterBar = ({ ...props }: FILTERBAR_INFO_TYPES) => {
   const { setIssueState, setParsingFilterState } = useFilter();
 
   const isChecked = (dataId: string) => {
-    if (dataId.match(stateReg)) return filterBarString === dataId;
+    if (dataId.match(stateFilterReg)) return filterBarString === dataId;
     return filterBarString === `is:open ${dataId}`;
   };
 

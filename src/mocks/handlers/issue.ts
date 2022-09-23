@@ -6,7 +6,7 @@ import { CommentsTypes, ContentTypes, IssuesTypes, ReactionResponseTypes } from 
 import { userTable } from '@/mocks/handlers/auth';
 import { USER_LIST } from '@/components/Molecules/Dropdown/mock';
 import { responseNewIssueData } from '@/mocks/tables/newIssueHelper';
-import { doubleQuotationReg } from '@/hooks/useFilter';
+import { doubleQuotationReg, issueStateReg, OPEN_QUERY } from '@/hooks/useFilter';
 
 const message = {
   message: '',
@@ -119,11 +119,12 @@ export const issueHandlers = [
 
     const openIssueContents = content.filter((e) => e.closed === false);
     const closedIssueContents = content.filter((e) => e.closed === true);
-    // eslint-disable-next-line no-nested-ternary
-    const filteredContent = quries?.includes('is:"open"')
-      ? openIssueContents
-      : quries?.includes('is:"closed"')
-      ? closedIssueContents
+
+    const openStateReg = new RegExp(OPEN_QUERY);
+    const stateContent = queries.match(openStateReg) ? openIssueContents : closedIssueContents;
+
+    const filteredContent = queries.match(issueStateReg)
+      ? stateContent
       : [...openIssueContents, ...closedIssueContents];
 
     const response: IssuesTypes = {
