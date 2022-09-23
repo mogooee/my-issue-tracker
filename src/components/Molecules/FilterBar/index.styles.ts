@@ -29,7 +29,7 @@ export const FilterBar = styled.div<{ isActive: boolean }>`
   display: flex;
 
   ${Form} {
-    width: 472px;
+    width: 560px;
     height: inherit;
     padding: 6px 24px 6px 24px;
     border-radius: 0px 11px 11px 0px;
