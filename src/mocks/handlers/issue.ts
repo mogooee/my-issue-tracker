@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { rest } from 'msw';
-import { issues } from '@/mocks/tables/issue';
+import { issueTable } from '@/mocks/tables/issue';
 import { REACTIONS } from '@/components/Molecules/Dropdown/Panel/Reaction/mock';
 import { CommentsTypes, ContentTypes, ReactionResponseTypes } from '@/api/issue/types';
 import { userTable } from '@/mocks/handlers/auth';
@@ -11,30 +11,28 @@ const message = {
   message: '',
 };
 
-let issueTable = issues;
-
 const findIssue = (issueId: number) => {
   const { openIssues, closedIssues } = issueTable;
-  const contents = [...openIssues.content, ...closedIssues.content];
+  const contents = [...openIssues, ...closedIssues];
 
   const issue = contents.find((e) => e.id === Number(issueId));
   return issue;
 };
 
 const updateIssueTable = (newIssue: ContentTypes) => {
-  let replacedIssuesContent = newIssue.closed ? issueTable.closedIssues.content : issueTable.openIssues.content;
+  const issuesContent = newIssue.closed ? issueTable.closedIssues : issueTable.openIssues;
 
-  replacedIssuesContent = replacedIssuesContent.map((content) => {
+  const newIssuesContent = issuesContent.map((content) => {
     if (content.id === newIssue.id) return newIssue;
     return content;
   });
 
-  if (newIssue.closed)
-    issueTable = { ...issueTable, closedIssues: { ...issueTable.closedIssues, content: replacedIssuesContent } };
-  else issueTable = { ...issueTable, openIssues: { ...issueTable.openIssues, content: replacedIssuesContent } };
+  if (newIssue.closed) issueTable.closedIssues = newIssuesContent;
+  else issueTable.openIssues = newIssuesContent;
 };
 
 const addIdCount = (type: 'comments' | 'reactions') => {
+  const contents = [...issueTable.openIssues, ...issueTable.closedIssues];
   const count = { comments: 0, reactions: 0 };
 
   count.comments = contents.reduce((acc, cur) => acc + cur.comments.length, 0);
@@ -110,7 +108,7 @@ export const issueHandlers = [
     const { status, ids } = await req.json();
 
     const { openIssues, closedIssues } = issueTable;
-    let contents = [...openIssues.content, ...closedIssues.content];
+    let contents = [...openIssues, ...closedIssues];
 
     ids.forEach((id: number) => {
       contents = contents.map((content) => {
@@ -124,13 +122,8 @@ export const issueHandlers = [
     const openIssuesContent = contents.filter(({ closed }) => closed === false);
     const closedIssuesContent = contents.filter(({ closed }) => closed === true);
 
-    issueTable = {
-      ...issueTable,
-      openIssues: { ...openIssues, content: openIssuesContent },
-      openIssueCount: openIssuesContent.length,
-      closedIssues: { ...closedIssues, content: closedIssuesContent },
-      closedIssueCount: closedIssuesContent.length,
-    };
+    issueTable.openIssues = openIssuesContent;
+    issueTable.closedIssues = closedIssuesContent;
 
     return res(ctx.status(204));
   }),
