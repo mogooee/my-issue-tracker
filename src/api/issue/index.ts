@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { ContentTypes, IssuesTypes } from '@/api/issue/types';
 import { NEW_ISSUE_FORM_TYPES } from '@/stores/newIssue';
+import { parsingFilterReg } from '@/hooks/useFilter';
 
 interface Idtypes {
   issueId: number;
@@ -9,9 +10,17 @@ interface Idtypes {
   memberId: number;
 }
 
-export const getIssuesData = async (page: number): Promise<IssuesTypes> => {
+export const getIssuesData = async (page: number, queryString: string): Promise<IssuesTypes> => {
   try {
-    const { data: issuesData } = await axios.get<IssuesTypes>(`api/issues?page=${page}`);
+    const queries =
+      queryString
+        .match(parsingFilterReg)
+        ?.map((e) => encodeURIComponent(e))
+        .join('+') || '';
+
+    const { data: issuesData } = await axios.get<IssuesTypes>(
+      `api/issues?page=${page}&q=${encodeURIComponent(queries)}`,
+    );
     return issuesData;
   } catch (error) {
     const err = error as AxiosError;
