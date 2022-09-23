@@ -2,10 +2,11 @@
 import { rest } from 'msw';
 import { issueTable } from '@/mocks/tables/issue';
 import { REACTIONS } from '@/components/Molecules/Dropdown/Panel/Reaction/mock';
-import { CommentsTypes, ContentTypes, ReactionResponseTypes } from '@/api/issue/types';
+import { CommentsTypes, ContentTypes, IssuesTypes, ReactionResponseTypes } from '@/api/issue/types';
 import { userTable } from '@/mocks/handlers/auth';
 import { USER_LIST } from '@/components/Molecules/Dropdown/mock';
 import { responseNewIssueData } from '@/mocks/tables/newIssueHelper';
+import { doubleQuotationReg } from '@/hooks/useFilter';
 
 const message = {
   message: '',
@@ -66,7 +67,99 @@ const addReactionsId = addIdCount('reactions');
 
 export const issueHandlers = [
   // 이슈 전체 조회
-  rest.get('api/issues', (req, res, ctx) => res(ctx.status(200), ctx.json(issueTable))),
+  rest.get('api/issues', (req, res, ctx) => {
+    const { openIssues, closedIssues } = issueTable;
+    const page = Number(req.url.searchParams.get('page'));
+    const quries = decodeURIComponent(req.url.searchParams.get('q')!);
+
+    let content: ContentTypes[] = [...openIssues, ...closedIssues];
+
+    const quriesArr = quries?.split('+');
+    quriesArr?.forEach((query) => {
+      const [key, value] = decodeURIComponent(query).split(':');
+      const decodingValue = value?.replace(doubleQuotationReg, '');
+
+      if (key === 'assignee') {
+        if (!decodingValue) {
+          content = content.filter((e) => !e.issueAssignees.issueAssignees.length);
+          return;
+        }
+        content = content.filter((e) =>
+          e.issueAssignees.issueAssignees.find((assignee) => assignee.nickname === decodingValue),
+        );
+      }
+
+      if (key === 'label') {
+        if (!decodingValue) {
+          content = content.filter((e) => !e.issueLabels.issueLabels.length);
+          return;
+        }
+        content = content.filter((e) => e.issueLabels.issueLabels.find((label) => label.title === decodingValue));
+        return;
+      }
+
+      if (key === 'milestone') {
+        if (!decodingValue) {
+          content = content.filter((e) => e.milestone === null);
+          return;
+        }
+        content = content.filter((e) => e.milestone?.title === decodingValue);
+        return;
+      }
+
+      if (key === 'author') {
+        content = content.filter((e) => e.author.nickname === decodingValue);
+        return;
+      }
+
+      if (key === 'mentions') {
+        content = content.filter((e) => e.comments.find((comment) => comment.author.nickname === decodingValue));
+      }
+    });
+
+    const openIssueContents = content.filter((e) => e.closed === false);
+    const closedIssueContents = content.filter((e) => e.closed === true);
+    // eslint-disable-next-line no-nested-ternary
+    const filteredContent = quries?.includes('is:"open"')
+      ? openIssueContents
+      : quries?.includes('is:"closed"')
+      ? closedIssueContents
+      : [...openIssueContents, ...closedIssueContents];
+
+    const response: IssuesTypes = {
+      openIssueCount: openIssueContents.length,
+      closedIssueCount: closedIssueContents.length,
+      issues: {
+        content: filteredContent,
+        pageable: {
+          sort: {
+            empty: true,
+            sorted: false,
+            unsorted: true,
+          },
+          offset: 0,
+          pageNumber: page,
+          pageSize: 10,
+          paged: true,
+          unpaged: false,
+        },
+        last: true,
+        totalPages: 1,
+        totalElements: 8,
+        sort: {
+          empty: true,
+          sorted: false,
+          unsorted: true,
+        },
+        first: true,
+        size: 10,
+        number: 0,
+        numberOfElements: 8,
+        empty: false,
+      },
+    };
+    return res(ctx.status(200), ctx.json(response));
+  }),
 
   // 이슈 단건 조회
   rest.get('api/issues/:issueId', (req, res, ctx) => {
