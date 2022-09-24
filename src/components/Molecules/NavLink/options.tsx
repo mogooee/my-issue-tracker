@@ -2,18 +2,23 @@ import Icon from '@/components/Atoms/Icon';
 import { CLOSED_QUERY, OPEN_QUERY, URLIssueStateReg } from '@/hooks/useFilter';
 import { COLORS } from '@/styles/theme';
 
-export const labelMilestone = (labelsNum?: number, milestonesNum?: number) => [
-  {
-    icon: <Icon icon="Tag" stroke={COLORS.TITLE_ACTIVE} />,
-    link: `/labels ${labelsNum}`,
-    title: '레이블',
-  },
-  {
-    icon: <Icon fill={COLORS.TITLE_ACTIVE} icon="Milestone" />,
-    link: `/milestones ${milestonesNum}`,
-    title: '마일스톤',
-  },
-];
+export const labelMilestone = (labelsNum?: number, milestonesNum?: number) => {
+  const labelTitle = labelsNum ? `레이블(${labelsNum})` : '레이블';
+  const milestoneTitle = milestonesNum ? `마일스톤 (${milestonesNum})` : '마일스톤';
+
+  return [
+    {
+      icon: <Icon icon="Tag" stroke={COLORS.TITLE_ACTIVE} />,
+      link: '/labels',
+      title: labelTitle,
+    },
+    {
+      icon: <Icon fill={COLORS.TITLE_ACTIVE} icon="Milestone" />,
+      link: '/milestones',
+      title: milestoneTitle,
+    },
+  ];
+};
 
 export const openCloseIssue = (openIssueNum: number, closedIssueNum: number, page: number, queryString: string) => {
   const pageQuery = `/issues?page=${page}`;
