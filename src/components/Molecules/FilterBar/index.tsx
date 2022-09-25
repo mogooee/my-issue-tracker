@@ -48,10 +48,10 @@ const FilterBar = ({ ...props }: FILTERBAR_INFO_TYPES) => {
   };
 
   const handleChangeFilterBar = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const quries = event.target.value;
-    if (!quries) return setFilterBarInputValue('');
+    const queries = event.target.value;
+    if (!queries) return setFilterBarInputValue('');
 
-    setFilterBarInputValue(quries);
+    setFilterBarInputValue(queries);
   };
 
   const handleTypingFilterBar = debounce(timerId, handleChangeFilterBar, DELAY);
@@ -68,8 +68,8 @@ const FilterBar = ({ ...props }: FILTERBAR_INFO_TYPES) => {
 
     setIssueState(filterBarInputValue);
 
-    const quriesArr = filterBarInputValue.match(parsingFilterReg);
-    quriesArr?.forEach((query: string) => {
+    const queriesArr = filterBarInputValue.match(parsingFilterReg);
+    queriesArr?.forEach((query: string) => {
       setParsingFilterState(query);
     });
   };

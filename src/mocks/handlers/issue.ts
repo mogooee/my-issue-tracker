@@ -70,12 +70,12 @@ export const issueHandlers = [
   rest.get('api/issues', (req, res, ctx) => {
     const { openIssues, closedIssues } = issueTable;
     const page = Number(req.url.searchParams.get('page'));
-    const quries = decodeURIComponent(req.url.searchParams.get('q')!);
+    const queries = decodeURIComponent(req.url.searchParams.get('q')!);
 
     let content: ContentTypes[] = [...openIssues, ...closedIssues];
 
-    const quriesArr = quries?.split('+');
-    quriesArr?.forEach((query) => {
+    const queriesArr = queries?.split('+');
+    queriesArr?.forEach((query) => {
       const [key, value] = decodeURIComponent(query).split(':');
       const decodingValue = value?.replace(doubleQuotationReg, '');
 
