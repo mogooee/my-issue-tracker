@@ -2,7 +2,7 @@ import DEFAULT_MARKDOWN from '@/styles/markdown';
 import styled, { css } from 'styled-components';
 
 export const Editer = styled.div`
-  max-width: 900px;
+  width: 100%;
   border-radius: 16px;
   border: 1px solid ${({ theme }) => theme.COLORS.LINE};
   background: white;

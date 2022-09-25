@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { ReactionPanel } from '@/components/Molecules/Dropdown/Panel/Reaction/index.styled';
 import { Label as StyledLabel } from '@/components/Atoms/Label/index.styles';
+import DEFAULT_MARKDOWN from '@/styles/markdown';
 
 export const CommentHeader = styled.div`
   display: grid;
@@ -52,15 +53,16 @@ export const CommentContent = styled.div`
     top: -58px;
     left: 0;
   }
+  .markdown {
+    padding: 0 8px;
+    font-size: 100%;
+    ${DEFAULT_MARKDOWN}
+  }
 `;
 
 export const TextArea = styled.div`
-  ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'center' })};
-  flex-direction: column;
-
-  textArea {
-    width: 880px;
-  }
+  ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'center', direction: 'column' })};
+  width: 900px;
 `;
 
 export const TextAreaButtonTab = styled.div`

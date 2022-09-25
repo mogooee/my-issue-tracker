@@ -177,3 +177,35 @@ export const createNewIssue = async ({ newIssueFormData, memberId }: CreateNewIs
     throw err;
   }
 };
+
+export const deleteIssue = async (issueId: number) => {
+  try {
+    const { data } = await axios.delete(`api/issues/${issueId}`);
+    return data;
+  } catch (error) {
+    const err = error as AxiosError;
+    throw err;
+  }
+};
+
+interface SideBarModifyTypes {
+  method: 'delete' | 'post' | 'patch';
+  issueId: number;
+  category: 'labels' | 'assignees' | 'milestone';
+  categoryId: number;
+}
+
+export const IssueSideBarModify = async ({ method, issueId, category, categoryId }: SideBarModifyTypes) => {
+  // 일괄삭제 구현x
+  const assigneesUrl = method === 'delete' ? `?clear=false&assigneeId=${categoryId}` : `/${categoryId}`;
+  try {
+    const { data } = await axios({
+      url: `api/issues/${issueId}/${category}${category === 'assignees' ? assigneesUrl : `/${categoryId}`}`,
+      method,
+    });
+    return data;
+  } catch (error) {
+    const err = error as AxiosError;
+    throw err;
+  }
+};

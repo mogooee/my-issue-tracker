@@ -3,7 +3,7 @@ import { USER_LIST } from '@/components/Molecules/Dropdown/mock';
 import { NEW_ISSUE_FORM_TYPES } from '@/stores/newIssue';
 import { labelTable } from '@/mocks/handlers/label';
 import { milestones } from '@/mocks/handlers/milestone';
-import { issues } from '@/mocks/tables/issue';
+import { issueTable } from '@/mocks/tables/issue';
 
 interface ResponseNewIssueDataTypes {
   memberId: number;
@@ -19,7 +19,7 @@ export const responseNewIssueData = ({ memberId, ...props }: NEW_ISSUE_FORM_TYPE
   const findMilestone = (id: number | null) =>
     id !== null ? milestones.openedMilestones.find((el) => el.id === id) : null;
 
-  const newIssueId = issues.openIssueCount + issues.closedIssueCount + 1;
+  const newIssueId = issueTable.openIssues.length + issueTable.closedIssues.length + 1;
 
   const responseIssue: ContentTypes = {
     id: newIssueId,

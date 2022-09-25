@@ -26,7 +26,7 @@ const HeaderInline = ({ id: issueId, title, closed }: HeaderInlineTypes) => {
   const { isActive, onChangeInput, onClickInput, onBlurInput } = useInput();
   const memberId = useRecoilValue(LoginUserInfoState).id;
 
-  const { useUpdateIssueTitle, useUpdateIssueState } = useFetchIssue();
+  const { useUpdateIssueTitle, useUpdateIssueState } = useFetchIssue(issueId);
   const { mutate: updateIssueTitle } = useUpdateIssueTitle(issueId);
   const { mutate: updateIssueState } = useUpdateIssueState([issueId]);
 

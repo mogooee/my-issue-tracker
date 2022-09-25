@@ -1,4 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { uploadImage } from '@/api/imageUpload';
+import { useRecoilState } from 'recoil';
+import { NewIssueFormState } from '@/stores/newIssue';
 
 import * as S from '@/components/Atoms/TextArea/index.styles';
 import Icon from '@/components/Atoms/Icon';
@@ -7,15 +10,18 @@ import { DEFAULT_TEXTAREA_MAX_LENGTH } from '@/components/Molecules/TextAreaEdit
 import debounce from '@/utils/debounce';
 
 export interface TextAreaTypes {
+  edit: 'ISSUE' | 'COMMENT';
   textAreaValue: string;
-  handleOnChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  setTextAreaValue?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const PLACEHOLDER = '코멘트를 입력하세요';
 const DEBOUNC_DELAY = 300;
 
-const TextArea = ({ textAreaValue, handleOnChange }: TextAreaTypes) => {
+const TextArea = ({ edit, textAreaValue, setTextAreaValue }: TextAreaTypes) => {
   const timerId = useRef<number>(0);
+  const [newIssueFormState, setNewIssueFormState] = useRecoilState(NewIssueFormState);
+
   const [isActive, setIsActive] = useState<boolean>(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -26,9 +32,56 @@ const TextArea = ({ textAreaValue, handleOnChange }: TextAreaTypes) => {
     setIsActive(true);
   };
 
-  const handleOnTypingTextArea = debounce(timerId, handleOnChange, DEBOUNC_DELAY);
+  const uploadImageFile = async (e: { target: HTMLInputElement }) => {
+    const file = e.target.files![0];
+    const data = await uploadImage(file);
+    const markdownImg = `\n![](${data})\n`;
+
+    if (edit === 'ISSUE') {
+      textAreaRef.current!.value += markdownImg;
+      setNewIssueFormState({ ...newIssueFormState, comment: `${newIssueFormState.comment} ${markdownImg}` });
+    }
+
+    if (edit === 'COMMENT') {
+      textAreaRef.current!.value += markdownImg;
+      setTextAreaValue?.(`${textAreaValue} ${markdownImg}`);
+    }
+  };
+
+  const updateCommentState = (value: string) => {
+    if (!value) return setTextAreaValue?.('');
+    if (Number(value) >= DEFAULT_TEXTAREA_MAX_LENGTH) {
+      // eslint-disable-next-line no-param-reassign
+      value = value.slice(0, DEFAULT_TEXTAREA_MAX_LENGTH);
+    }
+    return setTextAreaValue?.(value);
+  };
+
+  const updateNewIssueState = (value: string) => {
+    if (!value) return setNewIssueFormState({ ...newIssueFormState, comment: '' });
+    if (Number(value) >= DEFAULT_TEXTAREA_MAX_LENGTH) {
+      // eslint-disable-next-line no-param-reassign
+      value = value.slice(0, DEFAULT_TEXTAREA_MAX_LENGTH);
+    }
+    return setNewIssueFormState({ ...newIssueFormState, comment: value });
+  };
+
+  const handleOnChangeTextArea = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { value } = event.target;
+
+    if (edit === 'ISSUE') {
+      updateNewIssueState(value);
+    }
+
+    if (edit === 'COMMENT') {
+      updateCommentState(value);
+    }
+  };
+
+  const handleOnTypingTextArea = debounce(timerId, handleOnChangeTextArea, DEBOUNC_DELAY);
 
   useEffect(() => {
+    if (textAreaRef.current) textAreaRef.current.value = textAreaValue;
     if (textAreaRef.current && !textAreaValue) textAreaRef.current.value = '';
   }, [textAreaValue]);
 
@@ -51,9 +104,9 @@ const TextArea = ({ textAreaValue, handleOnChange }: TextAreaTypes) => {
       />
       <S.TextAreaAddFile className="textArea_addFile" isActive={isActive}>
         <label htmlFor="textArea_addFile">
-          <input id="textArea_addFile" type="file" />
+          <input id="textArea_addFile" type="file" onChange={uploadImageFile} accept="image/*" />
           <Icon icon="PaperClip" stroke={COLORS.LABEL} />
-          <span>파일 첨부하기</span>
+          <span>이미지 파일 첨부하기</span>
         </label>
       </S.TextAreaAddFile>
     </S.TextAreaContainer>

@@ -50,6 +50,35 @@ export interface CommentsTypes {
   issueCommentReactionsResponse: ReactionResponseTypes[] | [];
 }
 
+interface HistoryTime {
+  createdAt: string;
+  lastModifiedAt: string;
+}
+
+type HistoryMilestoneTypes = Omit<MilestoneTypes, 'openIssueCount' | 'closedIssueCount'>;
+
+export type HistoryActionTypes =
+  | 'CHANGE_TITLE'
+  | 'OPEN_ISSUE'
+  | 'CLOSE_ISSUE'
+  | 'ADD_LABEL'
+  | 'REMOVE_LABEL'
+  | 'ADD_ASSIGNEE'
+  | 'REMOVE_ASSIGNEE'
+  | 'ADD_MILESTONE'
+  | 'REMOVE_MILESTONE';
+
+export interface IssueHistoryTypes {
+  modifier: UserTypes;
+  modifiedAt: string;
+  action: HistoryActionTypes;
+  label: (HistoryTime & LabelTypes) | null;
+  milestone: (HistoryTime & HistoryMilestoneTypes) | null;
+  assignee: (HistoryTime & UserTypes) | null;
+  previousTitle: string | null;
+  changedTitle: string | null;
+}
+
 export interface ContentTypes {
   id: number;
   title: string;
@@ -61,7 +90,7 @@ export interface ContentTypes {
   issueAssignees: IssueAssigneesTypes;
   issueLabels: IssueLabelsTypes;
   milestone: MilestoneTypes | null;
-  issueHistories: [];
+  issueHistories: IssueHistoryTypes[];
 }
 
 export type IssueTypes = {
@@ -101,3 +130,9 @@ export type IssuesTypes = {
   closedIssueCount: number;
   issues: IssueTypes & PageTypes;
 };
+
+export const isIssueCommentsTypes = (props: CommentsTypes | IssueHistoryTypes): props is CommentsTypes =>
+  (props as CommentsTypes).content !== undefined;
+
+export const isIssueHistoryTypes = (props: CommentsTypes | IssueHistoryTypes): props is IssueHistoryTypes =>
+  (props as IssueHistoryTypes).action !== undefined;

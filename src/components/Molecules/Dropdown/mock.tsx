@@ -75,31 +75,31 @@ export const USER_LIST: UserTypes[] = [
   {
     id: 0,
     email: 'dobby@gmail.com',
-    nickname: 'dobby',
+    nickname: '도비',
     profileImage: 'https://avatars.githubusercontent.com/u/85747667?v=4',
   },
   {
     id: 1,
     email: 'dotori@gmail.com',
-    nickname: 'dotori',
+    nickname: '도토리',
     profileImage: 'https://avatars.githubusercontent.com/u/92701121?v=4',
   },
   {
     id: 2,
     email: 'whoo@gmail.com',
-    nickname: 'hoo',
+    nickname: '후',
     profileImage: 'https://avatars.githubusercontent.com/u/68011320?v=4',
   },
   {
     id: 3,
     email: 'ader@gmail.com',
-    nickname: 'ader',
+    nickname: '아더',
     profileImage: 'https://avatars.githubusercontent.com/u/29879110?v=4',
   },
   {
     id: 4,
     email: 'beck@gmail.com',
-    nickname: 'beck',
+    nickname: '벡',
     profileImage: 'https://avatars.githubusercontent.com/u/65931336?v=4',
   },
 ];

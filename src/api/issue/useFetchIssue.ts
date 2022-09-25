@@ -7,6 +7,7 @@ import {
   updateComment,
   deleteComment,
   createNewIssue,
+  deleteIssue,
 } from '@/api/issue';
 import { IssuesTypes, ContentTypes } from '@/api/issue/types';
 import { useNavigate } from 'react-router-dom';
@@ -15,7 +16,7 @@ import { useResetRecoilState } from 'recoil';
 import { NewIssueFormState } from '@/stores/newIssue';
 import { OPEN_QUERY } from '@/hooks/useFilter';
 
-const useFetchIssue = () => {
+const useFetchIssue = (id?: number) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const resetNewIssueFormState = useResetRecoilState(NewIssueFormState);
@@ -29,8 +30,7 @@ const useFetchIssue = () => {
 
   const useIssueData = (issueId: number) =>
     useQuery<ContentTypes>(['issue', issueId], () => getIssueData(issueId), {
-      cacheTime: 10000,
-      staleTime: 0,
+      refetchOnWindowFocus: false,
     });
 
   const useUpdateIssueTitle = (issueId: number) =>
@@ -44,8 +44,8 @@ const useFetchIssue = () => {
     useMutation(updateIssueState, {
       onSuccess: () => {
         queryClient.invalidateQueries(['issues']);
-        issueIds.forEach((id) => {
-          queryClient.invalidateQueries(['issue', id]);
+        issueIds.forEach((stateId) => {
+          queryClient.invalidateQueries(['issue', stateId]);
         });
       },
     });
@@ -79,6 +79,13 @@ const useFetchIssue = () => {
     },
   });
 
+  const { mutate: deleteIssueMutate } = useMutation(deleteIssue, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['issue', id]);
+      navigate(`/issues/`);
+    },
+  });
+
   return {
     useIssuesData,
     useIssueData,
@@ -88,6 +95,7 @@ const useFetchIssue = () => {
     useUpdateIssueComment,
     useDeleteIssueComment,
     createNewIssueMutate,
+    deleteIssueMutate,
   };
 };
 

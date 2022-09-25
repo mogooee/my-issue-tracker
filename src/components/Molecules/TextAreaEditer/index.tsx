@@ -5,7 +5,7 @@ import TextArea, { TextAreaTypes } from '@/components/Atoms/TextArea';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-const TextAreaEditer = ({ textAreaValue, handleOnChange }: TextAreaTypes) => {
+const TextAreaEditer = ({ edit, textAreaValue, setTextAreaValue }: TextAreaTypes) => {
   const [editerMode, setEditerMode] = useState<'Write' | 'Preview'>('Write');
 
   return (
@@ -19,7 +19,9 @@ const TextAreaEditer = ({ textAreaValue, handleOnChange }: TextAreaTypes) => {
         </button>
       </S.EditerNavButtons>
       <S.EditerTextAreaWrapper>
-        {editerMode === 'Write' && <TextArea textAreaValue={textAreaValue} handleOnChange={handleOnChange} />}
+        {editerMode === 'Write' && (
+          <TextArea edit={edit} textAreaValue={textAreaValue} setTextAreaValue={setTextAreaValue} />
+        )}
         {editerMode === 'Preview' && (
           <ReactMarkdown className="markdown" remarkPlugins={[remarkGfm]}>
             {textAreaValue}

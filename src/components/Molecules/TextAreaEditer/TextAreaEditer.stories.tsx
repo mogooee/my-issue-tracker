@@ -10,14 +10,7 @@ export default {
 const AddTemplate: ComponentStory<typeof TextAreaEditer> = () => {
   const [textAreaValue, setTextAreaValue] = useState('');
 
-  const handleOnChange = (event: React.FormEvent<HTMLTextAreaElement>) => {
-    const { value } = event.currentTarget;
-
-    if (!value) return setTextAreaValue('');
-    return setTextAreaValue(value);
-  };
-
-  return <TextAreaEditer textAreaValue={textAreaValue} handleOnChange={handleOnChange} />;
+  return <TextAreaEditer edit="COMMENT" textAreaValue={textAreaValue} setTextAreaValue={setTextAreaValue} />;
 };
 
 export const Initial = AddTemplate.bind({});
@@ -36,14 +29,7 @@ const ModifyTemplate: ComponentStory<typeof TextAreaEditer> = () => {
   ![프사](https://avatars.githubusercontent.com/u/85747667?v=4)
   `);
 
-  const handleOnChange = (event: React.FormEvent<HTMLTextAreaElement>) => {
-    const { value } = event.currentTarget;
-
-    if (!value) return setTextAreaValue('');
-    return setTextAreaValue(value);
-  };
-
-  return <TextAreaEditer textAreaValue={textAreaValue} handleOnChange={handleOnChange} />;
+  return <TextAreaEditer edit="COMMENT" textAreaValue={textAreaValue} setTextAreaValue={setTextAreaValue} />;
 };
 
 export const Modify = ModifyTemplate.bind({});

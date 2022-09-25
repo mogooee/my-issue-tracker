@@ -1,12 +1,20 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { rest } from 'msw';
-import { issueTable } from '@/mocks/tables/issue';
+import { issues, issueTable } from '@/mocks/tables/issue';
 import { REACTIONS } from '@/components/Molecules/Dropdown/Panel/Reaction/mock';
-import { CommentsTypes, ContentTypes, IssuesTypes, ReactionResponseTypes } from '@/api/issue/types';
+import { IssuesTypes, CommentsTypes, ContentTypes, IssueHistoryTypes, ReactionResponseTypes } from '@/api/issue/types';
 import { userTable } from '@/mocks/handlers/auth';
-import { USER_LIST } from '@/components/Molecules/Dropdown/mock';
+import { MILESTONE_LIST, USER_LIST } from '@/components/Molecules/Dropdown/mock';
 import { responseNewIssueData } from '@/mocks/tables/newIssueHelper';
 import { doubleQuotationReg, issueStateReg, OPEN_QUERY } from '@/hooks/useFilter';
+import { labelTable } from '@/mocks/handlers/label';
+import {
+  assigneesHistory,
+  changeStateHistory,
+  changeTitleHistory,
+  labelHistory,
+  milestoneHistory,
+} from '@/mocks/tables/issueHistoryHelper';
 
 const message = {
   message: '',
@@ -194,6 +202,14 @@ export const issueHandlers = [
     const newIssue = { ...issue, title };
     updateIssueTable(newIssue);
 
+    const history: IssueHistoryTypes = changeTitleHistory({
+      modifierInfo: USER_LIST[0],
+      previousTitle: issue.title,
+      changedTitle: title,
+    });
+
+    issue.issueHistories.push(history);
+
     return res(ctx.status(200), ctx.json(newIssue));
   }),
 
@@ -218,6 +234,12 @@ export const issueHandlers = [
 
     issueTable.openIssues = openIssuesContent;
     issueTable.closedIssues = closedIssuesContent;
+
+    const history: IssueHistoryTypes = changeStateHistory({
+      modifierInfo: USER_LIST[0],
+      action: status ? 'CLOSE' : 'OPEN',
+    });
+    contents.find((el) => el.id === ids[0])!.issueHistories.push(history);
 
     return res(ctx.status(204));
   }),
@@ -387,5 +409,248 @@ export const issueHandlers = [
     issueTable.openIssues.push(newIssue);
 
     return res(ctx.status(200), ctx.json(newIssue));
+  }),
+
+  rest.post('api/images/upload', async (req, res, ctx) => {
+    const responseFileUrl = 'https://avatars.githubusercontent.com/u/85747667?s=96&v=4';
+    return res(ctx.status(200), ctx.json(responseFileUrl));
+  }),
+
+  rest.delete('api/issues/:issueId', async (req, res, ctx) => {
+    const { issueId } = req.params;
+
+    const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
+    const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
+
+    if (findOpenIssues) {
+      issueTable.openIssues = issueTable.openIssues.filter((el) => el.id !== Number(issueId));
+      return res(ctx.status(200), ctx.json(issues));
+    }
+
+    if (findCloseIssues) {
+      issueTable.closedIssues = issueTable.closedIssues.filter((el) => el.id !== Number(issueId));
+      return res(ctx.status(200), ctx.json(issues));
+    }
+
+    return res(ctx.status(200), ctx.json(issues));
+  }),
+
+  //  sidebar 레이블 추가 / 삭제
+  rest.post('api/issues/:issueId/labels/:labelId', async (req, res, ctx) => {
+    const { issueId, labelId } = req.params;
+
+    const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
+    const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
+
+    const findLabel = labelTable.find((label) => label.id === Number(labelId));
+    if (findOpenIssues) {
+      findOpenIssues.issueLabels.issueLabels.push(findLabel!);
+
+      const history: IssueHistoryTypes = labelHistory({
+        modifierInfo: USER_LIST[0],
+        labelInfo: findLabel!,
+        action: 'ADD',
+      });
+      findOpenIssues.issueHistories.push(history);
+      return res(ctx.status(200), ctx.json(issues));
+    }
+
+    if (findCloseIssues) {
+      findCloseIssues.issueLabels.issueLabels.push(findLabel!);
+
+      const history: IssueHistoryTypes = labelHistory({
+        modifierInfo: USER_LIST[0],
+        labelInfo: findLabel!,
+        action: 'ADD',
+      });
+      findCloseIssues.issueHistories.push(history);
+      return res(ctx.status(200), ctx.json(issues));
+    }
+
+    return res(ctx.status(200), ctx.json(issues));
+  }),
+
+  rest.delete('api/issues/:issueId/labels/:labelId', async (req, res, ctx) => {
+    const { issueId, labelId } = req.params;
+
+    const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
+    const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
+
+    const findLabel = labelTable.find((label) => label.id === Number(labelId));
+    if (findOpenIssues) {
+      findOpenIssues.issueLabels.issueLabels = findOpenIssues.issueLabels.issueLabels.filter(
+        (label) => label.id !== findLabel!.id,
+      );
+
+      const history: IssueHistoryTypes = labelHistory({
+        modifierInfo: USER_LIST[0],
+        labelInfo: findLabel!,
+        action: 'REMOVE',
+      });
+      findOpenIssues.issueHistories.push(history);
+
+      return res(ctx.status(200), ctx.json(issues));
+    }
+
+    if (findCloseIssues) {
+      findCloseIssues.issueLabels.issueLabels = findCloseIssues.issueLabels.issueLabels.filter(
+        (label) => label.id !== findLabel!.id,
+      );
+
+      const history: IssueHistoryTypes = labelHistory({
+        modifierInfo: USER_LIST[0],
+        labelInfo: findLabel!,
+        action: 'REMOVE',
+      });
+      findCloseIssues.issueHistories.push(history);
+
+      return res(ctx.status(200), ctx.json(issues));
+    }
+
+    return res(ctx.status(200), ctx.json(issues));
+  }),
+
+  // sidebar 담당자 추가 / 삭제
+  rest.post('api/issues/:issueId/assignees/:assigneeId', async (req, res, ctx) => {
+    const { issueId, assigneeId } = req.params;
+
+    const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
+    const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
+
+    const findAssinees = USER_LIST.find((label) => label.id === Number(assigneeId));
+    if (findOpenIssues) {
+      findOpenIssues.issueAssignees.issueAssignees.push(findAssinees!);
+
+      const history: IssueHistoryTypes = assigneesHistory({
+        modifierInfo: USER_LIST[0],
+        assigneeInfo: findAssinees!,
+        action: 'ADD',
+      });
+      findOpenIssues.issueHistories.push(history);
+      return res(ctx.status(200), ctx.json(issues));
+    }
+
+    if (findCloseIssues) {
+      findCloseIssues.issueAssignees.issueAssignees.push(findAssinees!);
+
+      const history: IssueHistoryTypes = assigneesHistory({
+        modifierInfo: USER_LIST[0],
+        assigneeInfo: findAssinees!,
+        action: 'ADD',
+      });
+      findCloseIssues.issueHistories.push(history);
+      return res(ctx.status(200), ctx.json(issues));
+    }
+
+    return res(ctx.status(200), ctx.json(issues));
+  }),
+
+  rest.delete('api/issues/:issueId/assignees?clear=false', async (req, res, ctx) => {
+    const { issueId } = req.params;
+    const assigneeId = Number(req.url.searchParams.get('assigneeId'));
+
+    const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
+    const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
+
+    const findAssinees = USER_LIST.find((label) => label.id === Number(assigneeId));
+    if (findOpenIssues) {
+      findOpenIssues.issueAssignees.issueAssignees = findOpenIssues.issueAssignees.issueAssignees.filter(
+        (assignee) => assignee.id !== findAssinees!.id,
+      );
+
+      const history: IssueHistoryTypes = assigneesHistory({
+        modifierInfo: USER_LIST[0],
+        assigneeInfo: findAssinees!,
+        action: 'REMOVE',
+      });
+      findOpenIssues.issueHistories.push(history);
+      return res(ctx.status(200), ctx.json(issues));
+    }
+
+    if (findCloseIssues) {
+      findCloseIssues!.issueAssignees.issueAssignees = findCloseIssues.issueAssignees.issueAssignees.filter(
+        (assignee) => assignee.id !== findAssinees!.id,
+      );
+
+      const history: IssueHistoryTypes = assigneesHistory({
+        modifierInfo: USER_LIST[0],
+        assigneeInfo: findAssinees!,
+        action: 'REMOVE',
+      });
+      findCloseIssues.issueHistories.push(history);
+      return res(ctx.status(200), ctx.json(issues));
+    }
+
+    return res(ctx.status(200), ctx.json(issues));
+  }),
+
+  // sidebar 마일스톤 추가 / 삭제
+  rest.patch('api/issues/:issueId/milestone/:milestoneId', async (req, res, ctx) => {
+    const { issueId, milestoneId } = req.params;
+
+    const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
+    const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
+
+    const findMilestone = MILESTONE_LIST.find((label) => label.id === Number(milestoneId));
+    if (findOpenIssues) {
+      findOpenIssues.milestone = findMilestone!;
+
+      const history: IssueHistoryTypes = milestoneHistory({
+        modifierInfo: USER_LIST[0],
+        milestoneInfo: findMilestone!,
+        action: 'ADD',
+      });
+      findOpenIssues.issueHistories.push(history);
+      return res(ctx.status(200), ctx.json(issues));
+    }
+
+    if (findCloseIssues) {
+      findCloseIssues.milestone = findMilestone!;
+
+      const history: IssueHistoryTypes = milestoneHistory({
+        modifierInfo: USER_LIST[0],
+        milestoneInfo: findMilestone!,
+        action: 'ADD',
+      });
+      findCloseIssues.issueHistories.push(history);
+      return res(ctx.status(200), ctx.json(issues));
+    }
+
+    return res(ctx.status(200), ctx.json(issues));
+  }),
+
+  rest.delete('api/issues/:issueId/milestone/:milestoneId', async (req, res, ctx) => {
+    const { issueId, milestoneId } = req.params;
+
+    const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
+    const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
+
+    const findMilestone = MILESTONE_LIST.find((label) => label.id === Number(milestoneId));
+
+    if (findOpenIssues) {
+      findOpenIssues.milestone = null;
+
+      const history: IssueHistoryTypes = milestoneHistory({
+        modifierInfo: USER_LIST[0],
+        milestoneInfo: findMilestone!,
+        action: 'REMOVE',
+      });
+      findOpenIssues.issueHistories.push(history);
+      return res(ctx.status(200), ctx.json(issues));
+    }
+
+    if (findCloseIssues) {
+      findCloseIssues.milestone = null;
+
+      const history: IssueHistoryTypes = milestoneHistory({
+        modifierInfo: USER_LIST[0],
+        milestoneInfo: findMilestone!,
+        action: 'REMOVE',
+      });
+      findCloseIssues.issueHistories.push(history);
+      return res(ctx.status(200), ctx.json(issues));
+    }
+
+    return res(ctx.status(200), ctx.json(issues));
   }),
 ];
