@@ -1,45 +1,44 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { rest } from 'msw';
-import { issues } from '@/mocks/tables/issue';
+import { issueTable } from '@/mocks/tables/issue';
 import { REACTIONS } from '@/components/Molecules/Dropdown/Panel/Reaction/mock';
-import { CommentsTypes, ContentTypes, ReactionResponseTypes } from '@/api/issue/types';
+import { CommentsTypes, ContentTypes, IssuesTypes, ReactionResponseTypes } from '@/api/issue/types';
 import { userTable } from '@/mocks/handlers/auth';
 import { USER_LIST } from '@/components/Molecules/Dropdown/mock';
 import { responseNewIssueData } from '@/mocks/tables/newIssueHelper';
+import { doubleQuotationReg, issueStateReg, OPEN_QUERY } from '@/hooks/useFilter';
 
 const message = {
   message: '',
 };
 
-let issueTable = issues;
-
 const findIssue = (issueId: number) => {
   const { openIssues, closedIssues } = issueTable;
-  const contents = [...openIssues.content, ...closedIssues.content];
+  const contents = [...openIssues, ...closedIssues];
 
   const issue = contents.find((e) => e.id === Number(issueId));
   return issue;
 };
 
 const updateIssueTable = (newIssue: ContentTypes) => {
-  let replacedIssuesContent = newIssue.closed ? issueTable.closedIssues.content : issueTable.openIssues.content;
+  const issuesContent = newIssue.closed ? issueTable.closedIssues : issueTable.openIssues;
 
-  replacedIssuesContent = replacedIssuesContent.map((content) => {
+  const newIssuesContent = issuesContent.map((content) => {
     if (content.id === newIssue.id) return newIssue;
     return content;
   });
 
-  if (newIssue.closed)
-    issueTable = { ...issueTable, closedIssues: { ...issueTable.closedIssues, content: replacedIssuesContent } };
-  else issueTable = { ...issueTable, openIssues: { ...issueTable.openIssues, content: replacedIssuesContent } };
+  if (newIssue.closed) issueTable.closedIssues = newIssuesContent;
+  else issueTable.openIssues = newIssuesContent;
 };
 
 const addIdCount = (type: 'comments' | 'reactions') => {
-  const contents = [...issueTable.openIssues.content, ...issueTable.closedIssues.content];
+  const contents = [...issueTable.openIssues, ...issueTable.closedIssues];
+  const count = { comments: 0, reactions: 0 };
 
-  let commentsCount = contents.reduce((acc, cur) => acc + cur.comments.length, 0);
+  count.comments = contents.reduce((acc, cur) => acc + cur.comments.length, 0);
 
-  let reactionsCount: number = contents.reduce(
+  count.reactions = contents.reduce(
     (accContentReactions, { comments }) =>
       accContentReactions +
       comments.reduce(
@@ -50,15 +49,17 @@ const addIdCount = (type: 'comments' | 'reactions') => {
     0,
   );
 
-  return () => {
+  const addId = () => {
     if (type === 'comments') {
-      commentsCount += 1;
-      return commentsCount;
+      count.comments += 1;
+      return count.comments;
     }
 
-    reactionsCount += 1;
-    return reactionsCount;
+    count.reactions += 1;
+    return count.reactions;
   };
+
+  return addId;
 };
 
 const addCommentsId = addIdCount('comments');
@@ -66,7 +67,100 @@ const addReactionsId = addIdCount('reactions');
 
 export const issueHandlers = [
   // 이슈 전체 조회
-  rest.get('api/issues', (req, res, ctx) => res(ctx.status(200), ctx.json(issueTable))),
+  rest.get('api/issues', (req, res, ctx) => {
+    const { openIssues, closedIssues } = issueTable;
+    const page = Number(req.url.searchParams.get('page'));
+    const queries = decodeURIComponent(req.url.searchParams.get('q')!);
+
+    let content: ContentTypes[] = [...openIssues, ...closedIssues];
+
+    const queriesArr = queries?.split('+');
+    queriesArr?.forEach((query) => {
+      const [key, value] = decodeURIComponent(query).split(':');
+      const decodingValue = value?.replace(doubleQuotationReg, '');
+
+      if (key === 'assignee') {
+        if (!decodingValue) {
+          content = content.filter((e) => !e.issueAssignees.issueAssignees.length);
+          return;
+        }
+        content = content.filter((e) =>
+          e.issueAssignees.issueAssignees.find((assignee) => assignee.nickname === decodingValue),
+        );
+      }
+
+      if (key === 'label') {
+        if (!decodingValue) {
+          content = content.filter((e) => !e.issueLabels.issueLabels.length);
+          return;
+        }
+        content = content.filter((e) => e.issueLabels.issueLabels.find((label) => label.title === decodingValue));
+        return;
+      }
+
+      if (key === 'milestone') {
+        if (!decodingValue) {
+          content = content.filter((e) => e.milestone === null);
+          return;
+        }
+        content = content.filter((e) => e.milestone?.title === decodingValue);
+        return;
+      }
+
+      if (key === 'author') {
+        content = content.filter((e) => e.author.nickname === decodingValue);
+        return;
+      }
+
+      if (key === 'mentions') {
+        content = content.filter((e) => e.comments.find((comment) => comment.author.nickname === decodingValue));
+      }
+    });
+
+    const openIssueContents = content.filter((e) => e.closed === false);
+    const closedIssueContents = content.filter((e) => e.closed === true);
+
+    const openStateReg = new RegExp(OPEN_QUERY);
+    const stateContent = queries.match(openStateReg) ? openIssueContents : closedIssueContents;
+
+    const filteredContent = queries.match(issueStateReg)
+      ? stateContent
+      : [...openIssueContents, ...closedIssueContents];
+
+    const response: IssuesTypes = {
+      openIssueCount: openIssueContents.length,
+      closedIssueCount: closedIssueContents.length,
+      issues: {
+        content: filteredContent,
+        pageable: {
+          sort: {
+            empty: true,
+            sorted: false,
+            unsorted: true,
+          },
+          offset: 0,
+          pageNumber: page,
+          pageSize: 10,
+          paged: true,
+          unpaged: false,
+        },
+        last: true,
+        totalPages: 1,
+        totalElements: 8,
+        sort: {
+          empty: true,
+          sorted: false,
+          unsorted: true,
+        },
+        first: true,
+        size: 10,
+        number: 0,
+        numberOfElements: 8,
+        empty: false,
+      },
+    };
+    return res(ctx.status(200), ctx.json(response));
+  }),
 
   // 이슈 단건 조회
   rest.get('api/issues/:issueId', (req, res, ctx) => {
@@ -108,7 +202,7 @@ export const issueHandlers = [
     const { status, ids } = await req.json();
 
     const { openIssues, closedIssues } = issueTable;
-    let contents = [...openIssues.content, ...closedIssues.content];
+    let contents = [...openIssues, ...closedIssues];
 
     ids.forEach((id: number) => {
       contents = contents.map((content) => {
@@ -122,13 +216,8 @@ export const issueHandlers = [
     const openIssuesContent = contents.filter(({ closed }) => closed === false);
     const closedIssuesContent = contents.filter(({ closed }) => closed === true);
 
-    issueTable = {
-      ...issueTable,
-      openIssues: { ...openIssues, content: openIssuesContent },
-      openIssueCount: openIssuesContent.length,
-      closedIssues: { ...closedIssues, content: closedIssuesContent },
-      closedIssueCount: closedIssuesContent.length,
-    };
+    issueTable.openIssues = openIssuesContent;
+    issueTable.closedIssues = closedIssuesContent;
 
     return res(ctx.status(204));
   }),
@@ -274,6 +363,8 @@ export const issueHandlers = [
 
     const newIssue: ContentTypes = { ...issue, comments: newComments };
     updateIssueTable(newIssue);
+
+    return res(ctx.status(200), ctx.json(newIssue));
   }),
 
   // 이슈 등록
@@ -293,7 +384,7 @@ export const issueHandlers = [
     }
 
     const newIssue = responseNewIssueData({ memberId: userId, ...requestData });
-    issues.openIssues.content.push(newIssue);
+    issueTable.openIssues.push(newIssue);
 
     return res(ctx.status(200), ctx.json(newIssue));
   }),

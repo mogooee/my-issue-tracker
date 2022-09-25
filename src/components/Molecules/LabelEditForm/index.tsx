@@ -101,7 +101,7 @@ const LabelEditForm = ({ type, onClickCancleButton, onClickCompleteButton }: Lab
         </S.EditForm>
       </S.EditField>
       <S.EditButton>
-        {type === 'EDIT' && <Button {...BUTTON_PROPS.CLOSE} />}
+        {type === 'EDIT' && <Button {...BUTTON_PROPS.CLOSE} handleOnClick={onClickCancleButton} />}
         <Button {...BUTTON_PROPS.SAVE} handleOnClick={onClickCompleteButton} disabled={!isCompleteButtonActivated} />
       </S.EditButton>
     </S.LabelEditForm>

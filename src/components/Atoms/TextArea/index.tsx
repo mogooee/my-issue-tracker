@@ -1,9 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 
 import * as S from '@/components/Atoms/TextArea/index.styles';
 import Icon from '@/components/Atoms/Icon';
 import { COLORS } from '@/styles/theme';
 import { DEFAULT_TEXTAREA_MAX_LENGTH } from '@/components/Molecules/TextAreaEditer/constants';
+import debounce from '@/utils/debounce';
 
 export interface TextAreaTypes {
   textAreaValue: string;
@@ -11,8 +12,10 @@ export interface TextAreaTypes {
 }
 
 const PLACEHOLDER = '코멘트를 입력하세요';
+const DEBOUNC_DELAY = 300;
 
 const TextArea = ({ textAreaValue, handleOnChange }: TextAreaTypes) => {
+  const timerId = useRef<number>(0);
   const [isActive, setIsActive] = useState<boolean>(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -22,6 +25,12 @@ const TextArea = ({ textAreaValue, handleOnChange }: TextAreaTypes) => {
     textAreaRef.current?.focus();
     setIsActive(true);
   };
+
+  const handleOnTypingTextArea = debounce(timerId, handleOnChange, DEBOUNC_DELAY);
+
+  useEffect(() => {
+    if (textAreaRef.current && !textAreaValue) textAreaRef.current.value = '';
+  }, [textAreaValue]);
 
   return (
     <S.TextAreaContainer isActive={isActive} onClick={handleFormClick} onBlur={() => setIsActive(false)}>
@@ -37,8 +46,8 @@ const TextArea = ({ textAreaValue, handleOnChange }: TextAreaTypes) => {
         maxLength={DEFAULT_TEXTAREA_MAX_LENGTH}
         placeholder={PLACEHOLDER}
         ref={textAreaRef}
-        onChange={(event) => handleOnChange(event)}
-        value={textAreaValue}
+        onChange={handleOnTypingTextArea}
+        defaultValue={textAreaValue}
       />
       <S.TextAreaAddFile className="textArea_addFile" isActive={isActive}>
         <label htmlFor="textArea_addFile">

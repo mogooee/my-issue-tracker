@@ -17,3 +17,10 @@ export const IssueTableHeader = styled.div`
   align-items: center;
   grid-template-columns: 60px 500px auto;
 `;
+
+export const NoSearchResult = styled.div`
+  display: grid;
+  place-items: center;
+  padding: 40px;
+  color: ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
+`;

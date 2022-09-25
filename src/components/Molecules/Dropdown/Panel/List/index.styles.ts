@@ -24,11 +24,16 @@ export const Panel = styled.menu`
 
 export const PanelItem = styled.li`
   width: 100%;
+  cursor: pointer;
   padding: 8px 16px;
   border-top: 1px solid ${({ theme }) => theme.COLORS.LINE};
   background: ${({ theme }) => theme.COLORS.OFF_WHITE};
   color: ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
   ${({ theme }) => theme.FONTSTYLES.TEXT_SMALL};
+
+  &:hover {
+    background: ${({ theme }) => theme.COLORS.INPUT_BACKGROUND};
+  }
 
   &:last-child {
     border-bottom: none;
@@ -37,16 +42,21 @@ export const PanelItem = styled.li`
 
   input {
     display: none;
-
-    &:checked ~ label::after {
-      margin-top: 4px;
-      content: url(${checkOnCircle});
-    }
   }
 
   label {
     ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'space-between' })};
     cursor: pointer;
+  }
+`;
+
+export const CheckBoxItem = styled.input`
+  &:checked ~ label::after {
+    margin-top: 4px;
+    content: url(${checkOnCircle});
+  }
+
+  & ~ label {
     height: 28px;
 
     span {

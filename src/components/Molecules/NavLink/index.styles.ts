@@ -40,7 +40,7 @@ export const StyledNavLink = styled(NavLink)`
     stroke: ${({ theme }) => theme.COLORS.LABEL};
   }
 
-  &.active {
+  &.isActive {
     color: ${({ theme }) => theme.COLORS.BODY};
     path {
       stroke: ${({ theme }) => theme.COLORS.TITLE_ACTIVE};

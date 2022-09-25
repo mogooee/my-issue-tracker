@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import useFetchIssue from '@/api/issue/useFetchIssue';
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
@@ -14,34 +14,22 @@ import * as S from '@/components/Organisms/IssueTable/index.styles';
 import { DropdownTypes, ListPanelTypes } from '@/components/Molecules/Dropdown/types';
 import { OPEN_CLOSE_DROPDOWN_ARGS } from '@/components/Molecules/Dropdown/mock';
 import Table from '@/components/Molecules/Table';
-import { openCloseIssue } from '@/components/Molecules/NavLink/options';
-import { ContentTypes, IssuesTypes } from '@/api/issue/types';
 
-type IssueStateType = 'ALL' | 'OPEN' | 'CLOSED';
+import { IssuesTypes } from '@/api/issue/types';
+import { FilterStatsState, FilterState } from '@/stores/filter';
+import { openCloseIssue } from '@/components/Molecules/NavLink/options';
+import useFetchSideBarData from '@/api/useFetchSideBarData';
+import useFilter, { noneFilterReg } from '@/hooks/useFilter';
 
 interface IssueTableTypes {
-  issues: IssuesTypes;
+  issuesData: IssuesTypes;
   filterTabs: DropdownTypes<ListPanelTypes>[];
-  issueState: IssueStateType;
 }
 
-const definedItem = (
-  state: IssueStateType,
-  openIssuesContent: ContentTypes[],
-  closedIssuesContent: ContentTypes[],
-): ContentTypes[] => {
-  if (state === 'OPEN') {
-    return openIssuesContent;
-  }
-  if (state === 'CLOSED') {
-    return closedIssuesContent;
-  }
+const PARENT_CHECKBOX_ID = -1;
 
-  return [...openIssuesContent, ...closedIssuesContent];
-};
-
-const IssueTable = ({ issues, filterTabs, issueState }: IssueTableTypes) => {
-  const { openIssueCount, openIssues, closedIssueCount, closedIssues } = issues;
+const IssueTable = ({ issuesData, filterTabs }: IssueTableTypes) => {
+  const { openIssueCount, closedIssueCount, issues } = issuesData;
 
   const [checkState, setCheckState] = useRecoilState(CheckState);
   const setDefaultCheckIds = useSetRecoilState(DefaultCheckIds);
@@ -49,53 +37,110 @@ const IssueTable = ({ issues, filterTabs, issueState }: IssueTableTypes) => {
 
   const { useUpdateIssueState } = useFetchIssue();
   const { mutate: updateIssueState } = useUpdateIssueState(checkState.child);
+  const { memberData, memberDataRefetch } = useFetchSideBarData();
   const memberId = useRecoilValue(LoginUserInfoState).id;
 
-  const items = definedItem(issueState, openIssues.content, closedIssues.content);
+  const filterState = useRecoilValue(FilterState);
+  const { page, queries } = useRecoilValue(FilterStatsState);
+
+  const { isExistedFilter, setParsingFilterState, setRemovedFilterState } = useFilter();
 
   const changeIssueState = (target: HTMLInputElement) => {
     const clickedPanelStatus = target.dataset.id;
-    const status = clickedPanelStatus === 'close';
+    const status = clickedPanelStatus === 'closed';
     const newState = { status, ids: checkState.child };
     updateIssueState({ newState, memberId });
     setCheckState({ ...checkState, parent: false, child: [] });
   };
 
-  const IssueStateDropdownProps = {
-    ...OPEN_CLOSE_DROPDOWN_ARGS,
-    panelProps: { ...OPEN_CLOSE_DROPDOWN_ARGS.panelProps, handleOnClick: changeIssueState },
+  const handleOnOpenClosedNavClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    const clickedNavDataId = event.currentTarget.dataset.id;
+    setParsingFilterState(clickedNavDataId!);
+  };
+
+  const handleOnMemberDropdownClick = (filterKey: string) => {
+    const isMemberListData = filterKey === 'assignee' || filterKey === 'author';
+    if (isMemberListData && !memberData) memberDataRefetch();
+  };
+
+  const handleOnFilterTabsClick = (target: HTMLInputElement) => {
+    const key = target.dataset.panel!;
+    const value: string = target.dataset.id!;
+    const filter = value.match(noneFilterReg) ? value : `${key}:${value}`;
+
+    if (isExistedFilter(filter)) {
+      setRemovedFilterState(filter);
+      return;
+    }
+
+    setParsingFilterState(filter);
+  };
+
+  const isFilterTabsChecked = (panelId: string) => {
+    const content = filterState[panelId];
+
+    return (dataId: string): boolean => {
+      if (Array.isArray(content)) {
+        return !!content.find((e) => e === dataId);
+      }
+      return content === dataId;
+    };
   };
 
   useEffect(() => {
-    const openIds: number[] = issues.openIssues.content.map((openIssue) => openIssue.id);
-    const closedIds: number[] = issues.closedIssues.content.map((closedIssue) => closedIssue.id);
-    setDefaultCheckIds({ openIds, closedIds });
-  }, [issues.openIssueCount]);
+    const ids: number[] = issues.content.map((issue) => issue.id);
+    setDefaultCheckIds(ids);
+  }, [issues.content.length]);
 
   return (
     <Table
       header={
         <S.IssueTableHeader>
-          <CheckBox id={-1} type="parent" checked={checkState.parent} />
+          <CheckBox id={PARENT_CHECKBOX_ID} type="parent" checked={checkState.parent} />
           <S.IssueStates>
-            {checkedBoxNum > 0 ? (
+            {checkedBoxNum ? (
               <span>{`${checkedBoxNum}개 이슈 선택`}</span>
             ) : (
-              <NavLink navData={openCloseIssue(openIssueCount, closedIssueCount)} />
+              <NavLink
+                navData={openCloseIssue(openIssueCount, closedIssueCount, page, queries)}
+                handleOnClick={handleOnOpenClosedNavClick}
+                defaultActive="is:open"
+              />
             )}
           </S.IssueStates>
           <S.IssueInfoTabs>
-            {checkedBoxNum > 0 ? (
-              <Dropdown {...IssueStateDropdownProps} />
+            {checkedBoxNum ? (
+              <Dropdown {...OPEN_CLOSE_DROPDOWN_ARGS(changeIssueState)} />
             ) : (
-              filterTabs.map((info) => <Dropdown key={info.panelProps.panelTitle} {...info} />)
+              filterTabs.map((filterTab: DropdownTypes<ListPanelTypes>) => {
+                const { panelId: filterKey, panelTitle } = filterTab.panelProps;
+
+                const DROPDOWN_PROPS = {
+                  ...filterTab,
+                  panelProps: {
+                    ...filterTab.panelProps,
+                    handleOnClick: handleOnFilterTabsClick,
+                    isChecked: isFilterTabsChecked(filterKey),
+                  },
+                };
+
+                return (
+                  <Dropdown
+                    key={panelTitle}
+                    {...DROPDOWN_PROPS}
+                    handleOnDropdownClick={(e) => handleOnMemberDropdownClick(filterKey)}
+                  />
+                );
+              })
             )}
           </S.IssueInfoTabs>
         </S.IssueTableHeader>
       }
-      item={items.map((itemProps) => (
-        <IssueItem key={itemProps.id} {...itemProps} />
-      ))}
+      item={
+        issues.content.length
+          ? issues.content.map((itemProps) => <IssueItem key={itemProps.id} {...itemProps} />)
+          : [<S.NoSearchResult>No results matched your search. 👀</S.NoSearchResult>]
+      }
     />
   );
 };

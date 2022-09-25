@@ -29,11 +29,13 @@ const MILESTONE_STATE_TAB = (data: MilestoneListTypes) => [
     icon: <Icon icon="Milestone" fill={COLORS.TITLE_ACTIVE} stroke={COLORS.OFF_WHITE} />,
     link: '/milestones?state=open',
     title: `열린 마일스톤(${data.openedMilestones.length})`,
+    dataId: 'openMilestone',
   },
   {
     icon: <Icon icon="Archive" stroke={COLORS.TITLE_ACTIVE} />,
     link: '/milestones?state=closed',
     title: `닫힌 마일스톤(${data.closedMilestones.length})`,
+    dataId: 'closedMilestone',
   },
 ];
 
@@ -63,7 +65,7 @@ const MilestoneTable = () => {
   return (
     <>
       <Table
-        header={<NavLink navData={MILESTONE_STATE_TAB(milestoneData!)} />}
+        header={<NavLink navData={MILESTONE_STATE_TAB(milestoneData!)} defaultActive="openMilestone" />}
         item={
           isOpenMilestone()
             ? renderMilestones(milestoneData!.openedMilestones)

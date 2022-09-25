@@ -1,44 +1,76 @@
 import { useEffect } from 'react';
-import { useSetRecoilState } from 'recoil';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import useFetchIssue from '@/api/issue/useFetchIssue';
-import { CheckState } from '@/stores/checkBox';
 
 import * as S from '@/pages/Private/Issues/index.styled';
-import { COLORS } from '@/styles/theme';
 
-import Icon from '@/components/Atoms/Icon';
 import Button from '@/components/Atoms/Button';
 import FilterBar from '@/components/Molecules/FilterBar';
 import NavLink from '@/components/Molecules/NavLink';
 import IssueTable from '@/components/Organisms/IssueTable';
 
 import { FILTERBAR_INFO } from '@/components/Molecules/FilterBar/mocks';
-import { FILTER_TABS_INFO as FILTER_TABS } from '@/components/Molecules/Dropdown/mock';
+import {
+  ASSIGNEE_DROPDOWN_ARGS,
+  AUTHOR_DROPDOWN_ARGS,
+  LABEL_DROPDOWN_ARGS,
+  MILESTONE_DROPDOWN_ARGS,
+} from '@/components/Molecules/Dropdown/mock';
 import { NEW_ISSUE_BUTTON_INFO } from '@/components/Atoms/Button/options';
-
-const definedIssueState = (queries: string[]) => {
-  if (queries?.find((query) => query.includes('is:open'))) {
-    return 'OPEN';
-  }
-  if (queries?.find((query) => query.includes('is:closed'))) {
-    return 'CLOSED';
-  }
-  return 'ALL';
-};
+import { FilterState, FilterStatsState, initFilterState, PageState } from '@/stores/filter';
+import useFetchLabel from '@/api/label/useFetchLabel';
+import useFetchMilestone from '@/api/milestone/useFetchMilestone';
+import useFetchSideBarData from '@/api/useFetchSideBarData';
+import useFilter, { parsingFilterReg } from '@/hooks/useFilter';
+import { labelMilestone } from '@/components/Molecules/NavLink/options';
 
 const Issues = () => {
-  const { useIssuesData } = useFetchIssue();
-  const { data: issues } = useIssuesData(0);
-
+  const naviagate = useNavigate();
   const [searchParams] = useSearchParams();
-  const setCheckState = useSetRecoilState(CheckState);
-  const queries = searchParams.get('q')?.split('+')!;
-  const issueState = definedIssueState(queries);
+  const pageParams = Number(searchParams.get('page')) || 0;
+  const queriesParams = searchParams.get('q');
+  const filterState = useRecoilValue(FilterState);
+  const { page, queries } = useRecoilValue(FilterStatsState);
+  const setPageState = useSetRecoilState(PageState);
+
+  const { labelData } = useFetchLabel();
+  const { milestoneData } = useFetchMilestone();
+  const { memberData } = useFetchSideBarData();
+  const { useIssuesData } = useFetchIssue();
+
+  const { data: issues } = useIssuesData(pageParams, queriesParams);
+
+  const { setIssueState, setParsingFilterState } = useFilter();
+
+  const filterTabs = [
+    ASSIGNEE_DROPDOWN_ARGS(memberData!),
+    LABEL_DROPDOWN_ARGS(labelData!),
+    MILESTONE_DROPDOWN_ARGS(milestoneData?.openedMilestones!),
+    AUTHOR_DROPDOWN_ARGS(memberData!),
+  ];
+
+  const setURLQueriesToFilterState = () => {
+    if (!document.location.search) return;
+
+    setIssueState(queriesParams);
+
+    const queriesArr = queriesParams?.match(parsingFilterReg);
+    queriesArr?.forEach((query) => {
+      setParsingFilterState(query);
+    });
+  };
 
   useEffect(() => {
-    setCheckState((checkState) => ({ ...checkState, issueState }));
-  }, [issueState]);
+    if (!document.location.search && filterState === initFilterState) return;
+
+    naviagate(`/issues?page=${page}&q=${queries}`);
+  }, [queries]);
+
+  useEffect(() => {
+    setPageState(pageParams);
+    setURLQueriesToFilterState();
+  }, []);
 
   return (
     <>
@@ -46,14 +78,7 @@ const Issues = () => {
         <FilterBar {...FILTERBAR_INFO} />
         <S.SubNav>
           <NavLink
-            navData={[
-              { icon: <Icon icon="Tag" stroke={COLORS.TITLE_ACTIVE} />, title: '레이블 (3)', link: '/labels' },
-              {
-                icon: <Icon icon="Milestone" fill={COLORS.TITLE_ACTIVE} />,
-                title: '마일스톤 (2)',
-                link: '/milestones',
-              },
-            ]}
+            navData={labelMilestone(labelData!.length, milestoneData!.openedMilestones.length)}
             navLinkStyle="LINE"
           />
           <Link to="/issues/new">
@@ -61,7 +86,7 @@ const Issues = () => {
           </Link>
         </S.SubNav>
       </S.NavInline>
-      <IssueTable issues={issues!} filterTabs={FILTER_TABS} issueState={issueState} />
+      <IssueTable issuesData={issues!} filterTabs={filterTabs} />
     </>
   );
 };

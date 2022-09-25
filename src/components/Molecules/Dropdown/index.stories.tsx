@@ -1,12 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import Dropdown from '@/components/Molecules/Dropdown';
-import {
-  ASSIGNEE_DROPDOWN_ARGS,
-  MILESTONE_LIST,
-  UNUSED_OPTIONS,
-  REACTION_ARGS,
-  SIDEBAR_ARGS,
-} from '@/components/Molecules/Dropdown/mock';
+import { ASSIGNEE_DROPDOWN_ARGS, REACTION_ARGS, SIDEBAR_ARGS, USER_LIST } from '@/components/Molecules/Dropdown/mock';
 import styled from 'styled-components';
 
 export default {
@@ -28,7 +22,7 @@ const Template: ComponentStory<typeof Dropdown> = (args) => (
 );
 
 export const Initial = Template.bind({});
-Initial.args = ASSIGNEE_DROPDOWN_ARGS;
+Initial.args = ASSIGNEE_DROPDOWN_ARGS(USER_LIST);
 
 export const Sidebar = Template.bind({});
 Sidebar.args = SIDEBAR_ARGS;

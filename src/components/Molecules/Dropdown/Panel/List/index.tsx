@@ -47,13 +47,13 @@ const ListPanel = ({ ...props }: ListPanelTypes) => {
 
             return (
               <S.PanelItem key={ITEM_KEY}>
-                <input
+                <S.CheckBoxItem
                   id={ITEM_KEY}
                   type={panelType}
                   name={panelTitle}
                   data-id={DATASET_ID}
                   data-panel={panelId}
-                  checked={isChecked?.(INPUT_NAME) || false}
+                  checked={isChecked?.(DATASET_ID) || false}
                   onChange={handelOnChange}
                 />
                 <label htmlFor={ITEM_KEY}>

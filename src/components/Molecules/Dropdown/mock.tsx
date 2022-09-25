@@ -37,7 +37,7 @@ export const ISSUE_FILTER_LIST: IssueTypes[] = [
   },
   {
     id: 3,
-    dataId: 'mentions:@me ',
+    dataId: 'mentions:@me',
     title: '내가 댓글을 남긴 이슈',
   },
   {
@@ -75,31 +75,31 @@ export const USER_LIST: UserTypes[] = [
   {
     id: 0,
     email: 'dobby@gmail.com',
-    nickname: '도비',
+    nickname: 'dobby',
     profileImage: 'https://avatars.githubusercontent.com/u/85747667?v=4',
   },
   {
     id: 1,
     email: 'dotori@gmail.com',
-    nickname: '도토리',
+    nickname: 'dotori',
     profileImage: 'https://avatars.githubusercontent.com/u/92701121?v=4',
   },
   {
     id: 2,
     email: 'whoo@gmail.com',
-    nickname: '후',
+    nickname: 'hoo',
     profileImage: 'https://avatars.githubusercontent.com/u/68011320?v=4',
   },
   {
     id: 3,
     email: 'ader@gmail.com',
-    nickname: '아더',
+    nickname: 'ader',
     profileImage: 'https://avatars.githubusercontent.com/u/29879110?v=4',
   },
   {
     id: 4,
     email: 'beck@gmail.com',
-    nickname: '벡',
+    nickname: 'beck',
     profileImage: 'https://avatars.githubusercontent.com/u/65931336?v=4',
   },
 ];
@@ -143,12 +143,12 @@ const OPEN_CLOSE_STATE_LIST: IssueTypes[] = [
   },
   {
     id: 1,
-    dataId: 'close',
+    dataId: 'closed',
     title: '선택한 이슈 닫기',
   },
 ];
 
-export const ASSIGNEE_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
+export const ASSIGNEE_DROPDOWN_ARGS = (memberList: UserTypes[]): DropdownTypes<ListPanelTypes> => ({
   type: 'List',
   indicatorProps: {
     indicatorLabel: '담당자',
@@ -157,13 +157,13 @@ export const ASSIGNEE_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
   panelProps: {
     panelId: 'assignee',
     panelTitle: '담당자 필터',
-    panelType: 'radio',
-    panelList: USER_LIST,
+    panelType: 'checkbox',
+    panelList: memberList,
     unusedOption: UNUSED_OPTIONS.ASSIGNEE,
   },
-};
+});
 
-export const LABEL_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
+export const LABEL_DROPDOWN_ARGS = (labelList: LabelTypes[]): DropdownTypes<ListPanelTypes> => ({
   type: 'List',
   indicatorProps: {
     indicatorLabel: '레이블',
@@ -173,12 +173,12 @@ export const LABEL_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
     panelId: 'label',
     panelTitle: '레이블 필터',
     panelType: 'checkbox',
-    panelList: LABEL_LIST,
+    panelList: labelList,
     unusedOption: UNUSED_OPTIONS.LABEL,
   },
-};
+});
 
-export const MILESTONE_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
+export const MILESTONE_DROPDOWN_ARGS = (milestoneList: MilestoneTypes[]): DropdownTypes<ListPanelTypes> => ({
   type: 'List',
   indicatorProps: {
     indicatorLabel: '마일스톤',
@@ -188,26 +188,28 @@ export const MILESTONE_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
     panelId: 'milestone',
     panelTitle: '마일스톤 필터',
     panelType: 'checkbox',
-    panelList: LABEL_LIST,
+    panelList: milestoneList,
     unusedOption: UNUSED_OPTIONS.MILESTONE,
   },
-};
+});
 
-export const AUTHER_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
+export const AUTHOR_DROPDOWN_ARGS = (memberList: UserTypes[]): DropdownTypes<ListPanelTypes> => ({
   type: 'List',
   indicatorProps: {
     indicatorLabel: '작성자',
     indicatorStyle: 'STANDARD',
   },
   panelProps: {
-    panelId: 'auther',
+    panelId: 'author',
     panelTitle: '작성자 필터',
-    panelType: 'radio',
-    panelList: USER_LIST,
+    panelType: 'checkbox',
+    panelList: memberList,
   },
-};
+});
 
-export const OPEN_CLOSE_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
+export const OPEN_CLOSE_DROPDOWN_ARGS = (
+  handleOnClick: (target: HTMLInputElement) => void,
+): DropdownTypes<ListPanelTypes> => ({
   type: 'List',
   indicatorProps: {
     indicatorLabel: '상태 수정',
@@ -216,10 +218,11 @@ export const OPEN_CLOSE_DROPDOWN_ARGS: DropdownTypes<ListPanelTypes> = {
   panelProps: {
     panelId: 'state',
     panelTitle: '상태 변경',
-    panelType: 'checkbox',
+    panelType: 'radio',
     panelList: OPEN_CLOSE_STATE_LIST,
+    handleOnClick,
   },
-};
+});
 
 export const REACTION_ARGS: DropdownTypes<ReactionPanelTypes> = {
   type: 'Reaction',
@@ -256,5 +259,5 @@ export const FILTER_TABS_INFO = [
   ASSIGNEE_DROPDOWN_ARGS,
   LABEL_DROPDOWN_ARGS,
   MILESTONE_DROPDOWN_ARGS,
-  AUTHER_DROPDOWN_ARGS,
+  AUTHOR_DROPDOWN_ARGS,
 ];

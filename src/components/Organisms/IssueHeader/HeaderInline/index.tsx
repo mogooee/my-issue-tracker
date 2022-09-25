@@ -14,12 +14,12 @@ import debounce from '@/utils/debounce';
 import { BUTTON_PROPS } from '@/components/Atoms/Button/options';
 import { ISSUE_DETAIL_BUTTON_PROPS } from '@/components/Organisms/IssueHeader/HeaderInline/constants';
 
-type HeaderInlineTypes = Pick<ContentTypes, 'id' | 'title' | 'closed'> & { isAuthor: boolean };
+type HeaderInlineTypes = Pick<ContentTypes, 'id' | 'title' | 'closed'>;
 
 const MAX_ISSUE_TITLE_NUM = 255;
 const DEBOUNCE_DELAY = 200;
 
-const HeaderInline = ({ id: issueId, title, closed, isAuthor }: HeaderInlineTypes) => {
+const HeaderInline = ({ id: issueId, title, closed }: HeaderInlineTypes) => {
   const timerId = useRef(0);
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [issueTitle, setIssueTitle] = useState<string>(title);
@@ -95,12 +95,10 @@ const HeaderInline = ({ id: issueId, title, closed, isAuthor }: HeaderInlineType
           </>
         )}
       </S.Title>
-      {isAuthor && (
-        <S.ButtonTab>
-          <Button {...leftButtonProps} />
-          <Button {...rightButtonProps} />
-        </S.ButtonTab>
-      )}
+      <S.ButtonTab>
+        <Button {...leftButtonProps} />
+        <Button {...rightButtonProps} />
+      </S.ButtonTab>
     </S.HeaderInline>
   );
 };
