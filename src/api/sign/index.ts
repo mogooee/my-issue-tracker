@@ -1,3 +1,4 @@
+import { unAuthorizedErrorMsg } from '@/index';
 import { UserTypes } from '@/api/issue/types';
 import axios, { AxiosError } from 'axios';
 
@@ -48,15 +49,18 @@ export interface RedirectAuthTypes {
 }
 
 // 로그인 유지 관련
-export const silentRefresh = async () => {
+export const silentRefresh = async (): Promise<RedirectAuthTypes> => {
   try {
     const { data } = await axios.get('api/auth/reissue');
     const { accessToken } = data;
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken.token}`;
     return data;
-  } catch (error) {
+  } catch (error: any) {
     const err = error as AxiosError;
-    // throw err;
+    if (err.message === unAuthorizedErrorMsg.refreshToken) {
+      window.localStorage.removeItem('Authentication');
+    }
+    return error;
   }
 };
 
