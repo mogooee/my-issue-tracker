@@ -8,6 +8,7 @@ if (process.env.NODE_ENV === 'development') {
   worker.start({ onUnhandledRequest: 'bypass' });
 }
 
+axios.defaults.baseURL = process.env.REACT_APP_PUBLIC_URL;
 axios.defaults.withCredentials = true;
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
