@@ -1,0 +1,35 @@
+name: Auto Deploy after push
+
+on:
+  push:
+    branches:
+      - deploy
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name : Docker Environment Varibale File 
+        run: echo -e "REACT_APP_GITHUB_AUTH_URL=${{secrets.REACT_APP_GITHUB_AUTH_URL}}\n
+                      REACT_APP_KAKAO_AUTH_URL=${{secrets.REACT_APP_KAKAO_AUTH_URL}}\n
+                      REACT_APP_NAVER_AUTH_URL=${{secrets.REACT_APP_NAVER_AUTH_URL}}\n
+                      REACT_APP_PUBLIC_URL=${{secrets.REACT_APP_PUBLIC_URL}}\n" > ./.env
+      
+      - name: Install npm package
+        run: npm install --force
+    
+      - name: Build
+        run: npm run build
+
+      - name: Transfer to S3 for serving static
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks --delete
+        env:
+          AWS_REGION: ${{ secrets.AWS_BUCKET_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_S3_BUCKET: ${{ secrets.AWS_BUCKET_NAME }}
+          SOURCE_DIR: "build" 
