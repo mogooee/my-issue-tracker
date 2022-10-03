@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
 export type ReactionNameType =
   | 'THUMBS_UP'
@@ -16,11 +16,6 @@ export interface ReactionTypes {
 }
 
 export const getReactionData = async (): Promise<ReactionTypes[]> => {
-  try {
-    const { data } = await axios.get<ReactionTypes[]>('api/issues/comments/reactions/emojis');
-    return data;
-  } catch (error) {
-    const err = error as AxiosError;
-    throw err;
-  }
+  const { data } = await axios.get<ReactionTypes[]>('api/issues/comments/reactions/emojis');
+  return data;
 };

@@ -1,4 +1,3 @@
-import { unAuthorizedErrorMsg } from '@/index';
 import { UserTypes } from '@/api/issue/types';
 import axios, { AxiosError } from 'axios';
 
@@ -50,66 +49,45 @@ export interface RedirectAuthTypes {
 
 // 로그인 유지 관련
 export const silentRefresh = async (): Promise<RedirectAuthTypes> => {
-  try {
-    const { data } = await axios.get('api/auth/reissue');
-    const { accessToken } = data;
-    axios.defaults.headers.common.Authorization = `Bearer ${accessToken.token}`;
-    return data;
-  } catch (error: any) {
-    const err = error as AxiosError;
-    if (err.message === unAuthorizedErrorMsg.refreshToken) {
-      window.localStorage.removeItem('Authentication');
-    }
-    return error;
+  window.localStorage.removeItem('Authentication');
+  const { data } = await axios.get<RedirectAuthTypes>(`api/auth/reissue`);
+
+  if (data.accessToken) {
+    axios.defaults.headers.common.Authorization = `Bearer ${data.accessToken.token}`;
   }
+  return data;
 };
 
 export const getUserInfo = async () => {
-  try {
-    const { data } = await axios.get('api/members/info');
-    return data;
-  } catch (error) {
-    const err = error as AxiosError;
-    throw err;
-  }
+  const { data } = await axios.get('api/members/info');
+  return data;
 };
 
 // 로그인 로그아웃 관련
 export const signin = async (formData: SigninTypes) => {
-  try {
-    const { data } = await axios.post<OAuthResponse>('api/members/signin', formData);
-    return data;
-  } catch (error) {
-    const err = error as AxiosError<ErrorMessage>;
-    // throw err;
+  const { data } = await axios.post<OAuthResponse>('api/members/signin', formData);
+
+  if (data.accessToken) {
+    axios.defaults.headers.common.Authorization = `Bearer ${data.accessToken.token}`;
   }
+  return data;
 };
 
 export const signout = async () => {
-  try {
-    await axios.head('api/members/signout');
-    axios.defaults.headers.common.Authorization = '';
-    localStorage.removeItem('Authentication');
-  } catch (error) {
-    const err = error as AxiosError;
-    throw err;
-  }
+  await axios.head('api/members/signout');
+  axios.defaults.headers.common.Authorization = '';
+  localStorage.removeItem('Authentication');
 };
 
 // 회원가입 관련
 export const getRedirectAuthData = async (provider: string, code: string): Promise<RedirectAuthTypes> => {
-  try {
-    const { data } = await axios.get<RedirectAuthTypes>(`api/auth/${provider}?code=${code}`);
+  const { data } = await axios.get<RedirectAuthTypes>(`api/auth/${provider}?code=${code}`);
 
-    if (data.accessToken) {
-      axios.defaults.headers.common.Authorization = `Bearer ${data.accessToken.token}`;
-    }
-
-    return data;
-  } catch (error) {
-    const err = error as AxiosError;
-    throw err;
+  if (data.accessToken) {
+    axios.defaults.headers.common.Authorization = `Bearer ${data.accessToken.token}`;
   }
+
+  return data;
 };
 
 export const signup = async ({
@@ -119,15 +97,10 @@ export const signup = async ({
   formData: OAuthNewMemberTypes | GeneralNewMemberTypes;
   type: 'general' | 'auth';
 }) => {
-  try {
-    const { data } = await axios.post<OAuthResponse | UserTypes>(`api/members/new/${type}`, formData);
-    if (type === 'auth') {
-      const { accessToken } = data as OAuthResponse;
-      axios.defaults.headers.common.Authorization = `Bearer ${accessToken?.token}`;
-    }
-    return data;
-  } catch (error) {
-    const err = error as AxiosError;
-    throw err;
+  const { data } = await axios.post<OAuthResponse | UserTypes>(`api/members/new/${type}`, formData);
+  if (type === 'auth') {
+    const { accessToken } = data as OAuthResponse;
+    axios.defaults.headers.common.Authorization = `Bearer ${accessToken?.token}`;
   }
+  return data;
 };
