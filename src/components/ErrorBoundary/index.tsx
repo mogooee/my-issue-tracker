@@ -54,6 +54,8 @@ class ErrorBoundary extends React.Component<
 
     if (!error) return;
 
+    if (errorCode === 1001 && prevErrorCode === 1001) {
+      this.reset();
     }
   }
 
@@ -76,6 +78,9 @@ class ErrorBoundary extends React.Component<
       }
 
       switch (data.errorCode) {
+        // accessToken->reissue->에러인 경우에는 reissue가 한번 더 (에러인 경우) 실행이 됨
+        case 1001:
+          return <LoginExtensionComponent>{children}</LoginExtensionComponent>;
 
         case 1002:
         case 1004:
