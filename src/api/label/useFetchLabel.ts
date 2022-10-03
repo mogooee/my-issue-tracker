@@ -1,6 +1,7 @@
 import { addLabelData, getLabelData, patchLabelData, deleteLabelData } from '@/api/label';
 import { LabelTypes } from '@/api/issue/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import notifyError from '@/api/alertHelper';
 
 const useFetchLabel = () => {
   const queryClient = useQueryClient();
@@ -20,11 +21,17 @@ const useFetchLabel = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(['labels']);
     },
+    onError: (error: Error) => {
+      notifyError(error);
+    },
   });
 
   const { mutate: deleteLabel } = useMutation(deleteLabelData, {
     onSuccess: () => {
       queryClient.invalidateQueries(['labels']);
+    },
+    onError: (error: Error) => {
+      notifyError(error);
     },
   });
 

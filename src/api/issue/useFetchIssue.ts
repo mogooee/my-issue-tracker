@@ -15,6 +15,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useResetRecoilState } from 'recoil';
 import { NewIssueFormState } from '@/stores/newIssue';
 import { OPEN_QUERY } from '@/hooks/useFilter';
+import notifyError from '@/api/alertHelper';
 
 const useFetchIssue = (id?: number) => {
   const queryClient = useQueryClient();
@@ -62,12 +63,18 @@ const useFetchIssue = (id?: number) => {
       onSuccess: () => {
         queryClient.invalidateQueries(['issue', issueId]);
       },
+      onError: (error: Error) => {
+        notifyError(error);
+      },
     });
 
   const useDeleteIssueComment = (issueId: number) =>
     useMutation(deleteComment, {
       onSuccess: () => {
         queryClient.invalidateQueries(['issue', issueId]);
+      },
+      onError: (error: Error) => {
+        notifyError(error);
       },
     });
 

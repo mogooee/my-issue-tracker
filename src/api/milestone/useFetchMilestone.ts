@@ -7,6 +7,7 @@ import {
   deleteMilestone,
   MilestoneListTypes,
 } from '@/api/milestone';
+import notifyError from '@/api/alertHelper';
 
 const useFetchMilestone = () => {
   const queryClient = useQueryClient();
@@ -25,17 +26,26 @@ const useFetchMilestone = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(['milestones']);
     },
+    onError: (error: Error) => {
+      notifyError(error);
+    },
   });
 
   const { mutate: patchMilestoneStateMutate } = useMutation(patchMilestoneState, {
     onSuccess: () => {
       queryClient.invalidateQueries(['milestones']);
     },
+    onError: (error: Error) => {
+      notifyError(error);
+    },
   });
 
   const { mutate: deleteMilestoneMutate } = useMutation(deleteMilestone, {
     onSuccess: () => {
       queryClient.invalidateQueries(['milestones']);
+    },
+    onError: (error: Error) => {
+      notifyError(error);
     },
   });
 
