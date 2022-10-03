@@ -34,11 +34,12 @@ const Issues = () => {
   const { page, queries } = useRecoilValue(FilterStatsState);
   const setPageState = useSetRecoilState(PageState);
 
-  const { labelData } = useFetchLabel();
+  const { useLabelData } = useFetchLabel();
   const { milestoneData } = useFetchMilestone();
   const { memberData } = useFetchSideBarData();
   const { useIssuesData } = useFetchIssue();
 
+  const { data: labelData } = useLabelData();
   const { data: issues } = useIssuesData(pageParams, queriesParams);
 
   const { setIssueState, setParsingFilterState } = useFilter();

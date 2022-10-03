@@ -19,8 +19,9 @@ import LabelTableSkeleton from '@/components/Skeleton/LabelTable';
 import LabelItem from '@/components/Organisms/LabelTable/LabelItem';
 
 const LabelTable = () => {
-  const { labelData, replaceLabel, deleteLabel } = useFetchLabel();
+  const { useLabelData, replaceLabel, deleteLabel } = useFetchLabel();
 
+  const { data: labelData } = useLabelData();
   const labelNum = labelData!.length;
 
   const labelState = useRecoilValue(LabelState);
