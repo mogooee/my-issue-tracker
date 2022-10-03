@@ -164,7 +164,7 @@ export const authHandlers = [
   }),
 
   // 로그아웃
-  rest.head('api/members/signout', (req, res, ctx) => res(ctx.status(200))),
+  rest.post('api/members/signout', (req, res, ctx) => res(ctx.status(200))),
 
   rest.get('api/members', (req, res, ctx) =>
     // if (!req.cookies['refresh-token']) {

@@ -74,7 +74,7 @@ export const signin = async (formData: SigninTypes) => {
 };
 
 export const signout = async () => {
-  await axios.head('api/members/signout');
+  await axios.post('api/members/signout');
   axios.defaults.headers.common.Authorization = '';
   localStorage.removeItem('Authentication');
 };
