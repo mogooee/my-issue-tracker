@@ -1,8 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Suspense } from 'react';
 import { useRecoilValue, useResetRecoilState } from 'recoil';
-import { ErrorBoundary } from 'react-error-boundary';
-import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import * as S from '@/components/Organisms/LabelTable/index.styled';
 
 import Table from '@/components/Molecules/Table';
@@ -17,6 +15,8 @@ import DeleteCheck from '@/components/Modal/DeleteCheck';
 import ErrorTable from '@/components/Organisms/ErrorTable';
 import LabelTableSkeleton from '@/components/Skeleton/LabelTable';
 import LabelItem from '@/components/Organisms/LabelTable/LabelItem';
+
+import CustomErrorBoundary from '@/components/ErrorBoundary';
 
 const LabelTable = () => {
   const { useLabelData, replaceLabel, deleteLabel } = useFetchLabel();
@@ -69,19 +69,14 @@ const LabelTable = () => {
 };
 
 export const FallbackLabelTable = () => (
-  <QueryErrorResetBoundary>
-    {({ reset }) => (
-      <ErrorBoundary
-        onReset={reset}
-        // eslint-disable-next-line react/no-unstable-nested-components
-        fallbackRender={({ resetErrorBoundary }) => <ErrorTable type="label" resetErrorBoundary={resetErrorBoundary} />}
-      >
-        <Suspense fallback={<LabelTableSkeleton />}>
-          <LabelTable />
-        </Suspense>
-      </ErrorBoundary>
-    )}
-  </QueryErrorResetBoundary>
+  <CustomErrorBoundary
+    // eslint-disable-next-line react/no-unstable-nested-components
+    fallbackRender={({ resetErrorBoundary }) => <ErrorTable type="label" resetErrorBoundary={resetErrorBoundary} />}
+  >
+    <Suspense fallback={<LabelTableSkeleton />}>
+      <LabelTable />
+    </Suspense>
+  </CustomErrorBoundary>
 );
 
 export default FallbackLabelTable;

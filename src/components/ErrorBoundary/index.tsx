@@ -132,11 +132,23 @@ class ErrorBoundary extends React.Component<
           );
       }
 
+      if (fallbackRender) {
+        const fallbackRenderProps: FallbackRenderPropsType = {
+          resetErrorBoundary: this.reset.bind(this),
+        };
+
+        return fallbackRender(fallbackRenderProps);
+      }
+    }
 
     return children;
   }
 }
 
+interface CustomErrorBoundaryTypes {
+  fallbackRender?: typeof FallbackRender;
+  children: React.ReactNode;
+}
 
 const CustomErrorBoundary = ({ children, fallbackRender }: CustomErrorBoundaryTypes) => {
   const navigate = useNavigate();
