@@ -6,7 +6,7 @@ import { AxiosError } from 'axios';
 
 import * as S from '@/pages/Public/RedirectAuth/index.styled';
 
-import DuplicateEmail from '@/components/Organisms/DuplicateEmail/DuplicateEmail';
+import DuplicateEmail from '@/components/Organisms/DuplicateEmail';
 import { getRedirectAuthData, RedirectAuthTypes } from '@/api/sign';
 import useLogin from '@/api/sign/useLogin';
 
@@ -43,22 +43,4 @@ const RedirectAuth = () => {
   return <div />;
 };
 
-const RedirectErrorFallback = ({ error }: { error: Error }) => {
-  const err = error as AxiosError<ErrorMessage>;
-  const { status, data } = err.response!;
-  if (status === 400) return <DuplicateEmail provider="이메일 가입하기" email="mogoo22@naver.com" />;
-  return (
-    <S.Error>
-      <h1>{`${err.message}  🚧`}</h1>
-      <p>{data.message}</p>
-    </S.Error>
-  );
-};
-
-export const FallbackRedirectAuth = () => (
-  <ErrorBoundary fallbackRender={RedirectErrorFallback}>
-    <RedirectAuth />
-  </ErrorBoundary>
-);
-
-export default FallbackRedirectAuth;
+export default RedirectAuth;

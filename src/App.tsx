@@ -31,10 +31,10 @@ axios.defaults.withCredentials = true;
 axios.defaults.baseURL = process.env.REACT_APP_PUBLIC_URL;
 
 const App = () => (
-  <ThemeProvider theme={theme}>
-    <RecoilRoot>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter basename={process.env.PUBLIC_URL}>
+  <RecoilRoot>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter basename={process.env.PUBLIC_URL}>
+        <ThemeProvider theme={theme}>
           <CustomErrorBoundary>
             <Suspense fallback={<LoadingSpinner size={80} />}>
               <ReactQueryDevtools initialIsOpen={false} />
@@ -42,10 +42,10 @@ const App = () => (
               <Routers />
             </Suspense>
           </CustomErrorBoundary>
-        </BrowserRouter>
-      </QueryClientProvider>
-    </RecoilRoot>
-  </ThemeProvider>
+        </ThemeProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
+  </RecoilRoot>
 );
 
 export default App;

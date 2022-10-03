@@ -2,7 +2,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { Route, Routes } from 'react-router-dom';
 
 import Login from '@/pages/Public/Login';
-import DuplicateEmail from '@/components/Organisms/DuplicateEmail/DuplicateEmail';
+import DuplicateEmail from '@/components/Organisms/DuplicateEmail';
 
 export default {
   title: 'Organisms/DuplicateEmail',

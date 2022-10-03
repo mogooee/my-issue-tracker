@@ -6,9 +6,10 @@ import * as S from '@/components/Organisms/DuplicateEmail/index.styled';
 interface DuplicateEmailTypes {
   provider: 'GITHUB' | 'NAVER' | 'KAKAO' | '이메일 가입하기';
   email: string;
+  handleOnClick: () => void;
 }
 
-const DuplicateEmail = ({ provider, email }: DuplicateEmailTypes): React.ReactElement => {
+const DuplicateEmail = ({ provider, email, handleOnClick }: DuplicateEmailTypes): React.ReactElement => {
   const navigate = useNavigate();
 
   return (
@@ -21,7 +22,10 @@ const DuplicateEmail = ({ provider, email }: DuplicateEmailTypes): React.ReactEl
         buttonStyle="STANDARD"
         label="다른 방식으로 가입 또는 기존 계정 로그인"
         size="LARGE"
-        handleOnClick={(e) => navigate('/login')}
+        handleOnClick={() => {
+          handleOnClick();
+          navigate('/login');
+        }}
       />
     </S.DuplicateEmail>
   );

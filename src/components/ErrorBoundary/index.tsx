@@ -12,6 +12,7 @@ import OAuthState from '@/stores/auth';
 
 import { NotFound } from '@/pages';
 import LoginExtensionComponent from '@/components/ErrorBoundary/Refresh';
+import DuplicateEmail from '@/components/Organisms/DuplicateEmail';
 
 type FallbackRenderPropsType = {
   resetErrorBoundary: () => void;
@@ -118,8 +119,9 @@ class ErrorBoundary extends React.Component<
         // (으)로 이미 가입된 이메일입니다.
         case 2103:
           // 클릭핸들러에 reset 추가
-          return <div>{data.message}</div>;
-
+          return (
+            <DuplicateEmail provider="이메일 가입하기" email="example@emil.com" handleOnClick={() => this.reset()} />
+          );
         case 3000:
           return (
             <>
