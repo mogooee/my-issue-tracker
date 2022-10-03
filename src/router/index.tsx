@@ -1,12 +1,11 @@
-import { BrowserRouter } from 'react-router-dom';
-
+import { useEffect } from 'react';
 import useLogin from '@/api/sign/useLogin';
+
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import OAuthState, { AppComponentMountState } from '@/stores/auth';
 
 import PrivateRouter from '@/router/PrivateRouter';
 import PublicRouter from '@/router/PublicRouter';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import OAuthState, { AppComponentMountState } from '@/stores/auth';
-import { useEffect } from 'react';
 
 const Routers = (): JSX.Element => {
   const { useSilentLogin } = useLogin();
@@ -19,9 +18,7 @@ const Routers = (): JSX.Element => {
     setAppComponentDidMount(true);
   }, []);
 
-  return (
-    <BrowserRouter basename={process.env.PUBLIC_URL}>{isOAuth ? <PrivateRouter /> : <PublicRouter />}</BrowserRouter>
-  );
+  return isOAuth ? <PrivateRouter /> : <PublicRouter />;
 };
 
 export default Routers;

@@ -1,12 +1,15 @@
 import { Suspense } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import Routers from '@/router';
 import { RecoilRoot } from 'recoil';
-import { ErrorBoundary } from 'react-error-boundary';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from 'styled-components';
 import GlobalStyle from '@/styles/globalStyle';
 import theme from '@/styles/theme';
 import axios from 'axios';
+
+import CustomErrorBoundary from '@/components/ErrorBoundary';
 import LoadingSpinner from '@/components/Atoms/LoadingSpinner';
 
 const queryClient = new QueryClient({
@@ -22,19 +25,21 @@ axios.defaults.withCredentials = true;
 axios.defaults.baseURL = process.env.REACT_APP_PUBLIC_URL;
 
 const App = () => (
-  <ErrorBoundary fallback={<div>Error</div>}>
+  <ThemeProvider theme={theme}>
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <Suspense fallback={<LoadingSpinner size={80} />}>
-            <ReactQueryDevtools initialIsOpen={false} />
-            <GlobalStyle />
-            <Routers />
-          </Suspense>
-        </ThemeProvider>
+        <BrowserRouter basename={process.env.PUBLIC_URL}>
+          <CustomErrorBoundary>
+            <Suspense fallback={<LoadingSpinner size={80} />}>
+              <ReactQueryDevtools initialIsOpen={false} />
+              <GlobalStyle />
+              <Routers />
+            </Suspense>
+          </CustomErrorBoundary>
+        </BrowserRouter>
       </QueryClientProvider>
     </RecoilRoot>
-  </ErrorBoundary>
+  </ThemeProvider>
 );
 
 export default App;
