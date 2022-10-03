@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from 'styled-components';
 import GlobalStyle from '@/styles/globalStyle';
 import theme from '@/styles/theme';
-import Routers from '@/router';
+import axios from 'axios';
 import LoadingSpinner from '@/components/Atoms/LoadingSpinner';
 
 const queryClient = new QueryClient({
@@ -17,6 +17,9 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = process.env.REACT_APP_PUBLIC_URL;
 
 const App = () => (
   <ErrorBoundary fallback={<div>Error</div>}>
