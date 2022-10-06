@@ -76,10 +76,12 @@ class ErrorBoundary extends React.Component<
 
       switch (data.errorCode) {
         // accessToken->reissue->에러인 경우에는 reissue가 한번 더 (에러인 경우) 실행이 됨
+        // 액세스 토큰이 만료되었거나 유효하지 않는 경우
+        case 1000:
         case 1001:
           return <LoginExtensionComponent>{children}</LoginExtensionComponent>;
 
-        // 리프레시 토큰이 만료되었거나 유효하지 않음
+        // 리프레시 토큰이 만료되었거나 유효하지 않는 경우
         case 1002:
         case 1004:
           return <ExpiredLogin resetError={() => this.reset()} />;
@@ -88,11 +90,10 @@ class ErrorBoundary extends React.Component<
         case 2001:
           return <NotValidRedirectCode resetError={() => this.reset()} />;
 
-        // (으)로 이미 가입된 이메일입니다.
+        // oauth 회원가입시 이미 가입된 이메일이 있는 경우
         case 2103:
-          // 클릭핸들러에 reset 추가
           return (
-            <DuplicateEmail provider="이메일 가입하기" email="example@emil.com" handleOnClick={() => this.reset()} />
+            <DuplicateEmail provider="이메일 가입하기" email="example@email.com" handleOnClick={() => this.reset()} />
           );
 
         // 존재하지 않는 이슈에 접근하는 경우
