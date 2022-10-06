@@ -7,12 +7,10 @@ import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { ErrorMessage } from '@/api/constants';
 
-import { SetterOrUpdater, useRecoilState } from 'recoil';
-import OAuthState from '@/stores/auth';
-
 import { NotFound } from '@/pages';
 import LoginExtensionComponent from '@/components/ErrorBoundary/Refresh';
 import DuplicateEmail from '@/components/Organisms/DuplicateEmail';
+import ExpiredLogin from '@/components/ErrorBoundary/ExpiredLogin';
 
 type FallbackRenderPropsType = {
   resetErrorBoundary: () => void;
@@ -22,8 +20,6 @@ declare function FallbackRender(props: FallbackRenderPropsType): React.ReactElem
 
 interface ErrorBoundaryProps {
   navigate: NavigateFunction;
-  isOAuth: boolean;
-  setIsOAuth: SetterOrUpdater<boolean>;
   queryClient: QueryClient;
   fallbackRender?: typeof FallbackRender;
 }
@@ -68,7 +64,7 @@ class ErrorBoundary extends React.Component<
   }
 
   render() {
-    const { children, navigate, isOAuth, setIsOAuth, fallbackRender } = this.props;
+    const { children, navigate, fallbackRender } = this.props;
     const { error } = this.state;
 
     if (error) {
@@ -83,23 +79,10 @@ class ErrorBoundary extends React.Component<
         case 1001:
           return <LoginExtensionComponent>{children}</LoginExtensionComponent>;
 
+        // 리프레시 토큰이 만료되었거나 유효하지 않음
         case 1002:
         case 1004:
-          return (
-            <button
-              type="button"
-              onClick={() => {
-                if (isOAuth) {
-                  setIsOAuth(false);
-                }
-                window.localStorage.removeItem('Authentication');
-                navigate('/login');
-                this.reset();
-              }}
-            >
-              로그인 페이지로 이동
-            </button>
-          );
+          return <ExpiredLogin resetError={() => this.reset()} />;
 
         // oauth 로그인시 리다이렉트로 돌아오는 코드가 유효하지 않음
         case 2001:
@@ -160,16 +143,9 @@ interface CustomErrorBoundaryTypes {
 const CustomErrorBoundary = ({ children, fallbackRender }: CustomErrorBoundaryTypes) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [isOAuth, setIsOAuth] = useRecoilState(OAuthState);
 
   return (
-    <ErrorBoundary
-      navigate={navigate}
-      queryClient={queryClient}
-      isOAuth={isOAuth}
-      setIsOAuth={setIsOAuth}
-      fallbackRender={fallbackRender}
-    >
+    <ErrorBoundary navigate={navigate} queryClient={queryClient} fallbackRender={fallbackRender}>
       {children}
     </ErrorBoundary>
   );
