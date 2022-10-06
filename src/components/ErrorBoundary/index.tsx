@@ -7,11 +7,11 @@ import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { ErrorMessage } from '@/api/constants';
 
-import { NotFound } from '@/pages';
 import LoginExtensionComponent from '@/components/ErrorBoundary/Refresh';
 import DuplicateEmail from '@/components/Organisms/DuplicateEmail';
 import ExpiredLogin from '@/components/ErrorBoundary/ExpiredLogin';
 import NotValidRedirectCode from '@/components/ErrorBoundary/NotValidCode';
+import NotExistIssue from '@/components/ErrorBoundary/NotExistIssue';
 
 type FallbackRenderPropsType = {
   resetErrorBoundary: () => void;
@@ -20,7 +20,6 @@ type FallbackRenderPropsType = {
 declare function FallbackRender(props: FallbackRenderPropsType): React.ReactElement<React.FunctionComponent>;
 
 interface ErrorBoundaryProps {
-  navigate: NavigateFunction;
   queryClient: QueryClient;
   fallbackRender?: typeof FallbackRender;
 }
@@ -65,7 +64,7 @@ class ErrorBoundary extends React.Component<
   }
 
   render() {
-    const { children, navigate, fallbackRender } = this.props;
+    const { children, fallbackRender } = this.props;
     const { error } = this.state;
 
     if (error) {
@@ -95,21 +94,10 @@ class ErrorBoundary extends React.Component<
           return (
             <DuplicateEmail provider="이메일 가입하기" email="example@emil.com" handleOnClick={() => this.reset()} />
           );
+
+        // 존재하지 않는 이슈에 접근하는 경우
         case 3000:
-          return (
-            <>
-              <NotFound />
-              <button
-                type="button"
-                onClick={() => {
-                  navigate('/issues');
-                  this.reset();
-                }}
-              >
-                이슈 페이지로 이동
-              </button>
-            </>
-          );
+          return <NotExistIssue resetError={() => this.reset()} />;
       }
 
       if (fallbackRender) {
@@ -131,11 +119,10 @@ interface CustomErrorBoundaryTypes {
 }
 
 const CustomErrorBoundary = ({ children, fallbackRender }: CustomErrorBoundaryTypes) => {
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   return (
-    <ErrorBoundary navigate={navigate} queryClient={queryClient} fallbackRender={fallbackRender}>
+    <ErrorBoundary queryClient={queryClient} fallbackRender={fallbackRender}>
       {children}
     </ErrorBoundary>
   );
