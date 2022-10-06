@@ -74,9 +74,13 @@ export const signin = async (formData: SigninTypes) => {
 };
 
 export const signout = async () => {
-  await axios.post('api/members/signout');
-  axios.defaults.headers.common.Authorization = '';
-  localStorage.removeItem('Authentication');
+  try {
+    await axios.post('api/members/signout');
+    axios.defaults.headers.common.Authorization = '';
+  } catch (error) {
+    const err = error as AxiosError<ErrorMessage>;
+    throw err;
+  }
 };
 
 // 회원가입 관련

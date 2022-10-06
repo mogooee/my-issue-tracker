@@ -1,3 +1,4 @@
+// components/Organisms/Header/index.tsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useLogout from '@/api/sign/useLogout';
@@ -13,15 +14,10 @@ interface HeaderTypes {
 }
 
 const Header = ({ user }: HeaderTypes) => {
-  const navigate = useNavigate();
-  const { setLogout } = useLogout();
-
+  const { useSignout } = useLogout();
   const [clickTab, setclickTab] = useState<boolean>(false);
 
-  const handleClickLogoutButton = async () => {
-    await setLogout();
-    navigate('/login');
-  };
+  const useLogoutButton = async () => useSignout();
 
   return (
     <S.Header>
@@ -30,7 +26,7 @@ const Header = ({ user }: HeaderTypes) => {
         <Icon icon="Menu" />
         <UserImage {...user} imgSize="MEDIUM" />
       </S.UserTab>
-      <S.LogoutButton clickTab={clickTab} onClick={handleClickLogoutButton}>
+      <S.LogoutButton clickTab={clickTab} onClick={useLogoutButton}>
         로그아웃
       </S.LogoutButton>
     </S.Header>
