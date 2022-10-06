@@ -11,6 +11,7 @@ import { NotFound } from '@/pages';
 import LoginExtensionComponent from '@/components/ErrorBoundary/Refresh';
 import DuplicateEmail from '@/components/Organisms/DuplicateEmail';
 import ExpiredLogin from '@/components/ErrorBoundary/ExpiredLogin';
+import NotValidRedirectCode from '@/components/ErrorBoundary/NotValidCode';
 
 type FallbackRenderPropsType = {
   resetErrorBoundary: () => void;
@@ -84,20 +85,9 @@ class ErrorBoundary extends React.Component<
         case 1004:
           return <ExpiredLogin resetError={() => this.reset()} />;
 
-        // oauth 로그인시 리다이렉트로 돌아오는 코드가 유효하지 않음
+        // oauth 로그인시 리다이렉트로 돌아오는 코드가 유효하지 않는 경우
         case 2001:
-          return (
-            <button
-              type="button"
-              onClick={() => {
-                window.localStorage.removeItem('Authentication');
-                navigate('/login');
-                this.reset();
-              }}
-            >
-              메인으로
-            </button>
-          );
+          return <NotValidRedirectCode resetError={() => this.reset()} />;
 
         // (으)로 이미 가입된 이메일입니다.
         case 2103:
