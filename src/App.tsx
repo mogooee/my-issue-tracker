@@ -35,10 +35,10 @@ const App = () => (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter basename={process.env.PUBLIC_URL}>
         <ThemeProvider theme={theme}>
+          <GlobalStyle />
           <CustomErrorBoundary>
             <Suspense fallback={<LoadingSpinner size={80} />}>
               <ReactQueryDevtools initialIsOpen={false} />
-              <GlobalStyle />
               <Routers />
             </Suspense>
           </CustomErrorBoundary>
