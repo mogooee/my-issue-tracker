@@ -2,7 +2,6 @@
 import React, { useRef, useState } from 'react';
 import { LabelTypes } from '@/api/issue/types';
 
-import { COLORS } from '@/styles/theme';
 import * as S from '@/components/Molecules/LabelEditForm/index.styled';
 
 import Button from '@/components/Atoms/Button';
@@ -15,7 +14,7 @@ import debounce from '@/utils/debounce';
 import useInput from '@/hooks/useInput';
 import useFetchLabel from '@/api/label/useFetchLabel';
 import { BUTTON_PROPS } from '@/components/Atoms/Button/options';
-import { initLabelState } from '@/components/Molecules/LabelEditForm/constants';
+import { initLabelState, LABEL_EDIT_FORM_PROPS } from '@/components/Molecules/LabelEditForm/constants';
 
 type LabelEditFormTypes = {
   type: 'ADD' | 'EDIT';
@@ -23,7 +22,6 @@ type LabelEditFormTypes = {
   setIsEditLabel?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const [MAX_TITLE_LENTH, MAX_DESCRIPTION_LENGTH] = [30, 100];
 const DEBOUNCE_DELAY = 200;
 
 const LabelEditForm = ({ type, labelProps, setIsEditLabel }: LabelEditFormTypes) => {
@@ -83,43 +81,26 @@ const LabelEditForm = ({ type, labelProps, setIsEditLabel }: LabelEditFormTypes)
     <S.LabelEditForm>
       <S.Title>{formTitle}</S.Title>
       <S.EditField>
-        <Label
-          backgroundColorCode={`${backgroundColorCode || COLORS.INPUT_BACKGROUND}`}
-          textColor={textColor}
-          title={title || '레이블'}
-        />
+        <Label {...LABEL_EDIT_FORM_PROPS.LABEL({ backgroundColorCode, textColor, title })} />
         <S.EditForm>
           <Input
-            inputMaxLength={MAX_TITLE_LENTH}
-            inputPlaceholder="레이블 이름"
-            inputSize="SMALL"
-            inputType="text"
-            inputValue={title}
-            onChange={debounce(timerId, handleTitleTyping, DEBOUNCE_DELAY)}
-            isTyping={IsTitleTyping}
+            {...LABEL_EDIT_FORM_PROPS.LABEL_TITLE({
+              inputValue: title,
+              onChange: debounce(timerId, handleTitleTyping, DEBOUNCE_DELAY),
+              isTyping: IsTitleTyping,
+            })}
           />
           <Input
-            inputMaxLength={MAX_DESCRIPTION_LENGTH}
-            inputPlaceholder="설명(선택)"
-            inputSize="SMALL"
-            inputType="text"
-            inputValue={description}
-            onChange={debounce(timerId, handleDescriptionTyping, DEBOUNCE_DELAY)}
-            isTyping={IsDescriptionTyping}
+            {...LABEL_EDIT_FORM_PROPS.LABEL_DESCRIPTION({
+              inputValue: description,
+              onChange: debounce(timerId, handleDescriptionTyping, DEBOUNCE_DELAY),
+              isTyping: IsDescriptionTyping,
+            })}
           />
           <ColorCode color={labelState.backgroundColorCode} setLabelState={setLabelState} />
           <S.TextColor>
             <label>텍스트 색상</label>
-            <Radio
-              radioData={{
-                title: '텍스트 색상',
-                option: [
-                  { id: 1, title: '어두운 색', isChecked: textColor === 'BLACK' },
-                  { id: 2, title: '밝은 색', isChecked: textColor === 'WHITE' },
-                ],
-              }}
-              onChange={hanldeRadioChange}
-            />
+            <Radio {...LABEL_EDIT_FORM_PROPS.TEXT_COLOR({ onChange: hanldeRadioChange, textColor })} />
           </S.TextColor>
         </S.EditForm>
       </S.EditField>
