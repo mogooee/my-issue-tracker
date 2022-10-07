@@ -77,7 +77,7 @@ const LabelEditForm = ({ type, labelProps, setIsEditLabel }: LabelEditFormTypes)
     setLabelState((prev) => ({ ...prev, textColor: newTextColor }));
   };
 
-  const isCompleteButtonActivated = labelState.label.title;
+  const hasUniqueLabel: boolean = JSON.stringify(labelProps) !== JSON.stringify(labelState) && !!labelState.title;
 
   return (
     <S.LabelEditForm>
@@ -125,7 +125,7 @@ const LabelEditForm = ({ type, labelProps, setIsEditLabel }: LabelEditFormTypes)
       </S.EditField>
       <S.EditButton>
         {type === 'EDIT' && <Button {...BUTTON_PROPS.CLOSE} handleOnClick={handleCancelButtonClick} />}
-        <Button {...BUTTON_PROPS.SAVE} handleOnClick={handleCompleteButtonClick} />
+        <Button {...BUTTON_PROPS.SAVE} handleOnClick={handleCompleteButtonClick} disabled={!hasUniqueLabel} />
       </S.EditButton>
     </S.LabelEditForm>
   );
