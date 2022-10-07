@@ -29,8 +29,9 @@ const LabelItem = ({ setDeleteLabelId, ...labelProps }: LabelItemTypes) => {
     setIsModal(true);
     setDeleteLabelId(deletedLabelId);
   };
-  const handleLabelClick = (filterdLabelTitle: string) => {
-    navigate(`/issues?q=label%3A"${filterdLabelTitle}"`);
+
+  const handleLabelClick = (filteringLabelTitle: string) => {
+    navigate(`/issues?q=label%3A"${filteringLabelTitle}"`);
   };
 
   return isEditLabel ? (
