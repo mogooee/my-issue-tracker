@@ -1,5 +1,4 @@
-import { useRecoilState, useResetRecoilState } from 'recoil';
-import useFetchLabel from '@/api/label/useFetchLabel';
+import { useState } from 'react';
 
 import * as S from '@/pages/Private/Labels/index.styled';
 
@@ -8,42 +7,31 @@ import LabelEditForm from '@/components/Molecules/LabelEditForm';
 import NavLink from '@/components/Molecules/NavLink';
 import { FallbackLabelTable } from '@/components/Organisms/LabelTable';
 
+import { initLabelState } from '@/components/Molecules/LabelEditForm/constants';
 import { labelMilestone } from '@/components/Molecules/NavLink/options';
-import { LabelState } from '@/stores/label';
 import { BUTTON_PROPS } from '@/components/Atoms/Button/options';
 
 const Labels = () => {
-  const { addLabel } = useFetchLabel();
-
-  const [labelState, setLabelState] = useRecoilState(LabelState);
-
-  const resetLabelState = useResetRecoilState(LabelState);
+  const [isAddLabel, setIsAddLabel] = useState<boolean>(false);
 
   const handleCloseButtonClick = () => {
-    resetLabelState();
+    setIsAddLabel(false);
   };
 
   const handleAddButtonClick = () => {
-    resetLabelState();
-    setLabelState((prev) => ({ ...prev, type: 'ADD' }));
+    setIsAddLabel(true);
   };
 
-  const handleCompleteButtonClick = () => {
-    addLabel(labelState.label);
-    resetLabelState();
-  };
+  const closeButtonProps = { ...BUTTON_PROPS.CLOSE, handleOnClick: handleCloseButtonClick };
+  const addButtonProps = { ...BUTTON_PROPS.ADD, handleOnClick: handleAddButtonClick };
 
   return (
     <S.Labels>
       <S.SubNav>
         <NavLink navData={labelMilestone()} navLinkStyle="LINE" />
-        {labelState.type === 'ADD' ? (
-          <Button {...BUTTON_PROPS.CLOSE} handleOnClick={handleCloseButtonClick} />
-        ) : (
-          <Button {...BUTTON_PROPS.ADD} handleOnClick={handleAddButtonClick} />
-        )}
+        <Button {...(isAddLabel ? closeButtonProps : addButtonProps)} />
       </S.SubNav>
-      {labelState.type === 'ADD' && <LabelEditForm type="ADD" onClickCompleteButton={handleCompleteButtonClick} />}
+      {isAddLabel && <LabelEditForm type="ADD" labelProps={initLabelState} setIsEditLabel={setIsAddLabel} />}
       <FallbackLabelTable />
     </S.Labels>
   );
