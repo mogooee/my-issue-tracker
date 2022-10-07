@@ -1,33 +1,42 @@
-import { useSetRecoilState } from 'recoil';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LabelState } from '@/stores/label';
+import { useSetRecoilState } from 'recoil';
 
 import * as S from '@/components/Organisms/LabelTable/LabelItem/index.styled';
 
 import Button from '@/components/Atoms/Button';
 import Label from '@/components/Atoms/Label';
+import LabelEditForm from '@/components/Molecules/LabelEditForm';
 import { ModalState } from '@/components/Modal';
 
 import { LabelTypes } from '@/api/issue/types';
 import { TABLE_ITEM_BUTTON_INFO } from '@/components/Atoms/Button/options';
 
-const LabelItem = ({ id, title, backgroundColorCode, description, textColor }: LabelTypes) => {
+type LabelItemTypes = LabelTypes & { setDeleteLabelId: React.Dispatch<React.SetStateAction<number>> };
+
+const LabelItem = ({ setDeleteLabelId, ...labelProps }: LabelItemTypes) => {
+  const { id, title, backgroundColorCode, description, textColor } = labelProps;
+
   const navigate = useNavigate();
-  const setLabelState = useSetRecoilState(LabelState);
-  const setIsModal = useSetRecoilState(ModalState);
+  const setIsModal = useSetRecoilState<boolean>(ModalState);
+  const [isEditLabel, setIsEditLabel] = useState<boolean>(false);
 
-  const handleEditButtonClick = (props: LabelTypes) => {
-    setLabelState({ type: 'EDIT', label: props });
+  const handleEditButtonClick = () => {
+    setIsEditLabel(true);
   };
+
   const handleDeleteButtonClick = (deletedLabelId: number) => {
-    setLabelState((prev) => ({ type: 'DELETE', label: { ...prev.label, id: deletedLabelId } }));
     setIsModal(true);
-  };
-  const handleLabelClick = (filterdLabelTitle: string) => {
-    navigate(`/issues?q=label%3A"${filterdLabelTitle}"`);
+    setDeleteLabelId(deletedLabelId);
   };
 
-  return (
+  const handleLabelClick = (filteringLabelTitle: string) => {
+    navigate(`/issues?q=label%3A"${filteringLabelTitle}"`);
+  };
+
+  return isEditLabel ? (
+    <LabelEditForm type="EDIT" labelProps={labelProps} setIsEditLabel={setIsEditLabel} />
+  ) : (
     <S.LabelItem>
       <Label
         title={title}
@@ -37,10 +46,7 @@ const LabelItem = ({ id, title, backgroundColorCode, description, textColor }: L
       />
       <S.Description>{description}</S.Description>
       <S.EditButton>
-        <Button
-          {...TABLE_ITEM_BUTTON_INFO.MODIFY}
-          handleOnClick={() => handleEditButtonClick({ id, title, backgroundColorCode, description, textColor })}
-        />
+        <Button {...TABLE_ITEM_BUTTON_INFO.MODIFY} handleOnClick={handleEditButtonClick} />
         <Button {...TABLE_ITEM_BUTTON_INFO.DELETE} handleOnClick={() => handleDeleteButtonClick(id)} />
       </S.EditButton>
     </S.LabelItem>
