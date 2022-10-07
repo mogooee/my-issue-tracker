@@ -17,16 +17,18 @@ import debounce from '@/utils/debounce';
 import * as S from '@/components/Molecules/LabelEditForm/index.styled';
 import { BUTTON_PROPS } from '@/components/Atoms/Button/options';
 
-interface LabelAddFormTypes {
+type LabelEditFormTypes = {
   type: 'ADD' | 'EDIT';
-  onClickCancleButton?: () => void;
-  onClickCompleteButton?: () => void;
-}
+  labelProps: LabelTypes;
+  setIsEditLabel?: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
 const [MAX_TITLE_LENTH, MAX_DESCRIPTION_LENGTH] = [30, 100];
 const DEBOUNCE_DELAY = 200;
 
-const LabelEditForm = ({ type, onClickCancleButton, onClickCompleteButton }: LabelAddFormTypes) => {
+const LabelEditForm = ({ type, labelProps, setIsEditLabel }: LabelEditFormTypes) => {
+  const [labelState, setLabelState] = useState<LabelTypes>(labelProps);
+  const { title, backgroundColorCode, description, textColor } = labelState;
   const timerId = useRef(0);
   const { isTyping: IsTitleTyping, onChangeInput: onChangeTitleInput } = useInput();
   const { isTyping: IsDescriptionTyping, onChangeInput: onChangeDescriptionInput } = useInput();
@@ -37,21 +39,22 @@ const LabelEditForm = ({ type, onClickCancleButton, onClickCompleteButton }: Lab
   const formTitle = type === 'ADD' ? '새로운 레이블 추가' : '레이블 편집';
 
   const handleTitleTyping = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
+    const { value: newTitle } = event.target;
+
     onChangeTitleInput(event);
-    setLabelState((prev) => ({ ...prev, label: { ...prev.label, title: value } }));
+    setLabelState((prev) => ({ ...prev, title: newTitle }));
   };
 
   const handleDescriptionTyping = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
+    const { value: newDescription } = event.target;
 
     onChangeDescriptionInput(event);
-    setLabelState((prev) => ({ ...prev, label: { ...prev.label, description: value } }));
+    setLabelState((prev) => ({ ...prev, description: newDescription }));
   };
 
   const hanldeRadioChange = (text: string) => {
     const newTextColor = text === '어두운 색' ? 'BLACK' : 'WHITE';
-    setLabelState((prev) => ({ ...prev, label: { ...prev.label, textColor: newTextColor } }));
+    setLabelState((prev) => ({ ...prev, textColor: newTextColor }));
   };
 
   const isCompleteButtonActivated = labelState.label.title;
@@ -84,7 +87,7 @@ const LabelEditForm = ({ type, onClickCancleButton, onClickCompleteButton }: Lab
             onChange={debounce(timerId, handleDescriptionTyping, DEBOUNCE_DELAY)}
             isTyping={IsDescriptionTyping}
           />
-          <ColorCode />
+          <ColorCode color={labelState.backgroundColorCode} setLabelState={setLabelState} />
           <S.TextColor>
             <label>텍스트 색상</label>
             <Radio
