@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LabelState } from '@/stores/label';
+import { useSetRecoilState } from 'recoil';
 
 import * as S from '@/components/Organisms/LabelTable/LabelItem/index.styled';
 
@@ -12,9 +12,13 @@ import { ModalState } from '@/components/Modal';
 import { LabelTypes } from '@/api/issue/types';
 import { TABLE_ITEM_BUTTON_INFO } from '@/components/Atoms/Button/options';
 
+type LabelItemTypes = LabelTypes & { setDeleteLabelId: React.Dispatch<React.SetStateAction<number>> };
+
+const LabelItem = ({ setDeleteLabelId, ...labelProps }: LabelItemTypes) => {
   const { id, title, backgroundColorCode, description, textColor } = labelProps;
 
   const navigate = useNavigate();
+  const setIsModal = useSetRecoilState<boolean>(ModalState);
   const [isEditLabel, setIsEditLabel] = useState<boolean>(false);
 
   const handleEditButtonClick = () => {
@@ -22,8 +26,8 @@ import { TABLE_ITEM_BUTTON_INFO } from '@/components/Atoms/Button/options';
   };
 
   const handleDeleteButtonClick = (deletedLabelId: number) => {
-    setLabelState((prev) => ({ type: 'DELETE', label: { ...prev.label, id: deletedLabelId } }));
     setIsModal(true);
+    setDeleteLabelId(deletedLabelId);
   };
   const handleLabelClick = (filterdLabelTitle: string) => {
     navigate(`/issues?q=label%3A"${filterdLabelTitle}"`);
