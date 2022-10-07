@@ -1,8 +1,9 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useRef } from 'react';
-import { useRecoilState } from 'recoil';
+import React, { useRef, useState } from 'react';
+import { LabelTypes } from '@/api/issue/types';
 
 import { COLORS } from '@/styles/theme';
+import * as S from '@/components/Molecules/LabelEditForm/index.styled';
 
 import Button from '@/components/Atoms/Button';
 import Input from '@/components/Atoms/Input';
@@ -10,12 +11,11 @@ import Label from '@/components/Atoms/Label';
 import Radio from '@/components/Atoms/Radio';
 import ColorCode from '@/components/Atoms/ColorCode';
 
-import { LabelState } from '@/stores/label';
-
-import useInput from '@/hooks/useInput';
 import debounce from '@/utils/debounce';
-import * as S from '@/components/Molecules/LabelEditForm/index.styled';
+import useInput from '@/hooks/useInput';
+import useFetchLabel from '@/api/label/useFetchLabel';
 import { BUTTON_PROPS } from '@/components/Atoms/Button/options';
+import { initLabelState } from '@/components/Molecules/LabelEditForm/constants';
 
 type LabelEditFormTypes = {
   type: 'ADD' | 'EDIT';
@@ -29,14 +29,34 @@ const DEBOUNCE_DELAY = 200;
 const LabelEditForm = ({ type, labelProps, setIsEditLabel }: LabelEditFormTypes) => {
   const [labelState, setLabelState] = useState<LabelTypes>(labelProps);
   const { title, backgroundColorCode, description, textColor } = labelState;
+
   const timerId = useRef(0);
+  const { addLabel, replaceLabel } = useFetchLabel();
   const { isTyping: IsTitleTyping, onChangeInput: onChangeTitleInput } = useInput();
   const { isTyping: IsDescriptionTyping, onChangeInput: onChangeDescriptionInput } = useInput();
 
-  const [labelState, setLabelState] = useRecoilState(LabelState);
-  const { title, backgroundColorCode, description, textColor } = labelState.label;
-
   const formTitle = type === 'ADD' ? '새로운 레이블 추가' : '레이블 편집';
+
+  const resetLabelState = () => {
+    setLabelState(initLabelState);
+    setIsEditLabel?.(false);
+  };
+
+  const handleCompleteButtonClick = () => {
+    if (type === 'ADD') {
+      addLabel(labelState);
+    }
+
+    if (type === 'EDIT') {
+      replaceLabel({ id: labelProps.id, replacedLabel: labelState });
+    }
+
+    resetLabelState();
+  };
+
+  const handleCancelButtonClick = () => {
+    resetLabelState();
+  };
 
   const handleTitleTyping = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value: newTitle } = event.target;
@@ -104,8 +124,8 @@ const LabelEditForm = ({ type, labelProps, setIsEditLabel }: LabelEditFormTypes)
         </S.EditForm>
       </S.EditField>
       <S.EditButton>
-        {type === 'EDIT' && <Button {...BUTTON_PROPS.CLOSE} handleOnClick={onClickCancleButton} />}
-        <Button {...BUTTON_PROPS.SAVE} handleOnClick={onClickCompleteButton} disabled={!isCompleteButtonActivated} />
+        {type === 'EDIT' && <Button {...BUTTON_PROPS.CLOSE} handleOnClick={handleCancelButtonClick} />}
+        <Button {...BUTTON_PROPS.SAVE} handleOnClick={handleCompleteButtonClick} />
       </S.EditButton>
     </S.LabelEditForm>
   );
