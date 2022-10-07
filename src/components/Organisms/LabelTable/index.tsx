@@ -45,17 +45,7 @@ const LabelTable = () => {
       <Table
         header={<span>{`${labelNum}개의 레이블`}</span>}
         item={labelData!.map((props) => (
-          <TableItem key={props.id}>
-            {labelState.type === 'EDIT' && labelState.label.id === props.id ? (
-              <AddLabelField
-                type="EDIT"
-                onClickCancleButton={handleCancleButtonClick}
-                onClickCompleteButton={() => handleCompleteButtonClick(props.id)}
-              />
-            ) : (
-              <LabelItem {...props} />
-            )}
-          </TableItem>
+          <LabelItem key={props.id} {...props} />
         ))}
       />
       {isModal && (
