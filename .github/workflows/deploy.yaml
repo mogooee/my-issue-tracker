@@ -37,6 +37,14 @@ jobs:
           BUCKET_NAME: ${{ secrets.AWS_BE_S3_BUCKET_NAME }}
         run: |
           aws s3 cp --recursive --region ap-northeast-2 build s3://$BUCKET_NAME
+          
+      # 업로드한 s3 파일을 각 CDN 캐시 무효화하여 리프레시 하기
+      - name: CloudFront Invalidation
+        env:
+          CLOUD_FRONT_ID: ${{ secrets.AWS_CLOUDFRONT_ID}}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id $CLOUD_FRONT_ID --paths "/*"
 
 #       - name: Transfer to S3 for serving static
 #         uses: jakejarvis/s3-sync-action@master
