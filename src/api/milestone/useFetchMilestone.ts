@@ -20,6 +20,9 @@ const useFetchMilestone = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(['milestones']);
     },
+    onError: (error: Error) => {
+      notifyError(error);
+    },
   });
 
   const { mutate: patchMilestoneDataMutate } = useMutation(patchMilestoneData, {

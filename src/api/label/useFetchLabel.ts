@@ -15,6 +15,9 @@ const useFetchLabel = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(['labels']);
     },
+    onError: (error: Error) => {
+      notifyError(error);
+    },
   });
 
   const { mutate: replaceLabel } = useMutation(patchLabelData, {

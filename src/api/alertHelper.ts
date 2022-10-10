@@ -9,6 +9,12 @@ const useAlertHelper = (errorCode: number) => {
     case 3004:
     case 3005:
     case 4002:
+    case 5001:
+    case 5002:
+    case 5003:
+    case 5004:
+    case 6001:
+    case 6002:
       alert(ERROR_MESSAGE[errorCode]);
       break;
     default:
