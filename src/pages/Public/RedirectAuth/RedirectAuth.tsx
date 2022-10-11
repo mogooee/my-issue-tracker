@@ -1,18 +1,8 @@
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { ErrorBoundary } from 'react-error-boundary';
 import { useQuery } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
-
-import * as S from '@/pages/Public/RedirectAuth/index.styled';
-
-import DuplicateEmail from '@/components/Organisms/DuplicateEmail';
 import { getRedirectAuthData, RedirectAuthTypes } from '@/api/sign';
 import useLogin from '@/api/sign/useLogin';
-
-interface ErrorMessage {
-  message: string;
-}
 
 const RedirectAuth = () => {
   const { setSuccessLoginState, saveAuthLoginState } = useLogin();
@@ -22,9 +12,7 @@ const RedirectAuth = () => {
   const provider = searchParams.get('provider')!;
   const code = searchParams.get('code')!;
 
-  const { data } = useQuery<RedirectAuthTypes>(['auth'], () => getRedirectAuthData(provider, code), {
-    retry: 0,
-  });
+  const { data } = useQuery<RedirectAuthTypes>(['auth'], () => getRedirectAuthData(provider, code));
 
   useEffect(() => {
     if (!data) return;

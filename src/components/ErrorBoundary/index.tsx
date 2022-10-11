@@ -1,7 +1,5 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable max-classes-per-file */
 import React, { PropsWithChildren } from 'react';
-import { NavigateFunction, useNavigate } from 'react-router-dom';
 
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
