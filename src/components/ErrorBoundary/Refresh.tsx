@@ -1,20 +1,20 @@
 import React, { Suspense } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { RedirectAuthTypes, silentRefresh } from '@/api/sign';
-import CustomErrorBoundary from '@/components/ErrorBoundary/index';
-import LoadingSpinner from '@/components/Atoms/LoadingSpinner';
+import useLogin from '@/api/sign/useLogin';
 
 const Refresh = ({ children }: { children: React.ReactNode }): React.ReactElement => {
+  const { setSuccessLoginState } = useLogin();
   useQuery<RedirectAuthTypes>(['LoginExtension'], silentRefresh);
-  return <div className="refresh">{children}</div>;
+
+  // eslint-disable-next-line react/jsx-no-useless-fragment
+  return <>{children}</>;
 };
 
 const LoginExtensionComponent = ({ children }: { children: React.ReactNode }) => (
-  <CustomErrorBoundary>
-    <Suspense fallback={<LoadingSpinner size={80} />}>
-      <Refresh>{children}</Refresh>
-    </Suspense>
-  </CustomErrorBoundary>
+  <Suspense fallback={children}>
+    <Refresh>{children}</Refresh>
+  </Suspense>
 );
 
 export default LoginExtensionComponent;

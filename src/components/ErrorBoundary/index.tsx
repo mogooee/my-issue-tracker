@@ -43,15 +43,8 @@ class ErrorBoundary extends React.Component<
 
   componentDidUpdate(_: never, prevState: ErrorBoundaryState) {
     const { error } = this.state;
-
-    const errorCode = error?.response?.data.errorCode;
-    const prevErrorCode = prevState.error?.response?.data.errorCode;
-
+    // eslint-disable-next-line no-useless-return
     if (!error) return;
-
-    if (errorCode === 1001 && prevErrorCode === 1001) {
-      this.reset();
-    }
   }
 
   reset() {
@@ -73,7 +66,6 @@ class ErrorBoundary extends React.Component<
       }
 
       switch (data.errorCode) {
-        // accessToken->reissue->에러인 경우에는 reissue가 한번 더 (에러인 경우) 실행이 됨
         // 액세스 토큰이 만료되었거나 유효하지 않는 경우
         case 1000:
         case 1001:
