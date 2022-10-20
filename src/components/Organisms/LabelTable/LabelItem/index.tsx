@@ -31,7 +31,7 @@ const LabelItem = ({ setDeleteLabelId, ...labelProps }: LabelItemTypes) => {
   };
 
   const handleLabelClick = (filteringLabelTitle: string) => {
-    navigate(`/issues?q=label%3A"${filteringLabelTitle}"`);
+    navigate(`/issues?q=is%3A"open"+label%3A"${filteringLabelTitle}"`);
   };
 
   return isEditLabel ? (
