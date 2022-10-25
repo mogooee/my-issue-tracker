@@ -18,8 +18,8 @@ const useFilter = () => {
 
   const isExistedFilter = (filter: string): boolean => {
     const [key, value] = filter.split(':');
-    if (filter.match(noneFilterReg)) return !!filterState.no.find((e) => e === value);
-    if (filter.match(labelFilterReg)) return !!filterState.label.find((e) => e === value);
+    if (filter.match(noneFilterReg)) return !!filterState.no?.find((e) => e === value);
+    if (filter.match(labelFilterReg)) return !!filterState.label?.find((e) => e === value);
     return filterState[key] === value;
   };
 
@@ -32,18 +32,23 @@ const useFilter = () => {
     const filterValue = value?.replace(doubleQuotationReg, '');
 
     setFilterState((prevState) => {
-      // assignee:""
-      if (!filterValue) return { ...prevState, no: [...prevState.no, key as NoFilterKeysType] };
-      // no:assignee
-      if (filter.match(noneFilterReg)) {
-        const initPrevState = value === 'label' ? [] : '';
-        const newNoFilterKey = value as NoFilterKeysType;
-        return { ...prevState, [value]: initPrevState, no: [...prevState.no, newNoFilterKey] };
+      // assignee:"" || no:assignee
+      if (!filterValue || filter.match(noneFilterReg)) {
+        const deletedKeyState = { ...prevState };
+        delete deletedKeyState[value];
+        const newNoFilterKey = (filter.match(noneFilterReg) ? value : key) as NoFilterKeysType;
+        return { ...deletedKeyState, no: [...(prevState.no || []), newNoFilterKey] };
       }
 
-      const newValue = filter.match(labelFilterReg) ? [...prevState.label, filterValue] : filterValue;
-      const filterExistedKey = prevState.no.filter((e) => e !== key);
-      return { ...prevState, [key]: newValue, no: filterExistedKey };
+      const newValue = filter.match(labelFilterReg) ? [...(prevState.label || []), filterValue] : filterValue;
+      const filterExistedKey = prevState.no?.filter((e) => e !== key);
+      const newState = { ...prevState, [key]: newValue, no: filterExistedKey };
+
+      if (!filterExistedKey) {
+        delete newState.no;
+      }
+
+      return newState;
     });
   };
 
@@ -53,7 +58,13 @@ const useFilter = () => {
     const [key, value] = filter.split(':');
 
     setFilterState((prevState) => {
-      const removedValue = filter.match(labelFilterReg) ? prevState.label.filter((e) => e !== value) : '';
+      const removedValue = filter.match(labelFilterReg) ? prevState.label?.filter((e) => e !== value) : '';
+      if (!removedValue) {
+        const deletedKeyState = { ...prevState };
+        delete deletedKeyState[key];
+        return deletedKeyState;
+      }
+
       return { ...prevState, [key]: removedValue };
     });
   };
