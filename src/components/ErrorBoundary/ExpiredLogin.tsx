@@ -4,11 +4,10 @@ import { useSetRecoilState } from 'recoil';
 import Button from '@/components/Atoms/Button';
 import styled from 'styled-components';
 
-const StyledExpiredLogin = styled.div`
+const StyledExpiredLogin = styled.div<{ isModal: boolean }>`
   ${({ theme }) => theme.MIXIN.FLEX({ direction: 'column', align: 'center', justify: 'center' })};
   width: 100%;
-  height: 100vh;
-
+  height: ${({ isModal }) => (isModal ? '100%' : '100vh')};
   h1 {
     ${({ theme }) => theme.FONTSTYLES.DISPLAY_REGULER};
     margin-bottom: 8px;
@@ -20,7 +19,7 @@ const StyledExpiredLogin = styled.div`
   }
 `;
 
-const ExpiredLogin = ({ resetError }: { resetError: () => void }) => {
+const ExpiredLogin = ({ resetError, isModal = false }: { resetError: () => void; isModal?: boolean }) => {
   const navigate = useNavigate();
   const setIsOAuth = useSetRecoilState(OAuthState);
 
@@ -32,7 +31,7 @@ const ExpiredLogin = ({ resetError }: { resetError: () => void }) => {
   };
 
   return (
-    <StyledExpiredLogin>
+    <StyledExpiredLogin isModal={isModal}>
       <h1>로그인이 만료되었습니다 🥺</h1>
       <p>다시 로그인 후 시도해 주세요</p>
       <Button buttonStyle="STANDARD" label="로그인 하기" size="LARGE" handleOnClick={handleOnClick} />

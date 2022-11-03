@@ -65,6 +65,25 @@ class ErrorBoundary extends React.Component<
         return <div>server 500 Error</div>;
       }
 
+      if (fallbackRender) {
+        const fallbackRenderProps: FallbackRenderPropsType = {
+          resetErrorBoundary: this.reset.bind(this),
+        };
+
+        if (data.errorCode === 1002 || data.errorCode === 1004) {
+          return (
+            <>
+              {fallbackRender(fallbackRenderProps)}
+              <Modal>
+                <ExpiredLogin resetError={() => this.reset()} isModal />
+              </Modal>
+            </>
+          );
+        }
+
+        return fallbackRender(fallbackRenderProps);
+      }
+
       switch (data.errorCode) {
         // 액세스 토큰이 만료되었거나 유효하지 않는 경우
         case 1000:
