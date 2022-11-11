@@ -11,8 +11,12 @@ import ExpiredLogin from '@/components/ErrorBoundary/ExpiredLogin';
 import NotValidRedirectCode from '@/components/ErrorBoundary/NotValidCode';
 import NotExistIssue from '@/components/ErrorBoundary/NotExistIssue';
 
+import Modal from '@/components/Modal';
+
 type FallbackRenderPropsType = {
   resetErrorBoundary: () => void;
+  resetState: () => void;
+  errorCode: number;
 };
 
 declare function FallbackRender(props: FallbackRenderPropsType): React.ReactElement<React.FunctionComponent>;
@@ -47,7 +51,11 @@ class ErrorBoundary extends React.Component<
     if (!error) return;
   }
 
-  reset() {
+  resetState() {
+    this.setState(initErrorState);
+  }
+
+  resetQueryClient() {
     this.setState(initErrorState);
 
     const { queryClient } = this.props;
@@ -67,7 +75,9 @@ class ErrorBoundary extends React.Component<
 
       if (fallbackRender) {
         const fallbackRenderProps: FallbackRenderPropsType = {
-          resetErrorBoundary: this.reset.bind(this),
+          resetErrorBoundary: this.resetQueryClient.bind(this),
+          resetState: this.resetState.bind(this),
+          errorCode: data.errorCode,
         };
 
         if (data.errorCode === 1002 || data.errorCode === 1004) {
@@ -75,7 +85,7 @@ class ErrorBoundary extends React.Component<
             <>
               {fallbackRender(fallbackRenderProps)}
               <Modal>
-                <ExpiredLogin resetError={() => this.reset()} isModal />
+                <ExpiredLogin resetError={() => this.resetQueryClient()} isModal />
               </Modal>
             </>
           );
@@ -93,21 +103,25 @@ class ErrorBoundary extends React.Component<
         // 리프레시 토큰이 만료되었거나 유효하지 않는 경우
         case 1002:
         case 1004:
-          return <ExpiredLogin resetError={() => this.reset()} />;
+          return <ExpiredLogin resetError={() => this.resetQueryClient()} />;
 
         // oauth 로그인시 리다이렉트로 돌아오는 코드가 유효하지 않는 경우
         case 2001:
-          return <NotValidRedirectCode resetError={() => this.reset()} />;
+          return <NotValidRedirectCode resetError={() => this.resetQueryClient()} />;
 
         // oauth 회원가입시 이미 가입된 이메일이 있는 경우
         case 2103:
           return (
-            <DuplicateEmail provider="이메일 가입하기" email="example@email.com" handleOnClick={() => this.reset()} />
+            <DuplicateEmail
+              provider="이메일 가입하기"
+              email="example@email.com"
+              handleOnClick={() => this.resetQueryClient()}
+            />
           );
 
         // 존재하지 않는 이슈에 접근하는 경우
         case 3000:
-          return <NotExistIssue resetError={() => this.reset()} />;
+          return <NotExistIssue resetError={() => this.resetQueryClient()} />;
       }
     }
 
