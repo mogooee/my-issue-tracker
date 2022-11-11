@@ -80,6 +80,10 @@ class ErrorBoundary extends React.Component<
           errorCode: data.errorCode,
         };
 
+        if (data.errorCode === 1000 || data.errorCode === 1001) {
+          return <LoginExtensionComponent>{fallbackRender(fallbackRenderProps)}</LoginExtensionComponent>;
+        }
+
         if (data.errorCode === 1002 || data.errorCode === 1004) {
           return (
             <>
