@@ -109,14 +109,6 @@ class ErrorBoundary extends React.Component<
         case 3000:
           return <NotExistIssue resetError={() => this.reset()} />;
       }
-
-      if (fallbackRender) {
-        const fallbackRenderProps: FallbackRenderPropsType = {
-          resetErrorBoundary: this.reset.bind(this),
-        };
-
-        return fallbackRender(fallbackRenderProps);
-      }
     }
 
     return children;
