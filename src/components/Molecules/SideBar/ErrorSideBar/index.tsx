@@ -3,19 +3,9 @@ import { useState } from 'react';
 import * as S from '@/components/Molecules/SideBar/index.styles';
 import SideBarItem from '@/components/Molecules/SideBar/SideBarItem';
 
-import { ContentTypes, MilestoneTypes } from '@/api/issue/types';
 import { ContentListTypes } from '@/components/Molecules/SideBar/types';
 
-const ErrorSideBar = ({ issue }: { issue: ContentTypes }) => {
-  const milestoneArr: MilestoneTypes[] = [];
-  const DEFAULT_CONTENT_LIST: ContentListTypes = {
-    label: issue!.issueLabels.issueLabels,
-    assignee: issue!.issueAssignees.issueAssignees,
-    milestone: issue!.milestone === null ? milestoneArr : [issue!.milestone],
-  };
-  const [contentList, _] = useState(DEFAULT_CONTENT_LIST);
-
-  // 아무런 기능이 동작하지 않는다.
+const ErrorSideBar = ({ contentList }: { contentList: ContentListTypes }) => {
   const emptyFunction = () => {};
 
   return (
