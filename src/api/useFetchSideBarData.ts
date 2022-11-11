@@ -7,15 +7,17 @@ import { IssueSideBarModify } from '@/api/issue';
 const useFetchSideBarData = () => {
   const queryClient = useQueryClient();
 
-  const { data: memberData, refetch: memberDataRefetch } = useQuery(['members'], getMemberList, { enabled: false });
+  const { data: memberData, refetch: memberDataRefetch } = useQuery(['members'], getMemberList, {
+    enabled: false,
+  });
   const { data: labelData, refetch: labelDataRefetch } = useQuery(['labels'], getLabelData, { enabled: false });
   const { data: milestoneData, refetch: milestoneDataRefetch } = useQuery(['milestones'], getMilestoneData, {
     enabled: false,
   });
 
   const { mutate: IssueSideBarModifyMutate } = useMutation(IssueSideBarModify, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['issue']);
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries(['issue', variables.issueId]);
     },
   });
 
