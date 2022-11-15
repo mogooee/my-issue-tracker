@@ -45,7 +45,11 @@ const IsssueDetailAside = ({ issue, memberId }: { issue: ContentTypes; memberId:
   return (
     <>
       <S.Aside>
-        <CustomErrorBoundary fallbackRender={() => <ErrorSideBar contentList={DEFAULT_CONTENT_LIST} />}>
+        <CustomErrorBoundary
+          fallbackRender={({ resetState, errorCode }) => (
+            <ErrorSideBar contentList={DEFAULT_CONTENT_LIST} resetState={resetState!} errorCode={errorCode} />
+          )}
+        >
           <DetailSidebarLogic issueId={issue.id} contentList={DEFAULT_CONTENT_LIST} />
         </CustomErrorBoundary>
         {isIssueAuthor && (
