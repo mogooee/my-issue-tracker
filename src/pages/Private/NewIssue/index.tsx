@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -22,6 +23,9 @@ import { filterUncheckedItem, getFindDropdownItem } from '@/components/Molecules
 import { ContentListTypes, isMilestoneTypes, UpdateSideBarFuncTypes } from '@/components/Molecules/SideBar/types';
 
 import useFetchIssue from '@/api/issue/useFetchIssue';
+
+import CustomErrorBoundary from '@/components/ErrorBoundary';
+import ErrorSideBar from '@/components/Molecules/SideBar/ErrorSideBar';
 
 const NewIssue = () => {
   const LoginUserInfoStateValue = useRecoilValue(LoginUserInfoState);
@@ -114,7 +118,13 @@ const NewIssue = () => {
             />
             <TextAreaEditer edit="ISSUE" textAreaValue={newIssueFormState.comment} />
           </S.NewIssueForm>
-          <SideBar content={contentList} handleOnChange={updateSideBarItemState} />
+          <CustomErrorBoundary
+            fallbackRender={({ resetState, errorCode }) => (
+              <ErrorSideBar contentList={DEFAULT_CONTENT_LIST} resetState={resetState!} errorCode={errorCode} />
+            )}
+          >
+            <SideBar content={contentList} handleOnChange={updateSideBarItemState} />
+          </CustomErrorBoundary>
         </S.NewIssueEditer>
         <S.Divider />
         <S.NewIssueButtons>
