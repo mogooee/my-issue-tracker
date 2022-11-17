@@ -10,6 +10,7 @@ import DuplicateEmail from '@/components/Organisms/DuplicateEmail';
 import ExpiredLogin from '@/components/ErrorBoundary/ExpiredLogin';
 import NotValidRedirectCode from '@/components/ErrorBoundary/NotValidCode';
 import NotExistIssue from '@/components/ErrorBoundary/NotExistIssue';
+import InternalServerError from '@/components/ErrorBoundary/InternalServerError';
 
 import Modal from '@/components/Modal';
 
@@ -70,7 +71,7 @@ class ErrorBoundary extends React.Component<
       const { status, data } = error.response!;
 
       if (status === 500) {
-        return <div>server 500 Error</div>;
+        return <InternalServerError />;
       }
 
       if (fallbackRender) {
