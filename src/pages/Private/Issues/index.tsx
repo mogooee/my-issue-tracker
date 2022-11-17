@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import useFetchIssue from '@/api/issue/useFetchIssue';
 
@@ -26,6 +26,7 @@ const Issues = () => {
   const pageParams = Number(searchParams.get('page')) || 0;
   const queriesParams = searchParams.get('q');
   const filterState = useRecoilValue(FilterState);
+  const resetFilterState = useResetRecoilState(FilterState);
   const { page, queries } = useRecoilValue(FilterStatsState);
   const setPageState = useSetRecoilState(PageState);
 
@@ -40,6 +41,7 @@ const Issues = () => {
 
   const setURLQueriesToFilterState = () => {
     if (!document.location.search) return;
+    resetFilterState();
 
     setIssueState(queriesParams);
 

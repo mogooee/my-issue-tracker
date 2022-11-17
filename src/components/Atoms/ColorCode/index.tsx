@@ -1,49 +1,41 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
-import { useRecoilState } from 'recoil';
 
 import PanelPreviewLabel from '@/components/Molecules/Dropdown/Panel/Label';
 import Button from '@/components/Atoms/Button';
 
-import { LabelState } from '@/stores/label';
-
 import * as S from '@/components/Atoms/ColorCode/index.styled';
+import { LabelTypes } from '@/api/issue/types';
 
 interface ColorCodeTypes {
-  defaultColor?: string;
+  color?: string;
+  setLabelState?: React.Dispatch<React.SetStateAction<LabelTypes>>;
 }
 
 const MAX_COLORCODE_LENGTH = 7;
 const DEFAULT_COLOR = '#EFF0F6';
 const HEAX_COLOR_CODE_REGEX = /(#([a-fA-F0-9]{6}))/g;
 
-const ColorCode = ({ defaultColor = DEFAULT_COLOR }: ColorCodeTypes) => {
-  const [labelState, setLabelState] = useRecoilState(LabelState);
-
+const ColorCode = ({ color = DEFAULT_COLOR, setLabelState }: ColorCodeTypes) => {
   const changeColorCode = () => {
     const r = Math.floor(Math.random() * 127 + 128).toString(16);
     const g = Math.floor(Math.random() * 127 + 128).toString(16);
     const b = Math.floor(Math.random() * 127 + 128).toString(16);
     const newRandomColor = `#${r}${g}${b}`.toUpperCase();
-    setLabelState((prev) => ({ ...prev, label: { ...prev.label, backgroundColorCode: newRandomColor } }));
+    setLabelState?.((prev) => ({ ...prev, backgroundColorCode: newRandomColor }));
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     if (!value.match(HEAX_COLOR_CODE_REGEX)) return;
-    setLabelState((prev) => ({ ...prev, label: { ...prev.label, backgroundColorCode: value } }));
+    setLabelState?.((prev) => ({ ...prev, backgroundColorCode: value }));
   };
 
   return (
     <S.ColorCode>
       <label>배경 색상</label>
-      <input
-        type="text"
-        value={labelState.label.backgroundColorCode || defaultColor}
-        maxLength={MAX_COLORCODE_LENGTH}
-        onChange={handleInputChange}
-      />
-      <PanelPreviewLabel backgroundColor={labelState.label.backgroundColorCode || defaultColor} />
+      <input type="text" value={color} maxLength={MAX_COLORCODE_LENGTH} onChange={handleInputChange} />
+      <PanelPreviewLabel backgroundColor={color} />
       <Button
         buttonStyle="NO_BORDER"
         iconInfo={{
