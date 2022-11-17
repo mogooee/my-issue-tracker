@@ -1,15 +1,8 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import IssueTable from '@/components/Organisms/IssueTable';
-import {
-  ASSIGNEE_DROPDOWN_ARGS,
-  AUTHOR_DROPDOWN_ARGS,
-  LABEL_DROPDOWN_ARGS,
-  LABEL_LIST,
-  MILESTONE_DROPDOWN_ARGS,
-  MILESTONE_LIST,
-  USER_LIST,
-} from '@/components/Molecules/Dropdown/mock';
+import { LABEL_LIST } from '@/components/Molecules/Dropdown/mock';
 import { issues } from '@/mocks/tables/issue';
+import { milestones } from '@/mocks/handlers/milestone';
 
 export default {
   title: 'Organisms/IssueTable',
@@ -21,12 +14,8 @@ const Template: ComponentStory<typeof IssueTable> = (args) => <IssueTable {...ar
 export const TotalIssue = Template.bind({});
 TotalIssue.args = {
   issuesData: issues,
-  filterTabs: [
-    ASSIGNEE_DROPDOWN_ARGS(USER_LIST),
-    LABEL_DROPDOWN_ARGS(LABEL_LIST),
-    MILESTONE_DROPDOWN_ARGS(MILESTONE_LIST),
-    AUTHOR_DROPDOWN_ARGS(USER_LIST),
-  ],
+  labelData: LABEL_LIST,
+  milestoneData: milestones,
 };
 
 export const OpenIssue = Template.bind({});
