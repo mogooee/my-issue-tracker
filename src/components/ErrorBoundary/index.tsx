@@ -63,6 +63,32 @@ class ErrorBoundary extends React.Component<
     queryClient.clear();
   }
 
+  fallbackUIRender(fallbackRender: typeof FallbackRender, data: ErrorMessage) {
+    const fallbackRenderProps: FallbackRenderPropsType = {
+      resetErrorBoundary: this.resetQueryClient.bind(this),
+      resetState: this.resetState.bind(this),
+      errorCode: data.errorCode,
+    };
+
+    switch (data.errorCode) {
+      case 1000:
+      case 1001:
+        return <LoginExtensionComponent>{fallbackRender(fallbackRenderProps)}</LoginExtensionComponent>;
+      case 1002:
+      case 1004:
+        return (
+          <>
+            {fallbackRender(fallbackRenderProps)}
+            <Modal>
+              <ExpiredLogin resetError={() => this.resetQueryClient()} isModal />
+            </Modal>
+          </>
+        );
+      default:
+        return fallbackRender(fallbackRenderProps);
+    }
+  }
+
   render() {
     const { children, fallbackRender } = this.props;
     const { error } = this.state;
@@ -75,28 +101,7 @@ class ErrorBoundary extends React.Component<
       }
 
       if (fallbackRender) {
-        const fallbackRenderProps: FallbackRenderPropsType = {
-          resetErrorBoundary: this.resetQueryClient.bind(this),
-          resetState: this.resetState.bind(this),
-          errorCode: data.errorCode,
-        };
-
-        if (data.errorCode === 1000 || data.errorCode === 1001) {
-          return <LoginExtensionComponent>{fallbackRender(fallbackRenderProps)}</LoginExtensionComponent>;
-        }
-
-        if (data.errorCode === 1002 || data.errorCode === 1004) {
-          return (
-            <>
-              {fallbackRender(fallbackRenderProps)}
-              <Modal>
-                <ExpiredLogin resetError={() => this.resetQueryClient()} isModal />
-              </Modal>
-            </>
-          );
-        }
-
-        return fallbackRender(fallbackRenderProps);
+        this.fallbackUIRender(fallbackRender, data);
       }
 
       switch (data.errorCode) {
