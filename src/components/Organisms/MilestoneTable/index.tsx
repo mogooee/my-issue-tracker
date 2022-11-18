@@ -1,8 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Suspense, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { ErrorBoundary } from 'react-error-boundary';
-import { QueryErrorResetBoundary } from '@tanstack/react-query';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { ClickMilestoneState } from '@/stores/milestone';
@@ -23,6 +21,7 @@ import useFetchMilestone from '@/api/milestone/useFetchMilestone';
 import { COLORS } from '@/styles/theme';
 
 import { MilestoneListTypes } from '@/api/milestone';
+import CustomErrorBoundary from '@/components/ErrorBoundary';
 
 const MILESTONE_STATE_TAB = (data: MilestoneListTypes) => [
   {
@@ -82,21 +81,14 @@ const MilestoneTable = () => {
 };
 
 export const FallBackMilestoneTable = () => (
-  <QueryErrorResetBoundary>
-    {({ reset }) => (
-      <ErrorBoundary
-        onReset={reset}
-        // eslint-disable-next-line react/no-unstable-nested-components
-        fallbackRender={({ resetErrorBoundary }) => (
-          <ErrorTable type="milestone" resetErrorBoundary={resetErrorBoundary} />
-        )}
-      >
-        <Suspense fallback={<SkeletonMilestoneTable />}>
-          <MilestoneTable />
-        </Suspense>
-      </ErrorBoundary>
-    )}
-  </QueryErrorResetBoundary>
+  <CustomErrorBoundary
+    // eslint-disable-next-line react/no-unstable-nested-components
+    fallbackRender={({ resetErrorBoundary }) => <ErrorTable type="milestone" resetErrorBoundary={resetErrorBoundary} />}
+  >
+    <Suspense fallback={<SkeletonMilestoneTable />}>
+      <MilestoneTable />
+    </Suspense>
+  </CustomErrorBoundary>
 );
 
 export default MilestoneTable;
