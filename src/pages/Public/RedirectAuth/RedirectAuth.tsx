@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-
 import { useQuery } from '@tanstack/react-query';
 import { getRedirectAuthData, RedirectAuthTypes } from '@/api/sign';
 import useLogin from '@/api/sign/useLogin';

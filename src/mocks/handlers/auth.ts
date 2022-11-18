@@ -24,7 +24,7 @@ export const authHandlers = [
       accessToken: 'access123',
     };
 
-    return res(ctx.status(200), ctx.json(response), ctx.cookie('refresh-token', 'refresh123'));
+    return res(ctx.status(200), ctx.json(response), ctx.cookie('refresh_token', 'refresh123'));
   }),
 
   // 로그인 검사 테스트용 API
@@ -124,7 +124,7 @@ export const authHandlers = [
       },
     };
 
-    return res(ctx.status(201), ctx.json(response), ctx.cookie('refresh-token', 'refresh123'));
+    return res(ctx.status(201), ctx.json(response), ctx.cookie('refresh_token', 'refresh123'));
   }),
 
   // 유저 아이디 중복 검사
@@ -164,7 +164,7 @@ export const authHandlers = [
   }),
 
   // 로그아웃
-  rest.head('api/members/signout', (req, res, ctx) => res(ctx.status(200))),
+  rest.post('api/members/signout', (req, res, ctx) => res(ctx.status(200))),
 
   rest.get('api/members', (req, res, ctx) =>
     // if (!req.cookies['refresh-token']) {

@@ -1,90 +1,48 @@
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react/prop-types */
 import React, { useEffect } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import useFetchIssue from '@/api/issue/useFetchIssue';
-import { LoginUserInfoState } from '@/stores/loginUserInfo';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { CheckState, DefaultCheckIds } from '@/stores/checkBox';
 
 import CheckBox from '@/components/Atoms/CheckBox';
 import NavLink from '@/components/Molecules/NavLink';
 import IssueItem from '@/components/Organisms/IssueTable/IssueItem';
-import Dropdown from '@/components/Molecules/Dropdown';
 
 import * as S from '@/components/Organisms/IssueTable/index.styles';
-import { DropdownTypes, ListPanelTypes } from '@/components/Molecules/Dropdown/types';
-import { OPEN_CLOSE_DROPDOWN_ARGS } from '@/components/Molecules/Dropdown/mock';
 import Table from '@/components/Molecules/Table';
 
-import { IssuesTypes } from '@/api/issue/types';
-import { FilterStatsState, FilterState } from '@/stores/filter';
+import { IssuesTypes, LabelTypes } from '@/api/issue/types';
+import { MilestoneListTypes } from '@/api/milestone';
+import { FilterStatsState } from '@/stores/filter';
 import { openCloseIssue } from '@/components/Molecules/NavLink/options';
-import useFetchSideBarData from '@/api/useFetchSideBarData';
-import useFilter, { noneFilterReg } from '@/hooks/useFilter';
+import useFilter from '@/hooks/useFilter';
+
+import CustomErrorBoundary from '@/components/ErrorBoundary';
+import TableInfoTabs from '@/components/Organisms/IssueTable/TableInfoTabs';
+import ErrorInfoTabs from '@/components/Organisms/IssueTable/TableInfoTabs/Error';
 
 interface IssueTableTypes {
   issuesData: IssuesTypes;
-  filterTabs: DropdownTypes<ListPanelTypes>[];
+  labelData: LabelTypes[];
+  milestoneData: MilestoneListTypes;
 }
 
 const PARENT_CHECKBOX_ID = -1;
 
-const IssueTable = ({ issuesData, filterTabs }: IssueTableTypes) => {
+const IssueTable = ({ issuesData, labelData, milestoneData }: IssueTableTypes) => {
   const { openIssueCount, closedIssueCount, issues } = issuesData;
 
-  const [checkState, setCheckState] = useRecoilState(CheckState);
+  const checkState = useRecoilValue(CheckState);
   const setDefaultCheckIds = useSetRecoilState(DefaultCheckIds);
   const checkedBoxNum = checkState.child.length;
 
-  const { useUpdateIssueState } = useFetchIssue();
-  const { mutate: updateIssueState } = useUpdateIssueState(checkState.child);
-  const { memberData, memberDataRefetch } = useFetchSideBarData();
-  const memberId = useRecoilValue(LoginUserInfoState).id;
-
-  const filterState = useRecoilValue(FilterState);
   const { page, queries } = useRecoilValue(FilterStatsState);
 
-  const { isExistedFilter, setParsingFilterState, setRemovedFilterState } = useFilter();
-
-  const changeIssueState = (target: HTMLInputElement) => {
-    const clickedPanelStatus = target.dataset.id;
-    const status = clickedPanelStatus === 'closed';
-    const newState = { status, ids: checkState.child };
-    updateIssueState({ newState, memberId });
-    setCheckState({ ...checkState, parent: false, child: [] });
-  };
+  const { setParsingFilterState } = useFilter();
 
   const handleOnOpenClosedNavClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     const clickedNavDataId = event.currentTarget.dataset.id;
     setParsingFilterState(clickedNavDataId!);
-  };
-
-  const handleOnMemberDropdownClick = (filterKey: string) => {
-    const isMemberListData = filterKey === 'assignee' || filterKey === 'author';
-    if (isMemberListData && !memberData) memberDataRefetch();
-  };
-
-  const handleOnFilterTabsClick = (target: HTMLInputElement) => {
-    const key = target.dataset.panel!;
-    const value: string = target.dataset.id!;
-    const filter = value.match(noneFilterReg) ? value : `${key}:${value}`;
-
-    if (isExistedFilter(filter)) {
-      setRemovedFilterState(filter);
-      return;
-    }
-
-    setParsingFilterState(filter);
-  };
-
-  const isFilterTabsChecked = (panelId: string) => {
-    const content = filterState[panelId];
-
-    return (dataId: string): boolean => {
-      if (Array.isArray(content)) {
-        return !!content.find((e) => e === dataId);
-      }
-      return content === dataId;
-    };
   };
 
   useEffect(() => {
@@ -108,32 +66,13 @@ const IssueTable = ({ issuesData, filterTabs }: IssueTableTypes) => {
               />
             )}
           </S.IssueStates>
-          <S.IssueInfoTabs>
-            {checkedBoxNum ? (
-              <Dropdown {...OPEN_CLOSE_DROPDOWN_ARGS(changeIssueState)} />
-            ) : (
-              filterTabs.map((filterTab: DropdownTypes<ListPanelTypes>) => {
-                const { panelId: filterKey, panelTitle } = filterTab.panelProps;
-
-                const DROPDOWN_PROPS = {
-                  ...filterTab,
-                  panelProps: {
-                    ...filterTab.panelProps,
-                    handleOnClick: handleOnFilterTabsClick,
-                    isChecked: isFilterTabsChecked(filterKey),
-                  },
-                };
-
-                return (
-                  <Dropdown
-                    key={panelTitle}
-                    {...DROPDOWN_PROPS}
-                    handleOnDropdownClick={(e) => handleOnMemberDropdownClick(filterKey)}
-                  />
-                );
-              })
+          <CustomErrorBoundary
+            fallbackRender={({ resetState, errorCode }) => (
+              <ErrorInfoTabs resetState={resetState} errorCode={errorCode} />
             )}
-          </S.IssueInfoTabs>
+          >
+            <TableInfoTabs labelData={labelData} milestoneData={milestoneData} />
+          </CustomErrorBoundary>
         </S.IssueTableHeader>
       }
       item={

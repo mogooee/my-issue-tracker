@@ -79,33 +79,3 @@ const SideBar = ({ ...props }: SideBarTypes) => {
 };
 
 export default SideBar;
-
-// 이슈 디테일에서 해당 코드를 기본으로 handleOnChange 함수를 구현한 후 해당 주석 삭제하기
-// const handleOnChange = (target: HTMLInputElement) => {
-//   const { id, panel } = target.dataset;
-//   const { checked } = target;
-
-//   // 드롭다운 리스트에서 체크한 아이템의 정보를 찾는다.
-//   const findDropdownItem = getFindDropdownItem({ id: id!, panel: panel!, sideBarList });
-
-//   const contentKey = panel as keyof ContentListTypes;
-
-//   // 마일스톤의 드롭다운 아이템 체크시
-//   if (contentKey === 'milestone' && checked) {
-//     if (id !== 'none' && isMilestoneTypes(findDropdownItem!)) {
-//       // 하나의 요소만 들어갈 수 있도록 한다.
-//       return setContentList({ ...contentList, [contentKey]: [findDropdownItem] });
-//     }
-//     // 마일스톤 없음을 체크하면 아무 값도 들어가지 않는다.
-//     return setContentList({ ...contentList, [contentKey]: [] });
-//   }
-
-//   // 담당자, 레이블 드롭다운 아이템 체크시 findDropdownItem한 요소를 content 리스트에 추가한다.
-//   if (contentKey !== 'milestone' && checked) {
-//     return setContentList({ ...contentList, [contentKey]: [...contentList[contentKey], findDropdownItem] });
-//   }
-
-//   // 드롭다운 리스트에서 체크 해제하면, content 리스트에서 해당하는 요소를 제외한다.
-//   const filterContentList = filterUncheckedItem({ id: id!, contentKey, contentList });
-//   return setContentList({ ...contentList, [contentKey]: [...filterContentList] });
-// };

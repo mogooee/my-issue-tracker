@@ -1,8 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Suspense, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { ErrorBoundary } from 'react-error-boundary';
-import { QueryErrorResetBoundary } from '@tanstack/react-query';
 
 import * as S from '@/components/Organisms/LabelTable/index.styled';
 
@@ -15,9 +13,11 @@ import DeleteCheck from '@/components/Modal/DeleteCheck';
 import useFetchLabel from '@/api/label/useFetchLabel';
 import Modal, { ModalState } from '@/components/Modal';
 
-const LabelTable = () => {
-  const { labelData, deleteLabel } = useFetchLabel();
+import CustomErrorBoundary from '@/components/ErrorBoundary';
 
+const LabelTable = () => {
+  const { useLabelData, deleteLabel } = useFetchLabel();
+  const { data: labelData } = useLabelData();
   const labelNum = labelData!.length;
 
   const isModal = useRecoilValue(ModalState);
@@ -45,19 +45,14 @@ const LabelTable = () => {
 };
 
 export const FallbackLabelTable = () => (
-  <QueryErrorResetBoundary>
-    {({ reset }) => (
-      <ErrorBoundary
-        onReset={reset}
-        // eslint-disable-next-line react/no-unstable-nested-components
-        fallbackRender={({ resetErrorBoundary }) => <ErrorTable type="label" resetErrorBoundary={resetErrorBoundary} />}
-      >
-        <Suspense fallback={<LabelTableSkeleton />}>
-          <LabelTable />
-        </Suspense>
-      </ErrorBoundary>
-    )}
-  </QueryErrorResetBoundary>
+  <CustomErrorBoundary
+    // eslint-disable-next-line react/no-unstable-nested-components
+    fallbackRender={({ resetErrorBoundary }) => <ErrorTable type="label" resetErrorBoundary={resetErrorBoundary} />}
+  >
+    <Suspense fallback={<LabelTableSkeleton />}>
+      <LabelTable />
+    </Suspense>
+  </CustomErrorBoundary>
 );
 
 export default FallbackLabelTable;

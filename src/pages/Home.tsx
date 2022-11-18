@@ -1,11 +1,8 @@
-import { Suspense } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
 import { Outlet } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
 
 import styled from 'styled-components';
-import LoadingSpinner from '@/components/Atoms/LoadingSpinner';
 import Header from '@/components/Organisms/Header';
 import OAuthState from '@/stores/auth';
 
@@ -25,16 +22,12 @@ const Home = () => {
   const isOauthState = useRecoilValue(OAuthState);
 
   return (
-    <Suspense fallback={<LoadingSpinner size={80} />}>
-      <ErrorBoundary fallback={<div>error</div>}>
-        <StyledLayer>
-          <div>
-            {isOauthState && <Header user={LoginUserInfoStateValue} />}
-            <Outlet />
-          </div>
-        </StyledLayer>
-      </ErrorBoundary>
-    </Suspense>
+    <StyledLayer>
+      <div>
+        {isOauthState && <Header user={LoginUserInfoStateValue} />}
+        <Outlet />
+      </div>
+    </StyledLayer>
   );
 };
 
