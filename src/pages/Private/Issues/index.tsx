@@ -11,17 +11,12 @@ import NavLink from '@/components/Molecules/NavLink';
 import IssueTable from '@/components/Organisms/IssueTable';
 
 import { FILTERBAR_INFO } from '@/components/Molecules/FilterBar/mocks';
-import {
-  ASSIGNEE_DROPDOWN_ARGS,
-  AUTHOR_DROPDOWN_ARGS,
-  LABEL_DROPDOWN_ARGS,
-  MILESTONE_DROPDOWN_ARGS,
-} from '@/components/Molecules/Dropdown/mock';
 import { NEW_ISSUE_BUTTON_INFO } from '@/components/Atoms/Button/options';
 import { FilterState, FilterStatsState, initFilterState, PageState } from '@/stores/filter';
+
 import useFetchLabel from '@/api/label/useFetchLabel';
 import useFetchMilestone from '@/api/milestone/useFetchMilestone';
-import useFetchSideBarData from '@/api/useFetchSideBarData';
+
 import useFilter, { parsingFilterReg } from '@/hooks/useFilter';
 import { labelMilestone } from '@/components/Molecules/NavLink/options';
 
@@ -35,21 +30,14 @@ const Issues = () => {
   const { page, queries } = useRecoilValue(FilterStatsState);
   const setPageState = useSetRecoilState(PageState);
 
-  const { labelData } = useFetchLabel();
+  const { useLabelData } = useFetchLabel();
   const { milestoneData } = useFetchMilestone();
-  const { memberData } = useFetchSideBarData();
   const { useIssuesData } = useFetchIssue();
 
+  const { data: labelData } = useLabelData();
   const { data: issues } = useIssuesData(pageParams, queriesParams);
 
   const { setIssueState, setParsingFilterState } = useFilter();
-
-  const filterTabs = [
-    ASSIGNEE_DROPDOWN_ARGS(memberData!),
-    LABEL_DROPDOWN_ARGS(labelData!),
-    MILESTONE_DROPDOWN_ARGS(milestoneData?.openedMilestones!),
-    AUTHOR_DROPDOWN_ARGS(memberData!),
-  ];
 
   const setURLQueriesToFilterState = () => {
     if (!document.location.search) return;
@@ -88,7 +76,7 @@ const Issues = () => {
           </Link>
         </S.SubNav>
       </S.NavInline>
-      <IssueTable issuesData={issues!} filterTabs={filterTabs} />
+      <IssueTable issuesData={issues!} milestoneData={milestoneData!} labelData={labelData!} />
     </>
   );
 };

@@ -24,7 +24,7 @@ const ErrorTable = ({
   resetErrorBoundary,
 }: {
   type: 'milestone' | 'label' | 'issue';
-  resetErrorBoundary: (...args: Array<unknown>) => void;
+  resetErrorBoundary: () => void;
 }) => (
   <StyledErrorTable>
     <S.ErrorHeader>
