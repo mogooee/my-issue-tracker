@@ -19,6 +19,7 @@ import useFetchMilestone from '@/api/milestone/useFetchMilestone';
 
 import useFilter, { parsingFilterReg } from '@/hooks/useFilter';
 import { labelMilestone } from '@/components/Molecules/NavLink/options';
+import Paginiation from '@/components/Organisms/Pagination';
 
 const Issues = () => {
   const naviagate = useNavigate();
@@ -77,6 +78,7 @@ const Issues = () => {
         </S.SubNav>
       </S.NavInline>
       <IssueTable issuesData={issues!} milestoneData={milestoneData!} labelData={labelData!} />
+      {!!issues!.issues.content.length && <Paginiation issuesData={issues!.issues} />}
     </>
   );
 };
