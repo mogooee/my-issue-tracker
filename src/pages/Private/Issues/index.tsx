@@ -78,7 +78,9 @@ const Issues = () => {
         </S.SubNav>
       </S.NavInline>
       <IssueTable issuesData={issues!} milestoneData={milestoneData!} labelData={labelData!} />
-      {!!issues!.issues.content.length && <Paginiation issuesData={issues!.issues} />}
+      {!!issues!.issues.content.length && (
+        <Paginiation totalPages={issues!.issues.totalPages} currentPage={pageParams} />
+      )}
     </>
   );
 };
