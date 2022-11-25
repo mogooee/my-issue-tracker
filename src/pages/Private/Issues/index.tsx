@@ -52,16 +52,20 @@ const Issues = () => {
     });
   };
 
+  // 쿼리가 변경되면 해당하는 결과로 이동한다.
   useEffect(() => {
     if (!document.location.search && filterState === initFilterState) return;
-
     naviagate(`/issues?page=${page}&q=${queries}`);
   }, [queries]);
 
   useEffect(() => {
     setPageState(pageParams);
-    setURLQueriesToFilterState();
-  }, []);
+
+    // 뒤로가기 시 url의 쿼리와 FilterState를 일치시킨다.
+    if (decodeURIComponent(queries).replaceAll('+', ' ') !== decodeURIComponent(queriesParams!)) {
+      setURLQueriesToFilterState();
+    }
+  }, [queriesParams]);
 
   return (
     <>
