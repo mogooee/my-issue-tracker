@@ -65,6 +65,11 @@ const Issues = () => {
     if (decodeURIComponent(queries).replaceAll('+', ' ') !== decodeURIComponent(queriesParams!)) {
       setURLQueriesToFilterState();
     }
+    // 이전 페이지가 루트인 경우 FilterState를 초기화한다.
+    if (!queriesParams && !pageParams) {
+      console.log(null);
+      resetFilterState();
+    }
   }, [queriesParams]);
 
   return (
