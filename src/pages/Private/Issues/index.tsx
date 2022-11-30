@@ -22,7 +22,8 @@ import { labelMilestone } from '@/components/Molecules/NavLink/options';
 import Paginiation from '@/components/Organisms/Pagination';
 
 const Issues = () => {
-  const naviagate = useNavigate();
+  const navigate = useNavigate();
+
   const [searchParams] = useSearchParams();
   const pageParams = Number(searchParams.get('page')) || 0;
   const queriesParams = searchParams.get('q');
@@ -55,7 +56,7 @@ const Issues = () => {
   // 쿼리가 변경되면 해당하는 결과로 이동한다.
   useEffect(() => {
     if (!document.location.search && filterState === initFilterState) return;
-    naviagate(`/issues?page=${page}&q=${queries}`);
+    navigate(`/issues?page=${page}&q=${queries}`);
   }, [queries]);
 
   useEffect(() => {
