@@ -1,5 +1,5 @@
-import { FilterState, NoFilterKeysType } from '@/stores/filter';
-import { useRecoilState } from 'recoil';
+import { FilterState, NoFilterKeysType, PageState } from '@/stores/filter';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 export const stateFilterReg = /^is:/g;
 export const noneFilterReg = /^no:/g;
@@ -15,6 +15,7 @@ export const URLIssueStateReg = new RegExp(`${encodeURIComponent(OPEN_QUERY)}|${
 
 const useFilter = () => {
   const [filterState, setFilterState] = useRecoilState(FilterState);
+  const setPageState = useSetRecoilState(PageState);
 
   const isExistedFilter = (filter: string): boolean => {
     const [key, value] = filter.split(':');
@@ -45,6 +46,7 @@ const useFilter = () => {
       const filterExistedKey = prevState.no.filter((e) => e !== key);
       return { ...prevState, [key]: newValue, no: filterExistedKey };
     });
+    setPageState(0);
   };
 
   const setRemovedFilterState = (filter: string) => {

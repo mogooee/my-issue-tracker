@@ -19,9 +19,11 @@ import useFetchMilestone from '@/api/milestone/useFetchMilestone';
 
 import useFilter, { parsingFilterReg } from '@/hooks/useFilter';
 import { labelMilestone } from '@/components/Molecules/NavLink/options';
+import Paginiation from '@/components/Organisms/Pagination';
 
 const Issues = () => {
-  const naviagate = useNavigate();
+  const navigate = useNavigate();
+
   const [searchParams] = useSearchParams();
   const pageParams = Number(searchParams.get('page')) || 0;
   const queriesParams = searchParams.get('q');
@@ -51,16 +53,24 @@ const Issues = () => {
     });
   };
 
+  // 쿼리가 변경되면 해당하는 결과로 이동한다.
   useEffect(() => {
     if (!document.location.search && filterState === initFilterState) return;
-
-    naviagate(`/issues?page=${page}&q=${queries}`);
+    navigate(`/issues?page=${page}&q=${queries}`);
   }, [queries]);
 
   useEffect(() => {
     setPageState(pageParams);
-    setURLQueriesToFilterState();
-  }, []);
+
+    // 뒤로가기 시 url의 쿼리와 FilterState를 일치시킨다.
+    if (decodeURIComponent(queries).replaceAll('+', ' ') !== decodeURIComponent(queriesParams!)) {
+      setURLQueriesToFilterState();
+    }
+    // 이전 페이지가 루트인 경우 FilterState를 초기화한다.
+    if (!queriesParams && !pageParams) {
+      resetFilterState();
+    }
+  }, [queriesParams]);
 
   return (
     <>
@@ -77,6 +87,9 @@ const Issues = () => {
         </S.SubNav>
       </S.NavInline>
       <IssueTable issuesData={issues!} milestoneData={milestoneData!} labelData={labelData!} />
+      {!!issues!.issues.content.length && (
+        <Paginiation totalPages={issues!.issues.totalPages} currentPage={pageParams} />
+      )}
     </>
   );
 };
