@@ -1,37 +1,57 @@
-import { useRecoilValue } from 'recoil';
-import * as S from '@/components/Organisms/Pagination/index.styled';
-import NavLink from '@/components/Molecules/NavLink';
-import { FilterStatsState, PageState } from '@/stores/filter';
+import { useNavigate } from 'react-router-dom';
 
-const Paginiation = (): JSX.Element => {
-  const pageState = useRecoilValue(PageState);
+import { useRecoilValue } from 'recoil';
+import { FilterStatsState } from '@/stores/filter';
+
+import * as S from '@/components/Organisms/Pagination/index.styled';
+import Button from '@/components/Atoms/Button';
+import { buttonLogic } from '@/components/Organisms/Pagination/helper';
+
+const Paginiation = ({ totalPages, currentPage }: { totalPages: number; currentPage: number }): JSX.Element => {
+  const navigate = useNavigate();
   const { queries } = useRecoilValue(FilterStatsState);
+
+  const PaginationButtons = (total: number, current: number) => {
+    const isNumber = (x: any): x is number => typeof x === 'number';
+
+    const buttons = buttonLogic(total, current).map((el) => {
+      if (isNumber(el)) {
+        return (
+          <S.PaginationNumberButton
+            key={`page-btn-${el}`}
+            type="button"
+            isActive={el - 1 === currentPage}
+            onClick={() => navigate(`/issues?page=${el - 1}&q=${queries}`)}
+          >
+            {el}
+          </S.PaginationNumberButton>
+        );
+      }
+
+      return <div>…</div>;
+    });
+
+    return buttons;
+  };
+
   return (
     <S.Pagination>
-      <NavLink
-        navData={[
-          {
-            link: `/issues?page=${pageState - 1}&q=${queries}`,
-            title: '< Previous',
-            dataId: 'previous page',
-          },
-          {
-            link: `/issues?page=0&q=${queries}`,
-            title: '1',
-            dataId: 'page 1',
-          },
-          {
-            link: `/issues?page=1&q=${queries}`,
-            title: '2',
-            dataId: 'page 2',
-          },
-          {
-            link: `/issues?page=${pageState + 1}&q=${queries}`,
-            title: 'Next >',
-            dataId: 'next page',
-          },
-        ]}
-        defaultActive="page 1"
+      <Button
+        buttonStyle="NO_BORDER"
+        label="< PREVIOUS"
+        size="MEDIUM"
+        disabled={currentPage <= 0}
+        handleOnClick={() => navigate(`/issues?page=${currentPage > 0 ? currentPage - 1 : 0}&q=${queries}`)}
+      />
+      {PaginationButtons(totalPages, currentPage + 1)}
+      <Button
+        buttonStyle="NO_BORDER"
+        label="NEXT >"
+        size="MEDIUM"
+        disabled={totalPages <= currentPage + 1}
+        handleOnClick={() =>
+          navigate(`/issues?page=${currentPage < totalPages ? currentPage + 1 : totalPages}&q=${queries}`)
+        }
       />
     </S.Pagination>
   );
