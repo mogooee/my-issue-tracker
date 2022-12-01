@@ -101,7 +101,7 @@ class ErrorBoundary extends React.Component<
       }
 
       if (fallbackRender) {
-        this.fallbackUIRender(fallbackRender, data);
+        return this.fallbackUIRender(fallbackRender, data);
       }
 
       switch (data.errorCode) {
