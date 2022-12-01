@@ -27,8 +27,18 @@ const StyledInternalServerError = styled.div`
   }
 `;
 
-const InternalServerError = () => {
+const InternalServerError = ({ resetError }: { resetError: () => void }) => {
   const navigate = useNavigate();
+
+  const backToPreviousPage = () => {
+    resetError();
+    navigate(-1);
+  };
+
+  const backToMainPage = () => {
+    resetError();
+    navigate('/');
+  };
 
   return (
     <StyledInternalServerError>
@@ -40,8 +50,8 @@ const InternalServerError = () => {
         잠시 후 다시 확인해주세요.
       </p>
       <div className="nav_btns">
-        <Button buttonStyle="STANDARD" label="이전" size="MEDIUM" handleOnClick={() => navigate(-1)} />
-        <Button buttonStyle="STANDARD" label="메인으로" size="MEDIUM" handleOnClick={() => navigate('/')} />
+        <Button buttonStyle="STANDARD" label="이전" size="MEDIUM" handleOnClick={backToPreviousPage} />
+        <Button buttonStyle="STANDARD" label="메인으로" size="MEDIUM" handleOnClick={backToMainPage} />
       </div>
     </StyledInternalServerError>
   );
