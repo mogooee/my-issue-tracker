@@ -97,11 +97,11 @@ class ErrorBoundary extends React.Component<
       const { status, data } = error.response!;
 
       if (status === 500) {
-        return <InternalServerError />;
+        return <InternalServerError resetError={() => this.resetState()} />;
       }
 
       if (fallbackRender) {
-        this.fallbackUIRender(fallbackRender, data);
+        return this.fallbackUIRender(fallbackRender, data);
       }
 
       switch (data.errorCode) {
