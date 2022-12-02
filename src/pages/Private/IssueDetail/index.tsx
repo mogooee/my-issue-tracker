@@ -66,7 +66,6 @@ const IssueDetail = (): JSX.Element => {
         closed={closed}
         title={title}
         createdAt={createdAt}
-        lastModifiedAt={lastModifiedAt}
         author={author}
         commentNum={comments.length}
       />
