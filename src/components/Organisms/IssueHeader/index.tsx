@@ -9,16 +9,12 @@ import HeaderInline from '@/components/Organisms/IssueHeader/HeaderInline';
 import calcTimeForToday from '@/utils/calcForTimeToday';
 import { ContentTypes } from '@/api/issue/types';
 
-type IssueHeaderTypes = Pick<ContentTypes, 'id' | 'title' | 'closed' | 'createdAt' | 'lastModifiedAt' | 'author'> & {
+type IssueHeaderTypes = Pick<ContentTypes, 'id' | 'title' | 'closed' | 'createdAt' | 'author'> & {
   commentNum: number;
 };
 
-const IssueHeader = ({ id, closed, title, createdAt, lastModifiedAt, author, commentNum }: IssueHeaderTypes) => {
-  const issueState = closed ? '닫혔' : '열렸';
-  const timeStamp = createdAt === lastModifiedAt ? createdAt : lastModifiedAt;
-  const issueStateSummary = `이 이슈가 ${calcTimeForToday(timeStamp)}에 ${
-    author.nickname
-  }님에 의해 ${issueState}습니다.`;
+const IssueHeader = ({ id, closed, title, createdAt, author, commentNum }: IssueHeaderTypes) => {
+  const issueOpenSummary = `이 이슈가 ${calcTimeForToday(createdAt)}에 ${author.nickname}님에 의해 열렸습니다.`;
 
   return (
     <S.IssueHeader>
@@ -31,7 +27,7 @@ const IssueHeader = ({ id, closed, title, createdAt, lastModifiedAt, author, com
           lineColor={closed ? COLORS.SECONDORY.PURPLE : COLORS.PRIMARY.BLUE}
           title={closed ? '닫힌 이슈' : '열린 이슈'}
         />
-        <span>{issueStateSummary}</span>
+        <span>{issueOpenSummary}</span>
         <span className="splitLine">∙</span>
         <span>{`코멘트 ${commentNum}개`}</span>
       </S.Info>

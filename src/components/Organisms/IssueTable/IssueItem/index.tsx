@@ -16,16 +16,33 @@ import { ContentTypes } from '@/api/issue/types';
 import { FilterState } from '@/stores/filter';
 
 const IssueItem = (issueInfo: ContentTypes) => {
-  const { id, title, closed, issueLabels, author, issueAssignees, createdAt, lastModifiedAt, milestone } = issueInfo;
+  const {
+    id,
+    title,
+    closed,
+    issueLabels,
+    author,
+    issueAssignees,
+    createdAt,
+    lastModifiedAt,
+    milestone,
+    issueHistories,
+  } = issueInfo;
 
   const checkState = useRecoilValue(CheckState);
   const setFilterState = useSetRecoilState(FilterState);
 
   const issueLink = `/issues/${id}`;
   const milestoneLink = `/milestone/${id}`;
-  // eslint-disable-next-line no-nested-ternary
-  const issueState = closed ? '닫혔습니다' : createdAt === lastModifiedAt ? '작성되었습니다' : '열렸습니다';
-  const timeStamp = createdAt === lastModifiedAt ? createdAt : lastModifiedAt;
+
+  const issueState = closed ? '닫혔습니다' : '열렸습니다';
+  const closeIssueHistories = issueHistories.filter((history) => history.action === 'CLOSE_ISSUE');
+
+  const lastCloseIssueHistory = closeIssueHistories.length
+    ? closeIssueHistories[closeIssueHistories.length - 1].modifiedAt
+    : lastModifiedAt;
+
+  const timeStamp = closed ? lastCloseIssueHistory : createdAt;
   const issueSummary = `이 이슈가 ${calcTimeForToday(timeStamp)}, ${author.nickname}님에 의해 ${issueState}`;
 
   const isChecked = !!checkState.child.find((checkboxId) => checkboxId === id);
