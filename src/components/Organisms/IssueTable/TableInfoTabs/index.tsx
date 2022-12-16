@@ -5,8 +5,6 @@ import { LoginUserInfoState } from '@/stores/loginUserInfo';
 import useFetchSideBarData from '@/api/useFetchSideBarData';
 import useFetchIssue from '@/api/issue/useFetchIssue';
 
-import { LabelTypes } from '@/api/issue/types';
-import { MilestoneListTypes } from '@/api/milestone';
 import { DropdownTypes, ListPanelTypes } from '@/components/Molecules/Dropdown/types';
 
 import {
@@ -23,18 +21,13 @@ import Dropdown from '@/components/Molecules/Dropdown';
 import useFilter, { noneFilterReg } from '@/hooks/useFilter';
 import { FilterState } from '@/stores/filter';
 
-const TableInfoTabs = ({
-  labelData,
-  milestoneData,
-}: {
-  labelData: LabelTypes[];
-  milestoneData: MilestoneListTypes;
-}) => {
+const TableInfoTabs = () => {
   const memberId = useRecoilValue(LoginUserInfoState).id;
   const [checkState, setCheckState] = useRecoilState(CheckState);
   const checkedBoxNum = checkState.child.length;
 
-  const { memberData, memberDataRefetch } = useFetchSideBarData();
+  const { memberData, memberDataRefetch, labelData, milestoneData, labelDataRefetch, milestoneDataRefetch } =
+    useFetchSideBarData();
   const { useUpdateIssueState } = useFetchIssue();
   const { mutate: updateIssueState } = useUpdateIssueState(checkState.child);
 
@@ -48,8 +41,8 @@ const TableInfoTabs = ({
 
   const filterTabs = [
     ASSIGNEE_DROPDOWN_ARGS(memberData || []),
-    LABEL_DROPDOWN_ARGS(labelData),
-    MILESTONE_DROPDOWN_ARGS(milestoneData.openedMilestones || []),
+    LABEL_DROPDOWN_ARGS(labelData || []),
+    MILESTONE_DROPDOWN_ARGS(milestoneData?.openedMilestones || []),
     AUTHOR_DROPDOWN_ARGS(memberData || []),
   ];
 
@@ -83,6 +76,8 @@ const TableInfoTabs = ({
   const handleOnMemberDropdownClick = (filterKey: string) => {
     const isMemberListData = filterKey === 'assignee' || filterKey === 'author';
     if (isMemberListData && !memberData) memberDataRefetch();
+    if (filterKey === 'label' && !labelData) labelDataRefetch();
+    if (filterKey === 'milestone' && !milestoneData) milestoneDataRefetch();
   };
 
   return (
