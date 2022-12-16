@@ -10,6 +10,7 @@ import { FilterState, FilterStatsState, initFilterState, PageState } from '@/sto
 
 import useFilter, { parsingFilterReg } from '@/hooks/useFilter';
 import Paginiation from '@/components/Organisms/Pagination';
+import SkeletonIssueTable from '@/components/Skeleton/IssueTable';
 
 const Issues = () => {
   const navigate = useNavigate();
@@ -70,4 +71,17 @@ const Issues = () => {
   );
 };
 
-export default Issues;
+const fallbackIssues = () => (
+  <Suspense
+    fallback={
+      <>
+        <IssuesNavInline />
+        <SkeletonIssueTable />
+      </>
+    }
+  >
+    <Issues />
+  </Suspense>
+);
+
+export default fallbackIssues;
