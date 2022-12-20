@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { Home, NotFound, Issues, Labels, Milestones, NewIssue, IssueDetail } from '@/pages';
 
 const PrivateRouter = () => (
@@ -10,6 +10,7 @@ const PrivateRouter = () => (
       <Route path="/issues/:issueId" element={<IssueDetail />} />
       <Route path="/labels" element={<Labels />} />
       <Route path="/milestones" element={<Milestones />} />
+      <Route path="/redirect-auth" element={<Navigate to="/issues" />} />
     </Route>
     <Route path="*" element={<NotFound />} />
   </Routes>

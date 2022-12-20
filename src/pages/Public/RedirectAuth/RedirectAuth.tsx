@@ -22,7 +22,6 @@ const RedirectAuth = () => {
     if (signInMember) {
       setSuccessLoginState();
       saveAuthLoginState(signInMember);
-      navigate('/issues');
     } else {
       navigate('/signup-oauth');
     }
