@@ -1,7 +1,8 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { rest } from 'msw';
-import { MilestoneTypes } from '@/api/issue/types';
+import { ContentTypes, MilestoneTypes } from '@/api/issue/types';
 import { MilestoneListTypes } from '@/api/milestone';
+import { issueTable } from '@/mocks/tables/issue';
 
 const tokenErrorMessage = { message: '토큰이 유효하지 않습니다.' };
 
@@ -95,6 +96,15 @@ export const milestoneHandlers = [
     //   return res(ctx.status(400), ctx.json(tokenErrorMessage.message));
     // }
 
+    const updatedIssues = (state: 'openIssues' | 'closedIssues'): ContentTypes[] =>
+      issueTable[state].map((issue) => ({
+        ...issue,
+        milestone: issue.milestone?.id === Number(id) ? patchMilestone : issue.milestone,
+      }));
+
+    issueTable.openIssues = updatedIssues('openIssues');
+    issueTable.closedIssues = updatedIssues('closedIssues');
+
     return res(ctx.status(200), ctx.json(patchMilestones));
   }),
 
@@ -148,6 +158,15 @@ export const milestoneHandlers = [
     //   console.log(!req.cookies['refresh-token']);
     //   return res(ctx.status(400), ctx.json(tokenErrorMessage.message));
     // }
+
+    const updatedIssues = (state: 'openIssues' | 'closedIssues'): ContentTypes[] =>
+      issueTable[state].map((issue) => ({
+        ...issue,
+        milestone: issue.milestone?.id === Number(id) ? null : issue.milestone,
+      }));
+
+    issueTable.openIssues = updatedIssues('openIssues');
+    issueTable.closedIssues = updatedIssues('closedIssues');
 
     return res(ctx.status(200), ctx.json({ message: '성공적으로 삭제되었습니다.' }));
   }),
