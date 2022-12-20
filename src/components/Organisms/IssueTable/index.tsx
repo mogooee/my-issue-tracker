@@ -11,8 +11,7 @@ import IssueItem from '@/components/Organisms/IssueTable/IssueItem';
 import * as S from '@/components/Organisms/IssueTable/index.styles';
 import Table from '@/components/Molecules/Table';
 
-import { IssuesTypes, LabelTypes } from '@/api/issue/types';
-import { MilestoneListTypes } from '@/api/milestone';
+import { IssuesTypes } from '@/api/issue/types';
 import { FilterStatsState } from '@/stores/filter';
 import { openCloseIssue } from '@/components/Molecules/NavLink/options';
 import useFilter from '@/hooks/useFilter';
@@ -21,15 +20,9 @@ import CustomErrorBoundary from '@/components/ErrorBoundary';
 import TableInfoTabs from '@/components/Organisms/IssueTable/TableInfoTabs';
 import ErrorInfoTabs from '@/components/Organisms/IssueTable/TableInfoTabs/Error';
 
-interface IssueTableTypes {
-  issuesData: IssuesTypes;
-  labelData: LabelTypes[];
-  milestoneData: MilestoneListTypes;
-}
-
 const PARENT_CHECKBOX_ID = -1;
 
-const IssueTable = ({ issuesData, labelData, milestoneData }: IssueTableTypes) => {
+const IssueTable = ({ issuesData }: { issuesData: IssuesTypes }) => {
   const { openIssueCount, closedIssueCount, issues } = issuesData;
 
   const checkState = useRecoilValue(CheckState);
@@ -71,7 +64,7 @@ const IssueTable = ({ issuesData, labelData, milestoneData }: IssueTableTypes) =
               <ErrorInfoTabs resetState={resetState} errorCode={errorCode} />
             )}
           >
-            <TableInfoTabs labelData={labelData} milestoneData={milestoneData} />
+            <TableInfoTabs />
           </CustomErrorBoundary>
         </S.IssueTableHeader>
       }

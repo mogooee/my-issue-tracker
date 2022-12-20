@@ -10,7 +10,7 @@ import theme from '@/styles/theme';
 import axios from 'axios';
 
 import CustomErrorBoundary from '@/components/ErrorBoundary';
-import LoadingSpinner from '@/components/Atoms/LoadingSpinner';
+import ServiceLoading from '@/pages/ServiceLoading';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -37,7 +37,7 @@ const App = () => (
         <ThemeProvider theme={theme}>
           <GlobalStyle />
           <CustomErrorBoundary>
-            <Suspense fallback={<LoadingSpinner size={80} />}>
+            <Suspense fallback={<ServiceLoading />}>
               <ReactQueryDevtools initialIsOpen={false} />
               <Routers />
             </Suspense>

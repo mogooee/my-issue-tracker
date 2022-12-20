@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { MilestoneItem } from '@/components/Organisms/MilestoneTable/MilestoneItem/index.styles';
 import { COLORS } from '@/styles/theme';
 
-const skeletonRectangle = (width: number, height: number) => `
+export const skeletonRectangle = (width: number, height: number) => `
   position: relative;
   overflow: hidden;
   border-radius: 8px;

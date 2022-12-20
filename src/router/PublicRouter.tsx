@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { Home, RedirectAuth, Login, OAuthSignUp, CommonSignUp } from '@/pages';
 
 const PublicRouter = () => (
@@ -10,7 +10,7 @@ const PublicRouter = () => (
       <Route path="/signup-oauth" element={<OAuthSignUp />} />
       <Route path="/signup" element={<CommonSignUp />} />
     </Route>
-    <Route path="*" element={<Login />} />
+    <Route path="*" element={<Navigate to="/" />} />
   </Routes>
 );
 
