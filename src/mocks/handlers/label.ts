@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { rest } from 'msw';
-import { LabelTypes } from '@/api/issue/types';
+import { ContentTypes, LabelTypes } from '@/api/issue/types';
+import { issueTable } from '@/mocks/tables/issue';
 
 const message = {
   message: '',
@@ -91,6 +92,18 @@ export const labelHandlers = [
 
     labelTable = labelTable.filter((e) => e.id !== Number(id));
     message.message = '라벨 삭제 성공';
+
+    const updatedIssues = (state: 'openIssues' | 'closedIssues'): ContentTypes[] =>
+      issueTable[state].map((issue) => ({
+        ...issue,
+        issueLabels: {
+          issueLabels: issue.issueLabels.issueLabels.filter((issueLabel) => issueLabel.id !== Number(id)),
+        },
+      }));
+
+    issueTable.openIssues = updatedIssues('openIssues');
+    issueTable.closedIssues = updatedIssues('closedIssues');
+
     return res(ctx.status(200), ctx.json(message));
   }),
 
@@ -112,6 +125,21 @@ export const labelHandlers = [
       }
       return e;
     });
+
+    const updatedIssues = (state: 'openIssues' | 'closedIssues'): ContentTypes[] =>
+      issueTable[state].map((issue) => ({
+        ...issue,
+        issueLabels: {
+          issueLabels: issue.issueLabels.issueLabels.map((issueLabel) => {
+            if (issueLabel.id === Number(id)) return newLabel;
+            return issueLabel;
+          }),
+        },
+      }));
+
+    issueTable.openIssues = updatedIssues('openIssues');
+    issueTable.closedIssues = updatedIssues('closedIssues');
+
     return res(ctx.status(200), ctx.json(newLabel));
   }),
 ];
