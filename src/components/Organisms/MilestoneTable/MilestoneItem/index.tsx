@@ -26,7 +26,7 @@ const MilestoneItem = (props: MilestoneTypes) => {
     <>
       <S.MilestoneItem>
         <S.MilestoneItemInfo>
-          <Link to={`/milestone/${id}`} className="MilestoneItem_title">
+          <Link to={`/issues?q=milestone%3A"${title}"`} className="MilestoneItem_title">
             <Icon icon="Milestone" fill={COLORS.PRIMARY.BLUE} stroke={COLORS.PRIMARY.BLUE} />
             <span>{title}</span>
           </Link>
