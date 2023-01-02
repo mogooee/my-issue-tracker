@@ -12,9 +12,8 @@ import * as S from '@/components/Organisms/IssueTable/index.styles';
 import Table from '@/components/Molecules/Table';
 
 import { IssuesTypes } from '@/api/issue/types';
-import { FilterStatsState } from '@/stores/filter';
 import { openCloseIssue } from '@/components/Molecules/NavLink/options';
-import useFilter, { OPEN_QUERY } from '@/hooks/useFilter';
+import { OPEN_QUERY } from '@/hooks/useFilter';
 
 import CustomErrorBoundary from '@/components/ErrorBoundary';
 import TableInfoTabs from '@/components/Organisms/IssueTable/TableInfoTabs';
@@ -33,13 +32,6 @@ const IssueTable = ({ issuesData }: { issuesData: IssuesTypes }) => {
   const page = useRecoilValue(PageState);
   const queries = useRecoilValue(FilterState);
 
-  const { setParsingFilterState } = useFilter();
-
-  const handleOnOpenClosedNavClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    const clickedNavDataId = event.currentTarget.dataset.id;
-    setParsingFilterState(clickedNavDataId!);
-  };
-
   useEffect(() => {
     const ids: number[] = issues.content.map((issue) => issue.id);
     setDefaultCheckIds(ids);
@@ -56,7 +48,6 @@ const IssueTable = ({ issuesData }: { issuesData: IssuesTypes }) => {
             ) : (
               <NavLink
                 navData={openCloseIssue(openIssueCount, closedIssueCount, page, queries)}
-                handleOnClick={handleOnOpenClosedNavClick}
                 defaultActive={OPEN_QUERY}
               />
             )}
