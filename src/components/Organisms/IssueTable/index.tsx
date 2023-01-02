@@ -14,7 +14,7 @@ import Table from '@/components/Molecules/Table';
 import { IssuesTypes } from '@/api/issue/types';
 import { FilterStatsState } from '@/stores/filter';
 import { openCloseIssue } from '@/components/Molecules/NavLink/options';
-import useFilter from '@/hooks/useFilter';
+import useFilter, { OPEN_QUERY } from '@/hooks/useFilter';
 
 import CustomErrorBoundary from '@/components/ErrorBoundary';
 import TableInfoTabs from '@/components/Organisms/IssueTable/TableInfoTabs';
@@ -55,7 +55,7 @@ const IssueTable = ({ issuesData }: { issuesData: IssuesTypes }) => {
               <NavLink
                 navData={openCloseIssue(openIssueCount, closedIssueCount, page, queries)}
                 handleOnClick={handleOnOpenClosedNavClick}
-                defaultActive="is:open"
+                defaultActive={OPEN_QUERY}
               />
             )}
           </S.IssueStates>

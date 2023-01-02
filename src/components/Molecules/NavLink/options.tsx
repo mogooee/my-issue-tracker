@@ -1,5 +1,5 @@
 import Icon from '@/components/Atoms/Icon';
-import { CLOSED_QUERY, OPEN_QUERY, URLIssueStateReg } from '@/hooks/useFilter';
+import { CLOSED_QUERY, OPEN_QUERY } from '@/hooks/useFilter';
 import { COLORS } from '@/styles/theme';
 
 export const labelMilestone = (labelsNum?: number, milestonesNum?: number) => {
@@ -25,13 +25,13 @@ export const openCloseIssue = (openIssueNum: number, closedIssueNum: number, pag
   const filterIssueStateQuery = queryString.replace(URLIssueStateReg, '');
   return [
     {
-      dataId: 'is:open',
+      dataId: OPEN_QUERY,
       icon: <Icon icon="AlertCircle" stroke={COLORS.PRIMARY.BLUE} />,
       title: `열린 이슈 (${openIssueNum})`,
       link: `${pageQuery}&q=${encodeURIComponent(OPEN_QUERY)}${filterIssueStateQuery}`,
     },
     {
-      dataId: 'is:closed',
+      dataId: CLOSED_QUERY,
       icon: <Icon icon="Archive" stroke={COLORS.SECONDORY.PURPLE} />,
       title: `닫힌 이슈 (${closedIssueNum})`,
       link: `${pageQuery}&q=${encodeURIComponent(CLOSED_QUERY)}${filterIssueStateQuery}`,
