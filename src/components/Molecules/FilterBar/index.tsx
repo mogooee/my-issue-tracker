@@ -13,6 +13,7 @@ import { FILTERBAR_CLEAR_BUTTON_PROPS } from '@/components/Molecules/FilterBar/m
 import { DropdownTypes, ListPanelTypes } from '@/components/Molecules/Dropdown/types';
 import useFilter, { parsingFilterReg, stateFilterReg } from '@/hooks/useFilter';
 import debounce from '@/utils/debounce';
+import { FilterState, FilterStatsState } from '@/stores/filter';
 
 export type FILTERBAR_INFO_TYPES = {
   DROPDOWN: (
@@ -32,9 +33,10 @@ const FilterBar = ({ ...props }: FILTERBAR_INFO_TYPES) => {
   const setFilterState = useSetRecoilState(FilterState);
   const resetFilterValue = useResetRecoilState(FilterState);
   const { isActive, onClickInput, onBlurInput } = useInput();
+  const queries = useRecoilValue(FilterState);
+  const { isFiltering } = useRecoilValue(FilterStatsState);
 
-  const [filterBarInputValue, setFilterBarInputValue] = useState<string>(filterBarString);
-  const { setIssueState, setParsingFilterState } = useFilter();
+  const [filterBarValue, setFilterBarValue] = useState<string>(queries);
 
   const isChecked = (dataId: string) => {
     if (dataId.match(stateFilterReg)) return filterBarString === dataId;
