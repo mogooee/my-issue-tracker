@@ -1,66 +1,66 @@
-import { FilterState, NoFilterKeysType, PageState } from '@/stores/filter';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { FilterState, PageState } from '@/stores/filter';
+import { LoginUserInfoState } from '@/stores/loginUserInfo';
 
-export const stateFilterReg = /^is:/g;
-export const noneFilterReg = /^no:/g;
-const labelFilterReg = /^label:/g;
-export const parsingFilterReg = /\w+:(@?\w+|".*?")/g;
-export const doubleQuotationReg = /(^"|"$)/g;
-
-export const OPEN_QUERY = 'is:"open"';
-export const CLOSED_QUERY = 'is:"closed"';
+export const OPEN_QUERY = 'is:open';
+export const CLOSED_QUERY = 'is:closed';
 
 export const issueStateReg = new RegExp(`${OPEN_QUERY}|${CLOSED_QUERY}`);
-export const URLIssueStateReg = new RegExp(`${encodeURIComponent(OPEN_QUERY)}|${encodeURIComponent(CLOSED_QUERY)}`);
+export const noneFilterReg = /.?no:(\w+)/g;
+const filterReg = /(^\w+):(".*"|\S+)/g;
+const labelReg = /^label:/;
 
-const useFilter = () => {
-  const [filterState, setFilterState] = useRecoilState(FilterState);
-  const setPageState = useSetRecoilState(PageState);
+const useNewFilter = () => {
+  const pageState = useRecoilValue(PageState);
+  const filterState = useRecoilValue(FilterState);
+  const loginUserInfo = useRecoilValue(LoginUserInfoState);
+  const navigate = useNavigate();
 
-  const isExistedFilter = (filter: string): boolean => {
-    const [key, value] = filter.split(':');
-    if (filter.match(noneFilterReg)) return !!filterState.no.find((e) => e === value);
-    if (filter.match(labelFilterReg)) return !!filterState.label.find((e) => e === value);
-    return filterState[key] === value;
+  const addFilter = (filter: string) => {
+    const noneExistedFilterReg = new RegExp(`.${filter.replace(filterReg, 'no:$1')}`);
+    const existedFilterReg = new RegExp(
+      `.${filter.replace(noneFilterReg.test(filter) ? noneFilterReg : filterReg, '$1')}:(".*"|\\S+)`,
+      'g',
+    );
+
+    if (existedFilterReg.test(filterState) && !labelReg.test(filter)) {
+      return `${filterState.replace(existedFilterReg, '')} ${filter}`;
+    }
+
+    if (noneExistedFilterReg.test(filterState)) {
+      return `${filterState.replace(noneExistedFilterReg, '')} ${filter}`;
+    }
+
+    if (noneFilterReg.test(filter)) {
+      return `${filterState.replace(existedFilterReg, '')} ${filter}`;
+    }
+
+    return `${filterState} ${filter}`;
   };
 
-  const setIssueState = (queries: string | null) => {
-    if (!queries || !queries.match(issueStateReg)) setFilterState((prev) => ({ ...prev, is: 'all' }));
+  const removeFilter = (filter: string) => filterState.replace(` ${filter}`, '');
+
+  const isExistedFilter = (filter: string) => filterState.includes(filter);
+
+  const parseFilter = (filter: string) => {
+    if (isExistedFilter(filter)) {
+      return removeFilter(filter);
+    }
+
+    return addFilter(filter);
   };
 
-  const setParsingFilterState = (filter: string) => {
-    const [key, value] = filter.split(':');
-    const filterValue = value?.replace(doubleQuotationReg, '');
-
-    setFilterState((prevState) => {
-      // assignee:""
-      if (!filterValue) return { ...prevState, no: [...prevState.no, key as NoFilterKeysType] };
-      // no:assignee
-      if (filter.match(noneFilterReg)) {
-        const initPrevState = value === 'label' ? [] : '';
-        const newNoFilterKey = value as NoFilterKeysType;
-        return { ...prevState, [value]: initPrevState, no: [...prevState.no, newNoFilterKey] };
-      }
-
-      const newValue = filter.match(labelFilterReg) ? [...prevState.label, filterValue] : filterValue;
-      const filterExistedKey = prevState.no.filter((e) => e !== key);
-      return { ...prevState, [key]: newValue, no: filterExistedKey };
-    });
-    setPageState(0);
+  const searchFilter = (filter: string) => {
+    navigate(`/issues?page=${pageState}&q=${filter}`);
   };
 
-  const setRemovedFilterState = (filter: string) => {
-    if (filter.match(noneFilterReg)) return;
-
-    const [key, value] = filter.split(':');
-
-    setFilterState((prevState) => {
-      const removedValue = filter.match(labelFilterReg) ? prevState.label.filter((e) => e !== value) : '';
-      return { ...prevState, [key]: removedValue };
-    });
+  const changeNotEngFilter = (value: string) => {
+    const engReg = /^[a-z]+$/gi;
+    return engReg.test(value) ? value : `"${value}"`;
   };
 
-  return { isExistedFilter, setIssueState, setParsingFilterState, setRemovedFilterState };
+  return { isExistedFilter, parseFilter, searchFilter, changeNotEngFilter };
 };
 
-export default useFilter;
+export default useNewFilter;
