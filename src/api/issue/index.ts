@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { ContentTypes, IssuesTypes } from '@/api/issue/types';
 import { NEW_ISSUE_FORM_TYPES } from '@/stores/newIssue';
-import { parsingFilterReg } from '@/hooks/useFilter';
 
 interface Idtypes {
   issueId: number;
@@ -11,13 +10,9 @@ interface Idtypes {
 }
 
 export const getIssuesData = async (page: number, queryString: string): Promise<IssuesTypes> => {
-  const queries =
-    queryString
-      .match(parsingFilterReg)
-      ?.map((e) => encodeURIComponent(e))
-      .join('+') || '';
-
-  const { data: issuesData } = await axios.get<IssuesTypes>(`api/issues?page=${page}&q=${encodeURIComponent(queries)}`);
+  const { data: issuesData } = await axios.get<IssuesTypes>(
+    `api/issues?page=${page}&q=${encodeURIComponent(queryString)}`,
+  );
   return issuesData;
 };
 

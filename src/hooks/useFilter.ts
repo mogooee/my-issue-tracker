@@ -60,7 +60,24 @@ const useNewFilter = () => {
     return engReg.test(value) ? value : `"${value}"`;
   };
 
-  return { isExistedFilter, parseFilter, searchFilter, changeNotEngFilter };
+  const changeFilterToURL = (filter: string) => {
+    const meReg = /(\w+):@me/g;
+    const queryReg = /(\w+):(\w+)/g;
+    const parsingReg = /\w+:".*?"/g;
+
+    const URL =
+      filter
+        .replace(noneFilterReg, ' $1:""')
+        .replace(meReg, `$1:"${loginUserInfo.nickname}"`)
+        .replace(queryReg, '$1:"$2"')
+        .match(parsingReg)
+        ?.map((e) => encodeURIComponent(e))
+        .join('+') || '';
+
+    return URL;
+  };
+
+  return { isExistedFilter, parseFilter, searchFilter, changeNotEngFilter, changeFilterToURL };
 };
 
 export default useNewFilter;
