@@ -13,9 +13,11 @@ import { COLORS } from '@/styles/theme';
 import useFetchMilestone from '@/api/milestone/useFetchMilestone';
 import { ClickMilestoneState } from '@/stores/milestone';
 import { MilestoneTypes } from '@/api/issue/types';
+import useFilter from '@/hooks/useFilter';
 
 const MilestoneItem = (props: MilestoneTypes) => {
   const { patchMilestoneStateMutate } = useFetchMilestone();
+  const { changeNotEngFilter } = useFilter();
 
   const { id, title, description, dueDate, openIssueCount, closedIssueCount, closed } = props;
   const [isOpenModifyEditer, setIsOpenModifyEditer] = useState(false);
@@ -26,7 +28,7 @@ const MilestoneItem = (props: MilestoneTypes) => {
     <>
       <S.MilestoneItem>
         <S.MilestoneItemInfo>
-          <Link to={`/issues?q=milestone%3A"${title}"`} className="MilestoneItem_title">
+          <Link to={`/issues?page=0&q=milestone%3A${changeNotEngFilter(title)}`} className="MilestoneItem_title">
             <Icon icon="Milestone" fill={COLORS.PRIMARY.BLUE} stroke={COLORS.PRIMARY.BLUE} />
             <span>{title}</span>
           </Link>

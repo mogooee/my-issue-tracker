@@ -13,7 +13,7 @@ import UserImage from '@/components/Atoms/UserImage';
 import { CheckState } from '@/stores/checkBox';
 import calcTimeForToday from '@/utils/calcForTimeToday';
 import { ContentTypes } from '@/api/issue/types';
-import { FilterState } from '@/stores/filter';
+import useFilter from '@/hooks/useFilter';
 
 const IssueItem = (issueInfo: ContentTypes) => {
   const {
@@ -30,7 +30,7 @@ const IssueItem = (issueInfo: ContentTypes) => {
   } = issueInfo;
 
   const checkState = useRecoilValue(CheckState);
-  const setFilterState = useSetRecoilState(FilterState);
+  const { changeNotEngFilter } = useFilter();
 
   const issueLink = `/issues/${id}`;
   const milestoneLink = `/milestone/${id}`;
@@ -47,10 +47,6 @@ const IssueItem = (issueInfo: ContentTypes) => {
 
   const isChecked = !!checkState.child.find((checkboxId) => checkboxId === id);
 
-  const handleLabelClick = (filterdLabelTitle: string) => {
-    setFilterState((prev) => ({ ...prev, label: [filterdLabelTitle] }));
-  };
-
   return (
     <S.Template>
       <CheckBox id={id} type="child" checked={isChecked} />
@@ -66,7 +62,9 @@ const IssueItem = (issueInfo: ContentTypes) => {
           </Link>
           <S.Labels>
             {issueLabels.issueLabels.map((labelProps) => (
-              <Label key={labelProps.title} {...labelProps} onClick={() => handleLabelClick(labelProps.title)} />
+              <Link key={labelProps.title} to={`/issues?page=0&q=label%3A${changeNotEngFilter(labelProps.title)}`}>
+                <Label {...labelProps} />
+              </Link>
             ))}
           </S.Labels>
         </S.IssueTitle>
