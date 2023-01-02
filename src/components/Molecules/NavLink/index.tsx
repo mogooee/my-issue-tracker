@@ -17,21 +17,17 @@ export interface NavLinkTypes {
 
 const NavLink = ({ navData, navLinkStyle = 'NORMAL', defaultActive, handleOnClick }: NavLinkTypes) => {
   const { pathname, search } = document.location;
-  const url = pathname + search;
+  const url = decodeURIComponent(pathname + search);
 
   return (
     <S.StyledNavLinks navLinkStyle={navLinkStyle}>
       {navData.map(({ icon, title, link, dataId }) => {
-        const isActive = url === link;
         const isDefaultActive = !search && defaultActive === dataId;
+        const isActive = url.includes(link);
+        const active = isDefaultActive || isActive ? 'isActive' : '';
+
         return (
-          <S.StyledNavLink
-            key={title}
-            className={isActive || isDefaultActive ? 'isActive' : ''}
-            to={link}
-            data-id={dataId}
-            onClick={handleOnClick}
-          >
+          <S.StyledNavLink key={title} className={active} to={link} data-id={dataId} onClick={handleOnClick}>
             {icon}
             <span>{title}</span>
           </S.StyledNavLink>
