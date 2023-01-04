@@ -6,7 +6,7 @@ import { IssuesTypes, CommentsTypes, ContentTypes, IssueHistoryTypes, ReactionRe
 import { userTable } from '@/mocks/handlers/auth';
 import { MILESTONE_LIST, USER_LIST } from '@/components/Molecules/Dropdown/mock';
 import { responseNewIssueData } from '@/mocks/tables/newIssueHelper';
-import { doubleQuotationReg, issueStateReg, OPEN_QUERY } from '@/hooks/useFilter';
+import { OPEN_QUERY, CLOSED_QUERY } from '@/hooks/useFilter';
 import { labelTable } from '@/mocks/handlers/label';
 import {
   assigneesHistory,
@@ -84,6 +84,7 @@ export const issueHandlers = [
 
     const queriesArr = queries?.split('+');
     queriesArr?.forEach((query) => {
+      const doubleQuotationReg = /(^"|"$)/g;
       const [key, value] = decodeURIComponent(query).split(':');
       const decodingValue = value?.replace(doubleQuotationReg, '');
 
@@ -131,6 +132,7 @@ export const issueHandlers = [
     const openStateReg = new RegExp(OPEN_QUERY);
     const stateContent = queries.match(openStateReg) ? openIssueContents : closedIssueContents;
 
+    const issueStateReg = new RegExp(`${OPEN_QUERY}|${CLOSED_QUERY}`);
     const filteredContent = queries.match(issueStateReg)
       ? stateContent
       : [...openIssueContents, ...closedIssueContents];

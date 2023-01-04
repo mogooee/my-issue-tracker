@@ -12,13 +12,13 @@ import * as S from '@/components/Organisms/IssueTable/index.styles';
 import Table from '@/components/Molecules/Table';
 
 import { IssuesTypes } from '@/api/issue/types';
-import { FilterStatsState } from '@/stores/filter';
 import { openCloseIssue } from '@/components/Molecules/NavLink/options';
-import useFilter from '@/hooks/useFilter';
+import { OPEN_QUERY } from '@/hooks/useFilter';
 
 import CustomErrorBoundary from '@/components/ErrorBoundary';
 import TableInfoTabs from '@/components/Organisms/IssueTable/TableInfoTabs';
 import ErrorInfoTabs from '@/components/Organisms/IssueTable/TableInfoTabs/Error';
+import { FilterState, PageState } from '@/stores/filter';
 
 const PARENT_CHECKBOX_ID = -1;
 
@@ -29,14 +29,8 @@ const IssueTable = ({ issuesData }: { issuesData: IssuesTypes }) => {
   const setDefaultCheckIds = useSetRecoilState(DefaultCheckIds);
   const checkedBoxNum = checkState.child.length;
 
-  const { page, queries } = useRecoilValue(FilterStatsState);
-
-  const { setParsingFilterState } = useFilter();
-
-  const handleOnOpenClosedNavClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    const clickedNavDataId = event.currentTarget.dataset.id;
-    setParsingFilterState(clickedNavDataId!);
-  };
+  const page = useRecoilValue(PageState);
+  const queries = useRecoilValue(FilterState);
 
   useEffect(() => {
     const ids: number[] = issues.content.map((issue) => issue.id);
@@ -54,8 +48,7 @@ const IssueTable = ({ issuesData }: { issuesData: IssuesTypes }) => {
             ) : (
               <NavLink
                 navData={openCloseIssue(openIssueCount, closedIssueCount, page, queries)}
-                handleOnClick={handleOnOpenClosedNavClick}
-                defaultActive="is:open"
+                defaultActive={OPEN_QUERY}
               />
             )}
           </S.IssueStates>
