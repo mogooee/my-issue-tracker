@@ -11,6 +11,7 @@ import axios from 'axios';
 
 import CustomErrorBoundary from '@/components/ErrorBoundary';
 import ServiceLoading from '@/pages/ServiceLoading';
+import './styles/globalFont.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {
