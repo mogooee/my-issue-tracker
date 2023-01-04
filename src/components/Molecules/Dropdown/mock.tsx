@@ -3,6 +3,7 @@ import { IssueTypes, DropdownTypes, ListPanelTypes, ReactionPanelTypes } from '@
 import { COLORS } from '@/styles/theme';
 import { REACTIONS } from '@/components/Molecules/Dropdown/Panel/Reaction/mock';
 import { LabelTypes, MilestoneTypes, UserTypes } from '@/api/issue/types';
+import { CLOSED_QUERY, OPEN_QUERY } from '@/hooks/useFilter';
 
 export const UNUSED_OPTIONS = {
   ASSIGNEE: {
@@ -22,7 +23,7 @@ export const UNUSED_OPTIONS = {
 export const ISSUE_FILTER_LIST: IssueTypes[] = [
   {
     id: 0,
-    dataId: 'is:open',
+    dataId: OPEN_QUERY,
     title: '열린 이슈',
   },
   {
@@ -42,7 +43,7 @@ export const ISSUE_FILTER_LIST: IssueTypes[] = [
   },
   {
     id: 4,
-    dataId: 'is:closed',
+    dataId: CLOSED_QUERY,
     title: '닫힌 이슈',
   },
 ];

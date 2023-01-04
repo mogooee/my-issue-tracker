@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useResetRecoilState } from 'recoil';
 import { NewIssueFormState } from '@/stores/newIssue';
-import { OPEN_QUERY } from '@/hooks/useFilter';
+import useFilter from '@/hooks/useFilter';
 import notifyError from '@/api/alertHelper';
 
 const useFetchIssue = (id?: number) => {
@@ -22,9 +22,9 @@ const useFetchIssue = (id?: number) => {
   const navigate = useNavigate();
   const resetNewIssueFormState = useResetRecoilState(NewIssueFormState);
 
-  const useIssuesData = (page: number, queryString: string | null) => {
-    const issueStateQuery = !document.location.search ? OPEN_QUERY : '';
-    const queries = queryString || issueStateQuery;
+  const useIssuesData = (page: number, queryString: string) => {
+    const { changeFilterToURL } = useFilter();
+    const queries = changeFilterToURL(queryString);
 
     return useQuery<IssuesTypes>(['issues', page, queries], () => getIssuesData(page, queries));
   };

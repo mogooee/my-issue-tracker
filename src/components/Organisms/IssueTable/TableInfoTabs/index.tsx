@@ -19,7 +19,6 @@ import * as S from '@/components/Organisms/IssueTable/index.styles';
 import Dropdown from '@/components/Molecules/Dropdown';
 
 import useFilter, { noneFilterReg } from '@/hooks/useFilter';
-import { FilterState } from '@/stores/filter';
 
 const TableInfoTabs = () => {
   const memberId = useRecoilValue(LoginUserInfoState).id;
@@ -46,32 +45,25 @@ const TableInfoTabs = () => {
     AUTHOR_DROPDOWN_ARGS(memberData || []),
   ];
 
-  const { isExistedFilter, setParsingFilterState, setRemovedFilterState } = useFilter();
-  const filterState = useRecoilValue(FilterState);
+  const { isExistedFilter, parseFilter, searchFilter, changeNotEngFilter } = useFilter();
 
   const handleOnFilterTabsClick = (target: HTMLInputElement) => {
     const key = target.dataset.panel!;
-    const value: string = target.dataset.id!;
-    const filter = value.match(noneFilterReg) ? value : `${key}:${value}`;
+    const dataId = target.dataset.id!;
+    const filter = dataId.match(noneFilterReg) ? dataId : `${key}:${changeNotEngFilter(dataId)}`;
 
-    if (isExistedFilter(filter)) {
-      setRemovedFilterState(filter);
-      return;
-    }
-
-    setParsingFilterState(filter);
+    const parsingFilter = parseFilter(filter);
+    searchFilter(parsingFilter);
   };
 
-  const isFilterTabsChecked = (panelId: string) => {
-    const content = filterState[panelId];
+  const isFilterTabsChecked =
+    (panelId: string) =>
+    (dataId: string): boolean => {
+      const value = changeNotEngFilter(dataId);
+      const filter = `${panelId}:${value}`;
 
-    return (dataId: string): boolean => {
-      if (Array.isArray(content)) {
-        return !!content.find((e) => e === dataId);
-      }
-      return content === dataId;
+      return isExistedFilter(filter);
     };
-  };
 
   const handleOnMemberDropdownClick = (filterKey: string) => {
     const isMemberListData = filterKey === 'assignee' || filterKey === 'author';

@@ -25,7 +25,6 @@ export const Panel = styled.menu`
 export const PanelItem = styled.li`
   width: 100%;
   cursor: pointer;
-  padding: 8px 16px;
   border-top: 1px solid ${({ theme }) => theme.COLORS.LINE};
   background: ${({ theme }) => theme.COLORS.OFF_WHITE};
   color: ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
@@ -47,6 +46,7 @@ export const PanelItem = styled.li`
   label {
     ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'space-between' })};
     cursor: pointer;
+    padding: 4px 16px;
   }
 `;
 
@@ -58,6 +58,8 @@ export const CheckBoxItem = styled.input`
 
   & ~ label {
     height: 28px;
+    padding: 4px 16px;
+    height: fit-content;
 
     span {
       display: inline-block;
