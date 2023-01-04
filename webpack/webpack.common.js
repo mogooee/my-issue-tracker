@@ -30,6 +30,10 @@ module.exports = {
         use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
       },
       {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: 'asset/resource',
+      },
+      {
         test: /\.svg/,
         type: 'asset/inline',
         resourceQuery: /inline/, // *.svg?inline
