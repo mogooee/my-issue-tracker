@@ -1,5 +1,5 @@
 /* eslint-disable array-callback-return */
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useParams } from 'react-router-dom';
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
@@ -15,6 +15,7 @@ import Comment from '@/components/Molecules/Comment';
 import IssueHeader from '@/components/Organisms/IssueHeader';
 import IsssueDetailAside from '@/pages/Private/IssueDetail/Aside';
 import IssueHistory from '@/pages/Private/IssueDetail/History';
+import IssueInfo from './IssueInfo';
 
 const IssueDetail = (): JSX.Element => {
   const { issueId } = useParams();
@@ -70,6 +71,7 @@ const IssueDetail = (): JSX.Element => {
         commentNum={comments.length}
       />
       <S.IssueContent>
+        <IssueInfo issue={issue!} />
         <S.IssueComments>
           {sortTimeLine.map((content, index) => {
             if (isIssueCommentsTypes(content)) {
