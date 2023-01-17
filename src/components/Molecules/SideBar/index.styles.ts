@@ -14,11 +14,33 @@ export const SideBar = styled.div`
     border-bottom: none;
     border-radius: 0 0 16px 16px;
   }
+
+  @media ${({ theme }) => theme.DEVICE.MOBILE} {
+    width: 100%;
+    min-width: 268px;
+  }
 `;
 
 export const SideBarItem = styled.div`
   padding: 34px 32px;
   border-bottom: 1px solid ${({ theme }) => theme.COLORS.LINE};
+
+  @media ${({ theme }) => theme.DEVICE.MOBILE} {
+    width: 100%;
+
+    details {
+      width: 100%;
+    }
+
+    summary {
+      width: 100%;
+
+      span {
+        display: inline-block;
+        width: 95%;
+      }
+    }
+  }
 `;
 
 export const SideBarContent = styled.ul<{ isEmpty: boolean }>`
