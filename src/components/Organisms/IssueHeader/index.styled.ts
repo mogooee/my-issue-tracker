@@ -17,18 +17,26 @@ export const HeaderInline = styled.div`
 `;
 
 export const Info = styled.div<{ closed: boolean }>`
-  ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'flex-start' })};
-  gap: 8px;
-
   ${Label} {
+    display: inline-block;
     padding: 8px 16px;
+    margin-bottom: 8px;
     & span {
       color: ${({ theme, closed }) => (!closed ? theme.COLORS.PRIMARY.BLUE : theme.COLORS.SECONDORY.PURPLE)};
     }
   }
+`;
 
-  & > span {
+export const InfoText = styled.div`
+  display: inline-block;
+  margin-left: 8px;
+
+  span {
     ${({ theme }) => theme.FONTSTYLES.TEXT_MEDIUM};
     color: ${({ theme }) => theme.COLORS.BODY};
+  }
+
+  span + span {
+    margin-left: 8px;
   }
 `;
