@@ -26,6 +26,7 @@ type LabelEditFormTypes = {
 const DEBOUNCE_DELAY = 200;
 
 const LabelEditForm = ({ id, type, labelProps, setIsEditLabel }: LabelEditFormTypes) => {
+  const [isError, setIsError] = useState<boolean>(false);
   const [labelState, setLabelState] = useState<LabelTypes>(labelProps);
   const { title, backgroundColorCode, description, textColor } = labelState;
 
@@ -76,7 +77,8 @@ const LabelEditForm = ({ id, type, labelProps, setIsEditLabel }: LabelEditFormTy
     setLabelState((prev) => ({ ...prev, textColor: newTextColor }));
   };
 
-  const hasUniqueLabel: boolean = JSON.stringify(labelProps) !== JSON.stringify(labelState) && !!labelState.title;
+  const isUnchangedLabel: boolean = JSON.stringify(labelProps) === JSON.stringify(labelState);
+  const isErrorLabel: boolean = isError || !labelState.title;
 
   return (
     <S.LabelEditForm>
@@ -98,7 +100,12 @@ const LabelEditForm = ({ id, type, labelProps, setIsEditLabel }: LabelEditFormTy
               isTyping: IsDescriptionTyping,
             })}
           />
-          <ColorCode color={labelState.backgroundColorCode} setLabelState={setLabelState} />
+          <ColorCode
+            color={labelState.backgroundColorCode}
+            setLabelState={setLabelState}
+            isError={isError}
+            setIsError={setIsError}
+          />
           <S.TextColor>
             <label>텍스트 색상</label>
             <Radio {...LABEL_EDIT_FORM_PROPS.TEXT_COLOR({ id, onChange: hanldeRadioChange, textColor })} />
@@ -107,7 +114,11 @@ const LabelEditForm = ({ id, type, labelProps, setIsEditLabel }: LabelEditFormTy
       </S.EditField>
       <S.EditButton>
         {type === 'EDIT' && <Button {...BUTTON_PROPS.CLOSE} handleOnClick={handleCancelButtonClick} />}
-        <Button {...BUTTON_PROPS.SAVE} handleOnClick={handleCompleteButtonClick} disabled={!hasUniqueLabel} />
+        <Button
+          {...BUTTON_PROPS.SAVE}
+          handleOnClick={handleCompleteButtonClick}
+          disabled={isUnchangedLabel || isErrorLabel}
+        />
       </S.EditButton>
     </S.LabelEditForm>
   );
