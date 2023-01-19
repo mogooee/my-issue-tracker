@@ -31,7 +31,7 @@ const Labels = () => {
         <NavLink navData={labelMilestone()} navLinkStyle="LINE" />
         <Button {...(isAddLabel ? closeButtonProps : addButtonProps)} />
       </S.SubNav>
-      {isAddLabel && <LabelEditForm type="ADD" labelProps={initLabelState} setIsEditLabel={setIsAddLabel} />}
+      {isAddLabel && <LabelEditForm id={0} type="ADD" labelProps={initLabelState} setIsEditLabel={setIsAddLabel} />}
       <FallbackLabelTable />
     </S.Labels>
   );

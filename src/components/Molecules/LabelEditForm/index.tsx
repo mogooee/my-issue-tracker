@@ -17,6 +17,7 @@ import { BUTTON_PROPS } from '@/components/Atoms/Button/options';
 import { initLabelState, LABEL_EDIT_FORM_PROPS } from '@/components/Molecules/LabelEditForm/constants';
 
 type LabelEditFormTypes = {
+  id: number;
   type: 'ADD' | 'EDIT';
   labelProps: LabelTypes;
   setIsEditLabel?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,7 +25,7 @@ type LabelEditFormTypes = {
 
 const DEBOUNCE_DELAY = 200;
 
-const LabelEditForm = ({ type, labelProps, setIsEditLabel }: LabelEditFormTypes) => {
+const LabelEditForm = ({ id, type, labelProps, setIsEditLabel }: LabelEditFormTypes) => {
   const [labelState, setLabelState] = useState<LabelTypes>(labelProps);
   const { title, backgroundColorCode, description, textColor } = labelState;
 
@@ -100,7 +101,7 @@ const LabelEditForm = ({ type, labelProps, setIsEditLabel }: LabelEditFormTypes)
           <ColorCode color={labelState.backgroundColorCode} setLabelState={setLabelState} />
           <S.TextColor>
             <label>텍스트 색상</label>
-            <Radio {...LABEL_EDIT_FORM_PROPS.TEXT_COLOR({ onChange: hanldeRadioChange, textColor })} />
+            <Radio {...LABEL_EDIT_FORM_PROPS.TEXT_COLOR({ id, onChange: hanldeRadioChange, textColor })} />
           </S.TextColor>
         </S.EditForm>
       </S.EditField>

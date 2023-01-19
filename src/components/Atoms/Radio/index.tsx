@@ -27,7 +27,7 @@ const Radio = ({ radioData, onChange }: RadioTypes) => {
   return (
     <S.RadioList totalNum={option.length}>
       {option.map(({ id, title: optionTitle, isChecked = false }) => (
-        <S.Radio key={id}>
+        <S.Radio key={`${id}-${optionTitle}`}>
           <input
             type="radio"
             id={`${id}-${optionTitle}`}

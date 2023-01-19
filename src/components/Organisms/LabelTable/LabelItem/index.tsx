@@ -32,7 +32,7 @@ const LabelItem = ({ setDeleteLabelId, ...labelProps }: LabelItemTypes) => {
   };
 
   return isEditLabel ? (
-    <LabelEditForm type="EDIT" labelProps={labelProps} setIsEditLabel={setIsEditLabel} />
+    <LabelEditForm id={id} type="EDIT" labelProps={labelProps} setIsEditLabel={setIsEditLabel} />
   ) : (
     <S.LabelItem>
       <Link to={`/issues?page=0&q=label%3A${changeNotEngFilter(title)}`}>
