@@ -44,9 +44,9 @@ const Input = ({ disabled = false, inputMaxLength = defaultMaxLength, ...props }
   }, [inputValue]);
 
   const handleOnClickForm = () => {
-    if (!onClick || disabled) return;
+    if (disabled) return;
     inputRef?.current?.focus();
-    onClick();
+    onClick?.();
   };
 
   const handleOnChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
