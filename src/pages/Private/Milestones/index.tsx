@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Button from '@/components/Atoms/Button';
 import MilestoneEditForm from '@/components/Molecules/MilestoneEditForm';
 import NavLink from '@/components/Molecules/NavLink';
-import { StyledNavLink } from '@/components/Molecules/NavLink/index.styles';
+import { StyledNavLink, StyledNavLinks } from '@/components/Molecules/NavLink/index.styles';
 
 import { BUTTON_PROPS } from '@/components/Atoms/Button/options';
 import { FallBackMilestoneTable } from '@/components/Organisms/MilestoneTable';
@@ -12,10 +12,16 @@ import { labelMilestone } from '@/components/Molecules/NavLink/options';
 
 const NavContainer = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'space-between' })};
+  flex-wrap: wrap;
+  gap: 10px;
   margin-bottom: 24px;
 
   div {
     overflow: hidden;
+  }
+
+  ${StyledNavLinks} {
+    min-width: max-content;
   }
 
   ${StyledNavLink} {
