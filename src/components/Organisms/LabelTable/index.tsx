@@ -2,6 +2,8 @@
 import { Suspense, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
+import * as S from '@/components/Organisms/LabelTable/LabelItem/index.styled';
+
 import Table from '@/components/Molecules/Table';
 import ErrorTable from '@/components/Organisms/ErrorTable';
 import LabelItem from '@/components/Organisms/LabelTable/LabelItem';
@@ -13,10 +15,17 @@ import Modal, { ModalState } from '@/components/Modal';
 
 import CustomErrorBoundary from '@/components/ErrorBoundary';
 
+const EmptyLabelItem = () => (
+  <S.NoLabelItem>
+    <span>해당하는 레이블이 없습니다. 👀</span>
+  </S.NoLabelItem>
+);
+
 const LabelTable = () => {
   const { useLabelData, deleteLabel } = useFetchLabel();
   const { data: labelData } = useLabelData();
-  const labelTableTitle = `${labelData!.length}개의 레이블`;
+  const labelDataNum = labelData!.length;
+  const labelTableTitle = `${labelDataNum}개의 레이블`;
 
   const isModal = useRecoilValue(ModalState);
   const [deleteLabelId, setDeleteLabelId] = useState<number>(0);
@@ -29,9 +38,11 @@ const LabelTable = () => {
     <>
       <Table
         header={<span>{labelTableTitle}</span>}
-        item={labelData!.map((props) => (
-          <LabelItem key={props.id} setDeleteLabelId={setDeleteLabelId} {...props} />
-        ))}
+        item={
+          labelDataNum
+            ? labelData!.map((props) => <LabelItem key={props.id} setDeleteLabelId={setDeleteLabelId} {...props} />)
+            : [<EmptyLabelItem />]
+        }
       />
       {isModal && (
         <Modal>

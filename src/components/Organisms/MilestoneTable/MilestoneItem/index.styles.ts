@@ -17,7 +17,6 @@ export const MilestoneItem = styled.div`
 
 export const CommonMilestoneItem = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'center' })};
-  background: ${({ theme }) => theme.COLORS.OFF_WHITE};
   padding: 24px 32px;
 
   span {

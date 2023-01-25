@@ -56,3 +56,5 @@ export const LabelItem = styled.div`
     }
   }
 `;
+
+export { CommonMilestoneItem as NoLabelItem } from '@/components/Organisms/MilestoneTable/MilestoneItem/index.styles';

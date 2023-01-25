@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import { CommonMilestoneItem } from '@/components/Organisms/MilestoneTable/MilestoneItem/index.styles';
+
 export const IssueStates = styled.div`
   height: inherit;
 `;
@@ -18,9 +20,6 @@ export const IssueTableHeader = styled.div`
   grid-template-columns: 60px 500px auto;
 `;
 
-export const NoSearchResult = styled.div`
-  display: grid;
-  place-items: center;
-  padding: 40px;
+export const NoSearchResult = styled(CommonMilestoneItem)`
   color: ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
 `;
