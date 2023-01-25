@@ -40,7 +40,7 @@ export const StyledIssue = styled.div`
 
 export const IssueTitle = styled.div`
   display: grid;
-  align-items: center;
+  align-items: baseline;
   justify-content: start;
   grid-template-columns: 20px auto max-content;
   margin-bottom: 8px;
