@@ -136,6 +136,11 @@ const resetCSS = css`
     border-collapse: collapse;
     border-spacing: 0;
   }
+
+  input,
+  button {
+    margin: 0;
+  }
 `;
 
 export default resetCSS;
