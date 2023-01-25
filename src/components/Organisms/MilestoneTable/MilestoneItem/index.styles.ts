@@ -11,7 +11,7 @@ export const MilestoneItem = styled.div`
   }
 
   @media all and (max-width: 767px) {
-    gap: 20px;
+    flex-direction: column;
   }
 `;
 
@@ -27,7 +27,6 @@ export const CommonMilestoneItem = styled.div`
 `;
 
 export const MilestoneItemInfo = styled.div`
-  width: 450px;
   display: grid;
   flex-grow: 1;
   gap: 8px;
@@ -59,6 +58,7 @@ export const MilestoneItemInfo = styled.div`
   }
 
   @media all and (min-width: 768px) {
+    width: 450px;
     grid-auto-columns: minmax(auto, max-content);
 
     .MilestoneItem_description {
@@ -72,6 +72,10 @@ export const MilestoneItemInfo = styled.div`
     ${Dropdown} {
       display: none;
     }
+  }
+
+  @media all and (max-width: 767px) {
+    width: 100%;
   }
 `;
 
@@ -116,13 +120,17 @@ export const MilestoneItemButtons = styled.div<{ isOpenModifyEditer: boolean }>`
 `;
 
 export const MilestoneItemStates = styled.div`
-  flex: 1;
+  flex-grow: 1;
   min-width: 200px;
   display: grid;
   gap: 14px;
 
   details {
     justify-self: flex-end;
+  }
+
+  @media all and (max-width: 767px) {
+    width: 100%;
   }
 `;
 
