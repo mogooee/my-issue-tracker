@@ -5,14 +5,30 @@ export const IssueHeader = styled.div`
   width: 100%;
   display: grid;
   align-items: center;
-  grid-template-columns: 5% 65% 30%;
+  grid-template-columns: 5% auto auto;
 
   .skeleton-issue__nav-link {
     ${skeletonRectangle(232, 32)}
   }
 
   .skeleton-issue__filter {
+    justify-self: end;
     ${skeletonRectangle(360, 32)}
+  }
+
+  @media ${({ theme }) => theme.DEVICE.MOBILE} {
+    grid-template-columns: auto;
+    & > div:nth-child(1) {
+      display: none;
+    }
+
+    .skeleton-issue__nav-link {
+      display: none;
+    }
+    .skeleton-issue__filter {
+      justify-self: baseline;
+      width: 100%;
+    }
   }
 `;
 
@@ -22,6 +38,7 @@ export const IssueCheckbox = styled.div`
 `;
 
 export const IssueItem = styled.div`
+  width: 100%;
   display: grid;
   align-items: center;
   grid-template-columns: 5% auto 2%;
@@ -38,6 +55,28 @@ export const IssueItem = styled.div`
   .skeleton-issue__user {
     ${skeletonRectangle(20, 20)}
     border-radius: 50%;
+  }
+
+  @media ${({ theme }) => theme.DEVICE.MOBILE} {
+    grid-template-columns: auto;
+    & > div:nth-child(1) {
+      display: none;
+    }
+
+    .skeleton-issue__user {
+      ${skeletonRectangle(20, 20)}
+      display: none;
+    }
+
+    .item__title {
+      width: 100%;
+      max-width: 360px;
+    }
+
+    .item__desc {
+      width: 100%;
+      max-width: 400px;
+    }
   }
 `;
 
