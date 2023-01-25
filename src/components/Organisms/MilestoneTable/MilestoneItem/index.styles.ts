@@ -1,8 +1,7 @@
 import styled, { css } from 'styled-components';
 
 export const MilestoneItem = styled.div`
-  display: flex;
-  justify-content: space-between;
+  padding: 16px 32px;
 `;
 
 export const CommonMilestoneItem = styled.div`

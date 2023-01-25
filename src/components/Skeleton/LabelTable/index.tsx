@@ -10,19 +10,7 @@ const LabelTableSkeleton = () => {
       <S.LabelTableHeader>
         <S.LabelTableTitle />
       </S.LabelTableHeader>
-      {mapping.map((e, i) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <S.LabelItem key={i}>
-          <S.Label />
-          <S.Description />
-          <S.ButtonTabs>
-            <S.EditButton />
-            <S.DelteButton />
-          </S.ButtonTabs>
-        </S.LabelItem>
-      ))}
-    </S.LabelTable>
-  );
-};
+      <S.LabelTableItem key={e}>
+      </S.LabelTableItem>
 
 export default LabelTableSkeleton;

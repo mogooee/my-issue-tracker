@@ -13,7 +13,9 @@ const SkeletonIssueItem = () => (
 
 const SkeletonIssueTable = () => {
   const IssueItems = Array.from(['item1', 'item2', 'item3', 'items4']).map((key) => (
-    <SkeletonIssueItem key={`skeletonItems-${key}`} />
+    <S.IssueTableItem key={`skeletonItems-${key}`}>
+      <SkeletonIssueItem />
+    </S.IssueTableItem>
   ));
 
   return (
@@ -23,7 +25,6 @@ const SkeletonIssueTable = () => {
         <div className="skeleton-issue__nav-link" />
         <div className="skeleton-issue__filter" />
       </S.IssueHeader>
-      <SkeletonIssueItem />
       {IssueItems}
     </S.IssueTable>
   );

@@ -2,8 +2,6 @@
 import { Suspense, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
-import * as S from '@/components/Organisms/LabelTable/index.styled';
-
 import Table from '@/components/Molecules/Table';
 import ErrorTable from '@/components/Organisms/ErrorTable';
 import LabelItem from '@/components/Organisms/LabelTable/LabelItem';
@@ -18,7 +16,7 @@ import CustomErrorBoundary from '@/components/ErrorBoundary';
 const LabelTable = () => {
   const { useLabelData, deleteLabel } = useFetchLabel();
   const { data: labelData } = useLabelData();
-  const labelNum = labelData!.length;
+  const labelTableTitle = `${labelData!.length}개의 레이블`;
 
   const isModal = useRecoilValue(ModalState);
   const [deleteLabelId, setDeleteLabelId] = useState<number>(0);
@@ -28,9 +26,9 @@ const LabelTable = () => {
   };
 
   return (
-    <S.LabelTable>
+    <>
       <Table
-        header={<span>{`${labelNum}개의 레이블`}</span>}
+        header={<span>{labelTableTitle}</span>}
         item={labelData!.map((props) => (
           <LabelItem key={props.id} setDeleteLabelId={setDeleteLabelId} {...props} />
         ))}
@@ -40,7 +38,7 @@ const LabelTable = () => {
           <DeleteCheck handleDeleteButtonClick={handleDeleteButtonClick} />
         </Modal>
       )}
-    </S.LabelTable>
+    </>
   );
 };
 

@@ -74,7 +74,5 @@ export const EditButton = styled.div`
   height: 32px;
 `;
 
-export const DelteButton = styled.div`
-  width: 43px;
-  height: 32px;
-`;
+export { Table as LabelTable } from '@/components/Molecules/Table/index.styled';
+export { Item as LabelTableItem } from '@/components/Molecules/Table/TableItem/index';

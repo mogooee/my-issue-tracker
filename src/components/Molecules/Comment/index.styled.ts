@@ -48,6 +48,7 @@ export const CommentTab = styled.div`
 
 export const CommentContent = styled.div`
   color: ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
+  padding: 16px 32px;
 
   ${ReactionPanel} {
     top: -58px;

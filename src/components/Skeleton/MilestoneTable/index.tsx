@@ -15,7 +15,9 @@ const SkeletonMilestoneItem = (): JSX.Element => (
 
 const SkeletonMilestoneTable = () => {
   const MilestoneItems = Array.from(['item1', 'item2', 'item3', 'items4']).map((key) => (
-    <SkeletonMilestoneItem key={`skeletonItems-${key}`} />
+    <S.MilestoneTableItem key={`skeletonItems-${key}`}>
+      <SkeletonMilestoneItem />
+    </S.MilestoneTableItem>
   ));
 
   return (
