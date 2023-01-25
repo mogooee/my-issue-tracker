@@ -1,5 +1,12 @@
 import Icon from '@/components/Atoms/Icon';
-import { IssueTypes, DropdownTypes, ListPanelTypes, ReactionPanelTypes } from '@/components/Molecules/Dropdown/types';
+import {
+  IssueTypes,
+  DropdownTypes,
+  ListPanelTypes,
+  ReactionPanelTypes,
+  BubblePanelTypes,
+  ClickHandlerType,
+} from '@/components/Molecules/Dropdown/types';
 import { COLORS } from '@/styles/theme';
 import { REACTIONS } from '@/components/Molecules/Dropdown/Panel/Reaction/mock';
 import { LabelTypes, MilestoneTypes, UserTypes } from '@/api/issue/types';
@@ -255,6 +262,62 @@ export const SIDEBAR_ARGS: DropdownTypes<ListPanelTypes> = {
     unusedOption: UNUSED_OPTIONS.MILESTONE,
   },
 };
+
+interface LabelBtnsClickHandlerTypes {
+  editButton: ClickHandlerType;
+  deleteButton: ClickHandlerType;
+}
+
+type LabelBtnsArgsType = (clickHandler: LabelBtnsClickHandlerTypes) => DropdownTypes<BubblePanelTypes>;
+
+export const LABEL_BTNS_ARGS: LabelBtnsArgsType = (clickHandler) => ({
+  type: 'Bubble',
+  indicatorProps: {
+    indicatorLabel: '···',
+    indicatorStyle: 'BTN_GROUP',
+  },
+  panelProps: {
+    panelList: [
+      {
+        title: 'Edit',
+        onClick: clickHandler.editButton,
+      },
+      {
+        title: 'Delete',
+        onClick: clickHandler.deleteButton,
+      },
+    ],
+    position: 'RIGHT',
+  },
+});
+
+type MilestoneBtnsClickHandlerTypes = LabelBtnsClickHandlerTypes & { stateButton: ClickHandlerType };
+type MilestoneBtnsArgsType = (clickHandler: MilestoneBtnsClickHandlerTypes) => DropdownTypes<BubblePanelTypes>;
+
+export const MILESTONE_BTNS_ARGS: MilestoneBtnsArgsType = (clickHandler) => ({
+  type: 'Bubble',
+  indicatorProps: {
+    indicatorLabel: '···',
+    indicatorStyle: 'BTN_GROUP',
+  },
+  panelProps: {
+    panelList: [
+      {
+        title: 'Edit',
+        onClick: clickHandler.editButton,
+      },
+      {
+        title: 'Close',
+        onClick: clickHandler.stateButton,
+      },
+      {
+        title: 'Delete',
+        onClick: clickHandler.deleteButton,
+      },
+    ],
+    position: 'RIGHT',
+  },
+});
 
 export const FILTER_TABS_INFO = [
   ASSIGNEE_DROPDOWN_ARGS,

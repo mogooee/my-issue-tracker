@@ -1,6 +1,12 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import Dropdown from '@/components/Molecules/Dropdown';
-import { ASSIGNEE_DROPDOWN_ARGS, REACTION_ARGS, SIDEBAR_ARGS, USER_LIST } from '@/components/Molecules/Dropdown/mock';
+import {
+  ASSIGNEE_DROPDOWN_ARGS,
+  LABEL_BTNS_ARGS,
+  REACTION_ARGS,
+  SIDEBAR_ARGS,
+  USER_LIST,
+} from '@/components/Molecules/Dropdown/mock';
 import styled from 'styled-components';
 
 export default {
@@ -29,3 +35,10 @@ Sidebar.args = SIDEBAR_ARGS;
 
 export const Reaction = Template.bind({});
 Reaction.args = REACTION_ARGS;
+
+export const Bubble = Template.bind({});
+const clickHandler = {
+  editButton: () => {},
+  deleteButton: () => {},
+};
+Bubble.args = LABEL_BTNS_ARGS(clickHandler);

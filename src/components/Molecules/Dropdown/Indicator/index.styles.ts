@@ -14,9 +14,13 @@ export const Indicator = styled.summary<StyledDropdownIndicatorTypes>`
   color: ${({ theme }) => theme.COLORS.LABEL};
   ${({ theme }) => theme.FONTSTYLES.LINK_SMALL};
 
-  span {
-    margin-right: 4px;
-  }
+  ${({ indicatorStyle }) =>
+    indicatorStyle !== 'BTN_GROUP' &&
+    css`
+      span {
+        margin-right: 4px;
+      }
+    `}
 
   &:hover {
     span {
@@ -50,6 +54,21 @@ export const Indicator = styled.summary<StyledDropdownIndicatorTypes>`
     css`
       span {
         width: 224px;
+      }
+    `};
+
+  ${({ indicatorStyle }) =>
+    indicatorStyle === 'BTN_GROUP' &&
+    css`
+      border: 1px solid ${({ theme }) => theme.COLORS.LINE};
+      border-radius: 6px;
+      padding: 3px 12px;
+
+      &:hover {
+        background: ${({ theme }) => theme.COLORS.PRIMARY.BLUE};
+        span {
+          color: ${({ theme }) => theme.COLORS.OFF_WHITE};
+        }
       }
     `};
 

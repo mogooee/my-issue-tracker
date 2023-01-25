@@ -8,7 +8,7 @@ import { ReactionTypes } from '@/api/issue/reaction';
 // Indicator Types
 
 export interface DropdownIndicatorTypes {
-  indicatorStyle: 'STANDARD' | 'FILTERBAR' | 'ICON' | 'SIDEBAR';
+  indicatorStyle: 'STANDARD' | 'FILTERBAR' | 'ICON' | 'SIDEBAR' | 'BTN_GROUP';
   indicatorLabel: string;
   isActive?: boolean;
   indicatorIcon?: React.ReactNode;
@@ -53,10 +53,21 @@ export interface ReactionPanelTypes {
   memberId: number;
 }
 
+export type ClickHandlerType = (event: React.MouseEvent<HTMLButtonElement>) => void;
+
+export interface ButtonPanelListType {
+  title: string;
+  onClick: ClickHandlerType;
+}
+export interface BubblePanelTypes {
+  panelList: ButtonPanelListType[];
+  position?: 'LEFT' | 'RIGHT';
+}
+
 export type PanelType = keyof typeof panels;
 export interface DropdownPanelTypes {
   type: PanelType;
-  prop: ReactionPanelTypes | ListPanelTypes;
+  prop: ReactionPanelTypes | ListPanelTypes | BubblePanelTypes;
 }
 
 // Dropdown Types
