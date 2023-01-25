@@ -1,7 +1,17 @@
 import styled, { css } from 'styled-components';
 
 export const MilestoneItem = styled.div`
+  ${({ theme }) => theme.MIXIN.FLEX({ align: 'flex-start', justify: 'space-between' })};
+  flex-wrap: wrap;
   padding: 16px 32px;
+
+  progress {
+    width: auto;
+  }
+
+  @media all and (max-width: 767px) {
+    gap: 20px;
+  }
 `;
 
 export const CommonMilestoneItem = styled.div`
@@ -17,8 +27,9 @@ export const CommonMilestoneItem = styled.div`
 `;
 
 export const MilestoneItemInfo = styled.div`
+  width: 450px;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  flex-grow: 1;
   gap: 8px;
   align-items: baseline;
 
@@ -43,9 +54,20 @@ export const MilestoneItemInfo = styled.div`
 
   .MilestoneItem_description {
     min-height: 28px;
-    grid-column: 1 / 3;
     ${({ theme }) => theme.FONTSTYLES.TEXT_SMALL};
     color: ${({ theme }) => theme.COLORS.LABEL};
+  }
+
+  @media all and (min-width: 768px) {
+    grid-auto-columns: minmax(auto, max-content);
+
+    .MilestoneItem_description {
+      grid-column: 1 / 3;
+    }
+
+    .MilestoneItem_dueDate {
+      grid-column: 2 / 3;
+    }
   }
 `;
 
@@ -83,4 +105,20 @@ export const MilestoneItemButtons = styled.div<{ isOpenModifyEditer: boolean }>`
         }
       `}
   }
+`;
+
+export const MilestoneItemStates = styled.div`
+  flex: 1;
+  min-width: 200px;
+  display: grid;
+  gap: 14px;
+
+  details {
+    justify-self: flex-end;
+  }
+`;
+
+export const MilestoneTitle = styled.div`
+  ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'space-between' })};
+  gap: 14px;
 `;

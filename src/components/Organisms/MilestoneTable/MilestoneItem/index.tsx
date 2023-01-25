@@ -36,9 +36,9 @@ const MilestoneItem = (props: MilestoneTypes) => {
             <Icon icon="Calendar" stroke={COLORS.LABEL} />
             <span>{dueDate || '완료일 없음'}</span>
           </div>
-          <p className="MilestoneItem_description">{description || ' '}</p>
+          {description && <p className="MilestoneItem_description">{description}</p>}
         </S.MilestoneItemInfo>
-        <div>
+        <S.MilestoneItemStates>
           <S.MilestoneItemButtons isOpenModifyEditer={isOpenModifyEditer}>
             <Button
               {...(closed ? TABLE_ITEM_BUTTON_INFO.MILESTONE_OPEN : TABLE_ITEM_BUTTON_INFO.CLOSE)}
@@ -54,7 +54,7 @@ const MilestoneItem = (props: MilestoneTypes) => {
             />
           </S.MilestoneItemButtons>
           <PrograssBar open={openIssueCount} close={closedIssueCount} showState />
-        </div>
+        </S.MilestoneItemStates>
       </S.MilestoneItem>
       {isOpenModifyEditer && (
         <MilestoneEditForm

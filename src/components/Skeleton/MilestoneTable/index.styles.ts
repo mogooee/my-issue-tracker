@@ -33,34 +33,67 @@ export const skeletonRectangle = (width: number, height: number) => `
 `;
 
 export const SkeletonNavLink = styled.div`
-  ${skeletonRectangle(300, 32)}
+  @media all and (min-width: 380px) {
+    ${skeletonRectangle(300, 32)}
+  }
+
+  @media all and (max-width: 379px) {
+    ${skeletonRectangle(200, 32)}
+  }
 `;
 
 export const SkeletonMilestoneItem = styled(MilestoneItem)`
-  ${({ theme }) => theme.MIXIN.FLEX({ align: 'flex-start', justify: 'space-between' })};
+  gap: 14px;
 `;
 
 export const SkeletonMilestoneItemInfo = styled.div`
-  .skeleton_milestone__item {
-    ${skeletonRectangle(200, 24)}
-    margin-bottom: 16px;
+  @media all and (min-width: 380px) {
+    .skeleton_milestone__item {
+      ${skeletonRectangle(200, 24)}
+      margin-bottom: 16px;
+    }
+
+    .skeleton_milestone__desc {
+      ${skeletonRectangle(300, 20)}
+    }
   }
 
-  .skeleton_milestone__desc {
-    ${skeletonRectangle(300, 20)}
+  @media all and (max-width: 379px) {
+    .skeleton_milestone__item {
+      ${skeletonRectangle(120, 24)}
+      margin-bottom: 16px;
+    }
+
+    .skeleton_milestone__desc {
+      ${skeletonRectangle(165, 20)}
+    }
   }
 `;
 
 export const SkeletonMilestoneItemStates = styled.div`
+  flex-grow: 1;
   ${({ theme }) => theme.MIXIN.FLEX({ direction: 'column', align: 'flex-end' })};
 
-  .skeleton_milestone__buttons {
-    ${skeletonRectangle(180, 24)}
-    margin-bottom: 10px;
+  @media all and (min-width: 380px) {
+    .skeleton_milestone__buttons {
+      ${skeletonRectangle(180, 24)}
+      margin-bottom: 10px;
+    }
+
+    .skeleton_milestone__progress {
+      ${skeletonRectangle(244, 50)}
+    }
   }
 
-  .skeleton_milestone__progress {
-    ${skeletonRectangle(244, 50)}
+  @media all and (max-width: 379px) {
+    .skeleton_milestone__buttons {
+      ${skeletonRectangle(160, 24)}
+      margin-bottom: 10px;
+    }
+
+    .skeleton_milestone__progress {
+      ${skeletonRectangle(210, 50)}
+    }
   }
 `;
 
