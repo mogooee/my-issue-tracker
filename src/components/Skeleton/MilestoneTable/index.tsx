@@ -3,7 +3,10 @@ import * as S from '@/components/Skeleton/MilestoneTable/index.styles';
 const SkeletonMilestoneItem = (): JSX.Element => (
   <S.SkeletonMilestoneItem>
     <S.SkeletonMilestoneItemInfo>
-      <div className="skeleton_milestone__item" />
+      <S.SkeletonMilestoneTitle>
+        <div className="skeleton_milestone__item" />
+        <div className="skeleton_milestone__buttons" />
+      </S.SkeletonMilestoneTitle>
       <div className="skeleton_milestone__desc" />
     </S.SkeletonMilestoneItemInfo>
     <S.SkeletonMilestoneItemStates>

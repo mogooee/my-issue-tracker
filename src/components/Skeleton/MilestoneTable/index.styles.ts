@@ -16,7 +16,7 @@ export const skeletonRectangle = (width: number, height: number) => `
     }
     50%,
     100% {
-      transform: translateX(400px);
+      transform: translateX(680px);
     }
   }
 
@@ -47,6 +47,21 @@ export const SkeletonMilestoneItem = styled(MilestoneItem)`
 `;
 
 export const SkeletonMilestoneItemInfo = styled.div`
+  flex-grow: 1;
+
+  @media all and (min-width: 768px) {
+    width: 450px;
+  }
+
+  @media all and (max-width: 767px) {
+    width: 100%;
+
+    .skeleton_milestone__buttons {
+      ${skeletonRectangle(55, 30)}
+      margin-bottom: 16px;
+    }
+  }
+
   @media all and (min-width: 380px) {
     .skeleton_milestone__item {
       ${skeletonRectangle(200, 24)}
@@ -74,29 +89,24 @@ export const SkeletonMilestoneItemStates = styled.div`
   flex-grow: 1;
   ${({ theme }) => theme.MIXIN.FLEX({ direction: 'column', align: 'flex-end' })};
 
-  @media all and (min-width: 380px) {
+  .skeleton_milestone__progress {
+    ${skeletonRectangle(244, 50)}
+    width:100%;
+  }
+
+  @media all and (min-width: 768px) {
     .skeleton_milestone__buttons {
       ${skeletonRectangle(180, 24)}
       margin-bottom: 10px;
     }
-
-    .skeleton_milestone__progress {
-      ${skeletonRectangle(244, 50)}
-    }
   }
 
-  @media all and (max-width: 379px) {
-    .skeleton_milestone__buttons {
-      ${skeletonRectangle(160, 24)}
-      margin-bottom: 10px;
-    }
-
-    .skeleton_milestone__progress {
-      ${skeletonRectangle(210, 50)}
-    }
+  @media all and (max-width: 767px) {
+    width: 100%;
   }
 `;
 
 export { Table as MilestoneTable } from '@/components/Molecules/Table/index.styled';
 export { Header as MilestoneHeader } from '@/components/Molecules/Table/TableHeader';
 export { Item as MilestoneTableItem } from '@/components/Molecules/Table/TableItem/index';
+export { MilestoneTitle as SkeletonMilestoneTitle } from '@/components/Organisms/MilestoneTable/MilestoneItem/index.styles';
