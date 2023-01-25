@@ -1,3 +1,4 @@
+import { Dropdown } from '@/components/Molecules/Dropdown/index.styles';
 import styled, { css } from 'styled-components';
 
 export const MilestoneItem = styled.div`
@@ -68,6 +69,10 @@ export const MilestoneItemInfo = styled.div`
     .MilestoneItem_dueDate {
       grid-column: 2 / 3;
     }
+
+    ${Dropdown} {
+      display: none;
+    }
   }
 `;
 
@@ -104,6 +109,10 @@ export const MilestoneItemButtons = styled.div<{ isOpenModifyEditer: boolean }>`
           }
         }
       `}
+
+    @media all and (max-width: 767px) {
+      display: none;
+    }
   }
 `;
 
@@ -121,4 +130,8 @@ export const MilestoneItemStates = styled.div`
 export const MilestoneTitle = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'space-between' })};
   gap: 14px;
+
+  ${Dropdown} {
+    min-width: fit-content;
+  }
 `;

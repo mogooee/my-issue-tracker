@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Label } from '@/components/Atoms/Label/index.styles';
+import { Dropdown } from '@/components/Molecules/Dropdown/index.styles';
 
 export const EditButton = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'center' })};
@@ -15,6 +16,10 @@ export const EditButton = styled.div`
 
   button + button {
     margin-left: 24px;
+  }
+
+  @media all and (max-width: 1023px) {
+    display: none;
   }
 `;
 
@@ -45,7 +50,9 @@ export const LabelItem = styled.div`
     justify-self: end;
   }
 
-  button + button {
-    margin-left: 24px;
+  @media all and (min-width: 1024px) {
+    ${Dropdown} {
+      display: none;
+    }
   }
 `;
