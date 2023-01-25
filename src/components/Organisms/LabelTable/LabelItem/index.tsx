@@ -38,7 +38,7 @@ const LabelItem = ({ setDeleteLabelId, ...labelProps }: LabelItemTypes) => {
       <Link to={`/issues?page=0&q=label%3A${changeNotEngFilter(title)}`}>
         <Label title={title} backgroundColorCode={backgroundColorCode} textColor={textColor} />
       </Link>
-      <S.Description>{description}</S.Description>
+      <span className="label-description">{description}</span>
       <S.EditButton>
         <Button {...TABLE_ITEM_BUTTON_INFO.MODIFY} handleOnClick={handleEditButtonClick} />
         <Button {...TABLE_ITEM_BUTTON_INFO.DELETE} handleOnClick={() => handleDeleteButtonClick(id)} />

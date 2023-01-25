@@ -1,77 +1,41 @@
 import { COLORS } from '@/styles/theme';
 import styled, { keyframes } from 'styled-components';
+import { Header } from '@/components/Molecules/Table/TableHeader';
+import { LabelItem } from '@/components/Organisms/LabelTable/LabelItem/index.styled';
 
 const skeletonGradient = keyframes`
-  0% {
-    background: ${COLORS.BACKGROUND};
-  }
-  50% {
-    background: ${COLORS.LINE};
-  }
-  100% {
-    background: ${COLORS.BACKGROUND};
-  }
-  `;
-
-export const LabelTable = styled.div`
-  width: 1280px;
-  border-radius: 16px;
-  border: 1px solid ${({ theme }) => theme.COLORS.LINE};
-  overflow: hidden;
-  & > div {
-    div {
-      animation: ${skeletonGradient} 1.8s infinite ease-in-out;
-    }
-  }
+0%, 100% {
+  background: ${COLORS.BACKGROUND};
+}
+50% {
+  background: ${COLORS.LINE};
+}
 `;
 
-export const LabelTableHeader = styled.div`
-  display: grid;
-  grid-template-columns: 240px auto;
-  align-items: center;
-  justify-items: center;
-  width: 1280px;
-  height: 64px;
+export const SkeletonDiv = styled.div`
+  height: 28px;
+  border-radius: 8px;
+  animation: ${skeletonGradient} 1.8s infinite ease-in-out;
+`;
+
+export const LabelTableHeader = styled(Header)`
+  grid-template-columns: 35%;
   background: ${({ theme }) => theme.COLORS.INPUT_BACKGROUND};
 `;
 
-export const LabelTableTitle = styled.div`
-  width: 120px;
-  height: 28px;
-  background: ${({ theme }) => theme.COLORS.LINE};
-`;
-
-export const LabelItem = styled.div`
-  display: grid;
-  grid-template-columns: 240px auto 240px;
-  align-items: center;
-  justify-items: center;
-  width: 1280px;
+export const SkeletonLabelItem = styled(LabelItem)`
+  gap: 24px;
   height: 100px;
-  background: ${({ theme }) => theme.COLORS.INPUT_BACKGROUND};
-  border-top: 1px solid ${({ theme }) => theme.COLORS.LINE};
-`;
 
-export const Label = styled.div`
-  width: 120px;
-  height: 28px;
-`;
-
-export const Description = styled.div`
-  width: 800px;
-  height: 28px;
-`;
-
-export const ButtonTabs = styled.div`
-  display: flex;
-  div + div {
-    margin-left: 24px;
+  .label-icon,
+  .label-description,
+  .label-button-tabs {
+    width: 100%;
   }
-`;
 
-export const EditButton = styled.div`
-  width: 43px;
-  height: 32px;
+  .label-button-tabs {
+    justify-self: end;
+  }
 `;
 
 export { Table as LabelTable } from '@/components/Molecules/Table/index.styled';

@@ -1,84 +1,70 @@
+import { RadioList } from '@/components/Atoms/Radio/index.styled';
 import styled from 'styled-components';
 
 export const LabelEditForm = styled.div`
-  width: 1280px;
-  height: 345px;
-  background: ${({ theme }) => theme.COLORS.OFF_WHITE};
-  border: 1px solid ${({ theme }) => theme.COLORS.LINE};
-  border-radius: 16px;
-  padding: 32px;
   display: grid;
-  grid-template-rows: repeat(3, 1fr);
-  grid-template-columns: repeat(6, 1fr);
+  gap: 24px;
+  grid-template-rows: auto 1fr;
+  border-radius: 8px;
+  background: ${({ theme }) => theme.COLORS.OFF_WHITE};
+  padding: 32px;
 `;
 
 export const Title = styled.h1`
   ${({ theme }) => theme.FONTSTYLES.TEXT_LARGE}
-  margin-bottom:24px;
-  grid-column: 1/7;
 `;
 
 export const EditField = styled.div`
-  grid-column: 1/7;
-  grid-row: 2/3;
   display: grid;
-  grid-template-columns: 344px auto;
-  align-items: center;
+  place-items: center;
 
   & > div:first-child {
     justify-self: center;
     margin: 10px;
   }
+
+  @media all and (min-width: 1024px) {
+    grid-template-columns: 1fr 2fr;
+  }
+
+  @media all and (max-width: 1023px) {
+    grid-template-rows: 0.5fr 2fr;
+    gap: 24px;
+  }
 `;
 
 export const TextColor = styled.div`
+  ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'flex-start' })};
+  flex-wrap: wrap;
+  padding: 0px 24px;
+  border: none;
+  border-radius: 16px;
+  background: ${({ theme }) => theme.COLORS.INPUT_BACKGROUND};
+
   label {
     width: 100px;
   }
-`;
 
-export const BackgroundColor = styled.div`
-  input {
-    ${({ theme }) => theme.FONTSTYLES.TEXT_SMALL};
-    color: ${({ theme }) => theme.COLORS.TITLE_ACVITE};
+  label: first-child {
     width: 80px;
-    border: none;
-    background: transparent;
-
-    &:focus {
-      outline: none;
-    }
+    ${({ theme }) => theme.FONTSTYLES.TEXT_XSMALL}
+    color: ${({ theme }) => theme.COLORS.LABEL}
   }
 
-  svg {
-    cursor: pointer;
+  ${RadioList} {
+    display: flex;
+    flex-wrap: wrap;
   }
 `;
 
 export const EditForm = styled.div`
   display: grid;
   grid-gap: 16px;
-  grid-template-rows: repeat(3, 1fr);
-  grid-template-columns: 240px 352px auto;
-  grid-auto-columns: 940px;
+  width: 100%;
 
   form {
-    &:first-child,
-    &:nth-child(2) {
-      width: 904px;
-      width: inherit;
-      grid-column: 1/4;
-    }
-    &:nth-child(3) {
-      grid-row: 3/4;
-      grid-column: 1/2;
-      width: 240px;
-    }
-    &:nth-child(4) {
-      grid-row: 3/4;
-      grid-column: 2/3;
-      width: 352px;
-    }
+    width: inherit;
+    height: inherit;
 
     label {
       ${({ theme }) => theme.FONTSTYLES.TEXT_XSMALL}
@@ -86,28 +72,24 @@ export const EditForm = styled.div`
     }
   }
 
-  ${TextColor}, ${BackgroundColor} {
-    ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'flex-start' })};
-    padding: 0px 24px;
-    border: none;
-    border-radius: 16px;
-    background: ${({ theme }) => theme.COLORS.INPUT_BACKGROUND};
+  @media all and (min-width: 768px) {
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: 266px max-content;
 
-    &>label: first-child {
-      width: 80px;
-      ${({ theme }) => theme.FONTSTYLES.TEXT_XSMALL}
-      color: ${({ theme }) => theme.COLORS.LABEL}
+    form:first-child,
+    form:nth-child(2) {
+      grid-column: 1 / 4;
     }
+  }
+
+  @media all and (max-width: 767px) {
+    grid-template-rows: repeat(4, 1fr);
   }
 `;
 
 export const EditButton = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'center' })};
-  grid-column: 6/6;
-  grid-row: 3/3;
+  flex-wrap: wrap;
   justify-self: end;
-
-  button + button {
-    margin-left: 8px;
-  }
+  gap: 8px;
 `;

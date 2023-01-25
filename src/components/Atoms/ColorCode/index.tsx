@@ -45,17 +45,19 @@ const ColorCode = ({ color = DEFAULT_COLOR, setLabelState, isError, setIsError }
   return (
     <S.ColorCode isError={isError}>
       <label>배경 색상</label>
-      <input type="text" value={color} maxLength={MAX_COLORCODE_LENGTH} onChange={handleInputChange} />
-      <PanelPreviewLabel backgroundColor={color} />
-      <Button
-        buttonStyle="NO_BORDER"
-        iconInfo={{
-          icon: 'RefreshCcw',
-        }}
-        label=""
-        size="SMALL"
-        handleOnClick={changeColorCode}
-      />
+      <S.EditTool>
+        <input type="text" value={color} maxLength={MAX_COLORCODE_LENGTH} onChange={handleInputChange} />
+        <PanelPreviewLabel backgroundColor={color} />
+        <Button
+          buttonStyle="NO_BORDER"
+          iconInfo={{
+            icon: 'RefreshCcw',
+          }}
+          label=""
+          size="SMALL"
+          handleOnClick={changeColorCode}
+        />
+      </S.EditTool>
     </S.ColorCode>
   );
 };

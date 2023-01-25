@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const ColorCode = styled.form<{ isError: boolean }>`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'flex-start' })};
+  flex-wrap: wrap;
   width: fit-content;
   padding: 0px 24px;
   border: none;
@@ -36,4 +37,9 @@ export const ColorCode = styled.form<{ isError: boolean }>`
   svg {
     cursor: pointer;
   }
+`;
+
+export const EditTool = styled.div`
+  ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'flex-start' })};
+  flex-wrap: wrap;
 `;
