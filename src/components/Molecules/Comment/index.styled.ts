@@ -67,7 +67,7 @@ export const CommentContent = styled.div`
 
 export const TextArea = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'center', direction: 'column' })};
-  width: 900px;
+  width: 100%;
 `;
 
 export const TextAreaButtonTab = styled.div`
