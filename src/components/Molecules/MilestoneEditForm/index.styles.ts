@@ -33,7 +33,7 @@ export const EditForm = styled.div`
     }
   }
 
-  @media all and (min-width: 768px) {
+  @media all and (min-width: ${({ theme }) => `${theme.DEVICE_SIZE.TABLET}px`}) {
     div:last-child {
       grid-column: 1 / 3;
     }
@@ -45,11 +45,11 @@ export const EditButtons = styled.div`
   flex-wrap: wrap;
   gap: 8px;
 
-  @media all and (min-width: 380px) {
+  @media all and (min-width: ${({ theme }) => `${theme.DEVICE_SIZE.LARGE_MOBILE}px`}) {
     justify-content: flex-end;
   }
 
-  @media all and (max-width: 379px) {
+  @media all and (max-width: ${({ theme }) => `${theme.DEVICE_SIZE.LARGE_MOBILE - 1}px`}) {
     justify-content: center;
   }
 `;

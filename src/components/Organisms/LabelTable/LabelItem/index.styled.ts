@@ -18,7 +18,7 @@ export const EditButton = styled.div`
     margin-left: 24px;
   }
 
-  @media all and (max-width: 1023px) {
+  @media ${({ theme }) => theme.DEVICE.MOBILE_OR_TABLET} {
     display: none;
   }
 `;
@@ -37,7 +37,7 @@ export const LabelItem = styled.div`
     }
   }
 
-  @media all and (max-width: 767px) {
+  @media ${({ theme }) => theme.DEVICE.MOBILE} {
     grid-template-columns: 1fr 1fr;
 
     .label-description {
@@ -50,7 +50,7 @@ export const LabelItem = styled.div`
     justify-self: end;
   }
 
-  @media all and (min-width: 1024px) {
+  @media ${({ theme }) => theme.DEVICE.DESKTOP} {
     ${Dropdown} {
       display: none;
     }

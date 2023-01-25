@@ -23,11 +23,11 @@ export const EditField = styled.div`
     margin: 10px;
   }
 
-  @media all and (min-width: 1024px) {
+  @media ${({ theme }) => theme.DEVICE.DESKTOP} {
     grid-template-columns: 1fr 2fr;
   }
 
-  @media all and (max-width: 1023px) {
+  @media ${({ theme }) => theme.DEVICE.MOBILE_OR_TABLET} {
     grid-template-rows: 0.5fr 2fr;
     gap: 24px;
   }
@@ -72,7 +72,7 @@ export const EditForm = styled.div`
     }
   }
 
-  @media all and (min-width: 768px) {
+  @media all and (min-width: ${({ theme }) => `${theme.DEVICE_SIZE.TABLET}px`}) {
     grid-template-rows: repeat(3, 1fr);
     grid-template-columns: 266px max-content;
 
@@ -82,7 +82,7 @@ export const EditForm = styled.div`
     }
   }
 
-  @media all and (max-width: 767px) {
+  @media all and (max-width: ${({ theme }) => `${theme.DEVICE_SIZE.TABLET - 1}px`}) {
     grid-template-rows: repeat(4, 1fr);
   }
 `;

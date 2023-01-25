@@ -33,11 +33,11 @@ export const skeletonRectangle = (width: number, height: number) => `
 `;
 
 export const SkeletonNavLink = styled.div`
-  @media all and (min-width: 380px) {
+  @media all and (min-width: ${({ theme }) => `${theme.DEVICE_SIZE.LARGE_MOBILE}px`}) {
     ${skeletonRectangle(300, 32)}
   }
 
-  @media all and (max-width: 379px) {
+  @media all and (max-width: ${({ theme }) => `${theme.DEVICE_SIZE.LARGE_MOBILE - 1}px`}) {
     ${skeletonRectangle(200, 32)}
   }
 `;
@@ -49,11 +49,11 @@ export const SkeletonMilestoneItem = styled(MilestoneItem)`
 export const SkeletonMilestoneItemInfo = styled.div`
   flex-grow: 1;
 
-  @media all and (min-width: 768px) {
+  @media all and (min-width: ${({ theme }) => `${theme.DEVICE_SIZE.TABLET}px`}) {
     width: 450px;
   }
 
-  @media all and (max-width: 767px) {
+  @media ${({ theme }) => theme.DEVICE.MOBILE} {
     width: 100%;
 
     .skeleton_milestone__buttons {
@@ -62,7 +62,7 @@ export const SkeletonMilestoneItemInfo = styled.div`
     }
   }
 
-  @media all and (min-width: 380px) {
+  @media all and (min-width: ${({ theme }) => `${theme.DEVICE_SIZE.LARGE_MOBILE}px`}) {
     .skeleton_milestone__item {
       ${skeletonRectangle(200, 24)}
       margin-bottom: 16px;
@@ -73,7 +73,7 @@ export const SkeletonMilestoneItemInfo = styled.div`
     }
   }
 
-  @media all and (max-width: 379px) {
+  @media all and (max-width: ${({ theme }) => `${theme.DEVICE_SIZE.LARGE_MOBILE - 1}px`}) {
     .skeleton_milestone__item {
       ${skeletonRectangle(120, 24)}
       margin-bottom: 16px;
@@ -94,14 +94,14 @@ export const SkeletonMilestoneItemStates = styled.div`
     width:100%;
   }
 
-  @media all and (min-width: 768px) {
+  @media all and (min-width: ${({ theme }) => `${theme.DEVICE_SIZE.TABLET}px`}) {
     .skeleton_milestone__buttons {
       ${skeletonRectangle(180, 24)}
       margin-bottom: 10px;
     }
   }
 
-  @media all and (max-width: 767px) {
+  @media ${({ theme }) => theme.DEVICE.MOBILE} {
     width: 100%;
   }
 `;
