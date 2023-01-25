@@ -18,6 +18,7 @@ export const CommentHeader = styled.div`
   }
 
   .timeStamp {
+    white-space: pre;
     color: ${({ theme }) => theme.COLORS.LABEL};
   }
 `;
@@ -43,6 +44,10 @@ export const CommentTab = styled.div`
   ${ReactionPanel} {
     top: 0px;
     right: 25px;
+  }
+
+  @media ${({ theme }) => theme.DEVICE.MOBILE} {
+    gap: 0px 12px;
   }
 `;
 
