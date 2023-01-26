@@ -21,6 +21,16 @@ export const UserTab = styled.div`
   img {
     display: block;
   }
+
+  /* 갤럭시 폴드에서 헤더가 밀리는 현상때문에 추가*/
+  @media screen and (max-width: 320px) {
+    margin-right: 0px;
+    padding: 2px;
+
+    svg {
+      display: none;
+    }
+  }
 `;
 
 export const LogoutButton = styled.button<{ clickTab: boolean }>`

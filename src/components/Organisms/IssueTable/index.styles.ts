@@ -7,10 +7,30 @@ export const IssueStates = styled.div`
 `;
 
 export const IssueInfoTabs = styled.div`
-  ${({ theme }) => theme.MIXIN.FLEX({ direction: 'row' })};
-  margin-left: auto;
+  ${({ theme }) => theme.MIXIN.FLEX({ direction: 'row', justify: 'flex-end' })};
+
   details + details {
     margin-left: 32px;
+  }
+
+  @media ${({ theme }) => theme.DEVICE.TABLET} {
+    details + details {
+      margin-left: 24px;
+    }
+  }
+
+  @media ${({ theme }) => theme.DEVICE.MOBILE} {
+    justify-content: space-around;
+    details + details {
+      margin-left: 4px;
+    }
+
+    details:nth-child(1),
+    details:nth-child(2) {
+      menu {
+        left: 0;
+      }
+    }
   }
 `;
 
@@ -18,6 +38,30 @@ export const IssueTableHeader = styled.div`
   display: grid;
   align-items: center;
   grid-template-columns: 60px 500px auto;
+  width: 100%;
+
+  @media ${({ theme }) => theme.DEVICE.TABLET} {
+    grid-template-columns: 60px auto auto;
+  }
+
+  @media ${({ theme }) => theme.DEVICE.MOBILE} {
+    grid-template-columns: auto;
+
+    & > div:nth-child(1),
+    & > div:nth-child(2) {
+      display: none;
+    }
+
+    & > div:nth-child(3) {
+      span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+      }
+    }
+  }
 `;
 
 export const NoSearchResult = styled(CommonMilestoneItem)`

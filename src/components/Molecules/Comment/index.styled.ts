@@ -18,6 +18,7 @@ export const CommentHeader = styled.div`
   }
 
   .timeStamp {
+    white-space: pre;
     color: ${({ theme }) => theme.COLORS.LABEL};
   }
 `;
@@ -44,6 +45,10 @@ export const CommentTab = styled.div`
     top: 0px;
     right: 25px;
   }
+
+  @media ${({ theme }) => theme.DEVICE.MOBILE} {
+    gap: 0px 12px;
+  }
 `;
 
 export const CommentContent = styled.div`
@@ -63,7 +68,7 @@ export const CommentContent = styled.div`
 
 export const TextArea = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'center', direction: 'column' })};
-  width: 900px;
+  width: 100%;
 `;
 
 export const TextAreaButtonTab = styled.div`

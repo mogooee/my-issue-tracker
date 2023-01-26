@@ -4,7 +4,9 @@ import { DropdownIndicatorTypes } from '@/components/Molecules/Dropdown/types';
 type StyledDropdownIndicatorTypes = Pick<DropdownIndicatorTypes, 'indicatorStyle' | 'isActive'>;
 
 export const Indicator = styled.summary<StyledDropdownIndicatorTypes>`
+.indicator__container {
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center' })};
+}
 
   position: relative;
   width: fit-content;
@@ -78,6 +80,12 @@ export const Indicator = styled.summary<StyledDropdownIndicatorTypes>`
     css`
       background: ${({ theme }) => theme.COLORS.OFF_WHITE};
       border: 1px solid ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
-      border-right: 1px solid ${({ theme }) => theme.COLORS.LINE};
+      border-right: none;
     `}
+    &::marker,
+    &::-webkit-details-marker {
+      display: none;
+    }
+  }
+}
 `;
