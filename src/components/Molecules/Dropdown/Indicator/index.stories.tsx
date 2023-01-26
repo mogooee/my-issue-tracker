@@ -36,3 +36,9 @@ WithIcon.args = {
   indicatorIcon: <Icon icon="Smile" stroke={COLORS.LABEL} />,
   isActive: false,
 };
+
+export const BtnGroup = Template.bind({});
+BtnGroup.args = {
+  indicatorStyle: 'BTN_GROUP',
+  indicatorLabel: '···',
+};

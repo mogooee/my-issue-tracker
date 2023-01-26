@@ -22,6 +22,8 @@ import { FilterState, PageState } from '@/stores/filter';
 
 const PARENT_CHECKBOX_ID = -1;
 
+const EmptyIssueItem = () => <S.NoSearchResult>해당하는 이슈가 없습니다. 👀</S.NoSearchResult>;
+
 const IssueTable = ({ issuesData }: { issuesData: IssuesTypes }) => {
   const { openIssueCount, closedIssueCount, issues } = issuesData;
 
@@ -64,7 +66,7 @@ const IssueTable = ({ issuesData }: { issuesData: IssuesTypes }) => {
       item={
         issues.content.length
           ? issues.content.map((itemProps) => <IssueItem key={itemProps.id} {...itemProps} />)
-          : [<S.NoSearchResult>No results matched your search. 👀</S.NoSearchResult>]
+          : [<EmptyIssueItem />]
       }
     />
   );

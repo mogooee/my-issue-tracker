@@ -6,6 +6,8 @@ export const IssueHeader = styled.div`
   display: grid;
   align-items: center;
   grid-template-columns: 5% auto auto;
+  padding: 16px 32px;
+  border-bottom: 1px solid ${({ theme }) => theme.COLORS.LINE};
 
   .skeleton-issue__nav-link {
     ${skeletonRectangle(232, 32)}
@@ -42,6 +44,7 @@ export const IssueItem = styled.div`
   display: grid;
   align-items: center;
   grid-template-columns: 5% auto 2%;
+  padding: 16px 32px;
 
   .item__title {
     ${skeletonRectangle(360, 32)}
@@ -81,3 +84,4 @@ export const IssueItem = styled.div`
 `;
 
 export { Table as IssueTable } from '@/components/Molecules/Table/index.styled';
+export { Item as IssueTableItem } from '@/components/Molecules/Table/TableItem/index';

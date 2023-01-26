@@ -6,7 +6,7 @@ type ReactionType = Pick<ReactionResponseTypes, 'emoji'> & { nickname: string[] 
 
 export const ReactionTab = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'flex-start' })};
-  margin-top: 8px;
+  margin: 16px 0;
   gap: 12px;
 
   svg {

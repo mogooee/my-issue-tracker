@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const PrograssBar = styled.progress`
+export const ProgressBar = styled.progress`
   display: block;
   width: 244px;
   height: 10px;
@@ -19,9 +19,10 @@ export const PrograssBar = styled.progress`
   }
 `;
 
-export const PrograssState = styled.div`
+export const ProgressState = styled.div`
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   width: 100%;
   gap: 8px;
 
@@ -36,6 +37,6 @@ export const PrograssState = styled.div`
   }
 `;
 
-export const PrograssTitle = styled.span`
+export const ProgressTitle = styled.span`
   ${({ theme }) => theme.FONTSTYLES.TEXT_SMALL};
 `;

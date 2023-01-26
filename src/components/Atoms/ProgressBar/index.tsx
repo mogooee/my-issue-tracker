@@ -14,16 +14,16 @@ const PrograssBar = ({ open, close, showState, title }: PrograssBarTypes) => {
 
   return (
     <>
-      <S.PrograssBar value={progressValue} max={percent} />
-      {title && <S.PrograssTitle>{title}</S.PrograssTitle>}
+      <S.ProgressBar value={progressValue} max={percent} />
+      {title && <S.ProgressTitle>{title}</S.ProgressTitle>}
       {showState && (
-        <S.PrograssState>
+        <S.ProgressState>
           <span>{progressValue}%</span>
           <div>
             <span>열린 이슈 {open}</span>
             <span>닫힌 이슈 {close}</span>
           </div>
-        </S.PrograssState>
+        </S.ProgressState>
       )}
     </>
   );

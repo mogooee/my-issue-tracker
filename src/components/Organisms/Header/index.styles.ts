@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Header = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'space-between' })};
-  padding: 27px 0 60px 0;
+  padding-bottom: 60px;
   position: relative;
 `;
 
@@ -38,7 +38,7 @@ export const LogoutButton = styled.button<{ clickTab: boolean }>`
 
   cursor: pointer;
   position: absolute;
-  top: 87px;
+  top: 55px;
   right: -5px;
   width: 100px;
   padding: 8px 16px;

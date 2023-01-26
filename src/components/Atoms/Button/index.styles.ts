@@ -6,6 +6,7 @@ type StyledButtonTypes = Pick<ButtonTypes, 'size' | 'buttonStyle'>;
 export const Button = styled.button<StyledButtonTypes>`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'center' })};
 
+  min-width: fit-content;
   padding: 0px 24px;
   border: none;
   border-radius: 20px;

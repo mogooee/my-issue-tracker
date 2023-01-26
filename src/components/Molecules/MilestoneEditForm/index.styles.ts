@@ -22,15 +22,19 @@ export const MilestoneEditForm = styled.div<{ editMode: 'ADD' | 'MODIFY' }>`
 
 export const EditForm = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: minmax(40px, 1fr);
   gap: 16px;
   margin-bottom: 24px;
 
   div {
     form {
       width: 100%;
+      height: 100%;
     }
-    &:last-child {
+  }
+
+  @media all and (min-width: ${({ theme }) => `${theme.DEVICE_SIZE.TABLET}px`}) {
+    div:last-child {
       grid-column: 1 / 3;
     }
   }
@@ -38,6 +42,14 @@ export const EditForm = styled.div`
 
 export const EditButtons = styled.div`
   display: flex;
-  justify-content: flex-end;
+  flex-wrap: wrap;
   gap: 8px;
+
+  @media all and (min-width: ${({ theme }) => `${theme.DEVICE_SIZE.LARGE_MOBILE}px`}) {
+    justify-content: flex-end;
+  }
+
+  @media all and (max-width: ${({ theme }) => `${theme.DEVICE_SIZE.LARGE_MOBILE - 1}px`}) {
+    justify-content: center;
+  }
 `;

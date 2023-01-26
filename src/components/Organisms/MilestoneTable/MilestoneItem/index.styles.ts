@@ -1,13 +1,22 @@
+import { Dropdown } from '@/components/Molecules/Dropdown/index.styles';
 import styled, { css } from 'styled-components';
 
 export const MilestoneItem = styled.div`
-  display: flex;
-  justify-content: space-between;
+  ${({ theme }) => theme.MIXIN.FLEX({ align: 'flex-start', justify: 'space-between' })};
+  flex-wrap: wrap;
+  padding: 16px 32px;
+
+  progress {
+    width: auto;
+  }
+
+  @media ${({ theme }) => theme.DEVICE.MOBILE} {
+    flex-direction: column;
+  }
 `;
 
 export const CommonMilestoneItem = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'center' })};
-  background: ${({ theme }) => theme.COLORS.OFF_WHITE};
   padding: 24px 32px;
 
   span {
@@ -19,7 +28,7 @@ export const CommonMilestoneItem = styled.div`
 
 export const MilestoneItemInfo = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  flex-grow: 1;
   gap: 8px;
   align-items: baseline;
 
@@ -44,9 +53,29 @@ export const MilestoneItemInfo = styled.div`
 
   .MilestoneItem_description {
     min-height: 28px;
-    grid-column: 1 / 3;
     ${({ theme }) => theme.FONTSTYLES.TEXT_SMALL};
     color: ${({ theme }) => theme.COLORS.LABEL};
+  }
+
+  @media all and (min-width: ${({ theme }) => `${theme.DEVICE_SIZE.TABLET}px`}) {
+    width: 450px;
+    grid-auto-columns: minmax(auto, max-content);
+
+    .MilestoneItem_description {
+      grid-column: 1 / 3;
+    }
+
+    .MilestoneItem_dueDate {
+      grid-column: 2 / 3;
+    }
+
+    ${Dropdown} {
+      display: none;
+    }
+  }
+
+  @media ${({ theme }) => theme.DEVICE.MOBILE} {
+    width: 100%;
   }
 `;
 
@@ -83,5 +112,33 @@ export const MilestoneItemButtons = styled.div<{ isOpenModifyEditer: boolean }>`
           }
         }
       `}
+
+    @media ${({ theme }) => theme.DEVICE.MOBILE} {
+      display: none;
+    }
+  }
+`;
+
+export const MilestoneItemStates = styled.div`
+  flex-grow: 1;
+  min-width: 200px;
+  display: grid;
+  gap: 14px;
+
+  details {
+    justify-self: flex-end;
+  }
+
+  @media ${({ theme }) => theme.DEVICE.MOBILE} {
+    width: 100%;
+  }
+`;
+
+export const MilestoneTitle = styled.div`
+  ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'space-between' })};
+  gap: 14px;
+
+  ${Dropdown} {
+    min-width: fit-content;
   }
 `;
