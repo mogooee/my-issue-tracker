@@ -4,8 +4,8 @@ import { InputTypes } from '@/components/Atoms/Input';
 type FormStyleTypes = Pick<InputTypes, 'inputSize' | 'isActive'>;
 
 export const Form = styled.form<FormStyleTypes>`
-  ${({ theme }) => theme.MIXIN.FLEX({ direction: 'column', align: 'flex-start', justify: 'center' })};
-
+  ${({ theme }) => theme.MIXIN.FLEX({ direction: 'column', align: 'flex-start', justify: 'flex-start' })};
+  flex-wrap: wrap;
   border: none;
   border-radius: 16px;
   background: ${({ theme }) => theme.COLORS.INPUT_BACKGROUND};
@@ -34,7 +34,7 @@ export const Form = styled.form<FormStyleTypes>`
       case 'SMALL':
         return css`
           padding: 0 24px;
-          ${({ theme }) => theme.MIXIN.FLEX({ direction: 'row', align: 'center' })};
+          ${({ theme }) => theme.MIXIN.FLEX({ direction: 'row', align: 'center', justify: 'flex-start' })};
           ${({ theme }) => theme.TEXT_INPUT_SIZE.SMALL};
 
           label {
@@ -73,7 +73,8 @@ export const Form = styled.form<FormStyleTypes>`
 `;
 
 export const Input = styled.input`
-  width: 100%;
+  width: 80%;
+  flex-grow: 1;
   background: transparent;
   border: transparent;
   padding: 0;

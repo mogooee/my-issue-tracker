@@ -17,6 +17,7 @@ import { BUTTON_PROPS } from '@/components/Atoms/Button/options';
 import { initLabelState, LABEL_EDIT_FORM_PROPS } from '@/components/Molecules/LabelEditForm/constants';
 
 type LabelEditFormTypes = {
+  id: number;
   type: 'ADD' | 'EDIT';
   labelProps: LabelTypes;
   setIsEditLabel?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,7 +25,8 @@ type LabelEditFormTypes = {
 
 const DEBOUNCE_DELAY = 200;
 
-const LabelEditForm = ({ type, labelProps, setIsEditLabel }: LabelEditFormTypes) => {
+const LabelEditForm = ({ id, type, labelProps, setIsEditLabel }: LabelEditFormTypes) => {
+  const [isError, setIsError] = useState<boolean>(false);
   const [labelState, setLabelState] = useState<LabelTypes>(labelProps);
   const { title, backgroundColorCode, description, textColor } = labelState;
 
@@ -75,7 +77,8 @@ const LabelEditForm = ({ type, labelProps, setIsEditLabel }: LabelEditFormTypes)
     setLabelState((prev) => ({ ...prev, textColor: newTextColor }));
   };
 
-  const hasUniqueLabel: boolean = JSON.stringify(labelProps) !== JSON.stringify(labelState) && !!labelState.title;
+  const isUnchangedLabel: boolean = JSON.stringify(labelProps) === JSON.stringify(labelState);
+  const isErrorLabel: boolean = isError || !title;
 
   return (
     <S.LabelEditForm>
@@ -97,16 +100,25 @@ const LabelEditForm = ({ type, labelProps, setIsEditLabel }: LabelEditFormTypes)
               isTyping: IsDescriptionTyping,
             })}
           />
-          <ColorCode color={labelState.backgroundColorCode} setLabelState={setLabelState} />
+          <ColorCode
+            color={backgroundColorCode}
+            setLabelState={setLabelState}
+            isError={isError}
+            setIsError={setIsError}
+          />
           <S.TextColor>
             <label>텍스트 색상</label>
-            <Radio {...LABEL_EDIT_FORM_PROPS.TEXT_COLOR({ onChange: hanldeRadioChange, textColor })} />
+            <Radio {...LABEL_EDIT_FORM_PROPS.TEXT_COLOR({ id, onChange: hanldeRadioChange, textColor })} />
           </S.TextColor>
         </S.EditForm>
       </S.EditField>
       <S.EditButton>
         {type === 'EDIT' && <Button {...BUTTON_PROPS.CLOSE} handleOnClick={handleCancelButtonClick} />}
-        <Button {...BUTTON_PROPS.SAVE} handleOnClick={handleCompleteButtonClick} disabled={!hasUniqueLabel} />
+        <Button
+          {...BUTTON_PROPS.SAVE}
+          handleOnClick={handleCompleteButtonClick}
+          disabled={isUnchangedLabel || isErrorLabel}
+        />
       </S.EditButton>
     </S.LabelEditForm>
   );

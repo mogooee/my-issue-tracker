@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import useFetchReaction from '@/api/issue/useFetchReaction';
 import useFetchIssue from '@/api/issue/useFetchIssue';
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
@@ -19,7 +19,6 @@ import calcTimeForToday from '@/utils/calcForTimeToday';
 import { CommentsTypes, ReactionResponseTypes } from '@/api/issue/types';
 import { BUTTON_PROPS, TABLE_ITEM_BUTTON_INFO } from '@/components/Atoms/Button/options';
 import { AUTHOR_LABEL_PROPS, EDIT_BUTTON_PROPS } from '@/components/Molecules/Comment/constants';
-import { DEFAULT_TEXTAREA_MAX_LENGTH } from '@/components/Molecules/TextAreaEditer/constants';
 
 import Modal, { ModalState } from '@/components/Modal';
 import DeleteCheck from '@/components/Modal/DeleteCheck';
@@ -84,7 +83,8 @@ const Comment = ({
   const [isCommentModalOpen, setCommentModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useRecoilState(ModalState);
 
-  const { reactions } = useFetchReaction();
+  const { useReactionData } = useFetchReaction();
+  const { data: reactions } = useReactionData();
 
   const memberId = useRecoilValue(LoginUserInfoState).id;
   const hasReaction = issueCommentReactionsResponse.length > 0;

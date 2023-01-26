@@ -6,10 +6,11 @@ import notifyError from '@/api/alertHelper';
 const useFetchReaction = () => {
   const queryClient = useQueryClient();
 
-  const { data: reactions } = useQuery<ReactionTypes[]>(['reactions'], getReactionData, {
-    cacheTime: Infinity,
-    staleTime: Infinity,
-  });
+  const useReactionData = () =>
+    useQuery<ReactionTypes[]>(['reactions'], getReactionData, {
+      cacheTime: Infinity,
+      staleTime: Infinity,
+    });
 
   const useAddIssueCommentReaction = (issueId: number) =>
     useMutation(addCommentReaction, {
@@ -32,7 +33,7 @@ const useFetchReaction = () => {
     });
 
   return {
-    reactions,
+    useReactionData,
     useAddIssueCommentReaction,
     useDeleteIssueCommentReaction,
   };

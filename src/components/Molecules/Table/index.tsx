@@ -12,9 +12,11 @@ interface TableTypes {
 const Table = ({ header, item }: TableTypes) => (
   <S.Table>
     <TableHeader>{header}</TableHeader>
-    {item.map((e, i) => (
-      <TableItem key={i}>{e}</TableItem>
-    ))}
+    <ul>
+      {item.map((e, i) => (
+        <TableItem key={i}>{e}</TableItem>
+      ))}
+    </ul>
   </S.Table>
 );
 export default Table;

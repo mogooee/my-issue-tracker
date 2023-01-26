@@ -16,7 +16,7 @@ export const skeletonRectangle = (width: number, height: number) => `
     }
     50%,
     100% {
-      transform: translateX(400px);
+      transform: translateX(680px);
     }
   }
 
@@ -33,36 +33,80 @@ export const skeletonRectangle = (width: number, height: number) => `
 `;
 
 export const SkeletonNavLink = styled.div`
-  ${skeletonRectangle(300, 32)}
+  @media all and (min-width: ${({ theme }) => `${theme.DEVICE_SIZE.LARGE_MOBILE}px`}) {
+    ${skeletonRectangle(300, 32)}
+  }
+
+  @media all and (max-width: ${({ theme }) => `${theme.DEVICE_SIZE.LARGE_MOBILE - 1}px`}) {
+    ${skeletonRectangle(200, 32)}
+  }
 `;
 
 export const SkeletonMilestoneItem = styled(MilestoneItem)`
-  ${({ theme }) => theme.MIXIN.FLEX({ align: 'flex-start', justify: 'space-between' })};
+  gap: 14px;
 `;
 
 export const SkeletonMilestoneItemInfo = styled.div`
-  .skeleton_milestone__item {
-    ${skeletonRectangle(200, 24)}
-    margin-bottom: 16px;
+  flex-grow: 1;
+
+  @media all and (min-width: ${({ theme }) => `${theme.DEVICE_SIZE.TABLET}px`}) {
+    width: 450px;
   }
 
-  .skeleton_milestone__desc {
-    ${skeletonRectangle(300, 20)}
+  @media ${({ theme }) => theme.DEVICE.MOBILE} {
+    width: 100%;
+
+    .skeleton_milestone__buttons {
+      ${skeletonRectangle(55, 30)}
+      margin-bottom: 16px;
+    }
+  }
+
+  @media all and (min-width: ${({ theme }) => `${theme.DEVICE_SIZE.LARGE_MOBILE}px`}) {
+    .skeleton_milestone__item {
+      ${skeletonRectangle(200, 24)}
+      margin-bottom: 16px;
+    }
+
+    .skeleton_milestone__desc {
+      ${skeletonRectangle(300, 20)}
+    }
+  }
+
+  @media all and (max-width: ${({ theme }) => `${theme.DEVICE_SIZE.LARGE_MOBILE - 1}px`}) {
+    .skeleton_milestone__item {
+      ${skeletonRectangle(120, 24)}
+      margin-bottom: 16px;
+    }
+
+    .skeleton_milestone__desc {
+      ${skeletonRectangle(165, 20)}
+    }
   }
 `;
 
 export const SkeletonMilestoneItemStates = styled.div`
+  flex-grow: 1;
   ${({ theme }) => theme.MIXIN.FLEX({ direction: 'column', align: 'flex-end' })};
-
-  .skeleton_milestone__buttons {
-    ${skeletonRectangle(180, 24)}
-    margin-bottom: 10px;
-  }
 
   .skeleton_milestone__progress {
     ${skeletonRectangle(244, 50)}
+    width:100%;
+  }
+
+  @media all and (min-width: ${({ theme }) => `${theme.DEVICE_SIZE.TABLET}px`}) {
+    .skeleton_milestone__buttons {
+      ${skeletonRectangle(180, 24)}
+      margin-bottom: 10px;
+    }
+  }
+
+  @media ${({ theme }) => theme.DEVICE.MOBILE} {
+    width: 100%;
   }
 `;
 
 export { Table as MilestoneTable } from '@/components/Molecules/Table/index.styled';
 export { Header as MilestoneHeader } from '@/components/Molecules/Table/TableHeader';
+export { Item as MilestoneTableItem } from '@/components/Molecules/Table/TableItem/index';
+export { MilestoneTitle as SkeletonMilestoneTitle } from '@/components/Organisms/MilestoneTable/MilestoneItem/index.styles';

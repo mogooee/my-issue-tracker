@@ -5,6 +5,7 @@ export const Template = styled.div`
   display: grid;
   align-items: center;
   grid-template-columns: 60px auto 100px;
+  padding: 16px 32px;
 
   .checkbox {
     margin-top: -35px;

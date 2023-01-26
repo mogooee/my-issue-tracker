@@ -1,9 +1,14 @@
-import { DropdownTypes, ListPanelTypes, ReactionPanelTypes } from '@/components/Molecules/Dropdown/types';
+import {
+  BubblePanelTypes,
+  DropdownTypes,
+  ListPanelTypes,
+  ReactionPanelTypes,
+} from '@/components/Molecules/Dropdown/types';
 import * as S from '@/components/Molecules/Dropdown/index.styles';
 import DropdownIndicator from '@/components/Molecules/Dropdown/Indicator';
 import DropdownPanel from '@/components/Molecules/Dropdown/Panel';
 
-const Dropdown = <Panel extends ReactionPanelTypes | ListPanelTypes>({
+const Dropdown = <Panel extends ReactionPanelTypes | ListPanelTypes | BubblePanelTypes>({
   indicatorProps,
   type,
   panelProps,
