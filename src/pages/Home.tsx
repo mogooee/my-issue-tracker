@@ -12,8 +12,8 @@ const StyledLayer = styled.div`
   height: 100vh;
 
   & > div {
-    width: 1280px;
-    margin: 0 auto;
+    max-width: 1280px;
+    margin: 12px;
   }
 `;
 
