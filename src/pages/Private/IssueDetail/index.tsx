@@ -15,13 +15,17 @@ import Comment from '@/components/Molecules/Comment';
 import IssueHeader from '@/components/Organisms/IssueHeader';
 import IsssueDetailAside from '@/pages/Private/IssueDetail/Aside';
 import IssueHistory from '@/pages/Private/IssueDetail/History';
-import IssueInfo from './IssueInfo';
+import useFetchReaction from '@/api/issue/useFetchReaction';
+import IssueInfo from '@/pages/Private/IssueDetail/IssueInfo';
 
 const IssueDetail = (): JSX.Element => {
   const { issueId } = useParams();
   const { useIssueData, useAddIssueComment } = useFetchIssue(Number(issueId));
   const { data: issue } = useIssueData(Number(issueId));
   const { mutate: addIssueComment } = useAddIssueComment(Number(issueId));
+
+  const { useReactionData } = useFetchReaction();
+  const { data: reactions } = useReactionData();
 
   const { id, closed, title, createdAt, lastModifiedAt, author, comments, issueHistories } = issue!;
 
@@ -85,6 +89,7 @@ const IssueDetail = (): JSX.Element => {
                     comment={content}
                     setSelectCommentId={setSelectCommentId}
                     isMainComment={index === 0}
+                    reactions={reactions!}
                   />
                 </S.Comment>
               );
