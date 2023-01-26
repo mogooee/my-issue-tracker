@@ -78,7 +78,7 @@ const LabelEditForm = ({ id, type, labelProps, setIsEditLabel }: LabelEditFormTy
   };
 
   const isUnchangedLabel: boolean = JSON.stringify(labelProps) === JSON.stringify(labelState);
-  const isErrorLabel: boolean = isError || !labelState.title;
+  const isErrorLabel: boolean = isError || !title;
 
   return (
     <S.LabelEditForm>
@@ -101,7 +101,7 @@ const LabelEditForm = ({ id, type, labelProps, setIsEditLabel }: LabelEditFormTy
             })}
           />
           <ColorCode
-            color={labelState.backgroundColorCode}
+            color={backgroundColorCode}
             setLabelState={setLabelState}
             isError={isError}
             setIsError={setIsError}

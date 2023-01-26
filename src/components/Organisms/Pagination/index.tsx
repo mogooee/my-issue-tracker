@@ -14,7 +14,7 @@ const Paginiation = ({ totalPages, currentPage }: { totalPages: number; currentP
   const PaginationButtons = (total: number, current: number) => {
     const isNumber = (x: any): x is number => typeof x === 'number';
 
-    const buttons = buttonLogic(total, current).map((el) => {
+    const buttons = buttonLogic(total, current).map((el, i) => {
       if (isNumber(el)) {
         return (
           <S.PaginationNumberButton
@@ -28,7 +28,8 @@ const Paginiation = ({ totalPages, currentPage }: { totalPages: number; currentP
         );
       }
 
-      return <div>…</div>;
+      // eslint-disable-next-line react/no-array-index-key
+      return <div key={`ellipsis-${i}`}>…</div>;
     });
 
     return buttons;

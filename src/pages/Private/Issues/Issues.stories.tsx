@@ -14,7 +14,7 @@ export default {
   decorators: [
     (Story) => (
       <Routes>
-        <Route path="/issues" element={<Story />} />
+        <Route path="/" element={<Story />} />
         <Route path="/issues/:issueId" element={<IssueDetail />} />
         <Route path="/labels" element={<Labels />} />
         <Route path="/milestones" element={<Milestones />} />

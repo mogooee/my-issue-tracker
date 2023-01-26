@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import IssueTable from '@/components/Organisms/IssueTable';
-import { issues } from '@/mocks/tables/issue';
+import { issues, issueTable } from '@/mocks/tables/issue';
 
 export default {
   title: 'Organisms/IssueTable',
@@ -16,10 +16,16 @@ TotalIssue.args = {
 
 export const OpenIssue = Template.bind({});
 OpenIssue.args = {
-  ...TotalIssue.args,
+  issuesData: {
+    ...issues,
+    issues: { ...issues.issues, content: [...issues.issues.content.filter((issue) => !issue.closed)] },
+  },
 };
 
 export const ClosedIssue = Template.bind({});
 ClosedIssue.args = {
-  ...TotalIssue.args,
+  issuesData: {
+    ...issues,
+    issues: { ...issues.issues, content: [...issues.issues.content.filter((issue) => issue.closed)] },
+  },
 };

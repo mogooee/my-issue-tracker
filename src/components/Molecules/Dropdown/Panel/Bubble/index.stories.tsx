@@ -8,27 +8,11 @@ export default {
 
 const Template: ComponentStory<typeof PanelBubble> = (args) => <PanelBubble {...args} />;
 
-export const LabelBtns = Template.bind({});
-LabelBtns.args = {
+export const Initial = Template.bind({});
+Initial.args = {
   panelList: [
     {
       title: 'Edit',
-    },
-    {
-      title: 'Delete',
-    },
-  ],
-  position: 'LEFT',
-};
-
-export const MilestoneBtns = Template.bind({});
-MilestoneBtns.args = {
-  panelList: [
-    {
-      title: 'Edit',
-    },
-    {
-      title: 'Close',
     },
     {
       title: 'Delete',
