@@ -74,7 +74,7 @@ export const EditForm = styled.div`
 
   @media all and (min-width: ${({ theme }) => `${theme.DEVICE_SIZE.TABLET}px`}) {
     grid-template-rows: repeat(3, 1fr);
-    grid-template-columns: 266px max-content;
+    grid-template-columns: max-content max-content;
 
     form:first-child,
     form:nth-child(2) {

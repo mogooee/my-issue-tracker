@@ -14,7 +14,6 @@ export const BackGround = styled.div`
 `;
 
 export const ModalBlock = styled.div`
-  height: max-content;
   padding: 40px;
   position: absolute;
   border-radius: 20px;
