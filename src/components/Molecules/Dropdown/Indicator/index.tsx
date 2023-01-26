@@ -7,11 +7,13 @@ const DropdownIndicator = ({ ...props }: DropdownIndicatorTypes) => {
   const { indicatorStyle, indicatorLabel, indicatorIcon, isActive } = props;
   return (
     <S.Indicator role="button" indicatorStyle={indicatorStyle} isActive={isActive}>
-      {indicatorLabel && <span>{indicatorLabel}</span>}
-      {indicatorIcon}
-      {indicatorStyle !== 'ICON' && (
-        <Icon icon={indicatorStyle === 'SIDEBAR' ? 'Plus' : 'Caret'} stroke={COLORS.LABEL} />
-      )}
+      <div className="indicator__container">
+        {indicatorLabel && <span>{indicatorLabel}</span>}
+        {indicatorIcon}
+        {indicatorStyle !== 'ICON' && (
+          <Icon icon={indicatorStyle === 'SIDEBAR' ? 'Plus' : 'Caret'} stroke={COLORS.LABEL} />
+        )}
+      </div>
     </S.Indicator>
   );
 };

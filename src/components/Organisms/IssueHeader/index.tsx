@@ -27,9 +27,11 @@ const IssueHeader = ({ id, closed, title, createdAt, author, commentNum }: Issue
           lineColor={closed ? COLORS.SECONDORY.PURPLE : COLORS.PRIMARY.BLUE}
           title={closed ? '닫힌 이슈' : '열린 이슈'}
         />
-        <span>{issueOpenSummary}</span>
-        <span className="splitLine">∙</span>
-        <span>{`코멘트 ${commentNum}개`}</span>
+        <S.InfoText>
+          <span>{issueOpenSummary}</span>
+          <span className="splitLine">∙</span>
+          <span>{`코멘트 ${commentNum}개`}</span>
+        </S.InfoText>
       </S.Info>
     </S.IssueHeader>
   );
