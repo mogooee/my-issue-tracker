@@ -7,6 +7,9 @@ export const ErrorHeader = styled(Header)`
 `;
 
 export const ErrorItem = styled(CommonMilestoneItem)`
+  flex-wrap: wrap;
+  white-space: pre;
+
   button {
     margin-left: 12px;
     border-radius: 8px;

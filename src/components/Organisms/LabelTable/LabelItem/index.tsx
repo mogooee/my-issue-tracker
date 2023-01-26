@@ -7,6 +7,8 @@ import * as S from '@/components/Organisms/LabelTable/LabelItem/index.styled';
 import Button from '@/components/Atoms/Button';
 import Label from '@/components/Atoms/Label';
 import LabelEditForm from '@/components/Molecules/LabelEditForm';
+import { LABEL_BTNS_ARGS } from '@/components/Molecules/Dropdown/mock';
+import Dropdown from '@/components/Molecules/Dropdown';
 import { ModalState } from '@/components/Modal';
 
 import { LabelTypes } from '@/api/issue/types';
@@ -31,14 +33,20 @@ const LabelItem = ({ setDeleteLabelId, ...labelProps }: LabelItemTypes) => {
     setDeleteLabelId(deletedLabelId);
   };
 
+  const clickHandler = {
+    editButton: handleEditButtonClick,
+    deleteButton: () => handleDeleteButtonClick(id),
+  };
+
   return isEditLabel ? (
-    <LabelEditForm type="EDIT" labelProps={labelProps} setIsEditLabel={setIsEditLabel} />
+    <LabelEditForm id={id} type="EDIT" labelProps={labelProps} setIsEditLabel={setIsEditLabel} />
   ) : (
     <S.LabelItem>
       <Link to={`/issues?page=0&q=label%3A${changeNotEngFilter(title)}`}>
         <Label title={title} backgroundColorCode={backgroundColorCode} textColor={textColor} />
       </Link>
-      <S.Description>{description}</S.Description>
+      <span className="label-description">{description}</span>
+      <Dropdown {...LABEL_BTNS_ARGS(clickHandler)} />
       <S.EditButton>
         <Button {...TABLE_ITEM_BUTTON_INFO.MODIFY} handleOnClick={handleEditButtonClick} />
         <Button {...TABLE_ITEM_BUTTON_INFO.DELETE} handleOnClick={() => handleDeleteButtonClick(id)} />

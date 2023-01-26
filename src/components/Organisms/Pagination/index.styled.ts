@@ -16,6 +16,7 @@ export const PaginationNumberButton = styled.button<{ isActive: boolean }>`
   padding: 0 12px;
   border: 1px solid transparent;
   border-radius: 6px;
+  cursor: pointer;
   ${({ isActive, theme }) =>
     isActive
       ? `background: ${theme.COLORS.PRIMARY.BLUE}; color: ${theme.COLORS.OFF_WHITE};

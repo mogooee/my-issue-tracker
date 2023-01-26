@@ -6,7 +6,6 @@ import { IssuesTypes, CommentsTypes, ContentTypes, IssueHistoryTypes, ReactionRe
 import { userTable } from '@/mocks/handlers/auth';
 import { MILESTONE_LIST, USER_LIST } from '@/components/Molecules/Dropdown/mock';
 import { responseNewIssueData } from '@/mocks/tables/newIssueHelper';
-import { OPEN_QUERY, CLOSED_QUERY } from '@/hooks/useFilter';
 import { labelTable } from '@/mocks/handlers/label';
 import {
   assigneesHistory,
@@ -128,6 +127,9 @@ export const issueHandlers = [
 
     const openIssueContents = content.filter((e) => e.closed === false);
     const closedIssueContents = content.filter((e) => e.closed === true);
+
+    const OPEN_QUERY = 'is:"open"';
+    const CLOSED_QUERY = 'is:"closed"';
 
     const openStateReg = new RegExp(OPEN_QUERY);
     const stateContent = queries.match(openStateReg) ? openIssueContents : closedIssueContents;

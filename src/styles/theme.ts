@@ -112,6 +112,7 @@ const MIXIN = {
 
 const DEVICE_SIZE = {
   MOBILE: 320,
+  LARGE_MOBILE: 380,
   TABLET: 768,
   DESKTOP: 1024,
 };
@@ -119,6 +120,7 @@ const DEVICE_SIZE = {
 const DEVICE = {
   MOBILE: `screen and (max-width: ${DEVICE_SIZE.TABLET - 1}px)`,
   TABLET: `screen and (min-width: ${DEVICE_SIZE.TABLET}px) and (max-width: ${DEVICE_SIZE.DESKTOP - 1}px)`,
+  MOBILE_OR_TABLET: `screen and (max-width: ${DEVICE_SIZE.DESKTOP - 1}px)`,
   DESKTOP: `screen and (min-width: ${DEVICE_SIZE.DESKTOP}px)`,
 };
 
@@ -130,6 +132,7 @@ const THEME = {
   TEXTAREA_SIZE,
   MIXIN,
   DEVICE,
+  DEVICE_SIZE,
 };
 
 export default THEME;

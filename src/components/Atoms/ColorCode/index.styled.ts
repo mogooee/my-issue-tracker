@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
-export const ColorCode = styled.form`
+export const ColorCode = styled.form<{ isError: boolean }>`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'flex-start' })};
+  flex-wrap: wrap;
   width: fit-content;
   padding: 0px 24px;
   border: none;
@@ -16,7 +17,10 @@ export const ColorCode = styled.form`
 
   input {
     ${({ theme }) => theme.FONTSTYLES.TEXT_SMALL};
-    color: ${({ theme }) => theme.COLORS.TITLE_ACVITE};
+    color: ${({ theme, isError }) => {
+      if (isError) return theme.COLORS.ERROR.RED;
+      return theme.COLORS.TITLE_ACVITE;
+    }};
     width: 80px;
     border: none;
     background: transparent;
@@ -33,4 +37,9 @@ export const ColorCode = styled.form`
   svg {
     cursor: pointer;
   }
+`;
+
+export const EditTool = styled.div`
+  ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'flex-start' })};
+  flex-wrap: wrap;
 `;

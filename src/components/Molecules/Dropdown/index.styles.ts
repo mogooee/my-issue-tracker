@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
+import { Indicator } from './Indicator/index.styles';
 
-export const Dropdown = styled.details<{ dropdownStyle: 'STANDARD' | 'FILTERBAR' | 'SIDEBAR' | 'ICON' }>`
+export const Dropdown = styled.details<{ dropdownStyle: 'STANDARD' | 'FILTERBAR' | 'SIDEBAR' | 'ICON' | 'BTN_GROUP' }>`
   position: relative;
   width: fit-content;
 
@@ -30,5 +31,16 @@ export const Dropdown = styled.details<{ dropdownStyle: 'STANDARD' | 'FILTERBAR'
     cursor: default;
     content: ' ';
     background: transparent;
+  }
+
+  &[open] > ${Indicator} {
+    ${({ dropdownStyle }) => {
+      if (dropdownStyle === 'BTN_GROUP') {
+        return css`
+          background: ${({ theme }) => theme.COLORS.PRIMARY.BLUE};
+          color: ${({ theme }) => theme.COLORS.OFF_WHITE};
+        `;
+      }
+    }}
   }
 `;

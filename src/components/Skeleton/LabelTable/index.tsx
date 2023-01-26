@@ -1,28 +1,23 @@
 import * as S from '@/components/Skeleton/LabelTable/index.styled';
 
 const LABEL_COUNT = 4;
+const skeletonLabelItems = Array.from({ length: LABEL_COUNT }, (_, i) => `skeleton-label-item-${i + 1}`);
 
-const LabelTableSkeleton = () => {
-  const mapping = new Array(LABEL_COUNT).fill(true);
-
-  return (
-    <S.LabelTable>
-      <S.LabelTableHeader>
-        <S.LabelTableTitle />
-      </S.LabelTableHeader>
-      {mapping.map((e, i) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <S.LabelItem key={i}>
-          <S.Label />
-          <S.Description />
-          <S.ButtonTabs>
-            <S.EditButton />
-            <S.DelteButton />
-          </S.ButtonTabs>
-        </S.LabelItem>
-      ))}
-    </S.LabelTable>
-  );
-};
+const LabelTableSkeleton = () => (
+  <S.LabelTable>
+    <S.LabelTableHeader>
+      <S.SkeletonDiv className="label-num" />
+    </S.LabelTableHeader>
+    {skeletonLabelItems.map((e) => (
+      <S.LabelTableItem key={e}>
+        <S.SkeletonLabelItem>
+          <S.SkeletonDiv className="label-icon" />
+          <S.SkeletonDiv className="label-description" />
+          <S.SkeletonDiv className="label-button-tabs" />
+        </S.SkeletonLabelItem>
+      </S.LabelTableItem>
+    ))}
+  </S.LabelTable>
+);
 
 export default LabelTableSkeleton;

@@ -1,20 +1,6 @@
 import styled from 'styled-components';
 import { Label } from '@/components/Atoms/Label/index.styles';
-
-export const LabelItem = styled.div`
-  display: grid;
-  grid-template-columns: 240px auto 240px;
-  align-items: center;
-  ${Label} {
-    &:hover {
-      cursor: pointer;
-    }
-  }
-`;
-
-export const Description = styled.span`
-  width: 800px;
-`;
+import { Dropdown } from '@/components/Molecules/Dropdown/index.styles';
 
 export const EditButton = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'center', justify: 'center' })};
@@ -31,4 +17,44 @@ export const EditButton = styled.div`
   button + button {
     margin-left: 24px;
   }
+
+  @media ${({ theme }) => theme.DEVICE.MOBILE_OR_TABLET} {
+    display: none;
+  }
 `;
+
+export const LabelItem = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  align-items: center;
+  gap: 24px;
+  padding: 36px 32px;
+  word-break: break-all;
+
+  ${Label} {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  @media ${({ theme }) => theme.DEVICE.MOBILE} {
+    grid-template-columns: 1fr 1fr;
+
+    .label-description {
+      display: none;
+    }
+  }
+
+  details,
+  ${EditButton} {
+    justify-self: end;
+  }
+
+  @media ${({ theme }) => theme.DEVICE.DESKTOP} {
+    ${Dropdown} {
+      display: none;
+    }
+  }
+`;
+
+export { CommonMilestoneItem as NoLabelItem } from '@/components/Organisms/MilestoneTable/MilestoneItem/index.styles';

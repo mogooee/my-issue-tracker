@@ -10,7 +10,7 @@ const DropdownIndicator = ({ ...props }: DropdownIndicatorTypes) => {
       <div className="indicator__container">
         {indicatorLabel && <span>{indicatorLabel}</span>}
         {indicatorIcon}
-        {indicatorStyle !== 'ICON' && (
+        {indicatorStyle !== 'ICON' && indicatorStyle !== 'BTN_GROUP' && (
           <Icon icon={indicatorStyle === 'SIDEBAR' ? 'Plus' : 'Caret'} stroke={COLORS.LABEL} />
         )}
       </div>

@@ -35,6 +35,6 @@ export const WithIcon = Template.bind({
   backgrounds: 'black',
 });
 WithIcon.args = {
-  ...Initial.args,
+  ...{ ...Initial.args, textColor: 'WHITE' },
   icon: <Icon icon="Smile" stroke="#fff" />,
 };
