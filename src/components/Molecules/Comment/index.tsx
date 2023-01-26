@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import useFetchReaction from '@/api/issue/useFetchReaction';
+import { ReactionTypes } from '@/api/issue/reaction';
 import useFetchIssue from '@/api/issue/useFetchIssue';
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
 
@@ -31,6 +31,7 @@ interface CommentTypes {
   issueId: number;
   isAuthor: boolean;
   comment: CommentsTypes;
+  reactions: ReactionTypes[];
 }
 
 interface ReactorsTypes {
@@ -71,6 +72,7 @@ const Comment = ({
   isAuthor,
   comment,
   setSelectCommentId,
+  reactions,
 }: CommentTypes & MoleculesCommentType): JSX.Element => {
   const { id: commentId, author, content, createdAt, issueCommentReactionsResponse } = comment;
 
@@ -82,9 +84,6 @@ const Comment = ({
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isCommentModalOpen, setCommentModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useRecoilState(ModalState);
-
-  const { useReactionData } = useFetchReaction();
-  const { data: reactions } = useReactionData();
 
   const memberId = useRecoilValue(LoginUserInfoState).id;
   const hasReaction = issueCommentReactionsResponse.length > 0;
@@ -153,7 +152,7 @@ const Comment = ({
                   indicatorIcon: <Icon icon="Smile" stroke={COLORS.LABEL} />,
                 }}
                 type="Reaction"
-                panelProps={{ issueId, commentId, memberId, reactions: reactions!, usedEmojis }}
+                panelProps={{ issueId, commentId, memberId, reactions, usedEmojis }}
               />
             </S.CommentTab>
           </S.CommentHeader>
@@ -165,7 +164,7 @@ const Comment = ({
             </ReactMarkdown>
             {hasReaction && (
               <ReactionContainer
-                reactions={reactions!}
+                reactions={reactions}
                 usedEmojis={usedEmojis}
                 issueId={issueId}
                 commentId={commentId}
