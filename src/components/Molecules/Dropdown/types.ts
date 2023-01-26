@@ -57,7 +57,7 @@ export type ClickHandlerType = (event: React.MouseEvent<HTMLButtonElement>) => v
 
 export interface ButtonPanelListType {
   title: string;
-  onClick: ClickHandlerType;
+  onClick?: ClickHandlerType;
 }
 export interface BubblePanelTypes {
   panelList: ButtonPanelListType[];

@@ -268,9 +268,7 @@ interface LabelBtnsClickHandlerTypes {
   deleteButton: ClickHandlerType;
 }
 
-type LabelBtnsArgsType = (clickHandler: LabelBtnsClickHandlerTypes) => DropdownTypes<BubblePanelTypes>;
-
-export const LABEL_BTNS_ARGS: LabelBtnsArgsType = (clickHandler) => ({
+export const LABEL_BTNS_ARGS = (clickHandler: LabelBtnsClickHandlerTypes): DropdownTypes<BubblePanelTypes> => ({
   type: 'Bubble',
   indicatorProps: {
     indicatorLabel: '···',
@@ -292,9 +290,8 @@ export const LABEL_BTNS_ARGS: LabelBtnsArgsType = (clickHandler) => ({
 });
 
 type MilestoneBtnsClickHandlerTypes = LabelBtnsClickHandlerTypes & { stateButton: ClickHandlerType };
-type MilestoneBtnsArgsType = (clickHandler: MilestoneBtnsClickHandlerTypes) => DropdownTypes<BubblePanelTypes>;
 
-export const MILESTONE_BTNS_ARGS: MilestoneBtnsArgsType = (clickHandler) => ({
+export const MILESTONE_BTNS_ARGS = (clickHandler: MilestoneBtnsClickHandlerTypes): DropdownTypes<BubblePanelTypes> => ({
   type: 'Bubble',
   indicatorProps: {
     indicatorLabel: '···',

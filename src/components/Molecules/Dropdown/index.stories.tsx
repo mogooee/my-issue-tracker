@@ -41,4 +41,8 @@ const clickHandler = {
   editButton: () => {},
   deleteButton: () => {},
 };
-Bubble.args = LABEL_BTNS_ARGS(clickHandler);
+const BUBBLE_ARGS = LABEL_BTNS_ARGS(clickHandler);
+Bubble.args = {
+  ...BUBBLE_ARGS,
+  panelProps: { ...BUBBLE_ARGS.panelProps, position: 'LEFT' },
+};

@@ -13,11 +13,9 @@ LabelBtns.args = {
   panelList: [
     {
       title: 'Edit',
-      onClick: () => {},
     },
     {
       title: 'Delete',
-      onClick: () => {},
     },
   ],
   position: 'LEFT',
@@ -28,15 +26,12 @@ MilestoneBtns.args = {
   panelList: [
     {
       title: 'Edit',
-      onClick: () => {},
     },
     {
       title: 'Close',
-      onClick: () => {},
     },
     {
       title: 'Delete',
-      onClick: () => {},
     },
   ],
   position: 'LEFT',
