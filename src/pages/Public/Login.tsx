@@ -9,6 +9,11 @@ const StyledLogin = styled.div`
 
   & > a:first-child {
     margin-bottom: 64px;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
   }
 `;
 
