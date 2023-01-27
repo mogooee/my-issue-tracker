@@ -8,10 +8,19 @@ import useLogin from '@/api/sign/useLogin';
 import styled from 'styled-components';
 import Button from '@/components/Atoms/Button';
 import Input from '@/components/Atoms/Input';
+import { Form } from '@/components/Atoms/Input/index.styles';
 
-const Form = styled.div`
+const StyledLoginForm = styled.div`
+  ${Form} {
+    width: 100%;
+  }
+
   form + form {
     margin: 16px 0 24px 0;
+  }
+
+  button {
+    width: 100%;
   }
 `;
 
@@ -59,7 +68,7 @@ const LoginForm = (): JSX.Element => {
   };
 
   return (
-    <Form>
+    <StyledLoginForm>
       <Input
         isActive={isIdActive}
         isTyping={isIdTyping}
@@ -95,7 +104,7 @@ const LoginForm = (): JSX.Element => {
         </FailMessage>
       )}
       <Button buttonStyle="STANDARD" label="아이디로 로그인" size="LARGE" handleOnClick={login} />
-    </Form>
+    </StyledLoginForm>
   );
 };
 
