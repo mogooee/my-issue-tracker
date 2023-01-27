@@ -5,7 +5,6 @@ import styled, { css } from 'styled-components';
 export const FilterBarContainer = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ align: 'flex-start', justify: 'center' })};
   flex-direction: column;
-  height: 82px;
 
   ${Button} {
     svg {

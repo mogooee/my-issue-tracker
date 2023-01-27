@@ -11,7 +11,6 @@ import CompleteSignUp from '@/components/Modal/CompleteSignUp';
 
 const StyledDiv = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ direction: 'column', align: 'center', justify: 'center' })};
-  height: 100vh;
 
   & > a:first-child {
     margin-bottom: 64px;
