@@ -4,7 +4,7 @@ import { ReactionTypes } from '@/api/issue/reaction';
 import useFetchIssue from '@/api/issue/useFetchIssue';
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
 
-import * as S from '@/components/Molecules/Comment/index.styled';
+import * as S from '@/components/Organisms/Comment/index.styled';
 import { COLORS } from '@/styles/theme';
 
 import Label from '@/components/Atoms/Label';
@@ -13,12 +13,12 @@ import Button from '@/components/Atoms/Button';
 import Table from '@/components/Molecules/Table';
 import TextAreaEditer from '@/components/Molecules/TextAreaEditer';
 import Dropdown from '@/components/Molecules/Dropdown';
-import ReactionContainer from '@/components/Molecules/Comment/ReactionContainer';
+import ReactionContainer from '@/components/Organisms/Comment/ReactionContainer';
 
 import calcTimeForToday from '@/utils/calcForTimeToday';
 import { CommentsTypes, ReactionResponseTypes } from '@/api/issue/types';
 import { BUTTON_PROPS, TABLE_ITEM_BUTTON_INFO } from '@/components/Atoms/Button/options';
-import { AUTHOR_LABEL_PROPS, EDIT_BUTTON_PROPS } from '@/components/Molecules/Comment/constants';
+import { AUTHOR_LABEL_PROPS, EDIT_BUTTON_PROPS } from '@/components/Organisms/Comment/constants';
 
 import Modal, { ModalState } from '@/components/Modal';
 import DeleteCheck from '@/components/Modal/DeleteCheck';

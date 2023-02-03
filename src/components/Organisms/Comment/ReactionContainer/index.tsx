@@ -1,10 +1,10 @@
-import * as S from '@/components/Molecules/Comment/ReactionContainer/index.styled';
+import * as S from '@/components/Organisms/Comment/ReactionContainer/index.styled';
 import { COLORS } from '@/styles/theme';
 
 import Icon from '@/components/Atoms/Icon';
 import Label from '@/components/Atoms/Label';
 import Dropdown from '@/components/Molecules/Dropdown';
-import { UsedEmojisTypes } from '@/components/Molecules/Comment';
+import { UsedEmojisTypes } from '@/components/Organisms/Comment';
 
 import replaceUnicodeWithIcon from '@/utils/replaceUnicodeWithIcon';
 import { ReactionTypes } from '@/api/issue/reaction';

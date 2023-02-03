@@ -1,11 +1,11 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import Comment from '@/components/Molecules/Comment';
+import Comment from '@/components/Organisms/Comment';
 import { comment } from '@/mocks/tables/issue';
 import { issueHandlers } from '@/mocks/handlers/issue';
 import { REACTIONS } from '@/components/Molecules/Dropdown/Panel/Reaction/mock';
 
 export default {
-  title: 'Molecules/Comment',
+  title: 'Organisms/Comment',
   component: Comment,
 } as ComponentMeta<typeof Comment>;
 
