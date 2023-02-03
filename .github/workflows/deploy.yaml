@@ -15,7 +15,8 @@ jobs:
         run: echo -e "REACT_APP_GITHUB_AUTH_URL=${{secrets.REACT_APP_GITHUB_AUTH_URL}}\n
                       REACT_APP_KAKAO_AUTH_URL=${{secrets.REACT_APP_KAKAO_AUTH_URL}}\n
                       REACT_APP_NAVER_AUTH_URL=${{secrets.REACT_APP_NAVER_AUTH_URL}}\n
-                      REACT_APP_PUBLIC_URL=${{secrets.REACT_APP_PUBLIC_URL}}\n" > ./.env
+                      REACT_APP_PUBLIC_URL=${{secrets.REACT_APP_PUBLIC_URL}}\n
+                      REACT_APP_UNIVERSAL_LINK=${{secrets.REACT_APP_UNIVERSAL_LINK}}\n" > ./.env
       
       - name: Install npm package
         run: npm install --force
