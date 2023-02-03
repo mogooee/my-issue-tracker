@@ -8,7 +8,7 @@ import { FilterState, PageState } from '@/stores/filter';
 
 import IssuesNavInline from '@/pages/Private/Issues/NavInline';
 import IssueTable from '@/components/Organisms/IssueTable';
-import Paginiation from '@/components/Organisms/Pagination';
+import Paginiation from '@/components/Molecules/Pagination';
 import SkeletonIssueTable from '@/components/Skeleton/IssueTable';
 
 const Issues = () => {

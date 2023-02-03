@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { FilterState } from '@/stores/filter';
 
-import * as S from '@/components/Organisms/Pagination/index.styled';
+import * as S from '@/components/Molecules/Pagination/index.styled';
 import Button from '@/components/Atoms/Button';
-import { buttonLogic } from '@/components/Organisms/Pagination/helper';
+import { buttonLogic } from '@/components/Molecules/Pagination/helper';
 
 const Paginiation = ({ totalPages, currentPage }: { totalPages: number; currentPage: number }): JSX.Element => {
   const navigate = useNavigate();
