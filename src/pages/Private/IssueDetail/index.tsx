@@ -11,7 +11,7 @@ import Button from '@/components/Atoms/Button';
 import { BUTTON_PROPS } from '@/components/Atoms/Button/options';
 import TextArea from '@/components/Atoms/TextArea';
 import UserImage from '@/components/Atoms/UserImage';
-import Comment from '@/components/Molecules/Comment';
+import Comment from '@/components/Organisms/Comment';
 import IssueHeader from '@/components/Organisms/IssueHeader';
 import IsssueDetailAside from '@/pages/Private/IssueDetail/Aside';
 import IssueHistory from '@/pages/Private/IssueDetail/History';
