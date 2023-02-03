@@ -37,6 +37,7 @@ const Home = () => {
     <StyledLayer>
       <div>
         {isOauthState && <Header user={LoginUserInfoStateValue} />}
+        <a href={process.env.REACT_APP_UNIVERSAL_LINK}>앱으로 열기</a>
         <Outlet />
       </div>
     </StyledLayer>
