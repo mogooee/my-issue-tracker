@@ -6,7 +6,7 @@ import { milestoneHandlers } from '@/mocks/handlers/milestone';
 import { labelHandlers } from '@/mocks/handlers/label';
 
 export default {
-  title: 'Pages/Milestones',
+  title: 'pages (Private)/Milestones',
   component: Milestones,
   decorators: [
     (Story) => (

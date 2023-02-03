@@ -7,7 +7,7 @@ import { labelHandlers } from '@/mocks/handlers/label';
 import { authHandlers } from '@/mocks/handlers/auth';
 
 export default {
-  title: 'pages/IssueDetail',
+  title: 'pages (Private)/IssueDetail',
   component: IssueDetail,
   decorators: [
     (Story) => (

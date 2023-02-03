@@ -6,7 +6,7 @@ import { authHandlers } from '@/mocks/handlers/auth';
 import { issueHandlers } from '@/mocks/handlers/issue';
 
 export default {
-  title: 'pages/NewIssue',
+  title: 'pages (Private)/NewIssue',
   component: NewIssue,
 } as ComponentMeta<typeof NewIssue>;
 

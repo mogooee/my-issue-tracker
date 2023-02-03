@@ -9,7 +9,7 @@ import { labelHandlers } from '@/mocks/handlers/label';
 import { milestoneHandlers } from '@/mocks/handlers/milestone';
 
 export default {
-  title: 'pages/Issues',
+  title: 'pages (Private)/Issues',
   component: Issues,
   decorators: [
     (Story) => (
