@@ -4,7 +4,7 @@ import { issue } from '@/mocks/tables/issue';
 import IssueHistory from '@/pages/Private/IssueDetail/History';
 
 export default {
-  title: 'pages/IssueDetail/IssueHistory',
+  title: 'Molecules/IssueHistory',
   component: IssueHistory,
 } as ComponentMeta<typeof IssueHistory>;
 
