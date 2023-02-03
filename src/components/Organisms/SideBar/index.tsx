@@ -1,8 +1,8 @@
 import React from 'react';
 
-import * as S from '@/components/Molecules/SideBar/index.styles';
-import SideBarItem from '@/components/Molecules/SideBar/SideBarItem';
-import { SideBarTypes, ContentListTypes } from '@/components/Molecules/SideBar/types';
+import * as S from '@/components/Organisms/SideBar/index.styles';
+import SideBarItem from '@/components/Organisms/SideBar/SideBarItem';
+import { SideBarTypes, ContentListTypes } from '@/components/Organisms/SideBar/types';
 
 import useFetchSideBarData from '@/api/useFetchSideBarData';
 

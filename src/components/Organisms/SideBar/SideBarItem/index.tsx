@@ -1,6 +1,6 @@
 /* eslint-disable array-callback-return */
 import React, { Fragment } from 'react';
-import * as S from '@/components/Molecules/SideBar/index.styles';
+import * as S from '@/components/Organisms/SideBar/index.styles';
 import Label from '@/components/Atoms/Label';
 import PrograssBar from '@/components/Atoms/ProgressBar';
 import UserImage from '@/components/Atoms/UserImage';
@@ -12,7 +12,7 @@ import {
   isMilestoneTypes,
   ContentItemTypes,
   SideBarItemType,
-} from '@/components/Molecules/SideBar/types';
+} from '@/components/Organisms/SideBar/types';
 
 import { LabelTypes, UserTypes, MilestoneTypes } from '@/api/issue/types';
 

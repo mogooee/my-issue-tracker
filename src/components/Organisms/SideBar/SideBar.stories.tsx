@@ -1,18 +1,18 @@
 import { useState } from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import SideBar from '@/components/Molecules/SideBar';
-import { ContentListTypes, isMilestoneTypes, UpdateSideBarFuncTypes } from '@/components/Molecules/SideBar/types';
-import { filterUncheckedItem, getFindDropdownItem } from '@/components/Molecules/SideBar/utils';
+import SideBar from '@/components/Organisms/SideBar';
+import { ContentListTypes, isMilestoneTypes, UpdateSideBarFuncTypes } from '@/components/Organisms/SideBar/types';
+import { filterUncheckedItem, getFindDropdownItem } from '@/components/Organisms/SideBar/utils';
 
 import { milestoneHandlers } from '@/mocks/handlers/milestone';
 import { labelHandlers } from '@/mocks/handlers/label';
 import { authHandlers } from '@/mocks/handlers/auth';
 
-import { DEFAULT_CONTENT_LIST, MOCK_CONTENT_LIST } from '@/components/Molecules/SideBar/mock';
+import { DEFAULT_CONTENT_LIST, MOCK_CONTENT_LIST } from '@/components/Organisms/SideBar/mock';
 
 export default {
-  title: 'Molecules/SideBar',
+  title: 'Organisms/SideBar',
   component: SideBar,
 } as ComponentMeta<typeof SideBar>;
 

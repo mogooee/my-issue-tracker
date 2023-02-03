@@ -1,4 +1,4 @@
-import { LABEL_LIST, MILESTONE_LIST, USER_LIST } from '../Dropdown/mock';
+import { LABEL_LIST, MILESTONE_LIST, USER_LIST } from '../../Molecules/Dropdown/mock';
 import { ContentListTypes, SideBarItemType } from './types';
 
 export const DEFAULT_CONTENT_LIST: ContentListTypes = {

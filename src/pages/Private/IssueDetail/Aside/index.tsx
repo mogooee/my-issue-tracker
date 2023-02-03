@@ -12,9 +12,9 @@ import DeleteCheck from '@/components/Modal/DeleteCheck';
 
 import { useRecoilState } from 'recoil';
 import CustomErrorBoundary from '@/components/ErrorBoundary';
-import ErrorSideBar from '@/components/Molecules/SideBar/ErrorSideBar';
+import ErrorSideBar from '@/components/Organisms/SideBar/ErrorSideBar';
 import DetailSidebarLogic from '@/pages/Private/IssueDetail/Aside/DetailSidebarLogic';
-import { ContentListTypes } from '@/components/Molecules/SideBar/types';
+import { ContentListTypes } from '@/components/Organisms/SideBar/types';
 
 const IsssueDetailAside = ({ issue, memberId }: { issue: ContentTypes; memberId: number }) => {
   const milestoneArr: MilestoneTypes[] = [];

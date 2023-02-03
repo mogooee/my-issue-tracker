@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
-import * as S from '@/components/Molecules/SideBar/index.styles';
-import SideBarItem from '@/components/Molecules/SideBar/SideBarItem';
+import * as S from '@/components/Organisms/SideBar/index.styles';
+import SideBarItem from '@/components/Organisms/SideBar/SideBarItem';
 
-import { ContentListTypes } from '@/components/Molecules/SideBar/types';
+import { ContentListTypes } from '@/components/Organisms/SideBar/types';
 
 const ErrorSideBar = ({
   contentList,

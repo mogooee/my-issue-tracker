@@ -5,7 +5,7 @@ import {
   isMilestoneTypes,
   ContentListTypes,
   SideBarItemType,
-} from '@/components/Molecules/SideBar/types';
+} from '@/components/Organisms/SideBar/types';
 
 import { LabelTypes, UserTypes, MilestoneTypes } from '@/api/issue/types';
 
