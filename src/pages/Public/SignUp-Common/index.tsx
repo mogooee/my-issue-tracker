@@ -2,27 +2,13 @@ import { useEffect } from 'react';
 import { useRecoilValue, useResetRecoilState } from 'recoil';
 import { SignUpFormErrorState, SignUpFormState } from '@/stores/signUp';
 
-import styled from 'styled-components';
 import { FORM_INFO } from '@/components/Organisms/CommonSignUpForm/constants';
 import CommonSignUpForm from '@/components/Organisms/CommonSignUpForm';
 
 import Modal, { ModalState } from '@/components/Modal';
 import CompleteSignUp from '@/components/Modal/CompleteSignUp';
 
-const StyledDiv = styled.div`
-  ${({ theme }) => theme.MIXIN.FLEX({ direction: 'column', align: 'center', justify: 'center' })};
-  width: 100%;
-  height: 100vh;
-
-  & > a:first-child {
-    margin-bottom: 64px;
-  }
-
-  @media ${({ theme }) => theme.DEVICE.MOBILE} {
-    margin-top: 60px;
-    height: 100%;
-  }
-`;
+import * as S from '@/pages/Public/SignUp-Common/index.styles';
 
 const CommonSignUp = () => {
   window.history.forward();
@@ -40,14 +26,14 @@ const CommonSignUp = () => {
   }, []);
 
   return (
-    <StyledDiv>
+    <S.CommonSignUp>
       <CommonSignUpForm FORM_INFO={FORM_INFO} />
       {isModal && (
         <Modal>
           <CompleteSignUp id={id} />
         </Modal>
       )}
-    </StyledDiv>
+    </S.CommonSignUp>
   );
 };
 

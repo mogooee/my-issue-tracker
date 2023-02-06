@@ -2,7 +2,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { Routes, Route } from 'react-router-dom';
 import { authHandlers } from '@/mocks/handlers/auth';
 import Login from '@/pages/Public/Login';
-import CommonSignUp from '@/pages/Public//SignUp-Common';
+import CommonSignUp from '@/pages/Public/SignUp-Common';
 
 export default {
   title: 'pages (Public)/Login',
