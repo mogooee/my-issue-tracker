@@ -3,17 +3,10 @@ import { useResetRecoilState } from 'recoil';
 import { SignUpFormErrorState, SignUpFormState } from '@/stores/signUp';
 import { useQueryClient } from '@tanstack/react-query';
 import { RedirectAuthTypes } from '@/api/sign';
-import styled from 'styled-components';
+
 import OAuthSignUpForm from '@/components/Organisms/OauthSignUpForm';
 
-const StyledDiv = styled.div`
-  ${({ theme }) => theme.MIXIN.FLEX({ direction: 'column', align: 'center', justify: 'center' })};
-  height: 100vh;
-
-  & > a:first-child {
-    margin-bottom: 64px;
-  }
-`;
+import * as S from '@/pages/Public/SignUp-OAuth/index.styles';
 
 const OAuthSignUp = () => {
   window.history.forward();
@@ -30,9 +23,9 @@ const OAuthSignUp = () => {
   }, []);
 
   return (
-    <StyledDiv>
+    <S.OAuthSignUp>
       <OAuthSignUpForm SignUpFormData={authData?.signUpFormData!} />
-    </StyledDiv>
+    </S.OAuthSignUp>
   );
 };
 
