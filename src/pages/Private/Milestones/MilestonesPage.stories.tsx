@@ -1,7 +1,10 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
+
 import { Route, Routes } from 'react-router-dom';
+import Home from '@/pages/Home';
 import Milestones from '@/pages/Private/Milestones';
 import Labels from '@/pages/Private/Labels';
+
 import { milestoneHandlers } from '@/mocks/handlers/milestone';
 import { labelHandlers } from '@/mocks/handlers/label';
 
@@ -11,8 +14,10 @@ export default {
   decorators: [
     (Story) => (
       <Routes>
-        <Route path="/labels" element={<Labels />} />
-        <Route path="/milestones" element={<Story />} />
+        <Route path="/" element={<Home />}>
+          <Route path="/labels" element={<Labels />} />
+          <Route path="/milestones" element={<Story />} />
+        </Route>
       </Routes>
     ),
   ],

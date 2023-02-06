@@ -1,6 +1,9 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
+
 import { Routes, Route } from 'react-router-dom';
 import IssueDetail from '@/pages/Private/IssueDetail';
+import Home from '@/pages/Home';
+
 import { issueHandlers } from '@/mocks/handlers/issue';
 import { milestoneHandlers } from '@/mocks/handlers/milestone';
 import { labelHandlers } from '@/mocks/handlers/label';
@@ -12,7 +15,9 @@ export default {
   decorators: [
     (Story) => (
       <Routes>
-        <Route path="/issues/:issueId" element={<Story />} />
+        <Route path="/" element={<Home />}>
+          <Route path="/issues/:issueId" element={<Story />} />
+        </Route>
       </Routes>
     ),
   ],
