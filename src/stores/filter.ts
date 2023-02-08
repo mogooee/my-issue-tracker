@@ -1,5 +1,6 @@
 import { atom, selector } from 'recoil';
-import { OPEN_QUERY } from '@/hooks/useFilter';
+
+const OPEN_QUERY = 'is:open';
 
 export const FilterState = atom<string>({
   key: 'FilterState',

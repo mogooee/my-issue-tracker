@@ -394,7 +394,7 @@ export const issueHandlers = [
   }),
 
   // 이슈 등록
-  rest.post('api/issues?member', async (req, res, ctx) => {
+  rest.post('api/issues?memberId', async (req, res, ctx) => {
     const requestData = await req.json();
     const userId = req.url.searchParams.get('memberId');
     const { title } = requestData;

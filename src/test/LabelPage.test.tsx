@@ -26,13 +26,6 @@ afterEach(() => server.resetHandlers());
 
 afterAll(() => server.close());
 
-const mockedNavigate = jest.fn();
-
-jest.mock('react-router-dom', () => ({
-  ...(jest.requireActual('react-router-dom') as any),
-  useNavigate: () => mockedNavigate,
-}));
-
 const DEBOUNCE_DELAY = 200;
 
 describe('라벨 페이지 테스트', () => {
@@ -162,8 +155,15 @@ describe('라벨 페이지 테스트', () => {
 
   test('레이블을 클릭하면 이슈페이지로 이동', async () => {
     renderLablePageComponent();
-    const label = screen.getByText(/Docs/i);
-    await user.click(label);
-    expect(mockedNavigate).toBeCalledTimes(1);
+    const label = screen.getByText(/Bugs/i);
+    const labelHref = '/issues?page=0&q=label%3A"Bugs"';
+
+    await act(async () => {
+      await user.click(label);
+      window.history.pushState({}, 'Test-Page', labelHref);
+    });
+
+    const FilterBar = screen.getByPlaceholderText('Search all issues') as HTMLInputElement;
+    expect(FilterBar).toHaveValue('label:Bugs');
   });
 });

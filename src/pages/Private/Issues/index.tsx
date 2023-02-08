@@ -23,14 +23,13 @@ const Issues = () => {
   const setFilterState = useSetRecoilState(FilterState);
   const setPageState = useSetRecoilState(PageState);
 
-  const setURLQueriesToFilterState = () => {
-    setPageState(page);
+  useEffect(() => {
     setFilterState(queries);
-  };
+  }, [queries]);
 
   useEffect(() => {
-    setURLQueriesToFilterState();
-  }, [queries]);
+    setPageState(page);
+  }, [page]);
 
   return (
     <>
