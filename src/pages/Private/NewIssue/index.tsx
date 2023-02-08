@@ -85,7 +85,7 @@ const NewIssue = () => {
       setContentList({ ...contentList, [contentKey]: [...filterContentList] });
       setNewIssueFormState({
         ...newIssueFormState,
-        [`${contentKey}Ids`]: [...newIssueFormState[`${contentKey}Ids`], findDropdownItem!.id],
+        [`${contentKey}Ids`]: filterContentList.map((list) => list.id),
       });
     }
   };
