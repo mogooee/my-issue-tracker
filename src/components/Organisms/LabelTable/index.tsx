@@ -2,7 +2,7 @@
 import { Suspense, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
-import * as S from '@/components/Organisms/LabelTable/LabelItem/index.styled';
+import * as S from '@/components/Organisms/LabelTable/LabelItem/index.styles';
 
 import Table from '@/components/Molecules/Table';
 import ErrorTable from '@/components/Organisms/ErrorTable';

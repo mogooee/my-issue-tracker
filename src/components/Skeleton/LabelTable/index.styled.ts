@@ -1,7 +1,7 @@
 import { COLORS } from '@/styles/theme';
 import styled, { keyframes } from 'styled-components';
 import { Header } from '@/components/Molecules/Table/TableHeader';
-import { LabelItem } from '@/components/Organisms/LabelTable/LabelItem/index.styled';
+import { LabelItem } from '@/components/Organisms/LabelTable/LabelItem/index.styles';
 
 const skeletonGradient = keyframes`
 0%, 100% {

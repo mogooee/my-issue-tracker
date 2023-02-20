@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { FilterState } from '@/stores/filter';
 
-import * as S from '@/components/Molecules/Pagination/index.styled';
+import * as S from '@/components/Molecules/Pagination/index.styles';
 import Button from '@/components/Atoms/Button';
 import { buttonLogic } from '@/components/Molecules/Pagination/helper';
 
