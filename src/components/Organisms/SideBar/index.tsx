@@ -11,7 +11,7 @@ const SideBar = ({ ...props }: SideBarTypes) => {
   const { memberData, memberDataRefetch, labelData, labelDataRefetch, milestoneData, milestoneDataRefetch } =
     useFetchSideBarData();
 
-  const handleOnClick = (event: React.MouseEvent<HTMLDivElement>) => {
+  const fetchDropdownData = (event: React.MouseEvent<HTMLDivElement>) => {
     const { id } = event.currentTarget.dataset;
 
     // 중복 refetch 방지
@@ -20,7 +20,7 @@ const SideBar = ({ ...props }: SideBarTypes) => {
     if (id === 'milestone' && !milestoneData) milestoneDataRefetch();
   };
 
-  const handleOnChangeFunc = (target: HTMLInputElement) => {
+  const changeDropdownInput = (target: HTMLInputElement) => {
     const { id, panel } = target.dataset;
     const { checked } = target;
 
@@ -51,8 +51,8 @@ const SideBar = ({ ...props }: SideBarTypes) => {
         dropdownList={memberData!}
         dropdownType="checkbox"
         content={content.assignee}
-        handleOnChange={handleOnChangeFunc}
-        handleOnClick={handleOnClick}
+        handleOnChange={changeDropdownInput}
+        handleOnClick={fetchDropdownData}
       />
       <SideBarItem
         id="label"
@@ -61,8 +61,8 @@ const SideBar = ({ ...props }: SideBarTypes) => {
         dropdownList={labelData!}
         dropdownType="checkbox"
         content={content.label}
-        handleOnChange={handleOnChangeFunc}
-        handleOnClick={handleOnClick}
+        handleOnChange={changeDropdownInput}
+        handleOnClick={fetchDropdownData}
       />
       <SideBarItem
         id="milestone"
@@ -71,8 +71,8 @@ const SideBar = ({ ...props }: SideBarTypes) => {
         dropdownList={milestoneData?.openedMilestones!}
         dropdownType="radio"
         content={content.milestone}
-        handleOnChange={handleOnChangeFunc}
-        handleOnClick={handleOnClick}
+        handleOnChange={changeDropdownInput}
+        handleOnClick={fetchDropdownData}
       />
     </S.SideBar>
   );
