@@ -4,7 +4,7 @@ import { ReactionTypes } from '@/api/issue/reaction';
 import useFetchIssue from '@/api/issue/useFetchIssue';
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
 
-import * as S from '@/components/Organisms/Comment/index.styled';
+import * as S from '@/components/Organisms/Comment/index.styles';
 import { COLORS } from '@/styles/theme';
 
 import Label from '@/components/Atoms/Label';

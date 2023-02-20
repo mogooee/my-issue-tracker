@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import * as S from '@/pages/Private/Labels/index.styled';
+import * as S from '@/pages/Private/Labels/index.styles';
 
 import Button from '@/components/Atoms/Button';
 import LabelEditForm from '@/components/Molecules/LabelEditForm';

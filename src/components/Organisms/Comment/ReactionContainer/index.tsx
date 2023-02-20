@@ -1,4 +1,4 @@
-import * as S from '@/components/Organisms/Comment/ReactionContainer/index.styled';
+import * as S from '@/components/Organisms/Comment/ReactionContainer/index.styles';
 import { COLORS } from '@/styles/theme';
 
 import Icon from '@/components/Atoms/Icon';

@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '@/components/Atoms/Button';
 import { useNavigate } from 'react-router-dom';
-import * as S from '@/components/Organisms/DuplicateEmail/index.styled';
+import * as S from '@/components/Organisms/DuplicateEmail/index.styles';
 
 interface DuplicateEmailTypes {
   provider: 'GITHUB' | 'NAVER' | 'KAKAO' | '이메일 가입하기';
