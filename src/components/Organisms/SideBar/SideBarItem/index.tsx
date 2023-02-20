@@ -21,9 +21,18 @@ interface handleOnChangeTypes {
   handleOnClick: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-const SideBarItem = ({ ...props }: SideBarItemType & ContentItemTypes & handleOnChangeTypes) => {
-  const { id, dropdownTitle, dropdownListTitle, dropdownList, dropdownType, content, handleOnChange, handleOnClick } =
-    props;
+const SideBarItem = ({ isError = false, ...props }: SideBarItemType & ContentItemTypes & handleOnChangeTypes) => {
+  const {
+    id,
+    dropdownTitle,
+    dropdownListTitle,
+    dropdownList,
+    dropdownType,
+    content,
+    handleOnChange,
+    handleOnClick,
+    resetError,
+  } = props;
 
   const isChecked = (title: string) => {
     const contentList: (UserTypes | LabelTypes | MilestoneTypes)[] = content;
@@ -37,22 +46,35 @@ const SideBarItem = ({ ...props }: SideBarItemType & ContentItemTypes & handleOn
 
   return (
     <S.SideBarItem key={`sidebar-${id}`} className="sidebar_item" onClick={handleOnClick} data-id={id}>
-      <Dropdown
-        indicatorProps={{
-          indicatorStyle: 'SIDEBAR',
-          indicatorLabel: dropdownTitle,
-        }}
-        type="List"
-        panelProps={{
-          panelId: id,
-          panelTitle: dropdownListTitle,
-          panelList: dropdownList,
-          panelType: dropdownType,
-          handleOnClick: handleOnChange,
-          isChecked,
-          unusedOption: id === 'milestone' ? { dataId: 'no:milestone', title: '마일스톤 없음' } : undefined,
-        }}
-      />
+      {!isError ? (
+        <Dropdown
+          indicatorProps={{
+            indicatorStyle: 'SIDEBAR',
+            indicatorLabel: dropdownTitle,
+          }}
+          type="List"
+          panelProps={{
+            panelId: id,
+            panelTitle: dropdownListTitle,
+            panelList: dropdownList,
+            panelType: dropdownType,
+            handleOnClick: handleOnChange,
+            isChecked,
+            unusedOption: id === 'milestone' ? { dataId: 'no:milestone', title: '마일스톤 없음' } : undefined,
+          }}
+        />
+      ) : (
+        <Dropdown
+          indicatorProps={{
+            indicatorStyle: 'SIDEBAR',
+            indicatorLabel: dropdownTitle,
+          }}
+          type="Error"
+          panelProps={{
+            handleOnClick: resetError!,
+          }}
+        />
+      )}
 
       <S.SideBarContent isEmpty={!content.length} className="content_list">
         {content.map((contentItem) => {

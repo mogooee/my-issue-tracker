@@ -1,4 +1,5 @@
 import { LabelTypes, UserTypes, MilestoneTypes } from '@/api/issue/types';
+import React from 'react';
 
 export interface ContentListTypes {
   assignee: UserTypes[];
@@ -16,6 +17,8 @@ export interface SideBarItemType {
   dropdownListTitle: string;
   dropdownList: UserTypes[] | LabelTypes[] | MilestoneTypes[];
   dropdownType: 'checkbox' | 'radio';
+  isError?: boolean;
+  resetError?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export interface UpdateSideBarFuncTypes {
