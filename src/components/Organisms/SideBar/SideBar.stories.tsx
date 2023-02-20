@@ -10,6 +10,7 @@ import { labelHandlers } from '@/mocks/handlers/label';
 import { authHandlers } from '@/mocks/handlers/auth';
 
 import { DEFAULT_CONTENT_LIST, MOCK_CONTENT_LIST } from '@/components/Organisms/SideBar/mock';
+import ErrorSideBar from './ErrorSideBar';
 
 export default {
   title: 'Organisms/SideBar',
@@ -73,6 +74,21 @@ const MockContentListTemplate: ComponentStory<typeof SideBar> = () => {
 };
 export const Checked = MockContentListTemplate.bind({});
 Checked.parameters = {
+  msw: {
+    handlers: [...milestoneHandlers, ...labelHandlers, ...authHandlers],
+  },
+};
+
+const ErrorTemplete: ComponentStory<typeof SideBar> = () => {
+  const args = {
+    contentList: MOCK_CONTENT_LIST,
+    resetState: () => {},
+    errorCode: 1004,
+  };
+  return <ErrorSideBar {...args} />;
+};
+export const Error = ErrorTemplete.bind({});
+Error.parameters = {
   msw: {
     handlers: [...milestoneHandlers, ...labelHandlers, ...authHandlers],
   },
