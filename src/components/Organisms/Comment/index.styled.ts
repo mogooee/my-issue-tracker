@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ReactionPanel } from '@/components/Molecules/Dropdown/Panel/Reaction/index.styled';
+import { ReactionPanel } from '@/components/Molecules/Dropdown/Panel/Reaction/index.styles';
 import { Label as StyledLabel } from '@/components/Atoms/Label/index.styles';
 import DEFAULT_MARKDOWN from '@/styles/markdown';
 

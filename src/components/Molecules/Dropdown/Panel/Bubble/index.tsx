@@ -1,5 +1,5 @@
 import { BubblePanelTypes } from '@/components/Molecules/Dropdown/types';
-import * as S from '@/components/Molecules/Dropdown/Panel/Bubble/index.styled';
+import * as S from '@/components/Molecules/Dropdown/Panel/Bubble/index.styles';
 
 const Bubble = ({ ...props }: BubblePanelTypes) => {
   const { panelList, position } = props as BubblePanelTypes;
