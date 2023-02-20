@@ -6,7 +6,7 @@ import { LoginUserInfoState } from '@/stores/loginUserInfo';
 import useFetchIssue from '@/api/issue/useFetchIssue';
 import { isIssueCommentsTypes, isIssueHistoryTypes } from '@/api/issue/types';
 
-import * as S from '@/pages/Private/IssueDetail/index.styled';
+import * as S from '@/pages/Private/IssueDetail/index.styles';
 import Button from '@/components/Atoms/Button';
 import { BUTTON_PROPS } from '@/components/Atoms/Button/options';
 import TextArea from '@/components/Atoms/TextArea';

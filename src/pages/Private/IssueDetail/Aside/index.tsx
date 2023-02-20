@@ -4,7 +4,7 @@ import { ContentTypes, MilestoneTypes } from '@/api/issue/types';
 import useFetchIssue from '@/api/issue/useFetchIssue';
 
 import { COLORS } from '@/styles/theme';
-import * as S from '@/pages/Private/IssueDetail/index.styled';
+import * as S from '@/pages/Private/IssueDetail/index.styles';
 import Button from '@/components/Atoms/Button';
 
 import Modal, { ModalState } from '@/components/Modal';
