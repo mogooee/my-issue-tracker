@@ -1,4 +1,4 @@
-import { RadioList } from '@/components/Atoms/Radio/index.styled';
+import { RadioList } from '@/components/Atoms/Radio/index.styles';
 import styled from 'styled-components';
 
 export const LabelEditForm = styled.div`

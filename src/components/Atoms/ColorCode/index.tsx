@@ -4,7 +4,7 @@ import React from 'react';
 import PanelPreviewLabel from '@/components/Molecules/Dropdown/Panel/Label';
 import Button from '@/components/Atoms/Button';
 
-import * as S from '@/components/Atoms/ColorCode/index.styled';
+import * as S from '@/components/Atoms/ColorCode/index.styles';
 import { LabelTypes } from '@/api/issue/types';
 
 interface ColorCodeTypes {
