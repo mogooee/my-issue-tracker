@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import React from 'react';
 import TableHeader from '@/components/Molecules/Table/TableHeader';
-import * as S from '@/components/Molecules/Table/index.styled';
+import * as S from '@/components/Molecules/Table/index.styles';
 import TableItem from '@/components/Molecules/Table/TableItem';
 
 interface TableTypes {

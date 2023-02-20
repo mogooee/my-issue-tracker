@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { LabelEditForm } from '@/components/Molecules/LabelEditForm/index.styled';
+import { LabelEditForm } from '@/components/Molecules/LabelEditForm/index.styles';
 import { StyledNavLink, StyledNavLinks } from '@/components/Molecules/NavLink/index.styles';
 
 export const Labels = styled.div`

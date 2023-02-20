@@ -38,5 +38,5 @@ export const SkeletonLabelItem = styled(LabelItem)`
   }
 `;
 
-export { Table as LabelTable } from '@/components/Molecules/Table/index.styled';
+export { Table as LabelTable } from '@/components/Molecules/Table/index.styles';
 export { Item as LabelTableItem } from '@/components/Molecules/Table/TableItem/index';
