@@ -17,17 +17,16 @@ const ErrorSideBar = ({
 }) => {
   const queryClient = useQueryClient();
   const emptyFunction = () => {};
-
-  useEffect(() => {
+  const resetError = () => {
     if (!errorCode) {
-      alert('잘못된 요청입니다.');
+      alert('네트워크 연결이 원활하지 않습니다. 네트워크 상태를 확인해주세요.');
     }
 
     if (errorCode === 1000 || errorCode === 1001) {
       resetState();
       queryClient.resetQueries(['members']);
     }
-  }, []);
+  };
 
   return (
     <S.SideBar>
@@ -40,6 +39,8 @@ const ErrorSideBar = ({
         content={contentList.assignee}
         handleOnChange={emptyFunction}
         handleOnClick={emptyFunction}
+        resetError={resetError}
+        isError
       />
       <SideBarItem
         id="label"
@@ -50,6 +51,8 @@ const ErrorSideBar = ({
         content={contentList.label}
         handleOnChange={emptyFunction}
         handleOnClick={emptyFunction}
+        resetError={resetError}
+        isError
       />
       <SideBarItem
         id="milestone"
@@ -60,6 +63,8 @@ const ErrorSideBar = ({
         content={contentList.milestone}
         handleOnChange={emptyFunction}
         handleOnClick={emptyFunction}
+        resetError={resetError}
+        isError
       />
     </S.SideBar>
   );
