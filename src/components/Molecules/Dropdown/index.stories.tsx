@@ -41,8 +41,19 @@ const clickHandler = {
   editButton: () => {},
   deleteButton: () => {},
 };
+
 const BUBBLE_ARGS = LABEL_BTNS_ARGS(clickHandler);
 Bubble.args = {
   ...BUBBLE_ARGS,
   panelProps: { ...BUBBLE_ARGS.panelProps, position: 'LEFT' },
+};
+
+export const Error = Template.bind({});
+Error.args = {
+  type: 'Error',
+  indicatorProps: {
+    indicatorLabel: '에러',
+    indicatorStyle: 'STANDARD',
+  },
+  panelProps: { handleOnClick: () => {} },
 };

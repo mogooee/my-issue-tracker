@@ -64,10 +64,14 @@ export interface BubblePanelTypes {
   position?: 'LEFT' | 'RIGHT';
 }
 
+export interface ErrorPanelTypes {
+  handleOnClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+}
+
 export type PanelType = keyof typeof panels;
 export interface DropdownPanelTypes {
   type: PanelType;
-  prop: ReactionPanelTypes | ListPanelTypes | BubblePanelTypes;
+  prop: ReactionPanelTypes | ListPanelTypes | BubblePanelTypes | ErrorPanelTypes;
 }
 
 // Dropdown Types
@@ -77,5 +81,6 @@ export interface DropdownTypes<Panel> {
   indicatorProps: DropdownIndicatorTypes;
   panelProps: Panel;
   isActive?: boolean;
+  isError?: boolean;
   handleOnDropdownClick?: (event: React.MouseEvent<HTMLDetailsElement>) => void;
 }
