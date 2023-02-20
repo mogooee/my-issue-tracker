@@ -3,7 +3,7 @@ import useFetchMilestone from '@/api/milestone/useFetchMilestone';
 import { ClickMilestoneState } from '@/stores/milestone';
 import { ModalState } from '@/components/Modal';
 
-import * as S from '@/components/Modal/index.styled';
+import * as S from '@/components/Modal/index.styles';
 import Button from '@/components/Atoms/Button';
 import { MODAL_BUTTON_INFO } from '@/components/Atoms/Button/options';
 
