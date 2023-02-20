@@ -5,32 +5,10 @@ import { signin, OAuthResponse } from '@/api/sign';
 import useInput from '@/hooks/useInput';
 import useLogin from '@/api/sign/useLogin';
 
-import styled from 'styled-components';
 import Button from '@/components/Atoms/Button';
 import Input from '@/components/Atoms/Input';
-import { Form } from '@/components/Atoms/Input/index.styles';
 
-const StyledLoginForm = styled.div`
-  ${Form} {
-    width: 100%;
-  }
-
-  form + form {
-    margin: 16px 0 24px 0;
-  }
-
-  button {
-    width: 100%;
-  }
-`;
-
-const FailMessage = styled.span`
-  color: ${({ theme }) => theme.COLORS.ERROR.RED};
-  ${({ theme }) => theme.FONTSTYLES.TEXT_XSMALL};
-  display: block;
-  text-align: center;
-  padding-bottom: 24px;
-`;
+import * as S from '@/components/Molecules/CommonLoginForm/index.styles';
 
 const initLoginForm = { id: '', password: '' };
 const [idMaxLength, passwordMaxLength] = [10, 10];
@@ -68,7 +46,7 @@ const LoginForm = (): JSX.Element => {
   };
 
   return (
-    <StyledLoginForm>
+    <S.LoginForm>
       <Input
         isActive={isIdActive}
         isTyping={isIdTyping}
@@ -98,13 +76,13 @@ const LoginForm = (): JSX.Element => {
         inputPlaceholder="비밀번호"
       />
       {isError && (
-        <FailMessage>
+        <S.FailMessage>
           아이디 또는 비밀번호를 잘못 입력했습니다.
           <br /> 입력하신 내용을 다시 확인해주세요.
-        </FailMessage>
+        </S.FailMessage>
       )}
       <Button buttonStyle="STANDARD" label="아이디로 로그인" size="LARGE" handleOnClick={login} />
-    </StyledLoginForm>
+    </S.LoginForm>
   );
 };
 
