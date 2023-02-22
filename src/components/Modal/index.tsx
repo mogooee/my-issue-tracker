@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 import ModalPortal from '@/Portal';
-import { BackGround, ModalBlock } from '@/components/Modal/index.styled';
+import { BackGround, ModalBlock } from '@/components/Modal/index.styles';
 
 export const ModalState = atom<boolean>({
   key: 'ModalState',

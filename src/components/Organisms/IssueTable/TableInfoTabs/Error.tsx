@@ -20,40 +20,31 @@ const ErrorInfoTabs = ({ resetState, errorCode }: { resetState: () => void; erro
     AUTHOR_DROPDOWN_ARGS([]),
   ];
 
-  const emptyfunc = (title: string) => false;
-
-  useEffect(() => {
+  const resetError = () => {
     if (!errorCode) {
-      alert('잘못된 요청입니다.');
+      alert('네트워크 연결이 원활하지 않습니다. 네트워크 상태를 확인해주세요.');
     }
 
     if (errorCode === 1000 || errorCode === 1001) {
       resetState();
       queryClient.resetQueries(['members']);
     }
-  }, []);
+  };
 
   return (
     <S.IssueInfoTabs>
       {filterTabs.map((filterTab: DropdownTypes<ListPanelTypes>) => {
-        const { panelId: filterKey, panelTitle } = filterTab.panelProps;
+        const { panelTitle } = filterTab.panelProps;
 
         const DROPDOWN_PROPS = {
           ...filterTab,
           panelProps: {
-            ...filterTab.panelProps,
-            handleOnClick: (target: HTMLInputElement) => {},
-            isChecked: () => emptyfunc(filterKey),
+            handleOnClick: resetError,
           },
+          isError: true,
         };
 
-        return (
-          <Dropdown
-            key={panelTitle}
-            {...DROPDOWN_PROPS}
-            handleOnDropdownClick={(event: React.MouseEvent<HTMLDetailsElement, MouseEvent>) => {}}
-          />
-        );
+        return <Dropdown key={panelTitle} {...DROPDOWN_PROPS} type="Error" />;
       })}
     </S.IssueInfoTabs>
   );

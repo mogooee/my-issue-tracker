@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 
-import * as S from '@/components/Organisms/LabelTable/LabelItem/index.styled';
+import * as S from '@/components/Organisms/LabelTable/LabelItem/index.styles';
 
 import Button from '@/components/Atoms/Button';
 import Label from '@/components/Atoms/Label';

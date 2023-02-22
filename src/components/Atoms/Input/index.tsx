@@ -62,7 +62,13 @@ const Input = ({ disabled = false, inputMaxLength = defaultMaxLength, ...props }
   };
 
   return (
-    <S.Form isActive={isActive} inputSize={inputSize} onClick={handleOnClickForm} onSubmit={handleOnSubmitForm}>
+    <S.Form
+      isActive={isActive}
+      isTyping={isTyping}
+      inputSize={inputSize}
+      onClick={handleOnClickForm}
+      onSubmit={handleOnSubmitForm}
+    >
       {isTyping && <label>{inputLabel || inputPlaceholder}</label>}
       <S.Input
         type={inputType}

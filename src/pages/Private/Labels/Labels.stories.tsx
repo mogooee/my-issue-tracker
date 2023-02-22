@@ -1,21 +1,23 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
+
 import { Route, Routes } from 'react-router-dom';
+import Home from '@/pages/Home';
 import Labels from '@/pages/Private/Labels';
 import Milestones from '@/pages/Private/Milestones';
-import Issues from '@/pages/Private/Issues';
 import { labelHandlers } from '@/mocks/handlers/label';
 import { milestoneHandlers } from '@/mocks/handlers/milestone';
 import { issueHandlers } from '@/mocks/handlers/issue';
 
 export default {
-  title: 'pages/Labels',
+  title: 'pages (Private)/Labels',
   component: Labels,
   decorators: [
     (Story) => (
       <Routes>
-        <Route path="/labels" element={<Story />} />
-        <Route path="/milestones" element={<Milestones />} />
-        <Route path="/issues" element={<Issues />} />
+        <Route path="/" element={<Home />}>
+          <Route path="/labels" element={<Story />} />
+          <Route path="/milestones" element={<Milestones />} />
+        </Route>
       </Routes>
     ),
   ],

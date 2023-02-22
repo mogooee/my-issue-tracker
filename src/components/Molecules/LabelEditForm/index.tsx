@@ -2,7 +2,7 @@
 import React, { useRef, useState } from 'react';
 import { LabelTypes } from '@/api/issue/types';
 
-import * as S from '@/components/Molecules/LabelEditForm/index.styled';
+import * as S from '@/components/Molecules/LabelEditForm/index.styles';
 
 import Button from '@/components/Atoms/Button';
 import Input from '@/components/Atoms/Input';

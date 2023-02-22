@@ -1,7 +1,7 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import ReactionPanel from '@/components/Molecules/Dropdown/Panel/Reaction';
 import { REACTIONS } from '@/components/Molecules/Dropdown/Panel/Reaction/mock';
-import { definedUsedEmojis } from '@/components/Molecules/Comment';
+import { definedUsedEmojis } from '@/components/Organisms/Comment';
 import { comment } from '@/mocks/tables/issue';
 
 export default {

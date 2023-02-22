@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const ProgressBar = styled.progress`
   display: block;
-  width: 244px;
+  width: 100%;
   height: 10px;
   margin-bottom: 8px;
   appearance: none;
