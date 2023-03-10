@@ -70,8 +70,8 @@ module.exports = {
     }),
     new webpack.DefinePlugin({ 'process.env': JSON.stringify(process.env) }),
     new ESLintPlugin({ extensions: ['js', 'jsx', 'ts', 'tsx'] }),
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-    }),
+    // new BundleAnalyzerPlugin({
+    //   analyzerMode: 'static',
+    // }),
   ],
 };
