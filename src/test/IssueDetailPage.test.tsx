@@ -15,6 +15,15 @@ const { Initial } = composeStories(SampleIssueDetail);
 
 let DOMContainer = null;
 
+jest.mock(
+  'react-markdown',
+  () =>
+    ({ children }: any) =>
+      children,
+);
+
+jest.mock('remark-gfm', () => () => {});
+
 beforeAll(() => {
   DOMContainer = document.createElement('div');
   document.body.appendChild(DOMContainer);
@@ -139,7 +148,7 @@ describe('이슈 상세페이지 테스트', () => {
 
     const comment = screen.getByText('코멘트를 수정합니다.');
 
-    const deleteCommentButton = screen.getAllByText('삭제')[1];
+    const deleteCommentButton = screen.getAllByText('삭제')[0];
     await user.click(deleteCommentButton);
 
     await waitFor(() => {

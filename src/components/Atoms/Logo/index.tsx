@@ -15,7 +15,7 @@ const Logo = ({ logoSize }: LogoType) => {
   const resetFilterValue = useResetRecoilState(FilterState);
 
   return (
-    <Link to="/" onClick={resetFilterValue}>
+    <Link to="/" aria-label="issue tracker logo" onClick={resetFilterValue}>
       <LogoImg />
     </Link>
   );

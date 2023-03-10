@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { InputTypes } from '@/components/Atoms/Input';
 
-type FormStyleTypes = Pick<InputTypes, 'inputSize' | 'isActive'>;
+type FormStyleTypes = Pick<InputTypes, 'inputSize' | 'isActive' | 'isTyping'>;
 
 export const Form = styled.form<FormStyleTypes>`
   ${({ theme }) => theme.MIXIN.FLEX({ direction: 'column', align: 'flex-start', justify: 'flex-start' })};
@@ -36,10 +36,6 @@ export const Form = styled.form<FormStyleTypes>`
           padding: 0 24px;
           ${({ theme }) => theme.MIXIN.FLEX({ direction: 'row', align: 'center', justify: 'flex-start' })};
           ${({ theme }) => theme.TEXT_INPUT_SIZE.SMALL};
-
-          label {
-            width: 80px;
-          }
         `;
     }
   }}
@@ -53,6 +49,19 @@ export const Form = styled.form<FormStyleTypes>`
 
       label {
         color: ${({ theme }) => theme.COLORS.TITLE_ACTIVE};
+      }
+    `}
+
+  ${({ isTyping, inputSize }) =>
+    inputSize === 'SMALL' &&
+    isTyping &&
+    css`
+      input {
+        width: 80%;
+      }
+
+      label {
+        margin-right: 12px;
       }
     `}
   
@@ -73,7 +82,7 @@ export const Form = styled.form<FormStyleTypes>`
 `;
 
 export const Input = styled.input`
-  width: 80%;
+  width: 100%;
   flex-grow: 1;
   background: transparent;
   border: transparent;

@@ -101,5 +101,6 @@
   },
   "msw": {
     "workerDirectory": ".storybook/public"
-  }
+  },
+  "sideEffects": false
 }

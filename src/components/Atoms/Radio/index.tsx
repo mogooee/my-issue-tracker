@@ -1,4 +1,4 @@
-import * as S from '@/components/Atoms/Radio/index.styled';
+import * as S from '@/components/Atoms/Radio/index.styles';
 
 interface OptionTypes {
   id: number;

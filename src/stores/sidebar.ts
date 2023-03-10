@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { ContentListTypes } from '@/components/Molecules/SideBar/types';
+import { ContentListTypes } from '@/components/Organisms/SideBar/types';
 
 const DEFAULT_CONTENT_LIST: ContentListTypes = {
   assignee: [],

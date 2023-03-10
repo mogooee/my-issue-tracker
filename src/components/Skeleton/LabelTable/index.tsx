@@ -1,4 +1,4 @@
-import * as S from '@/components/Skeleton/LabelTable/index.styled';
+import * as S from '@/components/Skeleton/LabelTable/index.styles';
 
 const LABEL_COUNT = 4;
 const skeletonLabelItems = Array.from({ length: LABEL_COUNT }, (_, i) => `skeleton-label-item-${i + 1}`);

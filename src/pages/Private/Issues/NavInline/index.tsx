@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import * as S from '@/pages/Private/Issues/NavInline/index.styled';
+import * as S from '@/pages/Private/Issues/NavInline/index.styles';
 
 import FilterBar from '@/components/Molecules/FilterBar';
 import { FILTERBAR_INFO } from '@/components/Molecules/FilterBar/mocks';

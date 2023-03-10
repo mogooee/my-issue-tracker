@@ -1,6 +1,6 @@
 import * as S from '@/components/Organisms/ErrorTable/index.styles';
 import Button from '@/components/Atoms/Button';
-import { Table as StyledErrorTable } from '@/components/Molecules/Table/index.styled';
+import { Table as StyledErrorTable } from '@/components/Molecules/Table/index.styles';
 import { COLORS } from '@/styles/theme';
 
 const ErrorItem = ({ handleOnClick }: { handleOnClick: () => void }) => (

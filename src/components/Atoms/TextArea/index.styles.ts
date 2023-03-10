@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components';
 
 export const TextAreaContainer = styled.div<{ isActive: boolean }>`
   ${({ theme }) => theme.MIXIN.FLEX({ direction: 'column', align: 'flex-start', justify: 'center' })};
-  max-width: 880px;
+  width: 100%;
   border-radius: 16px;
 
   ${({ isActive }) =>

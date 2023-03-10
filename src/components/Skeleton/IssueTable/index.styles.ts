@@ -83,5 +83,5 @@ export const IssueItem = styled.div`
   }
 `;
 
-export { Table as IssueTable } from '@/components/Molecules/Table/index.styled';
+export { Table as IssueTable } from '@/components/Molecules/Table/index.styles';
 export { Item as IssueTableItem } from '@/components/Molecules/Table/TableItem/index';
