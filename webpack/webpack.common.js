@@ -10,11 +10,18 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 require('dotenv').config();
 
 module.exports = {
+  optimization: {
+    runtimeChunk: true,
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
   entry: path.resolve(__dirname, '..', 'src', 'index.tsx'),
   output: {
     path: path.join(__dirname, '..', 'build'),
-    filename: 'bundle.js',
+    filename: 'js/[name]-[chunkhash].js',
     assetModuleFilename: 'assets/[name][ext]',
+    clean: true,
   },
   resolve: {
     alias: {
@@ -63,8 +70,8 @@ module.exports = {
     }),
     new webpack.DefinePlugin({ 'process.env': JSON.stringify(process.env) }),
     new ESLintPlugin({ extensions: ['js', 'jsx', 'ts', 'tsx'] }),
-    // new BundleAnalyzerPlugin({
-    //   analyzerMode: 'static',
-    // }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+    }),
   ],
 };

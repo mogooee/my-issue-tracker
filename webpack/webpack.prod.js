@@ -19,7 +19,8 @@ module.exports = merge(common, {
               [
                 '@babel/preset-env',
                 {
-                  modules: 'cjs',
+                  modules: false,
+                  loose: true,
                 },
               ],
               ['@babel/preset-react', { runtime: 'automatic' }],
