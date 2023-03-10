@@ -27,20 +27,24 @@ module.exports = {
     rules: [
       {
         test: /\.css?$/,
+        include: path.resolve(__dirname, '..', 'src'),
         use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        include: path.resolve(__dirname, '..', 'src'),
         type: 'asset/resource',
       },
       {
         test: /\.svg/,
         type: 'asset/inline',
+        include: path.resolve(__dirname, '..', 'src'),
         resourceQuery: /inline/, // *.svg?inline
       },
       {
         test: /\.svg$/i,
         issuer: /\.[jt]sx?$/,
+        include: path.resolve(__dirname, '..', 'src'),
         use: {
           loader: '@svgr/webpack',
         },
