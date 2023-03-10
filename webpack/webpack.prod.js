@@ -1,13 +1,16 @@
 const { merge } = require('webpack-merge');
+const path = require('path');
 const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
   mode: 'production',
-  devtool: 'hidden-source-map',
+  cache: false,
+  devtool: false,
   module: {
     rules: [
       {
         test: /\.(ts|tsx|js|jsx)$/,
+        include: path.resolve(__dirname, '..', 'src'),
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
@@ -16,7 +19,8 @@ module.exports = merge(common, {
               [
                 '@babel/preset-env',
                 {
-                  modules: 'cjs',
+                  modules: false,
+                  loose: true,
                 },
               ],
               ['@babel/preset-react', { runtime: 'automatic' }],

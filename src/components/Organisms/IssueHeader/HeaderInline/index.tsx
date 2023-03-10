@@ -6,7 +6,7 @@ import useFetchIssue from '@/api/issue/useFetchIssue';
 
 import Button from '@/components/Atoms/Button';
 import Input from '@/components/Atoms/Input';
-import * as S from '@/components/Organisms/IssueHeader/HeaderInline/index.styled';
+import * as S from '@/components/Organisms/IssueHeader/HeaderInline/index.styles';
 
 import { ContentTypes } from '@/api/issue/types';
 import { LoginUserInfoState } from '@/stores/loginUserInfo';

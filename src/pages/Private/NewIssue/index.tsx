@@ -9,9 +9,9 @@ import * as S from '@/pages/Private/NewIssue/index.styles';
 import Button from '@/components/Atoms/Button';
 import Input from '@/components/Atoms/Input';
 import UserImage from '@/components/Atoms/UserImage';
-import SideBar from '@/components/Molecules/SideBar';
+import SideBar from '@/components/Organisms/SideBar';
 import TextAreaEditer from '@/components/Molecules/TextAreaEditer';
-import { DEFAULT_CONTENT_LIST } from '@/components/Molecules/SideBar/mock';
+import { DEFAULT_CONTENT_LIST } from '@/components/Organisms/SideBar/mock';
 
 import useInput from '@/hooks/useInput';
 import { NEW_ISSUE_BUTTON_INFO } from '@/components/Atoms/Button/options';
@@ -19,13 +19,13 @@ import { NEW_ISSUE_BUTTON_INFO } from '@/components/Atoms/Button/options';
 import Modal, { ModalState } from '@/components/Modal';
 import CancelNewIssueModal from '@/components/Modal/CancelNewIssue';
 
-import { filterUncheckedItem, getFindDropdownItem } from '@/components/Molecules/SideBar/utils';
-import { ContentListTypes, isMilestoneTypes, UpdateSideBarFuncTypes } from '@/components/Molecules/SideBar/types';
+import { filterUncheckedItem, getFindDropdownItem } from '@/components/Organisms/SideBar/utils';
+import { ContentListTypes, isMilestoneTypes, UpdateSideBarFuncTypes } from '@/components/Organisms/SideBar/types';
 
 import useFetchIssue from '@/api/issue/useFetchIssue';
 
 import CustomErrorBoundary from '@/components/ErrorBoundary';
-import ErrorSideBar from '@/components/Molecules/SideBar/ErrorSideBar';
+import ErrorSideBar from '@/components/Organisms/SideBar/ErrorSideBar';
 
 const NewIssue = () => {
   const LoginUserInfoStateValue = useRecoilValue(LoginUserInfoState);
@@ -85,7 +85,7 @@ const NewIssue = () => {
       setContentList({ ...contentList, [contentKey]: [...filterContentList] });
       setNewIssueFormState({
         ...newIssueFormState,
-        [`${contentKey}Ids`]: [...newIssueFormState[`${contentKey}Ids`], findDropdownItem!.id],
+        [`${contentKey}Ids`]: filterContentList.map((list) => list.id),
       });
     }
   };

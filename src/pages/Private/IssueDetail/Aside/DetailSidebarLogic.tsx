@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import useFetchSideBarData from '@/api/useFetchSideBarData';
 
-import SideBar from '@/components/Molecules/SideBar';
+import SideBar from '@/components/Organisms/SideBar';
 
-import { ContentListTypes, isMilestoneTypes, UpdateSideBarFuncTypes } from '@/components/Molecules/SideBar/types';
-import { filterUncheckedItem, getFindDropdownItem } from '@/components/Molecules/SideBar/utils';
+import { ContentListTypes, isMilestoneTypes, UpdateSideBarFuncTypes } from '@/components/Organisms/SideBar/types';
+import { filterUncheckedItem, getFindDropdownItem } from '@/components/Organisms/SideBar/utils';
 
 const SideBarLogic = ({
   issueId,

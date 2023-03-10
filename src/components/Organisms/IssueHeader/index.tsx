@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import { COLORS } from '@/styles/theme';
-import * as S from '@/components/Organisms/IssueHeader/index.styled';
+import * as S from '@/components/Organisms/IssueHeader/index.styles';
 
 import Icon from '@/components/Atoms/Icon';
 import Label from '@/components/Atoms/Label';

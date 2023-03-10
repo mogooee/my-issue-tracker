@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import useFetchReaction from '@/api/issue/useFetchReaction';
 import { LoginUserInfoState } from '@/stores/loginUserInfo';
 
-import * as S from '@/components/Molecules/Dropdown/Panel/Reaction/index.styled';
+import * as S from '@/components/Molecules/Dropdown/Panel/Reaction/index.styles';
 
 import Button from '@/components/Atoms/Button';
 

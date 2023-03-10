@@ -42,7 +42,7 @@ export const LABEL_EDIT_FORM_PROPS: LABEL_EDIT_FORM_PROPS_Types = {
   }),
   LABEL_DESCRIPTION: ({ inputValue, onChange, isTyping }) => ({
     inputMaxLength: MAX_DESCRIPTION_LENGTH,
-    inputPlaceholder: '설명 (선택)',
+    inputPlaceholder: '설명(선택)',
     inputSize: 'SMALL',
     inputType: 'text',
     inputValue,
