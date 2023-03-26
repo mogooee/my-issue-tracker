@@ -6,7 +6,7 @@ import { signup, GeneralNewMemberTypes } from '@/api/sign';
 import * as S from '@/components/Organisms/CommonSignUpForm/index.styles';
 import Button from '@/components/Atoms/Button';
 import SignUpInput from '@/components/Molecules/SignUpInput';
-import { ModalState } from '@/components/Modal';
+import { ModalState } from '@/stores/modal';
 
 interface FormInfoTypes {
   id: string;

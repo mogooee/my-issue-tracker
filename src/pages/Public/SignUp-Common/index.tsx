@@ -5,7 +5,9 @@ import { SignUpFormErrorState, SignUpFormState } from '@/stores/signUp';
 import { FORM_INFO } from '@/components/Organisms/CommonSignUpForm/constants';
 import CommonSignUpForm from '@/components/Organisms/CommonSignUpForm';
 
-import Modal, { ModalState } from '@/components/Modal';
+import Modal from '@/components/Modal';
+import { ModalState } from '@/stores/modal';
+
 import CompleteSignUp from '@/components/Modal/CompleteSignUp';
 
 import * as S from '@/pages/Public/SignUp-Common/index.styles';

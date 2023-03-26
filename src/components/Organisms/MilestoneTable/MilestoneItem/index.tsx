@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import * as S from '@/components/Organisms/MilestoneTable/MilestoneItem/index.styles';
 import { COLORS } from '@/styles/theme';
 
-import { ModalState } from '@/components/Modal';
+import { ModalState } from '@/stores/modal';
 import Button from '@/components/Atoms/Button';
 import Icon from '@/components/Atoms/Icon';
 import PrograssBar from '@/components/Atoms/ProgressBar';

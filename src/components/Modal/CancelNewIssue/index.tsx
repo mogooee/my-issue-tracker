@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useResetRecoilState, useSetRecoilState } from 'recoil';
-import { ModalState } from '@/components/Modal';
+import { ModalState } from '@/stores/modal';
 
 import * as S from '@/components/Modal/index.styles';
 import Button from '@/components/Atoms/Button';

@@ -20,8 +20,9 @@ import { CommentsTypes, ReactionResponseTypes } from '@/api/issue/types';
 import { BUTTON_PROPS, TABLE_ITEM_BUTTON_INFO } from '@/components/Atoms/Button/options';
 import { AUTHOR_LABEL_PROPS, EDIT_BUTTON_PROPS } from '@/components/Organisms/Comment/constants';
 
-import Modal, { ModalState } from '@/components/Modal';
+import Modal from '@/components/Modal';
 import DeleteCheck from '@/components/Modal/DeleteCheck';
+import { ModalState } from '@/stores/modal';
 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';

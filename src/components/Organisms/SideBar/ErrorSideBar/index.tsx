@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
 import * as S from '@/components/Organisms/SideBar/index.styles';
@@ -22,8 +21,9 @@ const ErrorSideBar = ({
       alert('네트워크 연결이 원활하지 않습니다. 네트워크 상태를 확인해주세요.');
     }
 
+    resetState();
+
     if (errorCode === 1000 || errorCode === 1001) {
-      resetState();
       queryClient.resetQueries(['members']);
     }
   };
