@@ -1,7 +1,7 @@
 import { useResetRecoilState, useSetRecoilState } from 'recoil';
 import useFetchMilestone from '@/api/milestone/useFetchMilestone';
 import { ClickMilestoneState } from '@/stores/milestone';
-import { ModalState } from '@/components/Modal';
+import { ModalState } from '@/stores/modal';
 
 import * as S from '@/components/Modal/index.styles';
 import Button from '@/components/Atoms/Button';

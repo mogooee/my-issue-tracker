@@ -43,6 +43,10 @@ module.exports = {
         type: 'asset/resource',
       },
       {
+        test: /\.(png|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+      },
+      {
         test: /\.svg/,
         type: 'asset/inline',
         include: path.resolve(__dirname, '..', 'src'),
@@ -70,8 +74,8 @@ module.exports = {
     }),
     new webpack.DefinePlugin({ 'process.env': JSON.stringify(process.env) }),
     new ESLintPlugin({ extensions: ['js', 'jsx', 'ts', 'tsx'] }),
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-    }),
+    // new BundleAnalyzerPlugin({
+    //   analyzerMode: 'static',
+    // }),
   ],
 };

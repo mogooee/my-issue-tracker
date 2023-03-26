@@ -16,7 +16,8 @@ import { DEFAULT_CONTENT_LIST } from '@/components/Organisms/SideBar/mock';
 import useInput from '@/hooks/useInput';
 import { NEW_ISSUE_BUTTON_INFO } from '@/components/Atoms/Button/options';
 
-import Modal, { ModalState } from '@/components/Modal';
+import Modal from '@/components/Modal';
+import { ModalState } from '@/stores/modal';
 import CancelNewIssueModal from '@/components/Modal/CancelNewIssue';
 
 import { filterUncheckedItem, getFindDropdownItem } from '@/components/Organisms/SideBar/utils';

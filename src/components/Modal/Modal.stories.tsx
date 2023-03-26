@@ -4,6 +4,7 @@ import CancelNewIssueModal from '@/components/Modal/CancelNewIssue';
 import CompleteSignUpModal from '@/components/Modal/CompleteSignUp';
 import DeleteCheckModal from '@/components/Modal/DeleteCheck';
 import ServiceLoadingModal from '@/components/Modal/ServiceLoading';
+import UniversalLinkModal from '@/components/Modal/UniversalLink';
 
 export default {
   title: 'Modal',
@@ -41,3 +42,11 @@ const ServiceLoadingTemplete: ComponentStory<typeof Modal> = () => (
 );
 
 export const ServiceLoading = ServiceLoadingTemplete.bind({});
+
+const UniversalLinkTemplete: ComponentStory<typeof Modal> = () => (
+  <Modal>
+    <UniversalLinkModal />
+  </Modal>
+);
+
+export const UniversalLink = UniversalLinkTemplete.bind({});

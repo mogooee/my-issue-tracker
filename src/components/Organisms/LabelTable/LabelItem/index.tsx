@@ -9,7 +9,7 @@ import Label from '@/components/Atoms/Label';
 import LabelEditForm from '@/components/Molecules/LabelEditForm';
 import { LABEL_BTNS_ARGS } from '@/components/Molecules/Dropdown/mock';
 import Dropdown from '@/components/Molecules/Dropdown';
-import { ModalState } from '@/components/Modal';
+import { ModalState } from '@/stores/modal';
 
 import { LabelTypes } from '@/api/issue/types';
 import { TABLE_ITEM_BUTTON_INFO } from '@/components/Atoms/Button/options';
