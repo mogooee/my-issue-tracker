@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
-import { ModalState } from '@/components/Modal';
+import { ModalState } from '@/stores/modal';
 
 import * as S from '@/components/Modal/index.styles';
 import Button from '@/components/Atoms/Button';

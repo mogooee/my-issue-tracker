@@ -1,5 +1,5 @@
 import { useSetRecoilState } from 'recoil';
-import { ModalState } from '@/components/Modal';
+import { ModalState } from '@/stores/modal';
 import * as S from '@/components/Modal/index.styles';
 import Button from '@/components/Atoms/Button';
 import { MODAL_BUTTON_INFO } from '@/components/Atoms/Button/options';

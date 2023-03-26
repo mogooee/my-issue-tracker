@@ -7,7 +7,8 @@ import { COLORS } from '@/styles/theme';
 import * as S from '@/pages/Private/IssueDetail/index.styles';
 import Button from '@/components/Atoms/Button';
 
-import Modal, { ModalState } from '@/components/Modal';
+import Modal from '@/components/Modal';
+import { ModalState } from '@/stores/modal';
 import DeleteCheck from '@/components/Modal/DeleteCheck';
 
 import { useRecoilState } from 'recoil';

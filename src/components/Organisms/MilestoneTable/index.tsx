@@ -4,7 +4,8 @@ import { useSearchParams } from 'react-router-dom';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { ClickMilestoneState } from '@/stores/milestone';
-import Modal, { ModalState } from '@/components/Modal';
+import Modal from '@/components/Modal';
+import { ModalState } from '@/stores/modal';
 import DeleteMilestoneModal from '@/components/Modal/DeleteMilestone';
 
 import Icon from '@/components/Atoms/Icon';

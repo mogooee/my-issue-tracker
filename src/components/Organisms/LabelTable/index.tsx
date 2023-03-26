@@ -11,7 +11,8 @@ import LabelTableSkeleton from '@/components/Skeleton/LabelTable';
 import DeleteCheck from '@/components/Modal/DeleteCheck';
 
 import useFetchLabel from '@/api/label/useFetchLabel';
-import Modal, { ModalState } from '@/components/Modal';
+import Modal from '@/components/Modal';
+import { ModalState } from '@/stores/modal';
 
 import CustomErrorBoundary from '@/components/ErrorBoundary';
 
