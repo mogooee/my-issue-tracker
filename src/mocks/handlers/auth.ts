@@ -1,14 +1,24 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { rest } from 'msw';
 import { RedirectAuthTypes } from '@/api/sign';
-import { USER_LIST } from '@/components/Molecules/Dropdown/mock';
+import { USER_LIST as OAUTH_USER_LIST } from '@/components/Molecules/Dropdown/mock';
 import { UserTypes } from '@/api/issue/types';
 
-export const userTable: UserTypes[] = [
+interface GeneralUserInfoTypes {
+  loginId?: string;
+  password?: string;
+}
+
+type UserTableTypes = GeneralUserInfoTypes & UserTypes;
+
+export const USER_TABLE: UserTableTypes[] = [
+  ...OAUTH_USER_LIST,
   {
-    id: 0,
-    email: 'dobby@gmail.com',
-    nickname: '도비',
+    id: OAUTH_USER_LIST.length + 1,
+    loginId: 'WebTest',
+    password: 'test1234',
+    email: 'WebTest@test.com',
+    nickname: 'WebTest',
     profileImage: 'https://avatars.githubusercontent.com/u/85747667?v=4',
   },
 ];
@@ -62,7 +72,7 @@ export const authHandlers = [
     };
 
     if (provider === 'github' || provider === 'naver' || provider === 'kakao') {
-      const member = userTable.find((el) => el.email === OAuthInfo.email);
+      const member = USER_TABLE.find((user) => user.email === OAuthInfo.email);
 
       if (member) {
         response.signInMember = { ...OAuthInfo, id: member.id };
@@ -110,11 +120,11 @@ export const authHandlers = [
       return res(ctx.status(400), ctx.json('필수 입력값을 입력해주세요'));
     }
 
-    userTable.push(newMember);
+    USER_TABLE.push(newMember);
 
     const response = {
       memberResponse: {
-        id: 0,
+        id: USER_TABLE.length + 1,
         email: newMember.email,
         nickname: newMember.nickname,
         profileImage: newMember.profileImage,
@@ -166,11 +176,6 @@ export const authHandlers = [
   // 로그아웃
   rest.post('api/members/signout', (req, res, ctx) => res(ctx.status(200))),
 
-  rest.get('api/members', (req, res, ctx) =>
-    // if (!req.cookies['refresh-token']) {
-    //   return res(ctx.status(400), ctx.json(false));
-    // }
-
-    res(ctx.status(200), ctx.json(USER_LIST)),
-  ),
+  // 모든 유저 정보 불러오기
+  rest.get('api/members', (req, res, ctx) => res(ctx.status(200), ctx.json(USER_TABLE))),
 ];
