@@ -140,9 +140,10 @@ export const authHandlers = [
   // 유저 아이디 중복 검사
   rest.get('api/members/signin-id/:id/exists', (req, res, ctx) => {
     const { id } = req.params;
+    const findUserId = USER_TABLE.find((user) => user.loginId === id);
 
     // dobby123라는 유저가 이미 있는 경우
-    if (id === 'dobby123') {
+    if (findUserId) {
       return res(ctx.status(200), ctx.json(true));
     }
 
@@ -152,9 +153,9 @@ export const authHandlers = [
   // 유저 닉네임 중복 검사
   rest.get('api/members/nickname/:nickname/exists', (req, res, ctx) => {
     const { nickname } = req.params;
+    const findUserNickname = USER_TABLE.find((user) => user.loginId === nickname);
 
-    // 도비라는 유저가 이미 있는 경우
-    if (nickname === '도비123') {
+    if (findUserNickname) {
       return res(ctx.status(200), ctx.json(true));
     }
 
@@ -164,9 +165,9 @@ export const authHandlers = [
   // 유저 이메일 중복 검사
   rest.get('api/members/email/:email/exists', (req, res, ctx) => {
     const { email } = req.params;
+    const findUserEmail = USER_TABLE.find((user) => user.loginId === email);
 
-    // 도비라는 유저가 이미 있는 경우
-    if (email === 'dobby123@gmail.com') {
+    if (findUserEmail) {
       return res(ctx.status(200), ctx.json(true));
     }
 
