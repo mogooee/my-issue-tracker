@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { rest } from 'msw';
-import { RedirectAuthTypes } from '@/api/sign';
+import { OAuthResponse, RedirectAuthTypes } from '@/api/sign';
 import { USER_LIST as OAUTH_USER_LIST } from '@/components/Molecules/Dropdown/mock';
 import { UserTypes } from '@/api/issue/types';
 
@@ -92,23 +92,27 @@ export const authHandlers = [
 
   // 일반 회원 가입
   rest.post('api/members/new/general', async (req, res, ctx) => {
-    const newMember = await req.json();
-    const { signInId, password, email, nickname } = newMember;
+    const formData = await req.json();
+    const { signInId, password, email, nickname } = formData;
 
     if (!signInId || !password || !email || !nickname) {
       return res(ctx.status(400), ctx.json('필수 입력값을 입력해주세요'));
     }
 
-    userTable.push(newMember);
-
-    const response = {
-      id: 0,
-      email: newMember.email,
-      nickname: newMember.nickname,
-      profileImage: newMember.profileImage,
+    const newMemberInfo: UserTableTypes = {
+      id: USER_TABLE.length + 1,
+      loginId: signInId,
+      password,
+      email,
+      nickname,
+      profileImage: 'https://avatars.githubusercontent.com/u/85747667?v=4',
     };
 
-    return res(ctx.status(201), ctx.json(response));
+    USER_TABLE.push(newMemberInfo);
+
+    const { loginId, password: newMemberPassword, ...response } = newMemberInfo;
+
+    return res(ctx.status(200), ctx.json(response));
   }),
 
   // Oauth 회원 가입
