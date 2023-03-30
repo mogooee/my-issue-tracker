@@ -3,8 +3,8 @@ import { rest } from 'msw';
 import { issues, issueTable } from '@/mocks/tables/issue';
 import { REACTIONS } from '@/components/Molecules/Dropdown/Panel/Reaction/mock';
 import { IssuesTypes, CommentsTypes, ContentTypes, IssueHistoryTypes, ReactionResponseTypes } from '@/api/issue/types';
-import { userTable } from '@/mocks/handlers/auth';
-import { MILESTONE_LIST, USER_LIST } from '@/components/Molecules/Dropdown/mock';
+import { TEST_USER, USER_TABLE } from '@/mocks/handlers/auth';
+import { MILESTONE_LIST } from '@/components/Molecules/Dropdown/mock';
 import { responseNewIssueData } from '@/mocks/tables/newIssueHelper';
 import { labelTable } from '@/mocks/handlers/label';
 import {
@@ -207,7 +207,7 @@ export const issueHandlers = [
     updateIssueTable(newIssue);
 
     const history: IssueHistoryTypes = changeTitleHistory({
-      modifierInfo: USER_LIST[0],
+      modifierInfo: TEST_USER,
       previousTitle: issue.title,
       changedTitle: title,
     });
@@ -240,7 +240,7 @@ export const issueHandlers = [
     issueTable.closedIssues = closedIssuesContent;
 
     const history: IssueHistoryTypes = changeStateHistory({
-      modifierInfo: USER_LIST[0],
+      modifierInfo: TEST_USER,
       action: status ? 'CLOSE' : 'OPEN',
     });
     contents.find((el) => el.id === ids[0])!.issueHistories.push(history);
@@ -263,7 +263,7 @@ export const issueHandlers = [
     const { content } = await req.json();
 
     const newCommentId = addCommentsId();
-    const author = userTable.find(({ id }) => id === Number(memberId))!;
+    const author = USER_TABLE.find(({ id }) => id === Number(memberId))!;
 
     const newComment: CommentsTypes = {
       id: newCommentId,
@@ -339,7 +339,7 @@ export const issueHandlers = [
 
     const newReactionId = addReactionsId();
     const { unicode } = REACTIONS.find((e) => emojiName === e.name)!;
-    const newReactor = { id: memberId, nickname: userTable.find(({ id }) => id === memberId)?.nickname! };
+    const newReactor = { id: memberId, nickname: USER_TABLE.find(({ id }) => id === memberId)?.nickname! };
 
     const newReaction: ReactionResponseTypes = {
       id: newReactionId,
@@ -399,7 +399,7 @@ export const issueHandlers = [
     const userId = req.url.searchParams.get('memberId');
     const { title } = requestData;
 
-    const findAuthor = (memberId: string) => USER_LIST.find((el) => el.id === Number(memberId));
+    const findAuthor = (memberId: string) => USER_TABLE.find((el) => el.id === Number(memberId));
 
     if (!title) {
       return res(ctx.status(400), ctx.json('필수 입력값을 입력해주세요'));
@@ -451,7 +451,7 @@ export const issueHandlers = [
       findOpenIssues.issueLabels.issueLabels.push(findLabel!);
 
       const history: IssueHistoryTypes = labelHistory({
-        modifierInfo: USER_LIST[0],
+        modifierInfo: TEST_USER,
         labelInfo: findLabel!,
         action: 'ADD',
       });
@@ -463,7 +463,7 @@ export const issueHandlers = [
       findCloseIssues.issueLabels.issueLabels.push(findLabel!);
 
       const history: IssueHistoryTypes = labelHistory({
-        modifierInfo: USER_LIST[0],
+        modifierInfo: TEST_USER,
         labelInfo: findLabel!,
         action: 'ADD',
       });
@@ -487,7 +487,7 @@ export const issueHandlers = [
       );
 
       const history: IssueHistoryTypes = labelHistory({
-        modifierInfo: USER_LIST[0],
+        modifierInfo: TEST_USER,
         labelInfo: findLabel!,
         action: 'REMOVE',
       });
@@ -502,7 +502,7 @@ export const issueHandlers = [
       );
 
       const history: IssueHistoryTypes = labelHistory({
-        modifierInfo: USER_LIST[0],
+        modifierInfo: TEST_USER,
         labelInfo: findLabel!,
         action: 'REMOVE',
       });
@@ -521,12 +521,12 @@ export const issueHandlers = [
     const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
-    const findAssinees = USER_LIST.find((label) => label.id === Number(assigneeId));
+    const findAssinees = USER_TABLE.find((label) => label.id === Number(assigneeId));
     if (findOpenIssues) {
       findOpenIssues.issueAssignees.issueAssignees.push(findAssinees!);
 
       const history: IssueHistoryTypes = assigneesHistory({
-        modifierInfo: USER_LIST[0],
+        modifierInfo: TEST_USER,
         assigneeInfo: findAssinees!,
         action: 'ADD',
       });
@@ -538,7 +538,7 @@ export const issueHandlers = [
       findCloseIssues.issueAssignees.issueAssignees.push(findAssinees!);
 
       const history: IssueHistoryTypes = assigneesHistory({
-        modifierInfo: USER_LIST[0],
+        modifierInfo: TEST_USER,
         assigneeInfo: findAssinees!,
         action: 'ADD',
       });
@@ -556,14 +556,14 @@ export const issueHandlers = [
     const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
-    const findAssinees = USER_LIST.find((label) => label.id === Number(assigneeId));
+    const findAssinees = USER_TABLE.find((label) => label.id === Number(assigneeId));
     if (findOpenIssues) {
       findOpenIssues.issueAssignees.issueAssignees = findOpenIssues.issueAssignees.issueAssignees.filter(
         (assignee) => assignee.id !== findAssinees!.id,
       );
 
       const history: IssueHistoryTypes = assigneesHistory({
-        modifierInfo: USER_LIST[0],
+        modifierInfo: TEST_USER,
         assigneeInfo: findAssinees!,
         action: 'REMOVE',
       });
@@ -577,7 +577,7 @@ export const issueHandlers = [
       );
 
       const history: IssueHistoryTypes = assigneesHistory({
-        modifierInfo: USER_LIST[0],
+        modifierInfo: TEST_USER,
         assigneeInfo: findAssinees!,
         action: 'REMOVE',
       });
@@ -600,7 +600,7 @@ export const issueHandlers = [
       findOpenIssues.milestone = findMilestone!;
 
       const history: IssueHistoryTypes = milestoneHistory({
-        modifierInfo: USER_LIST[0],
+        modifierInfo: TEST_USER,
         milestoneInfo: findMilestone!,
         action: 'ADD',
       });
@@ -612,7 +612,7 @@ export const issueHandlers = [
       findCloseIssues.milestone = findMilestone!;
 
       const history: IssueHistoryTypes = milestoneHistory({
-        modifierInfo: USER_LIST[0],
+        modifierInfo: TEST_USER,
         milestoneInfo: findMilestone!,
         action: 'ADD',
       });
@@ -635,7 +635,7 @@ export const issueHandlers = [
       findOpenIssues.milestone = null;
 
       const history: IssueHistoryTypes = milestoneHistory({
-        modifierInfo: USER_LIST[0],
+        modifierInfo: TEST_USER,
         milestoneInfo: findMilestone!,
         action: 'REMOVE',
       });
@@ -647,7 +647,7 @@ export const issueHandlers = [
       findCloseIssues.milestone = null;
 
       const history: IssueHistoryTypes = milestoneHistory({
-        modifierInfo: USER_LIST[0],
+        modifierInfo: TEST_USER,
         milestoneInfo: findMilestone!,
         action: 'REMOVE',
       });
