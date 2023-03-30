@@ -37,18 +37,31 @@ export const authHandlers = [
     return res(ctx.status(200), ctx.json(response), ctx.cookie('refresh_token', 'refresh123'));
   }),
 
-  // 로그인 검사 테스트용 API
-  rest.get('api/auth/test', (req, res, ctx) => res(ctx.status(200))),
+  // 일반 로그인
+  rest.post('api/members/signin', async (req, res, ctx) => {
+    const loginInfo = await req.json();
 
-  // 유저 정보 요청 API
-  rest.get('api/members/info', (req, res, ctx) => {
-    const userInfo = {
-      id: 0,
-      email: 'dobby@gmail.com',
-      nickname: '도비',
-      profileImage: 'https://avatars.githubusercontent.com/u/85747667?v=4',
-    };
-    return res(ctx.status(200), ctx.json(userInfo));
+    const findUser = USER_TABLE.find((user) => user.loginId === loginInfo.id);
+
+    if (!findUser) return res(ctx.status(400), ctx.json('해당하는 아이디를 찾을 수 없습니다.'));
+
+    if (findUser.password === loginInfo.password) {
+      const response: OAuthResponse = {
+        memberResponse: {
+          email: findUser.email,
+          id: findUser.id,
+          profileImage: findUser.profileImage,
+          nickname: findUser.nickname,
+        },
+        accessToken: {
+          token: 'access123',
+        },
+      };
+
+      return res(ctx.status(200), ctx.json(response), ctx.cookie('refresh_token', 'refresh123'));
+    }
+
+    return res(ctx.status(400), ctx.json('비밀번호를 다시 확인해주세요.'));
   }),
 
   // 유저 정보
