@@ -1,6 +1,6 @@
 import { ContentTypes } from '@/api/issue/types';
-import { USER_LIST } from '@/components/Molecules/Dropdown/mock';
 import { NEW_ISSUE_FORM_TYPES } from '@/stores/newIssue';
+import { TEST_USER, USER_TABLE } from '@/mocks/handlers/auth';
 import { labelTable } from '@/mocks/handlers/label';
 import { milestones } from '@/mocks/handlers/milestone';
 import { issueTable } from '@/mocks/tables/issue';
@@ -12,7 +12,7 @@ interface ResponseNewIssueDataTypes {
 export const responseNewIssueData = ({ memberId, ...props }: NEW_ISSUE_FORM_TYPES & ResponseNewIssueDataTypes) => {
   const { title, comment, assigneeIds, labelIds, milestoneId } = props;
 
-  const findUser = (id: number) => USER_LIST.find((el) => el.id === id)!;
+  const findUser = (id: number) => USER_TABLE.find((user) => user.id === id)!;
   const findAssignees = (ids: number[]) => (ids.length ? ids.map((id) => findUser(id)) : []);
   const findLabels = (ids: number[]) =>
     ids.length ? ids.map((id) => labelTable.find((label) => label.id === id)!) : [];
@@ -24,21 +24,11 @@ export const responseNewIssueData = ({ memberId, ...props }: NEW_ISSUE_FORM_TYPE
   const responseIssue: ContentTypes = {
     id: newIssueId,
     title,
-    author: findUser(memberId) || {
-      id: 0,
-      email: 'dobby@gmail.com',
-      nickname: '도비',
-      profileImage: 'https://avatars.githubusercontent.com/u/85747667?v=4',
-    },
+    author: USER_TABLE[memberId] || TEST_USER,
     comments: [
       {
         id: 12,
-        author: findUser(memberId) || {
-          id: 0,
-          email: 'dobby@gmail.com',
-          nickname: '도비',
-          profileImage: 'https://avatars.githubusercontent.com/u/85747667?v=4',
-        },
+        author: USER_TABLE[memberId] || TEST_USER,
         content: comment,
         createdAt: new Date().toISOString(),
         issueCommentReactionsResponse: [],
