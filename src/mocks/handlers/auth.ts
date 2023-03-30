@@ -3,6 +3,7 @@ import { rest } from 'msw';
 import { OAuthResponse, RedirectAuthTypes } from '@/api/sign';
 import { USER_LIST as OAUTH_USER_LIST } from '@/components/Molecules/Dropdown/mock';
 import { UserTypes } from '@/api/issue/types';
+import AppLogo from '@/assets/logo/issueTracker.png';
 
 interface GeneralUserInfoTypes {
   loginId?: string;
@@ -19,9 +20,11 @@ export const USER_TABLE: UserTableTypes[] = [
     password: 'test1234',
     email: 'WebTest@test.com',
     nickname: 'WebTest',
-    profileImage: 'https://avatars.githubusercontent.com/u/85747667?v=4',
+    profileImage: AppLogo,
   },
 ];
+
+export const TEST_USER = USER_TABLE.find((user) => user.nickname === 'WebTest') || USER_TABLE[0];
 
 const message = {
   message: '뭔가 잘못됨',
@@ -63,6 +66,9 @@ export const authHandlers = [
 
     return res(ctx.status(400), ctx.json('비밀번호를 다시 확인해주세요.'));
   }),
+
+  // 유저 정보 요청 API
+  rest.get('api/members/info', (req, res, ctx) => res(ctx.status(200), ctx.json(TEST_USER))),
 
   // 유저 정보
   rest.get('api/auth/:provider', (req, res, ctx) => {
@@ -113,12 +119,12 @@ export const authHandlers = [
     }
 
     const newMemberInfo: UserTableTypes = {
-      id: USER_TABLE.length + 1,
+      id: USER_TABLE.length,
       loginId: signInId,
       password,
       email,
       nickname,
-      profileImage: 'https://avatars.githubusercontent.com/u/85747667?v=4',
+      profileImage: AppLogo,
     };
 
     USER_TABLE.push(newMemberInfo);
