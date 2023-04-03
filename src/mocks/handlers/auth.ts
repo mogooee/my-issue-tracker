@@ -24,6 +24,11 @@ export const USER_TABLE: UserTableTypes[] = [
   },
 ];
 
+export const filterIdPassword = (obj: UserTableTypes) =>
+  Object.fromEntries(
+    Object.entries(obj).filter(([key]) => !key.includes('loginId') && !key.includes('password')),
+  ) as UserTypes;
+
 export const TEST_USER = USER_TABLE.find((user) => user.nickname === 'WebTest') || USER_TABLE[0];
 
 const message = {
@@ -76,7 +81,7 @@ export const authHandlers = [
 
     // 사이트에 유저정보를 요청하면 OAuth 정보 - 깃허브에서 오는 정보 (signUpData)
     const OAuthInfo = {
-      id: 'dobby',
+      loginId: 'dobby',
       email: 'dobby@gmail.com',
       nickname: '도비',
       profileImage: 'https://avatars.githubusercontent.com/u/85747667?v=4',
@@ -97,7 +102,7 @@ export const authHandlers = [
         response.signInMember = { ...OAuthInfo, id: member.id };
       } else {
         response.signUpFormData = {
-          resourceOwnerId: OAuthInfo.id,
+          resourceOwnerId: OAuthInfo.loginId,
           email: OAuthInfo.email,
           profileImage: OAuthInfo.profileImage,
         };
@@ -201,5 +206,9 @@ export const authHandlers = [
   rest.post('api/members/signout', (req, res, ctx) => res(ctx.status(200))),
 
   // 모든 유저 정보 불러오기
-  rest.get('api/members', (req, res, ctx) => res(ctx.status(200), ctx.json(USER_TABLE))),
+  rest.get('api/members', (req, res, ctx) => {
+    const FILTERED_USER_LIST = USER_TABLE.map((user) => filterIdPassword(user));
+
+    return res(ctx.status(200), ctx.json(FILTERED_USER_LIST));
+  }),
 ];

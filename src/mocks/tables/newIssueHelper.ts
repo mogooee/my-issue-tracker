@@ -1,6 +1,6 @@
 import { ContentTypes } from '@/api/issue/types';
 import { NEW_ISSUE_FORM_TYPES } from '@/stores/newIssue';
-import { TEST_USER, USER_TABLE } from '@/mocks/handlers/auth';
+import { filterIdPassword, TEST_USER, USER_TABLE } from '@/mocks/handlers/auth';
 import { labelTable } from '@/mocks/handlers/label';
 import { milestones } from '@/mocks/handlers/milestone';
 import { issueTable } from '@/mocks/tables/issue';
@@ -24,11 +24,11 @@ export const responseNewIssueData = ({ memberId, ...props }: NEW_ISSUE_FORM_TYPE
   const responseIssue: ContentTypes = {
     id: newIssueId,
     title,
-    author: USER_TABLE[memberId] || TEST_USER,
+    author: filterIdPassword(USER_TABLE[memberId] || TEST_USER),
     comments: [
       {
         id: 12,
-        author: USER_TABLE[memberId] || TEST_USER,
+        author: filterIdPassword(USER_TABLE[memberId] || TEST_USER),
         content: comment,
         createdAt: new Date().toISOString(),
         issueCommentReactionsResponse: [],
