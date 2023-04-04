@@ -4,6 +4,7 @@ import { OAuthResponse, RedirectAuthTypes } from '@/api/sign';
 import { USER_LIST as OAUTH_USER_LIST } from '@/components/Molecules/Dropdown/mock';
 import { UserTypes } from '@/api/issue/types';
 import AppLogo from '@/assets/logo/issueTracker.png';
+import { ERROR_CODE } from '@/api/constants';
 
 interface GeneralUserInfoTypes {
   loginId?: string;
@@ -31,10 +32,6 @@ export const filterIdPassword = (obj: UserTableTypes) =>
 
 export const TEST_USER = USER_TABLE.find((user) => user.nickname === 'WebTest') || USER_TABLE[0];
 
-const message = {
-  message: '뭔가 잘못됨',
-};
-
 export const authHandlers = [
   // silent-refresh
   rest.get('api/auth/reissue', (req, res, ctx) => {
@@ -51,7 +48,7 @@ export const authHandlers = [
 
     const findUser = USER_TABLE.find((user) => user.loginId === loginInfo.id);
 
-    if (!findUser) return res(ctx.status(400), ctx.json('해당하는 아이디를 찾을 수 없습니다.'));
+    if (!findUser) return res(ctx.status(401), ctx.json(ERROR_CODE.SIGN_IN_FAIL));
 
     if (findUser.password === loginInfo.password) {
       const response: OAuthResponse = {
@@ -69,7 +66,7 @@ export const authHandlers = [
       return res(ctx.status(200), ctx.json(response), ctx.cookie('refresh_token', 'refresh123'));
     }
 
-    return res(ctx.status(400), ctx.json('비밀번호를 다시 확인해주세요.'));
+    return res(ctx.status(401), ctx.json(ERROR_CODE.SIGN_IN_FAIL));
   }),
 
   // 유저 정보 요청 API
@@ -111,7 +108,7 @@ export const authHandlers = [
       return res(ctx.status(200), ctx.json(response));
     }
 
-    return res(ctx.status(400), ctx.json(message));
+    return res(ctx.status(400), ctx.json(ERROR_CODE.INVALID_AUTH_PROVIDER_TYPE));
   }),
 
   // 일반 회원 가입
@@ -146,6 +143,12 @@ export const authHandlers = [
 
     if (!email || !nickname) {
       return res(ctx.status(400), ctx.json('필수 입력값을 입력해주세요'));
+    }
+
+    const findEmail = USER_TABLE.find((user) => user.email === email);
+
+    if (findEmail) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.DUPLICATED_EMAIL));
     }
 
     USER_TABLE.push(newMember);
