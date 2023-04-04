@@ -1,9 +1,7 @@
 import { ContentTypes } from '@/api/issue/types';
 import { NEW_ISSUE_FORM_TYPES } from '@/stores/newIssue';
 import { filterIdPassword, TEST_USER, USER_TABLE } from '@/mocks/handlers/auth';
-import { labelTable } from '@/mocks/handlers/label';
-import { milestones } from '@/mocks/handlers/milestone';
-import { issueTable } from '@/mocks/tables/issue';
+import { LABEL_TABLE } from '@/mocks/handlers/label';
 
 interface ResponseNewIssueDataTypes {
   memberId: number;
@@ -15,7 +13,7 @@ export const responseNewIssueData = ({ memberId, ...props }: NEW_ISSUE_FORM_TYPE
   const findUser = (id: number) => USER_TABLE.find((user) => user.id === id)!;
   const findAssignees = (ids: number[]) => (ids.length ? ids.map((id) => findUser(id)) : []);
   const findLabels = (ids: number[]) =>
-    ids.length ? ids.map((id) => labelTable.find((label) => label.id === id)!) : [];
+    ids.length ? ids.map((id) => LABEL_TABLE.find((label) => label.id === id)!) : [];
   const findMilestone = (id: number | null) =>
     id !== null ? milestones.openedMilestones.find((el) => el.id === id) : null;
 

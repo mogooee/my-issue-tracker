@@ -6,7 +6,7 @@ import { IssuesTypes, CommentsTypes, ContentTypes, IssueHistoryTypes, ReactionRe
 import { filterIdPassword, TEST_USER, USER_TABLE } from '@/mocks/handlers/auth';
 import { MILESTONE_LIST } from '@/components/Molecules/Dropdown/mock';
 import { responseNewIssueData } from '@/mocks/tables/newIssueHelper';
-import { labelTable } from '@/mocks/handlers/label';
+import { LABEL_TABLE } from '@/mocks/handlers/label';
 import {
   assigneesHistory,
   changeStateHistory,
@@ -446,7 +446,9 @@ export const issueHandlers = [
     const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
-    const findLabel = labelTable.find((label) => label.id === Number(labelId));
+
+    const findLabel = LABEL_TABLE.find((label) => label.id === Number(labelId));
+
     if (findOpenIssues) {
       findOpenIssues.issueLabels.issueLabels.push(findLabel!);
 
@@ -480,7 +482,9 @@ export const issueHandlers = [
     const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
-    const findLabel = labelTable.find((label) => label.id === Number(labelId));
+
+    const findLabel = LABEL_TABLE.find((label) => label.id === Number(labelId));
+
     if (findOpenIssues) {
       findOpenIssues.issueLabels.issueLabels = findOpenIssues.issueLabels.issueLabels.filter(
         (label) => label.id !== findLabel!.id,

@@ -1,7 +1,7 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import LabelEditForm from '@/components/Molecules/LabelEditForm';
 import { initLabelState } from '@/components/Molecules/LabelEditForm/constants';
-import { labelTable } from '@/mocks/handlers/label';
+import { LABEL_TABLE } from '@/mocks/handlers/label';
 
 export default {
   title: 'Molecules/LabelEditForm',
@@ -19,5 +19,5 @@ New.args = {
 export const Edit = Template.bind({});
 Edit.args = {
   type: 'EDIT',
-  labelProps: labelTable[0],
+  labelProps: LABEL_TABLE[0],
 };

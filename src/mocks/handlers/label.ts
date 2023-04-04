@@ -5,7 +5,7 @@ import { issueTable } from '@/mocks/tables/issue';
 import { ERROR_CODE } from '@/api/constants';
 
 // eslint-disable-next-line import/no-mutable-exports
-export let labelTable: LabelTypes[] = [
+export let LABEL_TABLE: LabelTypes[] = [
   {
     id: 1,
     title: 'Feature',
@@ -37,7 +37,7 @@ export let labelTable: LabelTypes[] = [
 ];
 
 const addIdCount = () => {
-  let count = labelTable.length;
+  let count = LABEL_TABLE.length;
 
   return () => {
     count += 1;
@@ -47,18 +47,18 @@ const addIdCount = () => {
 
 const countId = addIdCount();
 
-const findLabelHelper = (id: number) => labelTable.find((e) => e.id === id);
+const findLabelHelper = (id: number) => LABEL_TABLE.find((e) => e.id === id);
 
 export const labelHandlers = [
   // 라벨 리스트 조회
-  rest.get('api/labels', (req, res, ctx) => res(ctx.status(200), ctx.json(labelTable))),
+  rest.get('api/labels', (req, res, ctx) => res(ctx.status(200), ctx.json(LABEL_TABLE))),
 
   // 라벨 등록
   rest.post('api/labels', async (req, res, ctx) => {
     const newLabel = await req.json();
     const { title, backgroundColorCode, textColor, description } = newLabel;
 
-    const findLabelTitle = labelTable.find((label) => label.title === title);
+    const findLabelTitle = LABEL_TABLE.find((label) => label.title === title);
 
     if (findLabelTitle) {
       return res(ctx.status(400), ctx.json(ERROR_CODE.DUPLICATED_LABEL_TITLE));
@@ -66,7 +66,7 @@ export const labelHandlers = [
 
     if (title && backgroundColorCode && textColor) {
       const id = countId();
-      labelTable.push({ ...newLabel, description, id });
+      LABEL_TABLE.push({ ...newLabel, description, id });
       return res(ctx.status(200), ctx.json(newLabel));
     }
 
@@ -93,7 +93,7 @@ export const labelHandlers = [
       return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_LABEL));
     }
 
-    labelTable = labelTable.filter((e) => e.id !== Number(id));
+    LABEL_TABLE = LABEL_TABLE.filter((e) => e.id !== Number(id));
 
     const updatedIssues = (state: 'openIssues' | 'closedIssues'): ContentTypes[] =>
       issueTable[state].map((issue) => ({
@@ -119,7 +119,7 @@ export const labelHandlers = [
       return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_LABEL));
     }
 
-    labelTable = labelTable.map((e) => {
+    LABEL_TABLE = LABEL_TABLE.map((e) => {
       if (e.id === Number(id)) {
         return newLabel;
       }
