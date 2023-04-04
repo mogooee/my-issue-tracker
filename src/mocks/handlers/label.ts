@@ -2,10 +2,7 @@
 import { rest } from 'msw';
 import { ContentTypes, LabelTypes } from '@/api/issue/types';
 import { issueTable } from '@/mocks/tables/issue';
-
-const message = {
-  message: '',
-};
+import { ERROR_CODE } from '@/api/constants';
 
 // eslint-disable-next-line import/no-mutable-exports
 export let labelTable: LabelTypes[] = [
@@ -50,6 +47,8 @@ const addIdCount = () => {
 
 const countId = addIdCount();
 
+const findLabelHelper = (id: number) => labelTable.find((e) => e.id === id);
+
 export const labelHandlers = [
   // 라벨 리스트 조회
   rest.get('api/labels', (req, res, ctx) => res(ctx.status(200), ctx.json(labelTable))),
@@ -58,6 +57,12 @@ export const labelHandlers = [
   rest.post('api/labels', async (req, res, ctx) => {
     const newLabel = await req.json();
     const { title, backgroundColorCode, textColor, description } = newLabel;
+
+    const findLabelTitle = labelTable.find((label) => label.title === title);
+
+    if (findLabelTitle) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.DUPLICATED_LABEL_TITLE));
+    }
 
     if (title && backgroundColorCode && textColor) {
       const id = countId();
@@ -71,27 +76,24 @@ export const labelHandlers = [
   // 라벨 상세 조회
   rest.get('api/labels/:id', (req, res, ctx) => {
     const { id } = req.params;
-    const result = labelTable.find((e) => e.id === Number(id));
+    const findLabel = findLabelHelper(Number(id));
 
-    if (!result) {
-      message.message = '해당하는 라벨 데이터가 없습니다.';
-      return res(ctx.status(400), ctx.json(message));
+    if (!findLabel) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_LABEL));
     }
-    return res(ctx.status(200), ctx.json(result));
+    return res(ctx.status(200), ctx.json(findLabel));
   }),
 
   // 라벨 삭제
   rest.delete('api/labels/:id', (req, res, ctx) => {
     const { id } = req.params;
+    const findLabel = findLabelHelper(Number(id));
 
-    const result = labelTable.find((e) => e.id === Number(id));
-    if (!result) {
-      message.message = '라벨 삭제 실패';
-      return res(ctx.status(400), ctx.json(message));
+    if (!findLabel) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_LABEL));
     }
 
     labelTable = labelTable.filter((e) => e.id !== Number(id));
-    message.message = '라벨 삭제 성공';
 
     const updatedIssues = (state: 'openIssues' | 'closedIssues'): ContentTypes[] =>
       issueTable[state].map((issue) => ({
@@ -104,19 +106,17 @@ export const labelHandlers = [
     issueTable.openIssues = updatedIssues('openIssues');
     issueTable.closedIssues = updatedIssues('closedIssues');
 
-    return res(ctx.status(200), ctx.json(message));
+    return res(ctx.status(200));
   }),
 
   // 라벨 수정
   rest.patch('api/labels/:id', async (req, res, ctx) => {
     const { id } = req.params;
     const newLabel = await req.json();
+    const findLabel = findLabelHelper(Number(id));
 
-    const result = labelTable.find((e) => e.id === Number(id));
-
-    if (!result) {
-      message.message = '라벨 수정 실패';
-      return res(ctx.status(400), ctx.json(message));
+    if (!findLabel) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_LABEL));
     }
 
     labelTable = labelTable.map((e) => {
