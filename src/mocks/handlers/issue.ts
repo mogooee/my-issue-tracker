@@ -7,6 +7,7 @@ import { filterIdPassword, TEST_USER, USER_TABLE } from '@/mocks/handlers/auth';
 import { MILESTONE_LIST } from '@/components/Molecules/Dropdown/mock';
 import { responseNewIssueData } from '@/mocks/tables/newIssueHelper';
 import { LABEL_TABLE } from '@/mocks/handlers/label';
+import { findMilestoneHelper, MILESTONE_TABLE } from '@/mocks/handlers/milestone';
 import {
   assigneesHistory,
   changeStateHistory,
@@ -600,7 +601,8 @@ export const issueHandlers = [
     const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
-    const findMilestone = MILESTONE_LIST.find((label) => label.id === Number(milestoneId));
+
+    const findMilestone = findMilestoneHelper(Number(milestoneId));
     if (findOpenIssues) {
       findOpenIssues.milestone = findMilestone!;
 
@@ -634,7 +636,8 @@ export const issueHandlers = [
     const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
-    const findMilestone = MILESTONE_LIST.find((label) => label.id === Number(milestoneId));
+
+    const findMilestone = findMilestoneHelper(Number(milestoneId));
 
     if (findOpenIssues) {
       findOpenIssues.milestone = null;

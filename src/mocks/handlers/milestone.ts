@@ -5,7 +5,7 @@ import { issueTable } from '@/mocks/tables/issue';
 import { MilestoneListTypes } from '@/api/milestone';
 import { ERROR_CODE } from '@/api/constants';
 
-export const milestones: MilestoneListTypes = {
+export const MILESTONE_TABLE: MilestoneListTypes = {
   openedMilestones: [
     {
       id: 0,
@@ -39,13 +39,13 @@ export const milestones: MilestoneListTypes = {
   ],
 };
 
-const findMilestoneHelper = (id: number) =>
-  Object.values(milestones)
+export const findMilestoneHelper = (id: number) =>
+  Object.values(MILESTONE_TABLE)
     .flat()
     .find((milestone) => milestone.id === id) as MilestoneTypes | undefined;
 
 export const milestoneHandlers = [
-  rest.get('api/milestones', (req, res, ctx) => res(ctx.status(200), ctx.json(milestones))),
+  rest.get('api/milestones', (req, res, ctx) => res(ctx.status(200), ctx.json(MILESTONE_TABLE))),
 
   rest.post('api/milestones', async (req, res, ctx) => {
     const requestData = await req.json();
@@ -65,7 +65,7 @@ export const milestoneHandlers = [
       closedIssueCount: 0,
     };
 
-    milestones.openedMilestones.push(newMilestone);
+    MILESTONE_TABLE.openedMilestones.push(newMilestone);
 
     return res(ctx.status(200), ctx.json(newMilestone));
   }),
@@ -80,7 +80,7 @@ export const milestoneHandlers = [
       return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_MILESTONE));
     }
 
-    const patchMilestones = Object.values(milestones).map((state: MilestoneTypes[]) => {
+    const patchMilestones = Object.values(MILESTONE_TABLE).map((state: MilestoneTypes[]) => {
       if (state.find((el) => el.id === Number(id))) {
         const updateMilestones = state.map((el) => (el.id === Number(id) ? { ...el, ...requestMilestoneData } : el));
         return updateMilestones;
@@ -89,8 +89,8 @@ export const milestoneHandlers = [
     });
 
     const [newOpenedMilestones, newClosedMilestones] = patchMilestones;
-    milestones.openedMilestones = newOpenedMilestones;
-    milestones.closedMilestones = newClosedMilestones;
+    MILESTONE_TABLE.openedMilestones = newOpenedMilestones;
+    MILESTONE_TABLE.closedMilestones = newClosedMilestones;
 
     const updatedIssues = (state: 'openIssues' | 'closedIssues'): ContentTypes[] =>
       issueTable[state].map((issue) => ({
@@ -114,14 +114,14 @@ export const milestoneHandlers = [
     }
 
     if (findMilestone.closed) {
-      milestones.openedMilestones.push({ ...findMilestone, closed: false });
-      milestones.closedMilestones = milestones.closedMilestones.filter((el) => el.id !== Number(id));
+      MILESTONE_TABLE.openedMilestones.push({ ...findMilestone, closed: false });
+      MILESTONE_TABLE.closedMilestones = MILESTONE_TABLE.closedMilestones.filter((el) => el.id !== Number(id));
     } else {
-      milestones.closedMilestones.push({ ...findMilestone, closed: true });
-      milestones.openedMilestones = milestones.openedMilestones.filter((el) => el.id !== Number(id));
+      MILESTONE_TABLE.closedMilestones.push({ ...findMilestone, closed: true });
+      MILESTONE_TABLE.openedMilestones = MILESTONE_TABLE.openedMilestones.filter((el) => el.id !== Number(id));
     }
 
-    return res(ctx.status(200), ctx.json(milestones));
+    return res(ctx.status(200), ctx.json(MILESTONE_TABLE));
   }),
 
   rest.delete('api/milestones/:id', async (req, res, ctx) => {
@@ -133,7 +133,7 @@ export const milestoneHandlers = [
       return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_MILESTONE));
     }
 
-    const deleteMilestones = Object.values(milestones).map((state: MilestoneTypes[]) => {
+    const deleteMilestones = Object.values(MILESTONE_TABLE).map((state: MilestoneTypes[]) => {
       if (state.find((el) => el.id === Number(id))) {
         return state.filter((el) => el.id !== Number(id));
       }
@@ -141,8 +141,8 @@ export const milestoneHandlers = [
     });
 
     const [newOpenedMilestones, newClosedMilestones] = deleteMilestones;
-    milestones.openedMilestones = newOpenedMilestones;
-    milestones.closedMilestones = newClosedMilestones;
+    MILESTONE_TABLE.openedMilestones = newOpenedMilestones;
+    MILESTONE_TABLE.closedMilestones = newClosedMilestones;
 
     const updatedIssues = (state: 'openIssues' | 'closedIssues'): ContentTypes[] =>
       issueTable[state].map((issue) => ({
