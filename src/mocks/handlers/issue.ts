@@ -586,7 +586,7 @@ export const issueHandlers = [
       );
 
       const history: IssueHistoryTypes = assigneesHistory({
-        modifierInfo: TEST_USER,
+        modifierInfo: filterIdPassword(TEST_USER),
         assigneeInfo: findAssinees,
         action: 'REMOVE',
       });
@@ -600,7 +600,7 @@ export const issueHandlers = [
       );
 
       const history: IssueHistoryTypes = assigneesHistory({
-        modifierInfo: TEST_USER,
+        modifierInfo: filterIdPassword(TEST_USER),
         assigneeInfo: findAssinees,
         action: 'REMOVE',
       });
