@@ -15,10 +15,7 @@ import {
   labelHistory,
   milestoneHistory,
 } from '@/mocks/tables/issueHistoryHelper';
-
-const message = {
-  message: '',
-};
+import { ERROR_CODE } from '@/api/constants';
 
 const findIssue = (issueId: number) => {
   const { openIssues, closedIssues } = issueTable;
@@ -182,8 +179,7 @@ export const issueHandlers = [
     const issue = findIssue(Number(issueId));
 
     if (!issue) {
-      message.message = '해당하는 이슈 데이터가 없습니다.';
-      return res(ctx.status(400), ctx.json(message));
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
     }
     return res(ctx.status(200), ctx.json(issue));
   }),
@@ -194,15 +190,10 @@ export const issueHandlers = [
     const issue = findIssue(Number(issueId));
 
     if (!issue) {
-      message.message = '해당하는 이슈 데이터가 없습니다.';
-      return res(ctx.status(400), ctx.json(message));
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
     }
 
     const { title } = await req.json();
-
-    if (!title) {
-      message.message = '이슈 제목이 유효하지 않습니다.';
-    }
 
     const newIssue = { ...issue, title };
     updateIssueTable(newIssue);
@@ -257,8 +248,7 @@ export const issueHandlers = [
     const issue = findIssue(Number(issueId));
 
     if (!issue) {
-      message.message = '해당하는 이슈 데이터가 없습니다.';
-      return res(ctx.status(400), ctx.json(message));
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
     }
 
     const { content } = await req.json();
@@ -288,8 +278,7 @@ export const issueHandlers = [
     const issue = findIssue(Number(issueId));
 
     if (!issue) {
-      message.message = '해당하는 이슈 데이터가 없습니다.';
-      return res(ctx.status(400), ctx.json(message));
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
     }
 
     const newComment: CommentsTypes[] = issue.comments.map((comment) => {
@@ -312,8 +301,7 @@ export const issueHandlers = [
     const issue = findIssue(Number(issueId));
 
     if (!issue) {
-      message.message = '해당하는 이슈 데이터가 없습니다.';
-      return res(ctx.status(400), ctx.json(message));
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
     }
 
     const newComment: CommentsTypes[] = issue.comments.filter((comment) => comment.id !== Number(commentId));
@@ -334,8 +322,7 @@ export const issueHandlers = [
     const issue = findIssue(Number(issueId));
 
     if (!issue) {
-      message.message = '해당하는 이슈 데이터가 없습니다.';
-      return res(ctx.status(400), ctx.json(message));
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
     }
 
     const newReactionId = addReactionsId();
@@ -370,8 +357,7 @@ export const issueHandlers = [
     const issue = findIssue(Number(issueId));
 
     if (!issue) {
-      message.message = '해당하는 이슈 데이터가 없습니다.';
-      return res(ctx.status(400), ctx.json(message));
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
     }
 
     const newComments: CommentsTypes[] = issue.comments.map((comment) => {
@@ -447,15 +433,22 @@ export const issueHandlers = [
     const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
+    if (!findOpenIssues && !findCloseIssues) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+    }
 
     const findLabel = LABEL_TABLE.find((label) => label.id === Number(labelId));
+
+    if (!findLabel) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_LABEL));
+    }
 
     if (findOpenIssues) {
       findOpenIssues.issueLabels.issueLabels.push(findLabel!);
 
       const history: IssueHistoryTypes = labelHistory({
         modifierInfo: filterIdPassword(TEST_USER),
-        labelInfo: findLabel!,
+        labelInfo: findLabel,
         action: 'ADD',
       });
       findOpenIssues.issueHistories.push(history);
@@ -467,7 +460,7 @@ export const issueHandlers = [
 
       const history: IssueHistoryTypes = labelHistory({
         modifierInfo: filterIdPassword(TEST_USER),
-        labelInfo: findLabel!,
+        labelInfo: findLabel,
         action: 'ADD',
       });
       findCloseIssues.issueHistories.push(history);
@@ -483,8 +476,15 @@ export const issueHandlers = [
     const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
+    if (!findOpenIssues && !findCloseIssues) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+    }
 
     const findLabel = LABEL_TABLE.find((label) => label.id === Number(labelId));
+
+    if (!findLabel) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_LABEL));
+    }
 
     if (findOpenIssues) {
       findOpenIssues.issueLabels.issueLabels = findOpenIssues.issueLabels.issueLabels.filter(
@@ -493,7 +493,7 @@ export const issueHandlers = [
 
       const history: IssueHistoryTypes = labelHistory({
         modifierInfo: filterIdPassword(TEST_USER),
-        labelInfo: findLabel!,
+        labelInfo: findLabel,
         action: 'REMOVE',
       });
       findOpenIssues.issueHistories.push(history);
@@ -508,7 +508,7 @@ export const issueHandlers = [
 
       const history: IssueHistoryTypes = labelHistory({
         modifierInfo: filterIdPassword(TEST_USER),
-        labelInfo: findLabel!,
+        labelInfo: findLabel,
         action: 'REMOVE',
       });
       findCloseIssues.issueHistories.push(history);
@@ -526,14 +526,22 @@ export const issueHandlers = [
     const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
+    if (!findOpenIssues && !findCloseIssues) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+    }
+
     const findAssinees = USER_TABLE.find((label) => label.id === Number(assigneeId));
+
+    if (!findAssinees) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_MEMBER));
+    }
 
     if (findOpenIssues) {
       findOpenIssues.issueAssignees.issueAssignees.push(findAssinees!);
 
       const history: IssueHistoryTypes = assigneesHistory({
         modifierInfo: filterIdPassword(TEST_USER),
-        assigneeInfo: findAssinees!,
+        assigneeInfo: findAssinees,
         action: 'ADD',
       });
       findOpenIssues.issueHistories.push(history);
@@ -545,7 +553,7 @@ export const issueHandlers = [
 
       const history: IssueHistoryTypes = assigneesHistory({
         modifierInfo: filterIdPassword(TEST_USER),
-        assigneeInfo: findAssinees!,
+        assigneeInfo: findAssinees,
         action: 'ADD',
       });
       findCloseIssues.issueHistories.push(history);
@@ -562,7 +570,16 @@ export const issueHandlers = [
     const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
+    if (!findOpenIssues && !findCloseIssues) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+    }
+
     const findAssinees = USER_TABLE.find((label) => label.id === Number(assigneeId));
+
+    if (!findAssinees) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_MEMBER));
+    }
+
     if (findOpenIssues) {
       findOpenIssues.issueAssignees.issueAssignees = findOpenIssues.issueAssignees.issueAssignees.filter(
         (assignee) => assignee.id !== findAssinees!.id,
@@ -570,7 +587,7 @@ export const issueHandlers = [
 
       const history: IssueHistoryTypes = assigneesHistory({
         modifierInfo: TEST_USER,
-        assigneeInfo: findAssinees!,
+        assigneeInfo: findAssinees,
         action: 'REMOVE',
       });
       findOpenIssues.issueHistories.push(history);
@@ -584,7 +601,7 @@ export const issueHandlers = [
 
       const history: IssueHistoryTypes = assigneesHistory({
         modifierInfo: TEST_USER,
-        assigneeInfo: findAssinees!,
+        assigneeInfo: findAssinees,
         action: 'REMOVE',
       });
       findCloseIssues.issueHistories.push(history);
@@ -601,14 +618,22 @@ export const issueHandlers = [
     const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
+    if (!findOpenIssues && !findCloseIssues) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+    }
 
     const findMilestone = findMilestoneHelper(Number(milestoneId));
+
+    if (!findMilestone) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_MILESTONE));
+    }
+
     if (findOpenIssues) {
-      findOpenIssues.milestone = findMilestone!;
+      findOpenIssues.milestone = findMilestone;
 
       const history: IssueHistoryTypes = milestoneHistory({
         modifierInfo: filterIdPassword(TEST_USER),
-        milestoneInfo: findMilestone!,
+        milestoneInfo: findMilestone,
         action: 'ADD',
       });
       findOpenIssues.issueHistories.push(history);
@@ -616,11 +641,11 @@ export const issueHandlers = [
     }
 
     if (findCloseIssues) {
-      findCloseIssues.milestone = findMilestone!;
+      findCloseIssues.milestone = findMilestone;
 
       const history: IssueHistoryTypes = milestoneHistory({
         modifierInfo: filterIdPassword(TEST_USER),
-        milestoneInfo: findMilestone!,
+        milestoneInfo: findMilestone,
         action: 'ADD',
       });
       findCloseIssues.issueHistories.push(history);
@@ -636,15 +661,22 @@ export const issueHandlers = [
     const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
+    if (!findOpenIssues && !findCloseIssues) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+    }
 
     const findMilestone = findMilestoneHelper(Number(milestoneId));
+
+    if (!findMilestone) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_MILESTONE));
+    }
 
     if (findOpenIssues) {
       findOpenIssues.milestone = null;
 
       const history: IssueHistoryTypes = milestoneHistory({
         modifierInfo: filterIdPassword(TEST_USER),
-        milestoneInfo: findMilestone!,
+        milestoneInfo: findMilestone,
         action: 'REMOVE',
       });
       findOpenIssues.issueHistories.push(history);
@@ -656,7 +688,7 @@ export const issueHandlers = [
 
       const history: IssueHistoryTypes = milestoneHistory({
         modifierInfo: filterIdPassword(TEST_USER),
-        milestoneInfo: findMilestone!,
+        milestoneInfo: findMilestone,
         action: 'REMOVE',
       });
       findCloseIssues.issueHistories.push(history);
