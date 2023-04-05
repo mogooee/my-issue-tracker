@@ -1,5 +1,7 @@
 import { IssuesTypes, ContentTypes, CommentsTypes } from '@/api/issue/types';
 import { USER_TABLE } from '@/mocks/handlers/auth';
+import { LABEL_TABLE } from '@/mocks/handlers/label';
+
 
 const AUTHOR = {
   DOBBY: USER_TABLE[0],
@@ -7,6 +9,13 @@ const AUTHOR = {
   WHO: USER_TABLE[2],
   ADER: USER_TABLE[3],
   BECK: USER_TABLE[4],
+};
+
+const LABEL = {
+  FEATURE: LABEL_TABLE[0],
+  DOCS: LABEL_TABLE[1],
+  BUGS: LABEL_TABLE[2],
+  QUESTION: LABEL_TABLE[3],
 };
 
 export const issues: IssuesTypes = {
@@ -71,45 +80,7 @@ export const issues: IssuesTypes = {
           issueAssignees: [AUTHOR.WHO, AUTHOR.ADER],
         },
         issueLabels: {
-          issueLabels: [
-            {
-              id: 1,
-              title: 'Feature',
-              backgroundColorCode: '#d4c5f9',
-              description: '기능 개발용 라벨입니다.',
-              textColor: 'BLACK',
-            },
-            {
-              id: 2,
-              title: 'Docs',
-              backgroundColorCode: '#d4c510',
-              description: '문서 추가용 라벨입니다.',
-              textColor: 'WHITE',
-            },
-            {
-              id: 3,
-              title: 'Bugs',
-              backgroundColorCode: '#d4c505',
-              description: '버그 수정용 라벨입니다.',
-              textColor: 'BLACK',
-            },
-            {
-              id: 4,
-              title: 'Question',
-              backgroundColorCode: '#d4c501',
-              description: '질문용 라벨입니다.',
-              textColor: 'WHITE',
-            },
-          ],
-        },
-        milestone: {
-          id: 2,
-          title: '마일스톤 3',
-          description: '열린 마일스톤에 대한 설명',
-          dueDate: '2022-08-28',
-          closed: false,
-          openIssueCount: 5,
-          closedIssueCount: 5,
+          issueLabels: [LABEL.FEATURE, LABEL.DOCS, LABEL.BUGS, LABEL.QUESTION],
         },
         issueHistories: [
           {
@@ -149,11 +120,7 @@ export const issues: IssuesTypes = {
             label: {
               createdAt: '2022-09-19T06:46:53.479Z',
               lastModifiedAt: '2022-09-19T06:46:53.479Z',
-              id: 4,
-              title: 'Question',
-              backgroundColorCode: '#d4c501',
-              description: '질문용 라벨입니다.',
-              textColor: 'WHITE',
+              ...LABEL.QUESTION,
             },
             milestone: null,
             assignee: null,
@@ -239,22 +206,7 @@ export const issues: IssuesTypes = {
           issueAssignees: [AUTHOR.WHO],
         },
         issueLabels: {
-          issueLabels: [
-            {
-              id: 2,
-              title: 'Docs',
-              backgroundColorCode: '#d4c510',
-              description: '문서 추가용 라벨입니다.',
-              textColor: 'WHITE',
-            },
-            {
-              id: 4,
-              title: 'Question',
-              backgroundColorCode: '#d4c501',
-              description: '질문용 라벨입니다.',
-              textColor: 'WHITE',
-            },
-          ],
+          issueLabels: [LABEL.FEATURE, LABEL.QUESTION],
         },
         milestone: {
           id: 2,
@@ -312,24 +264,7 @@ export const issues: IssuesTypes = {
           issueAssignees: [AUTHOR.WHO, AUTHOR.ADER],
         },
         issueLabels: {
-          issueLabels: [
-            {
-              id: 1,
-              title: 'Feature',
-              backgroundColorCode: '#d4c5f9',
-              description: '기능 개발용 라벨입니다.',
-              textColor: 'BLACK',
-            },
-          ],
-        },
-        milestone: {
-          id: 2,
-          title: '마일스톤 3',
-          description: '열린 마일스톤에 대한 설명',
-          dueDate: '2022-08-28',
-          closed: false,
-          openIssueCount: 5,
-          closedIssueCount: 5,
+          issueLabels: [LABEL.FEATURE],
         },
         issueHistories: [],
         createdAt: '2022-09-03T00:00:00',
@@ -353,31 +288,7 @@ export const issues: IssuesTypes = {
           issueAssignees: [AUTHOR.WHO, AUTHOR.ADER],
         },
         issueLabels: {
-          issueLabels: [
-            {
-              id: 1,
-              title: 'Feature',
-              backgroundColorCode: '#d4c5f9',
-              description: '기능 개발용 라벨입니다.',
-              textColor: 'BLACK',
-            },
-            {
-              id: 4,
-              title: 'Question',
-              backgroundColorCode: '#d4c501',
-              description: '질문용 라벨입니다.',
-              textColor: 'WHITE',
-            },
-          ],
-        },
-        milestone: {
-          id: 2,
-          title: '마일스톤 3',
-          description: '열린 마일스톤에 대한 설명',
-          dueDate: '2022-08-28',
-          closed: false,
-          openIssueCount: 5,
-          closedIssueCount: 5,
+          issueLabels: [LABEL.FEATURE, LABEL.QUESTION],
         },
         issueHistories: [],
         createdAt: '2022-09-04T00:00:00',
@@ -563,15 +474,7 @@ export const issues: IssuesTypes = {
           issueAssignees: [AUTHOR.DOBBY, AUTHOR.DOTORI, AUTHOR.BECK],
         },
         issueLabels: {
-          issueLabels: [
-            {
-              id: 2,
-              title: 'Docs',
-              backgroundColorCode: '#d4c510',
-              description: '문서 추가용 라벨입니다.',
-              textColor: 'WHITE',
-            },
-          ],
+          issueLabels: [LABEL.DOCS],
         },
         milestone: null,
         issueHistories: [],
