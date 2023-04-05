@@ -4,10 +4,10 @@ import { issues, issueTable } from '@/mocks/tables/issue';
 import { REACTIONS } from '@/components/Molecules/Dropdown/Panel/Reaction/mock';
 import { IssuesTypes, CommentsTypes, ContentTypes, IssueHistoryTypes, ReactionResponseTypes } from '@/api/issue/types';
 import { filterIdPassword, TEST_USER, USER_TABLE } from '@/mocks/handlers/auth';
-import { MILESTONE_LIST } from '@/components/Molecules/Dropdown/mock';
 import { responseNewIssueData } from '@/mocks/tables/newIssueHelper';
 import { LABEL_TABLE } from '@/mocks/handlers/label';
-import { findMilestoneHelper, MILESTONE_TABLE } from '@/mocks/handlers/milestone';
+import { MILESTONE_TABLE } from '@/mocks/tables/milestone';
+import { findMilestoneHelper } from '@/mocks/handlers/milestone';
 import {
   assigneesHistory,
   changeStateHistory,
