@@ -1,8 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { rest } from 'msw';
 import { ContentTypes, MilestoneTypes } from '@/api/issue/types';
-import { issueTable } from '@/mocks/tables/issue';
-import { MILESTONE_TABLE } from '@/mocks/tables/milestone';
+import { issueTable, MILESTONE_TABLE } from '@/mocks/tables/issue';
 import { ERROR_CODE } from '@/api/constants';
 
 export const findMilestoneHelper = (id: number) =>

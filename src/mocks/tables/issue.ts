@@ -1,7 +1,47 @@
 import { IssuesTypes, ContentTypes, CommentsTypes } from '@/api/issue/types';
+import { MilestoneListTypes } from '@/api/milestone';
 import { USER_TABLE } from '@/mocks/handlers/auth';
 import { LABEL_TABLE } from '@/mocks/handlers/label';
 
+export const MILESTONE_TABLE: MilestoneListTypes = {
+  openedMilestones: [
+    {
+      id: 0,
+      title: '마일스톤 1',
+      description: null,
+      dueDate: null,
+      closed: false,
+      openIssueCount: 2,
+      closedIssueCount: 0,
+    },
+    {
+      id: 2,
+      title: '마일스톤 3',
+      description: '열린 마일스톤에 대한 설명',
+      dueDate: '2022-08-28',
+      closed: false,
+      openIssueCount: 3,
+      closedIssueCount: 0,
+    },
+  ],
+  closedMilestones: [
+    {
+      id: 1,
+      title: '마일스톤 2',
+      description: '닫힌 마일스톤에 대한 설명',
+      dueDate: null,
+      closed: true,
+      openIssueCount: 1,
+      closedIssueCount: 2,
+    },
+  ],
+};
+
+export const MILESTONE = {
+  OPEN1: MILESTONE_TABLE.openedMilestones[0],
+  OPEN2: MILESTONE_TABLE.openedMilestones[1],
+  CLOSE1: MILESTONE_TABLE.closedMilestones[0],
+};
 
 const AUTHOR = {
   DOBBY: USER_TABLE[0],
@@ -19,8 +59,8 @@ const LABEL = {
 };
 
 export const issues: IssuesTypes = {
-  openIssueCount: 5,
-  closedIssueCount: 3,
+  openIssueCount: 7,
+  closedIssueCount: 2,
   issues: {
     content: [
       {
@@ -82,6 +122,7 @@ export const issues: IssuesTypes = {
         issueLabels: {
           issueLabels: [LABEL.FEATURE, LABEL.DOCS, LABEL.BUGS, LABEL.QUESTION],
         },
+        milestone: MILESTONE.OPEN1,
         issueHistories: [
           {
             modifier: AUTHOR.WHO,
@@ -144,16 +185,12 @@ export const issues: IssuesTypes = {
           {
             modifier: AUTHOR.DOBBY,
             modifiedAt: '2022-09-20T16:46:53.479Z',
-            action: 'REMOVE_MILESTONE',
+            action: 'ADD_MILESTONE',
             label: null,
             milestone: {
               createdAt: '2022-09-19T06:46:53.479Z',
               lastModifiedAt: '2022-09-19T06:46:53.479Z',
-              id: 2,
-              title: '마일스톤 3',
-              description: '열린 마일스톤에 대한 설명',
-              dueDate: '2022-08-28',
-              closed: false,
+              ...MILESTONE.OPEN1,
             },
             assignee: null,
             previousTitle: null,
@@ -266,6 +303,7 @@ export const issues: IssuesTypes = {
         issueLabels: {
           issueLabels: [LABEL.FEATURE],
         },
+        milestone: MILESTONE.OPEN1,
         issueHistories: [],
         createdAt: '2022-09-03T00:00:00',
         lastModifiedAt: '2022-09-03T00:00:00',
@@ -290,6 +328,7 @@ export const issues: IssuesTypes = {
         issueLabels: {
           issueLabels: [LABEL.FEATURE, LABEL.QUESTION],
         },
+        milestone: MILESTONE.OPEN2,
         issueHistories: [],
         createdAt: '2022-09-04T00:00:00',
         lastModifiedAt: '2022-09-04T00:00:00',
@@ -321,15 +360,7 @@ export const issues: IssuesTypes = {
         issueLabels: {
           issueLabels: [],
         },
-        milestone: {
-          id: 2,
-          title: '마일스톤 3',
-          description: '열린 마일스톤에 대한 설명',
-          dueDate: '2022-08-28',
-          closed: false,
-          openIssueCount: 5,
-          closedIssueCount: 5,
-        },
+        milestone: MILESTONE.OPEN2,
         issueHistories: [],
         createdAt: '2022-09-08T00:00:00',
         lastModifiedAt: '2022-09-08T00:00:00',
@@ -361,15 +392,7 @@ export const issues: IssuesTypes = {
         issueLabels: {
           issueLabels: [],
         },
-        milestone: {
-          id: 2,
-          title: '제목과 설명이 있는 마일스톤',
-          description: '하지만 완료일은 없다',
-          dueDate: null,
-          openIssueCount: 1,
-          closedIssueCount: 3,
-          closed: false,
-        },
+        milestone: MILESTONE.CLOSE1,
         issueHistories: [],
         createdAt: '2022-09-06T00:00:00',
         lastModifiedAt: '2022-09-06T00:00:00',
@@ -394,15 +417,7 @@ export const issues: IssuesTypes = {
         issueLabels: {
           issueLabels: [],
         },
-        milestone: {
-          id: 2,
-          title: '제목과 설명이 있는 마일스톤',
-          description: '하지만 완료일은 없다',
-          dueDate: null,
-          openIssueCount: 1,
-          closedIssueCount: 3,
-          closed: false,
-        },
+        milestone: MILESTONE.CLOSE1,
         issueHistories: [],
         createdAt: '2022-09-07T00:00:00',
         lastModifiedAt: '2022-09-07T00:00:00',
@@ -434,15 +449,7 @@ export const issues: IssuesTypes = {
         issueLabels: {
           issueLabels: [],
         },
-        milestone: {
-          id: 2,
-          title: '제목과 설명이 있는 마일스톤',
-          description: '하지만 완료일은 없다',
-          dueDate: null,
-          openIssueCount: 1,
-          closedIssueCount: 3,
-          closed: false,
-        },
+        milestone: MILESTONE.CLOSE1,
         issueHistories: [],
         createdAt: '2022-09-08T00:00:00',
         lastModifiedAt: '2022-09-08T00:00:00',
