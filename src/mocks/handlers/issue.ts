@@ -636,6 +636,16 @@ export const issueHandlers = [
         action: 'ADD',
       });
       findOpenIssues.issueHistories.push(history);
+
+      // 마일스톤 카운트 추가
+      if (findMilestone.closed) {
+        MILESTONE_TABLE.closedMilestones.find((data) => data.id === findMilestone.id)!.openIssueCount =
+          findMilestone.openIssueCount + 1;
+      } else {
+        MILESTONE_TABLE.openedMilestones.find((data) => data.id === findMilestone.id)!.openIssueCount =
+          findMilestone.openIssueCount + 1;
+      }
+
       return res(ctx.status(200), ctx.json(issues));
     }
 
@@ -648,6 +658,15 @@ export const issueHandlers = [
         action: 'ADD',
       });
       findCloseIssues.issueHistories.push(history);
+
+      // 마일스톤 카운트 추가
+      if (findMilestone.closed) {
+        MILESTONE_TABLE.closedMilestones.find((data) => data.id === findMilestone.id)!.closedIssueCount =
+          findMilestone.closedIssueCount + 1;
+      } else {
+        MILESTONE_TABLE.openedMilestones.find((data) => data.id === findMilestone.id)!.closedIssueCount =
+          findMilestone.closedIssueCount + 1;
+      }
       return res(ctx.status(200), ctx.json(issues));
     }
 
