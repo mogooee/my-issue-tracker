@@ -628,6 +628,17 @@ export const issueHandlers = [
     }
 
     if (findOpenIssues) {
+      // 이전 마일스톤이 존재할 경우
+      if (findOpenIssues.milestone !== null) {
+        if (findOpenIssues.milestone.closed) {
+          MILESTONE_TABLE.closedMilestones.find((data) => data.id === findOpenIssues.milestone!.id)!.openIssueCount =
+            findOpenIssues.milestone.openIssueCount - 1;
+        } else {
+          MILESTONE_TABLE.openedMilestones.find((data) => data.id === findOpenIssues.milestone!.id)!.openIssueCount =
+            findOpenIssues.milestone.openIssueCount - 1;
+        }
+      }
+
       findOpenIssues.milestone = findMilestone;
 
       const history: IssueHistoryTypes = milestoneHistory({
@@ -650,6 +661,16 @@ export const issueHandlers = [
     }
 
     if (findCloseIssues) {
+      // 이전 마일스톤이 존재할 경우
+      if (findCloseIssues.milestone !== null) {
+        if (findCloseIssues.milestone.closed) {
+          MILESTONE_TABLE.closedMilestones.find((data) => data.id === findCloseIssues.milestone!.id)!.closedIssueCount =
+            findCloseIssues.milestone.closedIssueCount - 1;
+        } else {
+          MILESTONE_TABLE.openedMilestones.find((data) => data.id === findCloseIssues.milestone!.id)!.closedIssueCount =
+            findCloseIssues.milestone.closedIssueCount - 1;
+        }
+      }
       findCloseIssues.milestone = findMilestone;
 
       const history: IssueHistoryTypes = milestoneHistory({
