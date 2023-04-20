@@ -140,7 +140,7 @@ export const issueHandlers = [
       openIssueCount: openIssueContents.length,
       closedIssueCount: closedIssueContents.length,
       issues: {
-        content: filteredContent,
+        content: filteredContent.sort((a, b) => b.id - a.id),
         pageable: {
           sort: {
             empty: true,

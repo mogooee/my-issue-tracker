@@ -524,8 +524,8 @@ interface IssuesTableTypes {
 }
 
 export const issueTable: IssuesTableTypes = {
-  openIssues: issues.issues.content.filter((data) => !data.closed),
-  closedIssues: issues.issues.content.filter((data) => data.closed),
+  openIssues: issues.issues.content.filter((data) => !data.closed).sort((a, b) => b.id - a.id),
+  closedIssues: issues.issues.content.filter((data) => data.closed).sort((a, b) => b.id - a.id),
 };
 
 export const issue: ContentTypes = issueTable.openIssues[0];
