@@ -218,14 +218,38 @@ export const issueHandlers = [
     ids.forEach((id: number) => {
       contents = contents.map((content) => {
         if (content.id === id) {
+          if (status === content.closed) return content;
+
+          if (content.milestone) {
+            if (content.closed && !content.milestone.closed) {
+              MILESTONE_TABLE.openedMilestones.find((data) => data.id === content.milestone!.id)!.openIssueCount += 1;
+              MILESTONE_TABLE.openedMilestones.find((data) => data.id === content.milestone!.id)!.closedIssueCount -= 1;
+            }
+
+            if (content.closed && content.milestone.closed) {
+              MILESTONE_TABLE.closedMilestones.find((data) => data.id === content.milestone!.id)!.openIssueCount += 1;
+              MILESTONE_TABLE.closedMilestones.find((data) => data.id === content.milestone!.id)!.closedIssueCount -= 1;
+            }
+
+            if (!content.closed && content.milestone.closed) {
+              MILESTONE_TABLE.closedMilestones.find((data) => data.id === content.milestone!.id)!.openIssueCount -= 1;
+              MILESTONE_TABLE.closedMilestones.find((data) => data.id === content.milestone!.id)!.closedIssueCount += 1;
+            }
+
+            if (!content.closed && !content.milestone.closed) {
+              MILESTONE_TABLE.openedMilestones.find((data) => data.id === content.milestone!.id)!.openIssueCount -= 1;
+              MILESTONE_TABLE.openedMilestones.find((data) => data.id === content.milestone!.id)!.closedIssueCount += 1;
+            }
+          }
+
           return { ...content, closed: status, lastModifiedAt: Date() };
         }
         return content;
       });
     });
 
-    const openIssuesContent = contents.filter(({ closed }) => closed === false);
-    const closedIssuesContent = contents.filter(({ closed }) => closed === true);
+    const openIssuesContent = contents.filter(({ closed }) => closed === false) || [];
+    const closedIssuesContent = contents.filter(({ closed }) => closed === true) || [];
 
     issueTable.openIssues = openIssuesContent;
     issueTable.closedIssues = closedIssuesContent;
