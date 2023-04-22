@@ -35,6 +35,11 @@ const REFRESH_TOKEN = {
   VALUE: 'refresh123',
 };
 
+const getCookie = (key: string, value: string) => {
+  const matchKey = document.cookie.match(`(^|;) ?${key}=([^;]*)(;|$)`);
+  return matchKey?.filter((el) => el === value)[0];
+};
+
 export const filterIdPassword = (obj: UserTableTypes) =>
   Object.fromEntries(
     Object.entries(obj).filter(([key]) => !key.includes('loginId') && !key.includes('password')),
@@ -44,11 +49,26 @@ export const TEST_USER = USER_TABLE.find((user) => user.nickname === 'WebTest') 
 
 export const authHandlers = [
   // silent-refresh
-  rest.get('api/auth/reissue', (req, res, ctx) => res(
+  rest.get('api/auth/reissue', (req, res, ctx) => {
+    // Access 토큰은 만료됐지만 refresh 토큰은 유효한 경우
+    if (!getCookie(ACCESS_TOKEN.KEY, ACCESS_TOKEN.VALUE) && getCookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE)) {
+      return res(ctx.status(200), ctx.cookie(ACCESS_TOKEN.KEY, ACCESS_TOKEN.VALUE));
+    }
+
+    // Refresh 토큰이 존재하지 않거나 유효하지 않은 경우
+    if (
+      getCookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE) !== REFRESH_TOKEN.VALUE ||
+      !getCookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE)
+    ) {
+      return res(ctx.status(401), ctx.json(ERROR_CODE.INVALID_REFRESH_TOKEN));
+    }
+
+    return res(
       ctx.status(200),
       ctx.cookie(ACCESS_TOKEN.KEY, ACCESS_TOKEN.VALUE),
       ctx.cookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE),
-    )),
+    );
+  }),
 
   // 일반 로그인
   rest.post('api/members/signin', async (req, res, ctx) => {
@@ -229,6 +249,18 @@ export const authHandlers = [
   // 모든 유저 정보 불러오기
   rest.get('api/members', (req, res, ctx) => {
     const FILTERED_USER_LIST = USER_TABLE.map((user) => filterIdPassword(user));
+    // Access 토큰은 만료됐지만 refresh 토큰은 유효한 경우
+    if (!getCookie(ACCESS_TOKEN.KEY, ACCESS_TOKEN.VALUE) && getCookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE)) {
+      return res(ctx.status(200), ctx.cookie(ACCESS_TOKEN.KEY, ACCESS_TOKEN.VALUE));
+    }
+
+    // Refresh 토큰이 존재하지 않거나 유효하지 않은 경우
+    if (
+      getCookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE) !== REFRESH_TOKEN.VALUE ||
+      !getCookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE)
+    ) {
+      return res(ctx.status(401), ctx.json(ERROR_CODE.INVALID_REFRESH_TOKEN));
+    }
 
     return res(ctx.status(200), ctx.json(FILTERED_USER_LIST));
   }),
