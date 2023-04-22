@@ -25,6 +25,16 @@ export const USER_TABLE: UserTableTypes[] = [
   },
 ];
 
+const ACCESS_TOKEN = {
+  KEY: 'access_token',
+  VALUE: 'access123',
+};
+
+const REFRESH_TOKEN = {
+  KEY: 'refresh_token',
+  VALUE: 'refresh123',
+};
+
 export const filterIdPassword = (obj: UserTableTypes) =>
   Object.fromEntries(
     Object.entries(obj).filter(([key]) => !key.includes('loginId') && !key.includes('password')),
@@ -34,13 +44,11 @@ export const TEST_USER = USER_TABLE.find((user) => user.nickname === 'WebTest') 
 
 export const authHandlers = [
   // silent-refresh
-  rest.get('api/auth/reissue', (req, res, ctx) => {
-    const response = {
-      accessToken: 'access123',
-    };
-
-    return res(ctx.status(200), ctx.json(response), ctx.cookie('refresh_token', 'refresh123'));
-  }),
+  rest.get('api/auth/reissue', (req, res, ctx) => res(
+      ctx.status(200),
+      ctx.cookie(ACCESS_TOKEN.KEY, ACCESS_TOKEN.VALUE),
+      ctx.cookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE),
+    )),
 
   // 일반 로그인
   rest.post('api/members/signin', async (req, res, ctx) => {
@@ -59,11 +67,16 @@ export const authHandlers = [
           nickname: findUser.nickname,
         },
         accessToken: {
-          token: 'access123',
+          token: ACCESS_TOKEN.VALUE,
         },
       };
 
-      return res(ctx.status(200), ctx.json(response), ctx.cookie('refresh_token', 'refresh123'));
+      return res(
+        ctx.status(200),
+        ctx.json(response),
+        ctx.cookie(ACCESS_TOKEN.KEY, ACCESS_TOKEN.VALUE),
+        ctx.cookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE),
+      );
     }
 
     return res(ctx.status(401), ctx.json(ERROR_CODE.SIGN_IN_FAIL));
@@ -161,11 +174,16 @@ export const authHandlers = [
         profileImage: newMember.profileImage,
       },
       accessToken: {
-        token: 'access123',
+        token: ACCESS_TOKEN.VALUE,
       },
     };
 
-    return res(ctx.status(201), ctx.json(response), ctx.cookie('refresh_token', 'refresh123'));
+    return res(
+      ctx.status(201),
+      ctx.json(response),
+      ctx.cookie(ACCESS_TOKEN.KEY, ACCESS_TOKEN.VALUE),
+      ctx.cookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE),
+    );
   }),
 
   // 유저 아이디 중복 검사
