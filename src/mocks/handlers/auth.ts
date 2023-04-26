@@ -40,6 +40,18 @@ const getCookie = (key: string, value: string) => {
   return matchKey?.filter((el) => el === value)[0];
 };
 
+const deleteAllCookies = () => {
+  const cookies = document.cookie.split('; ');
+  const expiration = 'Fri, 31 Dec 1999 00:00:00 GMT';
+
+  cookies.forEach((cookie: any) => {
+    const [key, _] = cookie.split('=');
+    document.cookie = `${key}=; expires=${expiration}`;
+    document.cookie = `${key}=; expires=${expiration}`;
+    document.cookie = `${key}=; expires=${expiration}; domain=localhost`;
+  });
+};
+
 export const filterIdPassword = (obj: UserTableTypes) =>
   Object.fromEntries(
     Object.entries(obj).filter(([key]) => !key.includes('loginId') && !key.includes('password')),
@@ -244,7 +256,10 @@ export const authHandlers = [
   }),
 
   // 로그아웃
-  rest.post('api/members/signout', (req, res, ctx) => res(ctx.status(200))),
+  rest.post('api/members/signout', (req, res, ctx) => {
+    deleteAllCookies();
+    return res(ctx.status(200));
+  }),
 
   // 모든 유저 정보 불러오기
   rest.get('api/members', (req, res, ctx) => {
