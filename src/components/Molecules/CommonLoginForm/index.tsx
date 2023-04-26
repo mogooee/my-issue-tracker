@@ -43,7 +43,10 @@ const LoginForm = (): JSX.Element => {
     }
   };
 
+  const isDisable = loginForm.id !== '' && loginForm.password !== '';
+
   const handleOnKeyDownEnter = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (!isDisable) return;
     if (e.key === 'Enter') {
       login();
     }
@@ -83,7 +86,7 @@ const LoginForm = (): JSX.Element => {
           <br /> 입력하신 내용을 다시 확인해주세요.
         </S.FailMessage>
       )}
-      <Button buttonStyle="STANDARD" label="아이디로 로그인" size="LARGE" handleOnClick={login} />
+      <Button buttonStyle="STANDARD" label="아이디로 로그인" size="LARGE" handleOnClick={login} disabled={!isDisable} />
     </S.LoginForm>
   );
 };
