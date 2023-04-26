@@ -57,6 +57,7 @@ const Input = ({ disabled = false, inputMaxLength = defaultMaxLength, ...props }
   };
 
   const handleOnSubmitForm = (event: React.ChangeEvent<HTMLFormElement>) => {
+    event.preventDefault();
     onSubmit?.(event);
     inputRef?.current?.blur();
   };
