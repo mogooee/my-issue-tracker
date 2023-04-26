@@ -1,4 +1,5 @@
-import { useState } from 'react';
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { signin, OAuthResponse } from '@/api/sign';
@@ -6,7 +7,6 @@ import useInput from '@/hooks/useInput';
 import useLogin from '@/api/sign/useLogin';
 
 import Button from '@/components/Atoms/Button';
-import Input from '@/components/Atoms/Input';
 
 import * as S from '@/components/Molecules/CommonLoginForm/index.styles';
 
@@ -18,14 +18,12 @@ const LoginForm = (): JSX.Element => {
     isActive: isIdActive,
     isTyping: isIdTyping,
     onChangeInput: onChangeInputId,
-    onClickInput: onClickInputId,
     onBlurInput: onBlurInputId,
   } = useInput();
   const {
     isActive: isPasswordActive,
     isTyping: isPasswordTyping,
     onChangeInput: onChangeInputPassword,
-    onClickInput: onClickInputPassword,
     onBlurInput: onBlurInputPassword,
   } = useInput();
 
@@ -45,36 +43,40 @@ const LoginForm = (): JSX.Element => {
     }
   };
 
+  const handleOnKeyDownEnter = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key === 'Enter') {
+      login();
+    }
+  };
+
   return (
-    <S.LoginForm>
-      <Input
-        isActive={isIdActive}
-        isTyping={isIdTyping}
-        onChange={(e) => {
-          onChangeInputId(e);
-          setLoginForm({ ...loginForm, id: e.target.value });
-        }}
-        onClick={onClickInputId}
-        onBlur={onBlurInputId}
-        inputSize="LARGE"
-        inputType="text"
-        inputMaxLength={idMaxLength}
-        inputPlaceholder="아이디"
-      />
-      <Input
-        isActive={isPasswordActive}
-        isTyping={isPasswordTyping}
-        onChange={(e) => {
-          onChangeInputPassword(e);
-          setLoginForm({ ...loginForm, password: e.target.value });
-        }}
-        onClick={onClickInputPassword}
-        onBlur={onBlurInputPassword}
-        inputSize="LARGE"
-        inputType="password"
-        inputMaxLength={passwordMaxLength}
-        inputPlaceholder="비밀번호"
-      />
+    <S.LoginForm onKeyDown={handleOnKeyDownEnter}>
+      <S.LoginLabel isActive={isIdActive} isTyping={isIdTyping}>
+        {isIdTyping && '아이디'}
+        <S.LoginInput
+          type="text"
+          placeholder="아이디"
+          maxLength={idMaxLength}
+          onBlur={onBlurInputId}
+          onChange={(e) => {
+            onChangeInputId(e);
+            setLoginForm({ ...loginForm, id: e.target.value });
+          }}
+        />
+      </S.LoginLabel>
+      <S.LoginLabel isActive={isPasswordActive} isTyping={isPasswordTyping}>
+        {isPasswordTyping && '패스워드'}
+        <S.LoginInput
+          type="password"
+          placeholder="패스워드"
+          maxLength={passwordMaxLength}
+          onBlur={onBlurInputPassword}
+          onChange={(e) => {
+            onChangeInputPassword(e);
+            setLoginForm({ ...loginForm, password: e.target.value });
+          }}
+        />
+      </S.LoginLabel>
       {isError && (
         <S.FailMessage>
           아이디 또는 비밀번호를 잘못 입력했습니다.
