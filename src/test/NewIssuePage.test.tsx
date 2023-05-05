@@ -24,6 +24,13 @@ jest.mock('react-markdown', () => {
 jest.mock('remark-gfm', () => () => {});
 
 describe('이슈 생성 페이지 테스트', () => {
+  beforeEach(() => {
+    Object.defineProperty(document, 'cookie', {
+      writable: true,
+      value: 'refresh_token=refresh123; access_token=access123',
+    });
+  });
+
   afterEach(() => {
     jest.useRealTimers();
   });
