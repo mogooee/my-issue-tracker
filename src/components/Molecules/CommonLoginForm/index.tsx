@@ -68,10 +68,10 @@ const LoginForm = (): JSX.Element => {
         />
       </S.LoginLabel>
       <S.LoginLabel isActive={isPasswordActive} isTyping={isPasswordTyping}>
-        {isPasswordTyping && '패스워드'}
+        {isPasswordTyping && '비밀번호'}
         <S.LoginInput
           type="password"
-          placeholder="패스워드"
+          placeholder="비밀번호"
           maxLength={passwordMaxLength}
           onBlur={onBlurInputPassword}
           onChange={(e) => {
