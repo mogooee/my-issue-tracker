@@ -16,7 +16,7 @@ type UserTableTypes = GeneralUserInfoTypes & UserTypes;
 export const USER_TABLE: UserTableTypes[] = [
   ...OAUTH_USER_LIST,
   {
-    id: OAUTH_USER_LIST.length + 1,
+    id: OAUTH_USER_LIST.length,
     loginId: 'WebTest',
     password: 'test1234',
     email: 'WebTest@test.com',
@@ -103,6 +103,9 @@ export const authHandlers = [
         },
       };
 
+      // 새로고침을 해도 저장된 유저의 정보를 불러올수있다.
+      sessionStorage.setItem('user', JSON.stringify(findUser));
+
       return res(
         ctx.status(200),
         ctx.json(response),
@@ -115,7 +118,22 @@ export const authHandlers = [
   }),
 
   // 유저 정보 요청 API
-  rest.get('api/members/info', (req, res, ctx) => res(ctx.status(200), ctx.json(TEST_USER))),
+  rest.get('api/members/info', (req, res, ctx) => {
+    // sessionStorage에 유저가 있는지 확인한다.
+    const getSessionStorgeUserInfo = sessionStorage.getItem('user');
+    if (getSessionStorgeUserInfo) {
+      const parserUserInfo = JSON.parse(getSessionStorgeUserInfo) as UserTableTypes;
+      const findUser = USER_TABLE.find((user) => user.nickname === parserUserInfo.nickname);
+
+      // 유저테이블에 없는 유저면 테이블에 추가한다.
+      if (!findUser) {
+        USER_TABLE.push(parserUserInfo);
+      }
+      return res(ctx.status(200), ctx.json(parserUserInfo));
+    }
+
+    return res(ctx.status(200), ctx.json(TEST_USER));
+  }),
 
   // 유저 정보
   rest.get('api/auth/:provider', (req, res, ctx) => {
@@ -175,6 +193,9 @@ export const authHandlers = [
     };
 
     USER_TABLE.push(newMemberInfo);
+
+    // 새로고침을 해도 저장된 유저의 정보를 불러올수있다.
+    sessionStorage.setItem('user', JSON.stringify(newMemberInfo));
 
     const { loginId, password: newMemberPassword, ...response } = newMemberInfo;
 
