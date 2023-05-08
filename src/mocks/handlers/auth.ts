@@ -59,6 +59,22 @@ export const filterIdPassword = (obj: UserTableTypes) =>
 
 export const TEST_USER = USER_TABLE.find((user) => user.nickname === 'WebTest') || USER_TABLE[0];
 
+export const getAuther = () => {
+  const getSessionStorgeUserInfo = sessionStorage.getItem('user');
+  if (getSessionStorgeUserInfo) {
+    const parserUserInfo = JSON.parse(getSessionStorgeUserInfo) as UserTableTypes;
+    const findUser = USER_TABLE.find((user) => user.nickname === parserUserInfo.nickname);
+
+    if (!findUser) {
+      USER_TABLE.push(parserUserInfo);
+      return filterIdPassword(parserUserInfo);
+    }
+    return filterIdPassword(findUser);
+  }
+
+  return filterIdPassword(TEST_USER);
+};
+
 export const authHandlers = [
   // silent-refresh
   rest.get('api/auth/reissue', (req, res, ctx) => {

@@ -3,7 +3,7 @@ import { rest } from 'msw';
 import { issues, issueTable, MILESTONE_TABLE } from '@/mocks/tables/issue';
 import { REACTIONS } from '@/components/Molecules/Dropdown/Panel/Reaction/mock';
 import { IssuesTypes, CommentsTypes, ContentTypes, IssueHistoryTypes, ReactionResponseTypes } from '@/api/issue/types';
-import { filterIdPassword, TEST_USER, USER_TABLE } from '@/mocks/handlers/auth';
+import { getAuther, TEST_USER, USER_TABLE } from '@/mocks/handlers/auth';
 import { responseNewIssueData } from '@/mocks/tables/newIssueHelper';
 import { LABEL_TABLE } from '@/mocks/handlers/label';
 import { findMilestoneHelper } from '@/mocks/handlers/milestone';
@@ -198,7 +198,7 @@ export const issueHandlers = [
     updateIssueTable(newIssue);
 
     const history: IssueHistoryTypes = changeTitleHistory({
-      modifierInfo: filterIdPassword(TEST_USER),
+      modifierInfo: getAuther(),
       previousTitle: issue.title,
       changedTitle: title,
     });
@@ -277,11 +277,10 @@ export const issueHandlers = [
     const { content } = await req.json();
 
     const newCommentId = addCommentsId();
-    const author = USER_TABLE.find(({ id }) => id === Number(memberId))!;
 
     const newComment: CommentsTypes = {
       id: newCommentId,
-      author: filterIdPassword(author),
+      author: getAuther(),
       content,
       createdAt: Date(),
       issueCommentReactionsResponse: [],
@@ -470,7 +469,7 @@ export const issueHandlers = [
       findOpenIssues.issueLabels.issueLabels.push(findLabel!);
 
       const history: IssueHistoryTypes = labelHistory({
-        modifierInfo: filterIdPassword(TEST_USER),
+        modifierInfo: getAuther(),
         labelInfo: findLabel,
         action: 'ADD',
       });
@@ -482,7 +481,7 @@ export const issueHandlers = [
       findCloseIssues.issueLabels.issueLabels.push(findLabel!);
 
       const history: IssueHistoryTypes = labelHistory({
-        modifierInfo: filterIdPassword(TEST_USER),
+        modifierInfo: getAuther(),
         labelInfo: findLabel,
         action: 'ADD',
       });
@@ -515,7 +514,7 @@ export const issueHandlers = [
       );
 
       const history: IssueHistoryTypes = labelHistory({
-        modifierInfo: filterIdPassword(TEST_USER),
+        modifierInfo: getAuther(),
         labelInfo: findLabel,
         action: 'REMOVE',
       });
@@ -530,7 +529,7 @@ export const issueHandlers = [
       );
 
       const history: IssueHistoryTypes = labelHistory({
-        modifierInfo: filterIdPassword(TEST_USER),
+        modifierInfo: getAuther(),
         labelInfo: findLabel,
         action: 'REMOVE',
       });
@@ -563,7 +562,7 @@ export const issueHandlers = [
       findOpenIssues.issueAssignees.issueAssignees.push(findAssinees!);
 
       const history: IssueHistoryTypes = assigneesHistory({
-        modifierInfo: filterIdPassword(TEST_USER),
+        modifierInfo: getAuther(),
         assigneeInfo: findAssinees,
         action: 'ADD',
       });
@@ -575,7 +574,7 @@ export const issueHandlers = [
       findCloseIssues.issueAssignees.issueAssignees.push(findAssinees!);
 
       const history: IssueHistoryTypes = assigneesHistory({
-        modifierInfo: filterIdPassword(TEST_USER),
+        modifierInfo: getAuther(),
         assigneeInfo: findAssinees,
         action: 'ADD',
       });
@@ -609,7 +608,7 @@ export const issueHandlers = [
       );
 
       const history: IssueHistoryTypes = assigneesHistory({
-        modifierInfo: filterIdPassword(TEST_USER),
+        modifierInfo: getAuther(),
         assigneeInfo: findAssinees,
         action: 'REMOVE',
       });
@@ -623,7 +622,7 @@ export const issueHandlers = [
       );
 
       const history: IssueHistoryTypes = assigneesHistory({
-        modifierInfo: filterIdPassword(TEST_USER),
+        modifierInfo: getAuther(),
         assigneeInfo: findAssinees,
         action: 'REMOVE',
       });
@@ -666,7 +665,7 @@ export const issueHandlers = [
       findOpenIssues.milestone = findMilestone;
 
       const history: IssueHistoryTypes = milestoneHistory({
-        modifierInfo: filterIdPassword(TEST_USER),
+        modifierInfo: getAuther(),
         milestoneInfo: findMilestone,
         action: 'ADD',
       });
@@ -698,7 +697,7 @@ export const issueHandlers = [
       findCloseIssues.milestone = findMilestone;
 
       const history: IssueHistoryTypes = milestoneHistory({
-        modifierInfo: filterIdPassword(TEST_USER),
+        modifierInfo: getAuther(),
         milestoneInfo: findMilestone,
         action: 'ADD',
       });
@@ -738,7 +737,7 @@ export const issueHandlers = [
       findOpenIssues.milestone = null;
 
       const history: IssueHistoryTypes = milestoneHistory({
-        modifierInfo: filterIdPassword(TEST_USER),
+        modifierInfo: getAuther(),
         milestoneInfo: findMilestone,
         action: 'REMOVE',
       });
@@ -760,7 +759,7 @@ export const issueHandlers = [
       findCloseIssues.milestone = null;
 
       const history: IssueHistoryTypes = milestoneHistory({
-        modifierInfo: filterIdPassword(TEST_USER),
+        modifierInfo: getAuther(),
         milestoneInfo: findMilestone,
         action: 'REMOVE',
       });
