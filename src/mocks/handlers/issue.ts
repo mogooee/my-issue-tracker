@@ -16,7 +16,7 @@ import {
   milestoneHistory,
 } from '@/mocks/helpers/issueHistoryHelper';
 import { responseNewIssueData } from '@/mocks/helpers/newIssueHelper';
-import { getAuther } from '@/mocks/helpers/authHelpers';
+import { filterIdPassword, getAuther } from '@/mocks/helpers/authHelpers';
 
 const findIssue = (issueId: number) => {
   const { openIssues, closedIssues } = issueTable;
@@ -280,9 +280,11 @@ export const issueHandlers = [
 
     const newCommentId = addCommentsId();
 
+    const author = USER_TABLE.find(({ id }) => id === Number(memberId))!;
+
     const newComment: CommentsTypes = {
       id: newCommentId,
-      author: getAuther(),
+      author: filterIdPassword(author),
       content,
       createdAt: Date(),
       issueCommentReactionsResponse: [],
