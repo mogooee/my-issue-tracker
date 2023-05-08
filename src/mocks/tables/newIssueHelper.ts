@@ -1,8 +1,9 @@
 import { ContentTypes } from '@/api/issue/types';
 import { NEW_ISSUE_FORM_TYPES } from '@/stores/newIssue';
-import { filterIdPassword, TEST_USER, USER_TABLE } from '@/mocks/handlers/auth';
+import { TEST_USER, USER_TABLE } from '@/mocks/handlers/auth';
 import { LABEL_TABLE } from '@/mocks/handlers/label';
 import { issueTable, MILESTONE_TABLE } from '@/mocks/tables/issue';
+import { filterIdPassword } from '@/mocks/tables/authHelpers';
 
 interface ResponseNewIssueDataTypes {
   memberId: number;

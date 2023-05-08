@@ -3,7 +3,7 @@ import { rest } from 'msw';
 import { issues, issueTable, MILESTONE_TABLE } from '@/mocks/tables/issue';
 import { REACTIONS } from '@/components/Molecules/Dropdown/Panel/Reaction/mock';
 import { IssuesTypes, CommentsTypes, ContentTypes, IssueHistoryTypes, ReactionResponseTypes } from '@/api/issue/types';
-import { getAuther, TEST_USER, USER_TABLE } from '@/mocks/handlers/auth';
+import { TEST_USER, USER_TABLE } from '@/mocks/handlers/auth';
 import { responseNewIssueData } from '@/mocks/tables/newIssueHelper';
 import { LABEL_TABLE } from '@/mocks/handlers/label';
 import { findMilestoneHelper } from '@/mocks/handlers/milestone';
@@ -15,6 +15,7 @@ import {
   milestoneHistory,
 } from '@/mocks/tables/issueHistoryHelper';
 import { ERROR_CODE } from '@/api/constants';
+import { getAuther } from '@/mocks/tables/authHelpers';
 
 const findIssue = (issueId: number) => {
   const { openIssues, closedIssues } = issueTable;
