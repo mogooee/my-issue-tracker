@@ -7,7 +7,7 @@ import { ERROR_CODE } from '@/api/constants';
 import { USER_LIST as OAUTH_USER_LIST } from '@/components/Molecules/Dropdown/mock';
 import AppLogo from '@/assets/logo/issueTracker.png';
 
-import { filterIdPassword, getCookie, deleteAllCookies } from '@/mocks/tables/authHelpers';
+import { filterIdPassword, getCookie, deleteAllCookies } from '@/mocks/helpers/authHelpers';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from '@/mocks/constants';
 
 interface GeneralUserInfoTypes {

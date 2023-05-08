@@ -3,7 +3,7 @@ import { NEW_ISSUE_FORM_TYPES } from '@/stores/newIssue';
 import { TEST_USER, USER_TABLE } from '@/mocks/handlers/auth';
 import { LABEL_TABLE } from '@/mocks/handlers/label';
 import { issueTable, MILESTONE_TABLE } from '@/mocks/tables/issue';
-import { filterIdPassword } from '@/mocks/tables/authHelpers';
+import { filterIdPassword } from '@/mocks/helpers/authHelpers';
 
 interface ResponseNewIssueDataTypes {
   memberId: number;

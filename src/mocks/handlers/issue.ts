@@ -4,18 +4,19 @@ import { issues, issueTable, MILESTONE_TABLE } from '@/mocks/tables/issue';
 import { REACTIONS } from '@/components/Molecules/Dropdown/Panel/Reaction/mock';
 import { IssuesTypes, CommentsTypes, ContentTypes, IssueHistoryTypes, ReactionResponseTypes } from '@/api/issue/types';
 import { TEST_USER, USER_TABLE } from '@/mocks/handlers/auth';
-import { responseNewIssueData } from '@/mocks/tables/newIssueHelper';
 import { LABEL_TABLE } from '@/mocks/handlers/label';
 import { findMilestoneHelper } from '@/mocks/handlers/milestone';
+import { ERROR_CODE } from '@/api/constants';
+
 import {
   assigneesHistory,
   changeStateHistory,
   changeTitleHistory,
   labelHistory,
   milestoneHistory,
-} from '@/mocks/tables/issueHistoryHelper';
-import { ERROR_CODE } from '@/api/constants';
-import { getAuther } from '@/mocks/tables/authHelpers';
+} from '@/mocks/helpers/issueHistoryHelper';
+import { responseNewIssueData } from '@/mocks/helpers/newIssueHelper';
+import { getAuther } from '@/mocks/helpers/authHelpers';
 
 const findIssue = (issueId: number) => {
   const { openIssues, closedIssues } = issueTable;
