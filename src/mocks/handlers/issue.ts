@@ -5,7 +5,7 @@ import { REACTIONS } from '@/components/Molecules/Dropdown/Panel/Reaction/mock';
 import { IssuesTypes, CommentsTypes, ContentTypes, IssueHistoryTypes, ReactionResponseTypes } from '@/api/issue/types';
 import { TEST_USER, USER_TABLE } from '@/mocks/handlers/auth';
 import { LABEL_TABLE } from '@/mocks/handlers/label';
-import { findMilestoneHelper } from '@/mocks/handlers/milestone';
+import { findMilestoneHelper } from '@/mocks/helpers/findMilestoneHelpers';
 import { ERROR_CODE } from '@/api/constants';
 
 import {

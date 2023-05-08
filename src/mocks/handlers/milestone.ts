@@ -3,11 +3,7 @@ import { rest } from 'msw';
 import { ContentTypes, MilestoneTypes } from '@/api/issue/types';
 import { issueTable, MILESTONE_TABLE } from '@/mocks/tables/issue';
 import { ERROR_CODE } from '@/api/constants';
-
-export const findMilestoneHelper = (id: number) =>
-  Object.values(MILESTONE_TABLE)
-    .flat()
-    .find((milestone) => milestone.id === id) as MilestoneTypes | undefined;
+import { findMilestoneHelper } from '../helpers/findMilestoneHelpers';
 
 export const milestoneHandlers = [
   rest.get('api/milestones', (req, res, ctx) => res(ctx.status(200), ctx.json(MILESTONE_TABLE))),
