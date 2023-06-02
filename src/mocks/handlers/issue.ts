@@ -1,23 +1,22 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { rest } from 'msw';
-import { issues, issueTable } from '@/mocks/tables/issue';
+import { issues, issueTable, MILESTONE_TABLE } from '@/mocks/tables/issue';
 import { REACTIONS } from '@/components/Molecules/Dropdown/Panel/Reaction/mock';
 import { IssuesTypes, CommentsTypes, ContentTypes, IssueHistoryTypes, ReactionResponseTypes } from '@/api/issue/types';
-import { userTable } from '@/mocks/handlers/auth';
-import { MILESTONE_LIST, USER_LIST } from '@/components/Molecules/Dropdown/mock';
-import { responseNewIssueData } from '@/mocks/tables/newIssueHelper';
-import { labelTable } from '@/mocks/handlers/label';
+import { TEST_USER, USER_TABLE } from '@/mocks/handlers/auth';
+import { LABEL_TABLE } from '@/mocks/handlers/label';
+import { findMilestoneHelper } from '@/mocks/helpers/findMilestoneHelpers';
+import { ERROR_CODE } from '@/api/constants';
+
 import {
   assigneesHistory,
   changeStateHistory,
   changeTitleHistory,
   labelHistory,
   milestoneHistory,
-} from '@/mocks/tables/issueHistoryHelper';
-
-const message = {
-  message: '',
-};
+} from '@/mocks/helpers/issueHistoryHelper';
+import { responseNewIssueData } from '@/mocks/helpers/newIssueHelper';
+import { filterIdPassword, getAuther } from '@/mocks/helpers/authHelpers';
 
 const findIssue = (issueId: number) => {
   const { openIssues, closedIssues } = issueTable;
@@ -143,7 +142,7 @@ export const issueHandlers = [
       openIssueCount: openIssueContents.length,
       closedIssueCount: closedIssueContents.length,
       issues: {
-        content: filteredContent,
+        content: filteredContent.sort((a, b) => b.id - a.id),
         pageable: {
           sort: {
             empty: true,
@@ -181,8 +180,7 @@ export const issueHandlers = [
     const issue = findIssue(Number(issueId));
 
     if (!issue) {
-      message.message = '해당하는 이슈 데이터가 없습니다.';
-      return res(ctx.status(400), ctx.json(message));
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
     }
     return res(ctx.status(200), ctx.json(issue));
   }),
@@ -193,21 +191,16 @@ export const issueHandlers = [
     const issue = findIssue(Number(issueId));
 
     if (!issue) {
-      message.message = '해당하는 이슈 데이터가 없습니다.';
-      return res(ctx.status(400), ctx.json(message));
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
     }
 
     const { title } = await req.json();
-
-    if (!title) {
-      message.message = '이슈 제목이 유효하지 않습니다.';
-    }
 
     const newIssue = { ...issue, title };
     updateIssueTable(newIssue);
 
     const history: IssueHistoryTypes = changeTitleHistory({
-      modifierInfo: USER_LIST[0],
+      modifierInfo: getAuther(),
       previousTitle: issue.title,
       changedTitle: title,
     });
@@ -227,20 +220,44 @@ export const issueHandlers = [
     ids.forEach((id: number) => {
       contents = contents.map((content) => {
         if (content.id === id) {
+          if (status === content.closed) return content;
+
+          if (content.milestone) {
+            if (content.closed && !content.milestone.closed) {
+              MILESTONE_TABLE.openedMilestones.find((data) => data.id === content.milestone!.id)!.openIssueCount += 1;
+              MILESTONE_TABLE.openedMilestones.find((data) => data.id === content.milestone!.id)!.closedIssueCount -= 1;
+            }
+
+            if (content.closed && content.milestone.closed) {
+              MILESTONE_TABLE.closedMilestones.find((data) => data.id === content.milestone!.id)!.openIssueCount += 1;
+              MILESTONE_TABLE.closedMilestones.find((data) => data.id === content.milestone!.id)!.closedIssueCount -= 1;
+            }
+
+            if (!content.closed && content.milestone.closed) {
+              MILESTONE_TABLE.closedMilestones.find((data) => data.id === content.milestone!.id)!.openIssueCount -= 1;
+              MILESTONE_TABLE.closedMilestones.find((data) => data.id === content.milestone!.id)!.closedIssueCount += 1;
+            }
+
+            if (!content.closed && !content.milestone.closed) {
+              MILESTONE_TABLE.openedMilestones.find((data) => data.id === content.milestone!.id)!.openIssueCount -= 1;
+              MILESTONE_TABLE.openedMilestones.find((data) => data.id === content.milestone!.id)!.closedIssueCount += 1;
+            }
+          }
+
           return { ...content, closed: status, lastModifiedAt: Date() };
         }
         return content;
       });
     });
 
-    const openIssuesContent = contents.filter(({ closed }) => closed === false);
-    const closedIssuesContent = contents.filter(({ closed }) => closed === true);
+    const openIssuesContent = contents.filter(({ closed }) => closed === false) || [];
+    const closedIssuesContent = contents.filter(({ closed }) => closed === true) || [];
 
     issueTable.openIssues = openIssuesContent;
     issueTable.closedIssues = closedIssuesContent;
 
     const history: IssueHistoryTypes = changeStateHistory({
-      modifierInfo: USER_LIST[0],
+      modifierInfo: TEST_USER,
       action: status ? 'CLOSE' : 'OPEN',
     });
     contents.find((el) => el.id === ids[0])!.issueHistories.push(history);
@@ -256,18 +273,18 @@ export const issueHandlers = [
     const issue = findIssue(Number(issueId));
 
     if (!issue) {
-      message.message = '해당하는 이슈 데이터가 없습니다.';
-      return res(ctx.status(400), ctx.json(message));
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
     }
 
     const { content } = await req.json();
 
     const newCommentId = addCommentsId();
-    const author = userTable.find(({ id }) => id === Number(memberId))!;
+
+    const author = USER_TABLE.find(({ id }) => id === Number(memberId))!;
 
     const newComment: CommentsTypes = {
       id: newCommentId,
-      author,
+      author: filterIdPassword(author),
       content,
       createdAt: Date(),
       issueCommentReactionsResponse: [],
@@ -287,8 +304,7 @@ export const issueHandlers = [
     const issue = findIssue(Number(issueId));
 
     if (!issue) {
-      message.message = '해당하는 이슈 데이터가 없습니다.';
-      return res(ctx.status(400), ctx.json(message));
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
     }
 
     const newComment: CommentsTypes[] = issue.comments.map((comment) => {
@@ -311,8 +327,7 @@ export const issueHandlers = [
     const issue = findIssue(Number(issueId));
 
     if (!issue) {
-      message.message = '해당하는 이슈 데이터가 없습니다.';
-      return res(ctx.status(400), ctx.json(message));
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
     }
 
     const newComment: CommentsTypes[] = issue.comments.filter((comment) => comment.id !== Number(commentId));
@@ -333,13 +348,12 @@ export const issueHandlers = [
     const issue = findIssue(Number(issueId));
 
     if (!issue) {
-      message.message = '해당하는 이슈 데이터가 없습니다.';
-      return res(ctx.status(400), ctx.json(message));
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
     }
 
     const newReactionId = addReactionsId();
     const { unicode } = REACTIONS.find((e) => emojiName === e.name)!;
-    const newReactor = { id: memberId, nickname: userTable.find(({ id }) => id === memberId)?.nickname! };
+    const newReactor = { id: memberId, nickname: USER_TABLE.find(({ id }) => id === memberId)?.nickname! };
 
     const newReaction: ReactionResponseTypes = {
       id: newReactionId,
@@ -369,8 +383,7 @@ export const issueHandlers = [
     const issue = findIssue(Number(issueId));
 
     if (!issue) {
-      message.message = '해당하는 이슈 데이터가 없습니다.';
-      return res(ctx.status(400), ctx.json(message));
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
     }
 
     const newComments: CommentsTypes[] = issue.comments.map((comment) => {
@@ -399,7 +412,7 @@ export const issueHandlers = [
     const userId = req.url.searchParams.get('memberId');
     const { title } = requestData;
 
-    const findAuthor = (memberId: string) => USER_LIST.find((el) => el.id === Number(memberId));
+    const findAuthor = (memberId: string) => USER_TABLE.find((el) => el.id === Number(memberId));
 
     if (!title) {
       return res(ctx.status(400), ctx.json('필수 입력값을 입력해주세요'));
@@ -446,13 +459,22 @@ export const issueHandlers = [
     const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
-    const findLabel = labelTable.find((label) => label.id === Number(labelId));
+    if (!findOpenIssues && !findCloseIssues) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+    }
+
+    const findLabel = LABEL_TABLE.find((label) => label.id === Number(labelId));
+
+    if (!findLabel) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_LABEL));
+    }
+
     if (findOpenIssues) {
       findOpenIssues.issueLabels.issueLabels.push(findLabel!);
 
       const history: IssueHistoryTypes = labelHistory({
-        modifierInfo: USER_LIST[0],
-        labelInfo: findLabel!,
+        modifierInfo: getAuther(),
+        labelInfo: findLabel,
         action: 'ADD',
       });
       findOpenIssues.issueHistories.push(history);
@@ -463,8 +485,8 @@ export const issueHandlers = [
       findCloseIssues.issueLabels.issueLabels.push(findLabel!);
 
       const history: IssueHistoryTypes = labelHistory({
-        modifierInfo: USER_LIST[0],
-        labelInfo: findLabel!,
+        modifierInfo: getAuther(),
+        labelInfo: findLabel,
         action: 'ADD',
       });
       findCloseIssues.issueHistories.push(history);
@@ -480,15 +502,24 @@ export const issueHandlers = [
     const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
-    const findLabel = labelTable.find((label) => label.id === Number(labelId));
+    if (!findOpenIssues && !findCloseIssues) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+    }
+
+    const findLabel = LABEL_TABLE.find((label) => label.id === Number(labelId));
+
+    if (!findLabel) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_LABEL));
+    }
+
     if (findOpenIssues) {
       findOpenIssues.issueLabels.issueLabels = findOpenIssues.issueLabels.issueLabels.filter(
         (label) => label.id !== findLabel!.id,
       );
 
       const history: IssueHistoryTypes = labelHistory({
-        modifierInfo: USER_LIST[0],
-        labelInfo: findLabel!,
+        modifierInfo: getAuther(),
+        labelInfo: findLabel,
         action: 'REMOVE',
       });
       findOpenIssues.issueHistories.push(history);
@@ -502,8 +533,8 @@ export const issueHandlers = [
       );
 
       const history: IssueHistoryTypes = labelHistory({
-        modifierInfo: USER_LIST[0],
-        labelInfo: findLabel!,
+        modifierInfo: getAuther(),
+        labelInfo: findLabel,
         action: 'REMOVE',
       });
       findCloseIssues.issueHistories.push(history);
@@ -521,13 +552,22 @@ export const issueHandlers = [
     const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
-    const findAssinees = USER_LIST.find((label) => label.id === Number(assigneeId));
+    if (!findOpenIssues && !findCloseIssues) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+    }
+
+    const findAssinees = USER_TABLE.find((label) => label.id === Number(assigneeId));
+
+    if (!findAssinees) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_MEMBER));
+    }
+
     if (findOpenIssues) {
       findOpenIssues.issueAssignees.issueAssignees.push(findAssinees!);
 
       const history: IssueHistoryTypes = assigneesHistory({
-        modifierInfo: USER_LIST[0],
-        assigneeInfo: findAssinees!,
+        modifierInfo: getAuther(),
+        assigneeInfo: findAssinees,
         action: 'ADD',
       });
       findOpenIssues.issueHistories.push(history);
@@ -538,8 +578,8 @@ export const issueHandlers = [
       findCloseIssues.issueAssignees.issueAssignees.push(findAssinees!);
 
       const history: IssueHistoryTypes = assigneesHistory({
-        modifierInfo: USER_LIST[0],
-        assigneeInfo: findAssinees!,
+        modifierInfo: getAuther(),
+        assigneeInfo: findAssinees,
         action: 'ADD',
       });
       findCloseIssues.issueHistories.push(history);
@@ -556,15 +596,24 @@ export const issueHandlers = [
     const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
-    const findAssinees = USER_LIST.find((label) => label.id === Number(assigneeId));
+    if (!findOpenIssues && !findCloseIssues) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+    }
+
+    const findAssinees = USER_TABLE.find((label) => label.id === Number(assigneeId));
+
+    if (!findAssinees) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_MEMBER));
+    }
+
     if (findOpenIssues) {
       findOpenIssues.issueAssignees.issueAssignees = findOpenIssues.issueAssignees.issueAssignees.filter(
         (assignee) => assignee.id !== findAssinees!.id,
       );
 
       const history: IssueHistoryTypes = assigneesHistory({
-        modifierInfo: USER_LIST[0],
-        assigneeInfo: findAssinees!,
+        modifierInfo: getAuther(),
+        assigneeInfo: findAssinees,
         action: 'REMOVE',
       });
       findOpenIssues.issueHistories.push(history);
@@ -577,8 +626,8 @@ export const issueHandlers = [
       );
 
       const history: IssueHistoryTypes = assigneesHistory({
-        modifierInfo: USER_LIST[0],
-        assigneeInfo: findAssinees!,
+        modifierInfo: getAuther(),
+        assigneeInfo: findAssinees,
         action: 'REMOVE',
       });
       findCloseIssues.issueHistories.push(history);
@@ -595,28 +644,77 @@ export const issueHandlers = [
     const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
-    const findMilestone = MILESTONE_LIST.find((label) => label.id === Number(milestoneId));
+    if (!findOpenIssues && !findCloseIssues) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+    }
+
+    const findMilestone = findMilestoneHelper(Number(milestoneId));
+
+    if (!findMilestone) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_MILESTONE));
+    }
+
     if (findOpenIssues) {
-      findOpenIssues.milestone = findMilestone!;
+      // 이전 마일스톤이 존재할 경우
+      if (findOpenIssues.milestone !== null) {
+        if (findOpenIssues.milestone.closed) {
+          MILESTONE_TABLE.closedMilestones.find((data) => data.id === findOpenIssues.milestone!.id)!.openIssueCount =
+            findOpenIssues.milestone.openIssueCount - 1;
+        } else {
+          MILESTONE_TABLE.openedMilestones.find((data) => data.id === findOpenIssues.milestone!.id)!.openIssueCount =
+            findOpenIssues.milestone.openIssueCount - 1;
+        }
+      }
+
+      findOpenIssues.milestone = findMilestone;
 
       const history: IssueHistoryTypes = milestoneHistory({
-        modifierInfo: USER_LIST[0],
-        milestoneInfo: findMilestone!,
+        modifierInfo: getAuther(),
+        milestoneInfo: findMilestone,
         action: 'ADD',
       });
       findOpenIssues.issueHistories.push(history);
+
+      // 마일스톤 카운트 추가
+      if (findMilestone.closed) {
+        MILESTONE_TABLE.closedMilestones.find((data) => data.id === findMilestone.id)!.openIssueCount =
+          findMilestone.openIssueCount + 1;
+      } else {
+        MILESTONE_TABLE.openedMilestones.find((data) => data.id === findMilestone.id)!.openIssueCount =
+          findMilestone.openIssueCount + 1;
+      }
+
       return res(ctx.status(200), ctx.json(issues));
     }
 
     if (findCloseIssues) {
-      findCloseIssues.milestone = findMilestone!;
+      // 이전 마일스톤이 존재할 경우
+      if (findCloseIssues.milestone !== null) {
+        if (findCloseIssues.milestone.closed) {
+          MILESTONE_TABLE.closedMilestones.find((data) => data.id === findCloseIssues.milestone!.id)!.closedIssueCount =
+            findCloseIssues.milestone.closedIssueCount - 1;
+        } else {
+          MILESTONE_TABLE.openedMilestones.find((data) => data.id === findCloseIssues.milestone!.id)!.closedIssueCount =
+            findCloseIssues.milestone.closedIssueCount - 1;
+        }
+      }
+      findCloseIssues.milestone = findMilestone;
 
       const history: IssueHistoryTypes = milestoneHistory({
-        modifierInfo: USER_LIST[0],
-        milestoneInfo: findMilestone!,
+        modifierInfo: getAuther(),
+        milestoneInfo: findMilestone,
         action: 'ADD',
       });
       findCloseIssues.issueHistories.push(history);
+
+      // 마일스톤 카운트 추가
+      if (findMilestone.closed) {
+        MILESTONE_TABLE.closedMilestones.find((data) => data.id === findMilestone.id)!.closedIssueCount =
+          findMilestone.closedIssueCount + 1;
+      } else {
+        MILESTONE_TABLE.openedMilestones.find((data) => data.id === findMilestone.id)!.closedIssueCount =
+          findMilestone.closedIssueCount + 1;
+      }
       return res(ctx.status(200), ctx.json(issues));
     }
 
@@ -629,17 +727,35 @@ export const issueHandlers = [
     const findOpenIssues = issueTable.openIssues.find((el) => el.id === Number(issueId));
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
-    const findMilestone = MILESTONE_LIST.find((label) => label.id === Number(milestoneId));
+    if (!findOpenIssues && !findCloseIssues) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+    }
+
+    const findMilestone = findMilestoneHelper(Number(milestoneId));
+
+    if (!findMilestone) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_MILESTONE));
+    }
 
     if (findOpenIssues) {
       findOpenIssues.milestone = null;
 
       const history: IssueHistoryTypes = milestoneHistory({
-        modifierInfo: USER_LIST[0],
-        milestoneInfo: findMilestone!,
+        modifierInfo: getAuther(),
+        milestoneInfo: findMilestone,
         action: 'REMOVE',
       });
       findOpenIssues.issueHistories.push(history);
+
+      // 마일스톤 카운트 제거
+      if (findMilestone.closed) {
+        MILESTONE_TABLE.closedMilestones.find((data) => data.id === findMilestone.id)!.openIssueCount =
+          findMilestone.openIssueCount - 1;
+      } else {
+        MILESTONE_TABLE.openedMilestones.find((data) => data.id === findMilestone.id)!.openIssueCount =
+          findMilestone.openIssueCount - 1;
+      }
+
       return res(ctx.status(200), ctx.json(issues));
     }
 
@@ -647,11 +763,21 @@ export const issueHandlers = [
       findCloseIssues.milestone = null;
 
       const history: IssueHistoryTypes = milestoneHistory({
-        modifierInfo: USER_LIST[0],
-        milestoneInfo: findMilestone!,
+        modifierInfo: getAuther(),
+        milestoneInfo: findMilestone,
         action: 'REMOVE',
       });
       findCloseIssues.issueHistories.push(history);
+
+      // 마일스톤 카운트 제거
+      if (findMilestone.closed) {
+        MILESTONE_TABLE.closedMilestones.find((data) => data.id === findMilestone.id)!.closedIssueCount =
+          findMilestone.closedIssueCount - 1;
+      } else {
+        MILESTONE_TABLE.openedMilestones.find((data) => data.id === findMilestone.id)!.closedIssueCount =
+          findMilestone.closedIssueCount - 1;
+      }
+
       return res(ctx.status(200), ctx.json(issues));
     }
 

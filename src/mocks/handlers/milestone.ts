@@ -1,53 +1,12 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { rest } from 'msw';
 import { ContentTypes, MilestoneTypes } from '@/api/issue/types';
-import { MilestoneListTypes } from '@/api/milestone';
-import { issueTable } from '@/mocks/tables/issue';
-
-const tokenErrorMessage = { message: '토큰이 유효하지 않습니다.' };
-
-export const milestones: MilestoneListTypes = {
-  openedMilestones: [
-    {
-      id: 0,
-      title: '마일스톤 1',
-      description: null,
-      dueDate: null,
-      closed: false,
-      openIssueCount: 3,
-      closedIssueCount: 7,
-    },
-    {
-      id: 2,
-      title: '마일스톤 3',
-      description: '열린 마일스톤에 대한 설명',
-      dueDate: '2022-08-28',
-      closed: false,
-      openIssueCount: 5,
-      closedIssueCount: 5,
-    },
-  ],
-  closedMilestones: [
-    {
-      id: 1,
-      title: '마일스톤 2',
-      description: '닫힌 마일스톤에 대한 설명',
-      dueDate: null,
-      closed: true,
-      openIssueCount: 16,
-      closedIssueCount: 13,
-    },
-  ],
-};
+import { issueTable, MILESTONE_TABLE } from '@/mocks/tables/issue';
+import { ERROR_CODE } from '@/api/constants';
+import { findMilestoneHelper } from '../helpers/findMilestoneHelpers';
 
 export const milestoneHandlers = [
-  rest.get('api/milestones', (req, res, ctx) =>
-    // if (!req.cookies['refresh-token']) {
-    //   return res(ctx.status(400), ctx.json(false));
-    // }
-
-    res(ctx.status(200), ctx.json(milestones)),
-  ),
+  rest.get('api/milestones', (req, res, ctx) => res(ctx.status(200), ctx.json(MILESTONE_TABLE))),
 
   rest.post('api/milestones', async (req, res, ctx) => {
     const requestData = await req.json();
@@ -56,10 +15,6 @@ export const milestoneHandlers = [
     if (!title) {
       return res(ctx.status(400), ctx.json('필수 입력값을 입력해주세요'));
     }
-
-    // if (!req.cookies['refresh-token']) {
-    //   return res(ctx.status(400), ctx.json(tokenErrorMessage.message));
-    // }
 
     const newMilestone = {
       id: title.charCodeAt(title.length - 1) + Math.floor(Math.random() * 10000),
@@ -71,35 +26,37 @@ export const milestoneHandlers = [
       closedIssueCount: 0,
     };
 
-    milestones.openedMilestones.push(newMilestone);
+    MILESTONE_TABLE.openedMilestones.push(newMilestone);
 
     return res(ctx.status(200), ctx.json(newMilestone));
   }),
 
   rest.patch('api/milestones/:id', async (req, res, ctx) => {
     const { id } = req.params;
-    const patchMilestone = await req.json();
+    const requestMilestoneData = await req.json();
 
-    const patchMilestones = Object.values(milestones).map((state: MilestoneTypes[]) => {
+    const findMilestone = findMilestoneHelper(Number(id));
+
+    if (!findMilestone) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_MILESTONE));
+    }
+
+    const patchMilestones = Object.values(MILESTONE_TABLE).map((state: MilestoneTypes[]) => {
       if (state.find((el) => el.id === Number(id))) {
-        const updateMilestones = state.map((el) => (el.id === Number(id) ? { ...el, ...patchMilestone } : el));
+        const updateMilestones = state.map((el) => (el.id === Number(id) ? { ...el, ...requestMilestoneData } : el));
         return updateMilestones;
       }
       return state;
     });
 
     const [newOpenedMilestones, newClosedMilestones] = patchMilestones;
-    milestones.openedMilestones = newOpenedMilestones;
-    milestones.closedMilestones = newClosedMilestones;
-
-    // if (!req.cookies['refresh-token']) {
-    //   return res(ctx.status(400), ctx.json(tokenErrorMessage.message));
-    // }
+    MILESTONE_TABLE.openedMilestones = newOpenedMilestones;
+    MILESTONE_TABLE.closedMilestones = newClosedMilestones;
 
     const updatedIssues = (state: 'openIssues' | 'closedIssues'): ContentTypes[] =>
       issueTable[state].map((issue) => ({
         ...issue,
-        milestone: issue.milestone?.id === Number(id) ? patchMilestone : issue.milestone,
+        milestone: issue.milestone?.id === Number(id) ? requestMilestoneData : issue.milestone,
       }));
 
     issueTable.openIssues = updatedIssues('openIssues');
@@ -111,39 +68,33 @@ export const milestoneHandlers = [
   rest.patch('api/milestones/:id/status', async (req, res, ctx) => {
     const { id } = req.params;
 
-    const find = () => {
-      const result: MilestoneTypes[] = [];
-      Object.values(milestones).forEach((state: MilestoneTypes[]) => {
-        const findMilestone = state.find((el) => el.id === Number(id));
-        if (findMilestone) {
-          result.push(findMilestone);
-        }
-      });
+    const findMilestone = findMilestoneHelper(Number(id));
 
-      return result[0];
-    };
-
-    const milestone = find();
-
-    if (milestone.closed) {
-      milestones.openedMilestones.push({ ...milestone, closed: false });
-      milestones.closedMilestones = milestones.closedMilestones.filter((el) => el.id !== Number(id));
-    } else {
-      milestones.closedMilestones.push({ ...milestone, closed: true });
-      milestones.openedMilestones = milestones.openedMilestones.filter((el) => el.id !== Number(id));
+    if (!findMilestone) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_MILESTONE));
     }
 
-    // if (!req.cookies['refresh-token']) {
-    //   return res(ctx.status(400), ctx.json(tokenErrorMessage.message));
-    // }
+    if (findMilestone.closed) {
+      MILESTONE_TABLE.openedMilestones.push({ ...findMilestone, closed: false });
+      MILESTONE_TABLE.closedMilestones = MILESTONE_TABLE.closedMilestones.filter((el) => el.id !== Number(id));
+    } else {
+      MILESTONE_TABLE.closedMilestones.push({ ...findMilestone, closed: true });
+      MILESTONE_TABLE.openedMilestones = MILESTONE_TABLE.openedMilestones.filter((el) => el.id !== Number(id));
+    }
 
-    return res(ctx.status(200), ctx.json(milestones));
+    return res(ctx.status(200), ctx.json(MILESTONE_TABLE));
   }),
 
   rest.delete('api/milestones/:id', async (req, res, ctx) => {
     const { id } = req.params;
 
-    const deleteMilestones = Object.values(milestones).map((state: MilestoneTypes[]) => {
+    const findMilestone = findMilestoneHelper(Number(id));
+
+    if (!findMilestone) {
+      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_MILESTONE));
+    }
+
+    const deleteMilestones = Object.values(MILESTONE_TABLE).map((state: MilestoneTypes[]) => {
       if (state.find((el) => el.id === Number(id))) {
         return state.filter((el) => el.id !== Number(id));
       }
@@ -151,13 +102,8 @@ export const milestoneHandlers = [
     });
 
     const [newOpenedMilestones, newClosedMilestones] = deleteMilestones;
-    milestones.openedMilestones = newOpenedMilestones;
-    milestones.closedMilestones = newClosedMilestones;
-
-    // if (!req.cookies['refresh-token']) {
-    //   console.log(!req.cookies['refresh-token']);
-    //   return res(ctx.status(400), ctx.json(tokenErrorMessage.message));
-    // }
+    MILESTONE_TABLE.openedMilestones = newOpenedMilestones;
+    MILESTONE_TABLE.closedMilestones = newClosedMilestones;
 
     const updatedIssues = (state: 'openIssues' | 'closedIssues'): ContentTypes[] =>
       issueTable[state].map((issue) => ({

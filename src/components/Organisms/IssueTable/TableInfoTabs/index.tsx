@@ -38,10 +38,15 @@ const TableInfoTabs = () => {
     setCheckState({ ...checkState, parent: false, child: [] });
   };
 
+  const totalMilestones =
+    milestoneData?.openedMilestones && milestoneData?.closedMilestones
+      ? [...milestoneData.openedMilestones, ...milestoneData.closedMilestones].sort((a, b) => a.id - b.id)
+      : [];
+
   const filterTabs = [
     ASSIGNEE_DROPDOWN_ARGS(memberData || []),
     LABEL_DROPDOWN_ARGS(labelData || []),
-    MILESTONE_DROPDOWN_ARGS(milestoneData?.openedMilestones || []),
+    MILESTONE_DROPDOWN_ARGS(totalMilestones),
     AUTHOR_DROPDOWN_ARGS(memberData || []),
   ];
 
