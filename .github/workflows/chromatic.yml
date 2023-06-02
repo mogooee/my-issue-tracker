@@ -1,0 +1,21 @@
+# Workflow name
+name: 'Chromatic Deployment'
+
+on: 
+  push:
+    branches:
+      - deploy-chromatic
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Install npm package
+        run: npm install --force
+
+      - uses: chromaui/action@v1
+
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN_MSW }}
