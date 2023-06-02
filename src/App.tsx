@@ -29,7 +29,7 @@ const queryClient = new QueryClient({
 });
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = process.env.REACT_APP_PUBLIC_URL;
+// axios.defaults.baseURL = process.env.REACT_APP_PUBLIC_URL;
 
 const App = () => (
   <RecoilRoot>
