@@ -12,4 +12,4 @@ const Template: ComponentStory<typeof IssueHistory> = (args) => <IssueHistory {.
 
 export const Initial = Template.bind({});
 // eslint-disable-next-line prefer-destructuring
-Initial.args = issue.issueHistories[3];
+Initial.args = issue.issueHistories[0];
