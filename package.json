@@ -101,7 +101,7 @@
     "webpack-merge": "^5.8.0"
   },
   "msw": {
-    "workerDirectory": ".storybook/public"
+    "workerDirectory": "build"
   },
   "sideEffects": false
 }
