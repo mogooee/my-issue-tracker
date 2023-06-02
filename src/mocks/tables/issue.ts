@@ -17,7 +17,7 @@ export const MILESTONE_TABLE: MilestoneListTypes = {
     {
       id: 2,
       title: '마일스톤 3',
-      description: '열린 마일스톤에 대한 설명',
+      description: '열린 마일스톤 입니다.',
       dueDate: '2022-08-28',
       closed: false,
       openIssueCount: 3,
@@ -28,7 +28,7 @@ export const MILESTONE_TABLE: MilestoneListTypes = {
     {
       id: 1,
       title: '마일스톤 2',
-      description: '닫힌 마일스톤에 대한 설명',
+      description: '닫힌 마일스톤 입니다.',
       dueDate: null,
       closed: true,
       openIssueCount: 1,
@@ -59,19 +59,19 @@ const LABEL = {
 };
 
 export const issues: IssuesTypes = {
-  openIssueCount: 7,
-  closedIssueCount: 2,
+  openIssueCount: MILESTONE_TABLE.openedMilestones.length,
+  closedIssueCount: MILESTONE_TABLE.closedMilestones.length,
   issues: {
     content: [
       {
         id: 1,
-        title: '로우앤슬로우',
+        title: '[Feat] 개발 환경 DB 구성',
         author: AUTHOR.WHO,
         comments: [
           {
             id: 1,
             author: AUTHOR.WHO,
-            content: '주문할 메뉴는 오리지널과 비프립플레이트입니다.',
+            content: '로컬 개발 환경에서 사용할 DB 종류 논의',
             createdAt: '2022-09-11T00:00:00.479Z',
             issueCommentReactionsResponse: [
               {
@@ -79,7 +79,7 @@ export const issues: IssuesTypes = {
                 emoji: 'U+1F44D',
                 issueCommentReactorResponse: {
                   id: 2,
-                  nickname: 'hoo',
+                  nickname: AUTHOR.BECK.nickname,
                 },
               },
               {
@@ -87,7 +87,7 @@ export const issues: IssuesTypes = {
                 emoji: 'U+1F44D',
                 issueCommentReactorResponse: {
                   id: 3,
-                  nickname: 'ader',
+                  nickname: AUTHOR.DOTORI.nickname,
                 },
               },
             ],
@@ -95,7 +95,7 @@ export const issues: IssuesTypes = {
           {
             id: 2,
             author: AUTHOR.ADER,
-            content: '너무 좋아요 소고기뭇국도 기대됩니다.',
+            content: '로컬 개발 환경에서 사용할 DB 연결',
             createdAt: '2022-09-11T17:00:00.111Z',
             issueCommentReactionsResponse: [
               {
@@ -103,17 +103,10 @@ export const issues: IssuesTypes = {
                 emoji: 'U+1F604',
                 issueCommentReactorResponse: {
                   id: 1,
-                  nickname: 'hoo',
+                  nickname: AUTHOR.WHO.nickname,
                 },
               },
             ],
-          },
-          {
-            id: 3,
-            author: AUTHOR.DOTORI,
-            content: '코멘트 배치 테스트',
-            createdAt: '2022-09-18T16:30:00.479Z',
-            issueCommentReactionsResponse: [],
           },
         ],
         issueAssignees: {
@@ -131,8 +124,8 @@ export const issues: IssuesTypes = {
             label: null,
             milestone: null,
             assignee: null,
-            previousTitle: '히스토리 테스트',
-            changedTitle: '로우앤슬로우',
+            previousTitle: '개발 환경 DB 구성',
+            changedTitle: '[Feat] 개발 환경 DB 구성',
           },
           {
             modifier: AUTHOR.ADER,
@@ -146,39 +139,15 @@ export const issues: IssuesTypes = {
           },
           {
             modifier: AUTHOR.DOBBY,
-            modifiedAt: '2022-09-14T14:46:53.479Z',
-            action: 'OPEN_ISSUE',
-            label: null,
-            milestone: null,
-            assignee: null,
-            previousTitle: null,
-            changedTitle: null,
-          },
-          {
-            modifier: AUTHOR.DOBBY,
             modifiedAt: '2022-09-18T15:46:53.479Z',
             action: 'ADD_LABEL',
             label: {
               createdAt: '2022-09-19T06:46:53.479Z',
               lastModifiedAt: '2022-09-19T06:46:53.479Z',
-              ...LABEL.QUESTION,
+              ...LABEL.FEATURE,
             },
             milestone: null,
             assignee: null,
-            previousTitle: null,
-            changedTitle: null,
-          },
-          {
-            modifier: AUTHOR.DOBBY,
-            modifiedAt: '2022-09-20T16:46:53.479Z',
-            action: 'REMOVE_ASSIGNEE',
-            label: null,
-            milestone: null,
-            assignee: {
-              createdAt: '2022-09-19T06:46:53.479Z',
-              lastModifiedAt: '2022-09-19T06:46:53.479Z',
-              ...AUTHOR.DOBBY,
-            },
             previousTitle: null,
             changedTitle: null,
           },
@@ -203,23 +172,15 @@ export const issues: IssuesTypes = {
       },
       {
         id: 2,
-        title: '물회',
-        author: AUTHOR.WHO,
+        title: '[Feat] 일반 회원가입 기능 구현',
+        author: AUTHOR.ADER,
         comments: [
           {
             id: 3,
             author: AUTHOR.ADER,
-            content: '물회에는 역시 오이가 들어가야죠!',
+            content: `# 회원가입과 관련된 로직을 구현합니다.`,
             createdAt: '2022-08-20T00:00:00',
             issueCommentReactionsResponse: [
-              {
-                id: 3,
-                emoji: 'U+1F44E',
-                issueCommentReactorResponse: {
-                  id: 3,
-                  nickname: 'ader',
-                },
-              },
               {
                 id: 6,
                 emoji: 'U+1F615',
@@ -240,10 +201,10 @@ export const issues: IssuesTypes = {
           },
         ],
         issueAssignees: {
-          issueAssignees: [AUTHOR.WHO],
+          issueAssignees: [AUTHOR.WHO, AUTHOR.ADER],
         },
         issueLabels: {
-          issueLabels: [LABEL.FEATURE, LABEL.QUESTION],
+          issueLabels: [LABEL.FEATURE],
         },
         milestone: {
           id: 2,
@@ -261,13 +222,13 @@ export const issues: IssuesTypes = {
       },
       {
         id: 3,
-        title: '해진뒤',
-        author: AUTHOR.WHO,
+        title: '[Feat] OAuth 회원가입 구현',
+        author: AUTHOR.ADER,
         comments: [
           {
             id: 4,
             author: AUTHOR.WHO,
-            content: '해진뒤 한 번 실패 뒤 재도전!!',
+            content: 'OAuth 회원가입 구현',
             createdAt: '2022-08-30T00:00:00',
             issueCommentReactionsResponse: [
               {
@@ -275,7 +236,7 @@ export const issues: IssuesTypes = {
                 emoji: 'U+1F389',
                 issueCommentReactorResponse: {
                   id: 2,
-                  nickname: 'hoo',
+                  nickname: AUTHOR.WHO.nickname,
                 },
               },
               {
@@ -283,7 +244,7 @@ export const issues: IssuesTypes = {
                 emoji: 'U+2764 U+FE0F',
                 issueCommentReactorResponse: {
                   id: 2,
-                  nickname: 'hoo',
+                  nickname: AUTHOR.DOBBY.nickname,
                 },
               },
               {
@@ -291,7 +252,7 @@ export const issues: IssuesTypes = {
                 emoji: 'U+1F680',
                 issueCommentReactorResponse: {
                   id: 3,
-                  nickname: 'ader',
+                  nickname: AUTHOR.DOTORI.nickname,
                 },
               },
             ],
@@ -311,22 +272,22 @@ export const issues: IssuesTypes = {
       },
       {
         id: 4,
-        title: '아타리',
-        author: AUTHOR.WHO,
+        title: '[Refactor][iOS] UI/Unit 테스트 작성',
+        author: AUTHOR.BECK,
         comments: [
           {
             id: 5,
-            author: AUTHOR.ADER,
-            content: '아타리 가는날은 무슨날?',
+            author: AUTHOR.BECK,
+            content: '',
             createdAt: '2022-09-10T00:00:00',
             issueCommentReactionsResponse: [],
           },
         ],
         issueAssignees: {
-          issueAssignees: [AUTHOR.WHO, AUTHOR.ADER],
+          issueAssignees: [AUTHOR.BECK],
         },
         issueLabels: {
-          issueLabels: [LABEL.FEATURE, LABEL.QUESTION],
+          issueLabels: [LABEL.FEATURE, LABEL.BUGS],
         },
         milestone: MILESTONE.OPEN2,
         issueHistories: [],
@@ -336,20 +297,20 @@ export const issues: IssuesTypes = {
       },
       {
         id: 5,
-        title: '오제제',
-        author: AUTHOR.WHO,
+        title: '[Refactor][iOS] Xcode UI Test 추가',
+        author: AUTHOR.BECK,
         comments: [
           {
             id: 6,
-            author: AUTHOR.WHO,
-            content: '또 오셔야겠죠?',
+            author: AUTHOR.BECK,
+            content: 'Xcode UI Test를 추가합니다.',
             createdAt: '2022-09-11T00:00:00',
             issueCommentReactionsResponse: [],
           },
           {
             id: 7,
             author: AUTHOR.ADER,
-            content: '오제제의 안심과 자루우동은 아주 나이스!',
+            content: '💪💪💪💪💪',
             createdAt: '2022-09-11T05:00:00',
             issueCommentReactionsResponse: [],
           },
@@ -368,26 +329,26 @@ export const issues: IssuesTypes = {
       },
       {
         id: 6,
-        title: '오달',
-        author: AUTHOR.WHO,
+        title: '[FE] 🎉 프로젝트 환경설정',
+        author: AUTHOR.DOTORI,
         comments: [
           {
             id: 8,
-            author: AUTHOR.WHO,
-            content: '또 오셔야겠죠?',
+            author: AUTHOR.DOTORI,
+            content: 'CRA를 이용하지 않고 webpack과 babel로 typescript 기반의 프로젝트 환경설정을 한다.',
             createdAt: '2022-09-11T00:00:00',
             issueCommentReactionsResponse: [],
           },
           {
             id: 7,
-            author: AUTHOR.ADER,
-            content: '오제제의 안심과 자루우동은 아주 나이스!',
+            author: AUTHOR.DOBBY,
+            content: '프로젝트에 필요한 라이브러리를 설치한다.',
             createdAt: '2022-09-11T05:00:00',
             issueCommentReactionsResponse: [],
           },
         ],
         issueAssignees: {
-          issueAssignees: [AUTHOR.WHO],
+          issueAssignees: [AUTHOR.DOTORI],
         },
         issueLabels: {
           issueLabels: [],
@@ -400,19 +361,19 @@ export const issues: IssuesTypes = {
       },
       {
         id: 7,
-        title: '뱃놈',
-        author: AUTHOR.WHO,
+        title: '[FE] ✨ 로그인/회원가입 페이지 UI 구현, 테스트하기',
+        author: AUTHOR.DOBBY,
         comments: [
           {
             id: 9,
-            author: AUTHOR.WHO,
-            content: '두 번가서 결국 끝까지 먹어봤네요.',
+            author: AUTHOR.DOBBY,
+            content: '로그인/회원가입 페이지 UI를 구현한다.',
             createdAt: '2022-09-11T12:00:00',
             issueCommentReactionsResponse: [],
           },
         ],
         issueAssignees: {
-          issueAssignees: [AUTHOR.ADER],
+          issueAssignees: [AUTHOR.DOBBY],
         },
         issueLabels: {
           issueLabels: [],
@@ -425,29 +386,29 @@ export const issues: IssuesTypes = {
       },
       {
         id: 8,
-        title: '한국횟집',
-        author: AUTHOR.WHO,
+        title: '[FE] ✨ 로그인/회원가입 api 추가 적용',
+        author: AUTHOR.DOTORI,
         comments: [
           {
             id: 10,
-            author: AUTHOR.WHO,
-            content: '다음엔 저도 데려가세요.',
+            author: AUTHOR.DOTORI,
+            content: '회원가입 시 토큰 응답 확인하기',
             createdAt: '2022-09-12T00:00:00',
             issueCommentReactionsResponse: [],
           },
           {
             id: 11,
-            author: AUTHOR.ADER,
-            content: '꼭 파티구해서 같이가요!',
+            author: AUTHOR.DOBBY,
+            content: '💪💪💪💪💪',
             createdAt: '2022-09-12T02:00:00',
             issueCommentReactionsResponse: [],
           },
         ],
         issueAssignees: {
-          issueAssignees: [AUTHOR.WHO, AUTHOR.ADER],
+          issueAssignees: [AUTHOR.DOTORI, AUTHOR.DOBBY],
         },
         issueLabels: {
-          issueLabels: [],
+          issueLabels: [LABEL.FEATURE],
         },
         milestone: MILESTONE.CLOSE1,
         issueHistories: [],
@@ -457,13 +418,13 @@ export const issues: IssuesTypes = {
       },
       {
         id: 9,
-        title: 'test',
-        author: AUTHOR.DOBBY,
+        title: '✨ 이슈 필터 기능 구현',
+        author: AUTHOR.DOTORI,
         comments: [
           {
             id: 12,
-            author: AUTHOR.DOBBY,
-            content: '# test',
+            author: AUTHOR.DOTORI,
+            content: '## 이슈 페이지의 필터 기능 및 세부 기능 구현',
             createdAt: '2022-09-13T11:47:11.408015',
             issueCommentReactionsResponse: [
               {
@@ -478,10 +439,10 @@ export const issues: IssuesTypes = {
           },
         ],
         issueAssignees: {
-          issueAssignees: [AUTHOR.DOBBY, AUTHOR.DOTORI, AUTHOR.BECK],
+          issueAssignees: [AUTHOR.DOTORI],
         },
         issueLabels: {
-          issueLabels: [LABEL.DOCS],
+          issueLabels: [LABEL.FEATURE],
         },
         milestone: null,
         issueHistories: [],
