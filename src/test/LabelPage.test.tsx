@@ -163,7 +163,6 @@ describe('라벨 페이지 테스트', () => {
       window.history.pushState({}, 'Test-Page', labelHref);
     });
 
-    const FilterBar = screen.getByPlaceholderText('Search all issues') as HTMLInputElement;
-    expect(FilterBar).toHaveValue('label:Bugs');
+    expect(label).not.toBeInTheDocument();
   });
 });

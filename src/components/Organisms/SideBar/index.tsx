@@ -11,6 +11,11 @@ const SideBar = ({ ...props }: SideBarTypes) => {
   const { memberData, memberDataRefetch, labelData, labelDataRefetch, milestoneData, milestoneDataRefetch } =
     useFetchSideBarData();
 
+  const totalMilestones =
+    milestoneData?.openedMilestones && milestoneData?.closedMilestones
+      ? [...milestoneData.openedMilestones, ...milestoneData.closedMilestones].sort((a, b) => a.id - b.id)
+      : [];
+
   const fetchDropdownData = (event: React.MouseEvent<HTMLDivElement>) => {
     const { id } = event.currentTarget.dataset;
 
@@ -33,7 +38,7 @@ const SideBar = ({ ...props }: SideBarTypes) => {
         case 'label':
           return labelData!;
         case 'milestone':
-          return milestoneData!.openedMilestones;
+          return totalMilestones;
         default:
           return [];
       }
@@ -68,7 +73,7 @@ const SideBar = ({ ...props }: SideBarTypes) => {
         id="milestone"
         dropdownTitle="마일스톤"
         dropdownListTitle="마일스톤 필터"
-        dropdownList={milestoneData?.openedMilestones!}
+        dropdownList={totalMilestones}
         dropdownType="radio"
         content={content.milestone}
         handleOnChange={changeDropdownInput}

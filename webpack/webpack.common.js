@@ -27,7 +27,7 @@ module.exports = {
     alias: {
       '@': path.resolve(__dirname, '..', 'src'),
     },
-    modules: ['node_modules'],
+    modules: ['node_modules', 'bower_components', 'shared', '/shared/vendor/modules'],
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   module: {

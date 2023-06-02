@@ -24,7 +24,7 @@ describe('OAuth가입 컴포넌트 테스트', () => {
   const rendering = () => {
     const signUpFormData = {
       resourceOwnerId: 'string',
-      email: 'dobby@gmail.com',
+      email: 'testDobby@gmail.com',
       profileImage: 'string',
     };
 
@@ -82,7 +82,7 @@ describe('OAuth가입 컴포넌트 테스트', () => {
     await userEvent.click(signUpButton);
     // post가 정상적으로 되었는지 확인
     expect(resolver).toBeCalledTimes(1);
-    // navigate가 정상적으로 이동되었는지 확인
+    // // navigate가 정상적으로 이동되었는지 확인
     expect(mockedNavigate).toBeCalledTimes(1);
   });
 });

@@ -6,6 +6,7 @@ import { composeStories } from '@storybook/testing-react';
 import { act } from 'react-dom/test-utils';
 
 import * as NewIssuePageStories from '@/pages/Private/NewIssue/NewIssue.stories';
+import { MemoryRouter } from 'react-router-dom';
 
 const { Initial } = composeStories(NewIssuePageStories);
 
@@ -23,14 +24,28 @@ jest.mock('react-markdown', () => {
 jest.mock('remark-gfm', () => () => {});
 
 describe('이슈 생성 페이지 테스트', () => {
+  beforeEach(() => {
+    Object.defineProperty(document, 'cookie', {
+      writable: true,
+      value: 'refresh_token=refresh123; access_token=access123',
+    });
+  });
+
   afterEach(() => {
     jest.useRealTimers();
   });
 
   const user = userEvent.setup({ delay: null });
 
+  const renderNewIssuePageComponent = () =>
+    render(
+      <MemoryRouter>
+        <Initial />
+      </MemoryRouter>,
+    );
+
   it('이슈 생성 페이지를 조회한다.', async () => {
-    const { container } = render(<Initial />);
+    const { container } = renderNewIssuePageComponent();
 
     await waitFor(() => {
       expect(container).toHaveTextContent('새로운 이슈 작성');
@@ -39,7 +54,7 @@ describe('이슈 생성 페이지 테스트', () => {
 
   it(`제목에 '이슈 생성 테스트'를 입력하면 완료 버튼이 활성화 된다.`, async () => {
     jest.useFakeTimers();
-    render(<Initial />);
+    renderNewIssuePageComponent();
 
     const title = screen.getByPlaceholderText('제목') as HTMLInputElement;
     await user.type(title, '이슈 생성 테스트');
@@ -62,7 +77,8 @@ describe('이슈 생성 페이지 테스트', () => {
 
   it(`사이드 바의 담당자를 클릭한 후, 이름이 '도비'인 유저를 추가한다.`, async () => {
     jest.useFakeTimers();
-    const { container } = render(<Initial />);
+
+    const { container } = renderNewIssuePageComponent();
 
     const assignees = container.querySelectorAll('.sidebar_item')[0];
     await user.click(assignees);
@@ -83,7 +99,7 @@ describe('이슈 생성 페이지 테스트', () => {
 
   it(`사이드 바의 레이블를 클릭한 후, 이름이 'Feature'인 레이블을 추가한다.`, async () => {
     jest.useFakeTimers();
-    const { container } = render(<Initial />);
+    const { container } = renderNewIssuePageComponent();
 
     const labels = container.querySelectorAll('.sidebar_item')[1];
     await user.click(labels);
@@ -104,7 +120,7 @@ describe('이슈 생성 페이지 테스트', () => {
 
   it(`사이드 바의 마일스톤을 클릭한 후, 이름이 '마일스톤 1'인 마일스톤을 추가한다.`, async () => {
     jest.useFakeTimers();
-    const { container } = render(<Initial />);
+    const { container } = renderNewIssuePageComponent();
 
     const milestone = container.querySelectorAll('.sidebar_item')[2];
     await user.click(milestone);
@@ -125,7 +141,7 @@ describe('이슈 생성 페이지 테스트', () => {
 
   it(`제목이 '새로운 이슈 생성'이고 담당자가 도비, 레이블이 feature인 이슈를 생성한다.`, async () => {
     jest.useFakeTimers();
-    const { container } = render(<Initial />);
+    const { container } = renderNewIssuePageComponent();
 
     const title = screen.getByPlaceholderText('제목') as HTMLInputElement;
     await user.type(title, '이슈 생성 테스트');
