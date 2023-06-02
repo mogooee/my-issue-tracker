@@ -14,7 +14,9 @@ type IssueHeaderTypes = Pick<ContentTypes, 'id' | 'title' | 'closed' | 'createdA
 };
 
 const IssueHeader = ({ id, closed, title, createdAt, author, commentNum }: IssueHeaderTypes) => {
-  const issueOpenSummary = `이 이슈가 ${calcTimeForToday(createdAt)}에 ${author.nickname}님에 의해 열렸습니다.`;
+  const issueOpenSummary = `이 이슈가 ${calcTimeForToday(createdAt)}에 ${author.nickname}님에 의해 ${
+    closed ? '닫혔습니다' : '열렸습니다.'
+  }`;
 
   return (
     <S.IssueHeader>
