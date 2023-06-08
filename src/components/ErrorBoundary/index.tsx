@@ -20,11 +20,11 @@ type FallbackRenderPropsType = {
   errorCode: number;
 };
 
-declare function FallbackRender(props: FallbackRenderPropsType): React.ReactElement<React.FunctionComponent>;
+type FallbackRenderType = (props: FallbackRenderPropsType) => React.ReactElement<React.FunctionComponent>;
 
 interface ErrorBoundaryProps {
   queryClient: QueryClient;
-  fallbackRender?: typeof FallbackRender;
+  fallbackRender?: FallbackRenderType;
 }
 
 interface ErrorBoundaryState {
@@ -63,7 +63,7 @@ class ErrorBoundary extends React.Component<
     queryClient.clear();
   }
 
-  fallbackUIRender(fallbackRender: typeof FallbackRender, data: ErrorMessage) {
+  fallbackUIRender(fallbackRender: FallbackRenderType, data: ErrorMessage) {
     const fallbackRenderProps: FallbackRenderPropsType = {
       resetErrorBoundary: this.resetQueryClient.bind(this),
       resetState: this.resetState.bind(this),
@@ -140,7 +140,7 @@ class ErrorBoundary extends React.Component<
 }
 
 interface CustomErrorBoundaryTypes {
-  fallbackRender?: typeof FallbackRender;
+  fallbackRender?: FallbackRenderType;
   children: React.ReactNode;
 }
 
