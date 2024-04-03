@@ -39,7 +39,7 @@ const Refresh = ({ children }: { children: React.ReactNode }): React.ReactElemen
   return <>{children}</>;
 };
 
-const LoginExtensionComponent = ({ children }: { children: React.ReactNode }) => (
+const LoginExtensionComponent = ({ children }: { children?: React.ReactNode }) => (
   <Suspense
     fallback={
       <>
