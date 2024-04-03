@@ -2,7 +2,7 @@
 import { rest } from 'msw';
 import { ContentTypes, LabelTypes } from '@/api/issue/types';
 import { issueTable } from '@/mocks/tables/issue';
-import { ERROR_CODE } from '@/api/constants';
+import { CustomErrorCode, makeErrRes } from '@/api/constants';
 
 // eslint-disable-next-line import/no-mutable-exports
 export let LABEL_TABLE: LabelTypes[] = [
@@ -51,7 +51,8 @@ const findLabelHelper = (id: number) => LABEL_TABLE.find((e) => e.id === id);
 
 export const labelHandlers = [
   // 라벨 리스트 조회
-  rest.get('api/labels', (req, res, ctx) => res(ctx.status(200), ctx.json(LABEL_TABLE))),
+  rest.get('api/labels', (req, res, ctx) => res(ctx.status(403), ctx.json({ errorCode: 1001, msg: '노레이블' }))),
+  // rest.get('api/labels', (req, res, ctx) => res(ctx.status(200), ctx.json(LABEL_TABLE))),
 
   // 라벨 등록
   rest.post('api/labels', async (req, res, ctx) => {
@@ -61,7 +62,7 @@ export const labelHandlers = [
     const findLabelTitle = LABEL_TABLE.find((label) => label.title === title);
 
     if (findLabelTitle) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.DUPLICATED_LABEL_TITLE));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.DUPLICATED_LABEL_TITLE)));
     }
 
     if (title && backgroundColorCode && textColor) {
@@ -79,7 +80,7 @@ export const labelHandlers = [
     const findLabel = findLabelHelper(Number(id));
 
     if (!findLabel) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_LABEL));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_LABEL)));
     }
     return res(ctx.status(200), ctx.json(findLabel));
   }),
@@ -90,7 +91,7 @@ export const labelHandlers = [
     const findLabel = findLabelHelper(Number(id));
 
     if (!findLabel) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_LABEL));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_LABEL)));
     }
 
     LABEL_TABLE = LABEL_TABLE.filter((e) => e.id !== Number(id));
@@ -116,7 +117,7 @@ export const labelHandlers = [
     const findLabel = findLabelHelper(Number(id));
 
     if (!findLabel) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_LABEL));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_LABEL)));
     }
 
     LABEL_TABLE = LABEL_TABLE.map((e) => {

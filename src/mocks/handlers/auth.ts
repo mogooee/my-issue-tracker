@@ -2,7 +2,7 @@
 import { rest } from 'msw';
 import { OAuthResponse, RedirectAuthTypes } from '@/api/sign';
 import { UserTypes } from '@/api/issue/types';
-import { ERROR_CODE } from '@/api/constants';
+import { CustomErrorCode, makeErrRes } from '@/api/constants';
 
 import { USER_LIST as OAUTH_USER_LIST } from '@/components/Molecules/Dropdown/mock';
 import AppLogo from '@/assets/logo/issueTracker.png';
@@ -44,7 +44,7 @@ export const authHandlers = [
       getCookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE) !== REFRESH_TOKEN.VALUE ||
       !getCookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE)
     ) {
-      return res(ctx.status(401), ctx.json(ERROR_CODE.INVALID_REFRESH_TOKEN));
+      return res(ctx.status(401), ctx.json(makeErrRes(CustomErrorCode.INVALID_REFRESH_TOKEN)));
     }
 
     return res(
@@ -60,7 +60,7 @@ export const authHandlers = [
 
     const findUser = USER_TABLE.find((user) => user.loginId === loginInfo.id);
 
-    if (!findUser) return res(ctx.status(401), ctx.json(ERROR_CODE.SIGN_IN_FAIL));
+    if (!findUser) return res(ctx.status(401), ctx.json(makeErrRes(CustomErrorCode.SIGN_IN_FAIL)));
 
     if (findUser.password === loginInfo.password) {
       const response: OAuthResponse = {
@@ -86,7 +86,7 @@ export const authHandlers = [
       );
     }
 
-    return res(ctx.status(401), ctx.json(ERROR_CODE.SIGN_IN_FAIL));
+    return res(ctx.status(401), ctx.json(makeErrRes(CustomErrorCode.SIGN_IN_FAIL)));
   }),
 
   // 유저 정보 요청 API
@@ -143,7 +143,7 @@ export const authHandlers = [
       return res(ctx.status(200), ctx.json(response));
     }
 
-    return res(ctx.status(400), ctx.json(ERROR_CODE.INVALID_AUTH_PROVIDER_TYPE));
+    return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.INVALID_AUTH_PROVIDER_TYPE)));
   }),
 
   // 일반 회원 가입
@@ -186,7 +186,7 @@ export const authHandlers = [
     const findEmail = USER_TABLE.find((user) => user.email === email);
 
     if (findEmail) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.DUPLICATED_EMAIL));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.DUPLICATED_EMAIL)));
     }
 
     USER_TABLE.push(newMember);
@@ -267,7 +267,7 @@ export const authHandlers = [
       getCookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE) !== REFRESH_TOKEN.VALUE ||
       !getCookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE)
     ) {
-      return res(ctx.status(401), ctx.json(ERROR_CODE.INVALID_REFRESH_TOKEN));
+      return res(ctx.status(401), ctx.json(makeErrRes(CustomErrorCode.INVALID_REFRESH_TOKEN)));
     }
 
     return res(ctx.status(200), ctx.json(FILTERED_USER_LIST));
