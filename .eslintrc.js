@@ -78,6 +78,8 @@ module.exports = {
         labelAttributes: ['htmlFor'],
       },
     ],
+    'no-shadow': 'off', // replaced by ts-eslint rule below
+    '@typescript-eslint/no-shadow': ['error'],
   },
   globals: {
     JSX: true,
