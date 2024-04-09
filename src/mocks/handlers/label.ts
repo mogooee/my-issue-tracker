@@ -51,8 +51,7 @@ const findLabelHelper = (id: number) => LABEL_TABLE.find((e) => e.id === id);
 
 export const labelHandlers = [
   // 라벨 리스트 조회
-  rest.get('api/labels', (req, res, ctx) => res(ctx.status(403), ctx.json({ errorCode: 1001, msg: '노레이블' }))),
-  // rest.get('api/labels', (req, res, ctx) => res(ctx.status(200), ctx.json(LABEL_TABLE))),
+  rest.get('api/labels', (req, res, ctx) => res(ctx.status(200), ctx.json(LABEL_TABLE))),
 
   // 라벨 등록
   rest.post('api/labels', async (req, res, ctx) => {
