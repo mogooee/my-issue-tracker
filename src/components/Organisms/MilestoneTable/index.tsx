@@ -22,7 +22,7 @@ import useFetchMilestone from '@/api/milestone/useFetchMilestone';
 import { COLORS } from '@/styles/theme';
 
 import { MilestoneListTypes } from '@/api/milestone';
-import CustomErrorBoundary from '@/components/ErrorBoundary';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 const MILESTONE_STATE_TAB = (data: MilestoneListTypes) => [
   {
@@ -82,14 +82,15 @@ const MilestoneTable = () => {
 };
 
 export const FallBackMilestoneTable = () => (
-  <CustomErrorBoundary
+  <ErrorBoundary
+    resetKeys={['MilestoneTable']}
     // eslint-disable-next-line react/no-unstable-nested-components
     fallbackRender={({ resetErrorBoundary }) => <ErrorTable type="milestone" resetErrorBoundary={resetErrorBoundary} />}
   >
     <Suspense fallback={<SkeletonMilestoneTable />}>
       <MilestoneTable />
     </Suspense>
-  </CustomErrorBoundary>
+  </ErrorBoundary>
 );
 
 export default MilestoneTable;

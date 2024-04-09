@@ -15,7 +15,7 @@ import { IssuesTypes } from '@/api/issue/types';
 import { openCloseIssue } from '@/components/Molecules/NavLink/options';
 import { OPEN_QUERY } from '@/hooks/useFilter';
 
-import CustomErrorBoundary from '@/components/ErrorBoundary';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import TableInfoTabs from '@/components/Organisms/IssueTable/TableInfoTabs';
 import ErrorInfoTabs from '@/components/Organisms/IssueTable/TableInfoTabs/Error';
 import { FilterState, PageState } from '@/stores/filter';
@@ -54,13 +54,14 @@ const IssueTable = ({ issuesData }: { issuesData: IssuesTypes }) => {
               />
             )}
           </S.IssueStates>
-          <CustomErrorBoundary
-            fallbackRender={({ resetState, errorCode }) => (
-              <ErrorInfoTabs resetState={resetState} errorCode={errorCode} />
+          <ErrorBoundary
+            resetKeys={['IssueTab']}
+            fallbackRender={({ resetErrorBoundary, errorCode }) => (
+              <ErrorInfoTabs resetState={resetErrorBoundary} errorCode={errorCode} />
             )}
           >
             <TableInfoTabs />
-          </CustomErrorBoundary>
+          </ErrorBoundary>
         </S.IssueTableHeader>
       }
       item={

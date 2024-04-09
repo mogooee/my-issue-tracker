@@ -26,31 +26,28 @@ export const RefreshUI = () => (
   </StyledRefreshUI>
 );
 
-const Refresh = ({ children }: { children: React.ReactNode }): React.ReactElement => {
+const Refresh = ({ resetError }: { resetError: () => void }): React.ReactElement => {
   const { setSuccessLoginState } = useLogin();
-
   useQuery<RedirectAuthTypes>(['LoginExtension'], silentRefresh, {
     onSuccess: () => {
       setSuccessLoginState();
+      resetError();
     },
   });
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
-  return <>{children}</>;
+  return <></>;
 };
 
-const LoginExtensionComponent = ({ children }: { children?: React.ReactNode }) => (
+const LoginExtensionComponent = ({ resetError }: { resetError: () => void }) => (
   <Suspense
     fallback={
-      <>
-        {children}
-        <Modal>
-          <RefreshUI />
-        </Modal>
-      </>
+      <Modal>
+        <RefreshUI />
+      </Modal>
     }
   >
-    <Refresh>{children}</Refresh>
+    <Refresh resetError={resetError} />
   </Suspense>
 );
 

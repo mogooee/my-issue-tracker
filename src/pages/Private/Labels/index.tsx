@@ -5,7 +5,7 @@ import * as S from '@/pages/Private/Labels/index.styles';
 import Button from '@/components/Atoms/Button';
 import LabelEditForm from '@/components/Molecules/LabelEditForm';
 import NavLink from '@/components/Molecules/NavLink';
-import { FallbackLabelTable } from '@/components/Organisms/LabelTable';
+import FallbackLabelTable from '@/components/Organisms/LabelTable';
 
 import { initLabelState } from '@/components/Molecules/LabelEditForm/constants';
 import { labelMilestone } from '@/components/Molecules/NavLink/options';

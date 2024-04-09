@@ -12,7 +12,7 @@ import { ModalState } from '@/stores/modal';
 import DeleteCheck from '@/components/Modal/DeleteCheck';
 
 import { useRecoilState } from 'recoil';
-import CustomErrorBoundary from '@/components/ErrorBoundary';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import ErrorSideBar from '@/components/Organisms/SideBar/ErrorSideBar';
 import DetailSidebarLogic from '@/pages/Private/IssueDetail/Aside/DetailSidebarLogic';
 import { ContentListTypes } from '@/components/Organisms/SideBar/types';
@@ -46,13 +46,15 @@ const IsssueDetailAside = ({ issue, memberId }: { issue: ContentTypes; memberId:
   return (
     <>
       <S.Aside>
-        <CustomErrorBoundary
-          fallbackRender={({ resetState, errorCode }) => (
-            <ErrorSideBar contentList={DEFAULT_CONTENT_LIST} resetState={resetState!} errorCode={errorCode} />
+        <ErrorBoundary
+          resetKeys={['Aside']}
+          fallbackRender={({ resetErrorBoundary, errorCode }) => (
+            <ErrorSideBar contentList={DEFAULT_CONTENT_LIST} resetState={resetErrorBoundary!} errorCode={errorCode} />
           )}
         >
           <DetailSidebarLogic issueId={issue.id} contentList={DEFAULT_CONTENT_LIST} />
-        </CustomErrorBoundary>
+        </ErrorBoundary>
+
         {isIssueAuthor && (
           <Button
             buttonStyle="NO_BORDER"
