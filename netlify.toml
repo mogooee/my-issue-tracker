@@ -1,12 +1,12 @@
 [build]
   command = """
     npm install --force
-    npx msw init ./build --save
     npm run build
     echo -e "REACT_APP_GITHUB_AUTH_URL=$REACT_APP_GITHUB_AUTH_URL\n
              REACT_APP_KAKAO_AUTH_URL=$REACT_APP_KAKAO_AUTH_URL\n
              REACT_APP_NAVER_AUTH_URL=$REACT_APP_NAVER_AUTH_URL\n
              REACT_APP_PUBLIC_URL=$REACT_APP_PUBLIC_URL\n
              REACT_APP_UNIVERSAL_LINK=$REACT_APP_UNIVERSAL_LINK\n" > ./.env
+    npx msw init ./build --save
   """
   publish = "build"
