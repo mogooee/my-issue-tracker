@@ -17,6 +17,8 @@ import IsssueDetailAside from '@/pages/Private/IssueDetail/Aside';
 import IssueHistory from '@/pages/Private/IssueDetail/History';
 import useFetchReaction from '@/api/issue/useFetchReaction';
 import IssueInfo from '@/pages/Private/IssueDetail/IssueInfo';
+import ErrorBoundary from '@/components/ErrorBoundary';
+import NotExistIssue from '@/components/ErrorBoundary/NotExistIssue';
 
 const IssueDetail = (): JSX.Element => {
   const { issueId } = useParams();
@@ -65,7 +67,8 @@ const IssueDetail = (): JSX.Element => {
   });
 
   return (
-    <>
+    // eslint-disable-next-line react/no-unstable-nested-components
+    <ErrorBoundary fallbackRender={({ resetErrorBoundary }) => <NotExistIssue resetError={resetErrorBoundary} />}>
       <IssueHeader
         id={id}
         closed={closed}
@@ -107,7 +110,7 @@ const IssueDetail = (): JSX.Element => {
         </S.IssueComments>
         <IsssueDetailAside issue={issue!} memberId={memberId} />
       </S.IssueContent>
-    </>
+    </ErrorBoundary>
   );
 };
 

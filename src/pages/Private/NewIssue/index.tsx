@@ -25,7 +25,7 @@ import { ContentListTypes, isMilestoneTypes, UpdateSideBarFuncTypes } from '@/co
 
 import useFetchIssue from '@/api/issue/useFetchIssue';
 
-import CustomErrorBoundary from '@/components/ErrorBoundary';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import ErrorSideBar from '@/components/Organisms/SideBar/ErrorSideBar';
 
 const NewIssue = () => {
@@ -119,13 +119,15 @@ const NewIssue = () => {
             />
             <TextAreaEditer edit="ISSUE" textAreaValue={newIssueFormState.comment} />
           </S.NewIssueForm>
-          <CustomErrorBoundary
-            fallbackRender={({ resetState, errorCode }) => (
-              <ErrorSideBar contentList={DEFAULT_CONTENT_LIST} resetState={resetState!} errorCode={errorCode} />
+
+          <ErrorBoundary
+            resetKeys={['NewIssue']}
+            fallbackRender={({ resetErrorBoundary, errorCode }) => (
+              <ErrorSideBar contentList={DEFAULT_CONTENT_LIST} resetState={resetErrorBoundary!} errorCode={errorCode} />
             )}
           >
             <SideBar content={contentList} handleOnChange={updateSideBarItemState} />
-          </CustomErrorBoundary>
+          </ErrorBoundary>
         </S.NewIssueEditer>
         <S.Divider />
         <S.NewIssueButtons>

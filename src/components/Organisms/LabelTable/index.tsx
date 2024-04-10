@@ -14,7 +14,7 @@ import useFetchLabel from '@/api/label/useFetchLabel';
 import Modal from '@/components/Modal';
 import { ModalState } from '@/stores/modal';
 
-import CustomErrorBoundary from '@/components/ErrorBoundary';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 const EmptyLabelItem = () => (
   <S.NoLabelItem>
@@ -25,7 +25,7 @@ const EmptyLabelItem = () => (
 const LabelTable = () => {
   const { useLabelData, deleteLabel } = useFetchLabel();
   const { data: labelData } = useLabelData();
-  const labelDataNum = labelData!.length;
+  const labelDataNum = labelData?.length;
   const labelTableTitle = `${labelDataNum}개의 레이블`;
 
   const isModal = useRecoilValue(ModalState);
@@ -41,7 +41,7 @@ const LabelTable = () => {
         header={<span>{labelTableTitle}</span>}
         item={
           labelDataNum
-            ? labelData!.map((props) => <LabelItem key={props.id} setDeleteLabelId={setDeleteLabelId} {...props} />)
+            ? labelData?.map((props) => <LabelItem key={props.id} setDeleteLabelId={setDeleteLabelId} {...props} />)
             : [<EmptyLabelItem />]
         }
       />
@@ -54,15 +54,16 @@ const LabelTable = () => {
   );
 };
 
-export const FallbackLabelTable = () => (
-  <CustomErrorBoundary
+const FallbackLabelTable = () => (
+  <ErrorBoundary
+    resetKeys={['LableTable']}
     // eslint-disable-next-line react/no-unstable-nested-components
     fallbackRender={({ resetErrorBoundary }) => <ErrorTable type="label" resetErrorBoundary={resetErrorBoundary} />}
   >
     <Suspense fallback={<LabelTableSkeleton />}>
       <LabelTable />
     </Suspense>
-  </CustomErrorBoundary>
+  </ErrorBoundary>
 );
 
 export default FallbackLabelTable;

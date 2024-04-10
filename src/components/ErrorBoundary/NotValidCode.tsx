@@ -12,12 +12,12 @@ const StyledNotValidRedirectCode = styled.div`
   }
 `;
 
-const NotValidRedirectCode = ({ resetError }: { resetError: () => void }) => {
+const NotValidRedirectCode = ({ resetError }: { resetError?: () => void }) => {
   const navigate = useNavigate();
 
   const handleOnClick = () => {
     navigate('/');
-    resetError();
+    resetError?.();
   };
 
   return (

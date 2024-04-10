@@ -3,6 +3,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getRedirectAuthData, RedirectAuthTypes } from '@/api/sign';
 import useLogin from '@/api/sign/useLogin';
+import ErrorBoundary from '@/components/ErrorBoundary';
+import NotValidRedirectCode from '@/components/ErrorBoundary/NotValidCode';
 
 const RedirectAuth = () => {
   const { setSuccessLoginState, saveAuthLoginState } = useLogin();
@@ -30,4 +32,10 @@ const RedirectAuth = () => {
   return <div />;
 };
 
-export default RedirectAuth;
+const fallbackRedirectAuth = () => (
+  <ErrorBoundary fallbackRender={({ resetErrorBoundary }) => <NotValidRedirectCode resetError={resetErrorBoundary} />}>
+    <RedirectAuth />
+  </ErrorBoundary>
+);
+
+export default fallbackRedirectAuth;

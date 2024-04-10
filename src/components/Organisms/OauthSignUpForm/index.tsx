@@ -21,6 +21,15 @@ const FORM_INFO = {
   errMsg: '닉네임 형식에 맞게 입력해주세요',
 };
 
+const EMAIL_INFO: InputTypes = {
+  disabled: true,
+  inputSize: 'MEDIUM',
+  inputType: 'email',
+  inputValue: '',
+  inputMaxLength: 0,
+  inputPlaceholder: '이메일',
+};
+
 const OAuthSignUpForm = ({ SignUpFormData }: { SignUpFormData: SignUpFormDataTypes | null }) => {
   const { setSuccessLoginState, saveAuthLoginState } = useLogin();
   const navigate = useNavigate();
@@ -28,14 +37,7 @@ const OAuthSignUpForm = ({ SignUpFormData }: { SignUpFormData: SignUpFormDataTyp
 
   const { email, profileImage, resourceOwnerId } = SignUpFormData!;
 
-  const EMAIL_FORM: InputTypes = {
-    disabled: true,
-    inputSize: 'MEDIUM',
-    inputType: 'email',
-    inputValue: email,
-    inputMaxLength: email.length,
-    inputPlaceholder: '이메일',
-  };
+  const EMAIL_FORM: InputTypes = { ...EMAIL_INFO, inputValue: email, inputMaxLength: email.length };
 
   const disabled = useSignUpFormError() || !signUpFormValue.nickname;
 

@@ -29,7 +29,7 @@ const useFetchSideBarData = () => {
 
       notifyError(error);
 
-      if (errorCode >= 3000 && errorCode < 4000) {
+      if (+errorCode >= 3000 && +errorCode < 4000) {
         const queryKey = () => {
           switch (variables.category) {
             case 'assignees':

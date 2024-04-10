@@ -2,7 +2,7 @@
 import { rest } from 'msw';
 import { ContentTypes, MilestoneTypes } from '@/api/issue/types';
 import { issueTable, MILESTONE_TABLE } from '@/mocks/tables/issue';
-import { ERROR_CODE } from '@/api/constants';
+import { CustomErrorCode, makeErrRes } from '@/api/constants';
 import { findMilestoneHelper } from '../helpers/findMilestoneHelpers';
 
 export const milestoneHandlers = [
@@ -38,7 +38,7 @@ export const milestoneHandlers = [
     const findMilestone = findMilestoneHelper(Number(id));
 
     if (!findMilestone) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_MILESTONE));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_MILESTONE)));
     }
 
     const patchMilestones = Object.values(MILESTONE_TABLE).map((state: MilestoneTypes[]) => {
@@ -71,7 +71,7 @@ export const milestoneHandlers = [
     const findMilestone = findMilestoneHelper(Number(id));
 
     if (!findMilestone) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_MILESTONE));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_MILESTONE)));
     }
 
     if (findMilestone.closed) {
@@ -91,7 +91,7 @@ export const milestoneHandlers = [
     const findMilestone = findMilestoneHelper(Number(id));
 
     if (!findMilestone) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_MILESTONE));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_MILESTONE)));
     }
 
     const deleteMilestones = Object.values(MILESTONE_TABLE).map((state: MilestoneTypes[]) => {

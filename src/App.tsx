@@ -9,8 +9,9 @@ import GlobalStyle from '@/styles/globalStyle';
 import theme from '@/styles/theme';
 import axios from 'axios';
 
-import CustomErrorBoundary from '@/components/ErrorBoundary';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import ServiceLoading from '@/components/Modal/ServiceLoading';
+import GlobalErrorUI from './components/ErrorBoundary/GlobalErrorUI';
 import '@/styles/globalFont.css';
 
 const queryClient = new QueryClient({
@@ -34,17 +35,17 @@ axios.defaults.withCredentials = true;
 const App = () => (
   <RecoilRoot>
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter basename={process.env.PUBLIC_URL}>
-        <ThemeProvider theme={theme}>
+      <ReactQueryDevtools initialIsOpen={false} />
+      <ThemeProvider theme={theme}>
+        <BrowserRouter basename={process.env.PUBLIC_URL}>
           <GlobalStyle />
-          <CustomErrorBoundary>
+          <ErrorBoundary resetKeys={['global']} fallbackRender={GlobalErrorUI}>
             <Suspense fallback={<ServiceLoading />}>
-              <ReactQueryDevtools initialIsOpen={false} />
               <Routers />
             </Suspense>
-          </CustomErrorBoundary>
-        </ThemeProvider>
-      </BrowserRouter>
+          </ErrorBoundary>
+        </BrowserRouter>
+      </ThemeProvider>
     </QueryClientProvider>
   </RecoilRoot>
 );
