@@ -33,14 +33,11 @@ const LoginForm = (): JSX.Element => {
   const [isError, setIsError] = useState<boolean>(false);
 
   const login = async () => {
-    try {
-      const { memberResponse } = (await signin(loginForm)) as OAuthResponse;
-      setSuccessLoginState();
-      saveAuthLoginState(memberResponse);
-      navigate('/issues');
-    } catch (error) {
-      setIsError(true);
-    }
+    const { memberResponse } = (await signin(loginForm)) as OAuthResponse;
+    setSuccessLoginState();
+    saveAuthLoginState(memberResponse);
+    navigate('/issues');
+    if (!memberResponse) setIsError(true);
   };
 
   const isDisable = loginForm.id !== '' && loginForm.password !== '';

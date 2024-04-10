@@ -6,10 +6,7 @@ import notifyError from '@/api/alertHelper';
 const useFetchLabel = () => {
   const queryClient = useQueryClient();
 
-  const useLabelData = () =>
-    useQuery<LabelTypes[]>(['labels'], getLabelData, {
-      cacheTime: 10000,
-    });
+  const useLabelData = () => useQuery<LabelTypes[]>(['labels'], getLabelData);
 
   const { mutate: addLabel } = useMutation(addLabelData, {
     onSuccess: () => {

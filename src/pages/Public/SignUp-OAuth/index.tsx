@@ -7,7 +7,8 @@ import { RedirectAuthTypes } from '@/api/sign';
 import OAuthSignUpForm from '@/components/Organisms/OauthSignUpForm';
 
 import * as S from '@/pages/Public/SignUp-OAuth/index.styles';
-import NotValidRedirectCode from '@/components/ErrorBoundary/NotValidCode';
+import ErrorBoundary from '@/components/ErrorBoundary';
+import DuplicateEmail from '@/components/Organisms/DuplicateEmail';
 
 const OAuthSignUp = () => {
   window.history.forward();
@@ -23,13 +24,17 @@ const OAuthSignUp = () => {
     resetSignUpFormState();
   }, []);
 
-  return authData ? (
-    <S.OAuthSignUp>
-      <OAuthSignUpForm SignUpFormData={authData?.signUpFormData!} />
-    </S.OAuthSignUp>
-  ) : (
-    // 네트워크 요청 에러가 아니여서 리셋할 에러가 없으므로 빈 함수를 넣어놓았음
-    <NotValidRedirectCode resetError={() => {}} />
+  return (
+    <ErrorBoundary
+      // eslint-disable-next-line react/no-unstable-nested-components
+      fallbackRender={({ resetErrorBoundary }) => (
+        <DuplicateEmail provider="이메일 가입하기" email="example@email.com" handleOnClick={resetErrorBoundary} />
+      )}
+    >
+      <S.OAuthSignUp>
+        <OAuthSignUpForm SignUpFormData={authData ? authData.signUpFormData : null} />
+      </S.OAuthSignUp>
+    </ErrorBoundary>
   );
 };
 

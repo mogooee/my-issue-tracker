@@ -1,91 +1,54 @@
-/* eslint-disable react/prop-types */
-import React, { PropsWithChildren } from 'react';
+/* eslint-disable max-classes-per-file */
+import React, { PropsWithChildren, memo } from 'react';
 
-import { QueryClient, useQueryClient } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
-import { ErrorMessage } from '@/api/constants';
+import { QueryClient, QueryErrorResetBoundary, useQueryClient } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { CustomErrorCode, ErrorMessage } from '@/api/constants';
 
-import LoginExtensionComponent from '@/components/ErrorBoundary/Refresh';
-import DuplicateEmail from '@/components/Organisms/DuplicateEmail';
-import ExpiredLogin from '@/components/ErrorBoundary/ExpiredLogin';
-import NotValidRedirectCode from '@/components/ErrorBoundary/NotValidCode';
-import NotExistIssue from '@/components/ErrorBoundary/NotExistIssue';
-import InternalServerError from '@/components/ErrorBoundary/InternalServerError';
-
-import Modal from '@/components/Modal';
-
-type FallbackRenderPropsType = {
+export type FallbackRenderPropsType = {
   resetErrorBoundary: () => void;
-  resetState: () => void;
-  errorCode: number;
+  status: number;
+  errorCode: CustomErrorCode;
+  children?: React.ReactNode;
 };
 
-type FallbackRenderType = (props: FallbackRenderPropsType) => React.ReactElement<React.FunctionComponent>;
+export type FallbackRenderType = (props: FallbackRenderPropsType) => React.ReactElement<React.FunctionComponent>;
 
-interface ErrorBoundaryProps {
-  queryClient: QueryClient;
-  fallbackRender?: FallbackRenderType;
+interface CustomErrorBoundaryProps {
+  resetKeys?: string[];
+  fallbackRender: FallbackRenderType;
+  children: React.ReactNode;
 }
 
+type ErrorBoundaryProps = {
+  onReset: () => void;
+} & Omit<CustomErrorBoundaryProps, 'resetKeys'>;
+
 interface ErrorBoundaryState {
+  hasError: false;
   error: AxiosError<ErrorMessage> | null;
 }
 
-const initErrorState: ErrorBoundaryState = { error: null };
+const initErrorState: ErrorBoundaryState = { error: null, hasError: false };
 
-class ErrorBoundary extends React.Component<
-  React.PropsWithRef<PropsWithChildren<ErrorBoundaryProps>>,
-  ErrorBoundaryState
-> {
-  constructor(props: React.PropsWithRef<PropsWithChildren<ErrorBoundaryProps>> & ErrorBoundaryState) {
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
+    this.resetErrorBoundary = this.resetErrorBoundary.bind(this);
     this.state = initErrorState;
   }
 
   static getDerivedStateFromError(error: AxiosError<ErrorMessage>) {
-    return { error };
+    return { error, hasError: true };
   }
 
-  componentDidUpdate(_: never, prevState: ErrorBoundaryState) {
+  resetErrorBoundary(...args: any[]) {
+    const { onReset } = this.props;
     const { error } = this.state;
-    // eslint-disable-next-line no-useless-return
-    if (!error) return;
-  }
 
-  resetState() {
-    this.setState(initErrorState);
-  }
-
-  resetQueryClient() {
-    this.setState(initErrorState);
-
-    const { queryClient } = this.props;
-    queryClient.clear();
-  }
-
-  fallbackUIRender(fallbackRender: FallbackRenderType, data: ErrorMessage) {
-    const fallbackRenderProps: FallbackRenderPropsType = {
-      resetErrorBoundary: this.resetQueryClient.bind(this),
-      resetState: this.resetState.bind(this),
-      errorCode: data.errorCode,
-    };
-
-    switch (data.errorCode) {
-      case 1000:
-      case 1001:
-        return <LoginExtensionComponent>{fallbackRender(fallbackRenderProps)}</LoginExtensionComponent>;
-      case 1002:
-      case 1004:
-        return (
-          <>
-            {fallbackRender(fallbackRenderProps)}
-            <Modal>
-              <ExpiredLogin resetError={() => this.resetQueryClient()} isModal />
-            </Modal>
-          </>
-        );
-      default:
-        return fallbackRender(fallbackRenderProps);
+    if (error !== null) {
+      onReset?.();
+      this.setState(initErrorState);
     }
   }
 
@@ -93,65 +56,87 @@ class ErrorBoundary extends React.Component<
     const { children, fallbackRender } = this.props;
     const { error } = this.state;
 
-    if (error) {
-      const { status, data } = error.response!;
-
-      if (status === 500) {
-        return <InternalServerError resetError={() => this.resetState()} />;
-      }
+    if (error !== null) {
+      const fallbackRenderProps: FallbackRenderPropsType = {
+        resetErrorBoundary: this.resetErrorBoundary,
+        status: error.response!.status,
+        errorCode: error.response!.data.errorCode,
+      };
 
       if (fallbackRender) {
-        return this.fallbackUIRender(fallbackRender, data);
+        return fallbackRender(fallbackRenderProps);
       }
 
-      switch (data.errorCode) {
-        // 액세스 토큰이 만료되었거나 유효하지 않는 경우
-        case 1000:
-        case 1001:
-          return <LoginExtensionComponent>{children}</LoginExtensionComponent>;
-
-        // 리프레시 토큰이 만료되었거나 유효하지 않는 경우
-        case 1002:
-        case 1004:
-          return <ExpiredLogin resetError={() => this.resetQueryClient()} />;
-
-        // oauth 로그인시 리다이렉트로 돌아오는 코드가 유효하지 않는 경우
-        case 2001:
-          return <NotValidRedirectCode resetError={() => this.resetQueryClient()} />;
-
-        // oauth 회원가입시 이미 가입된 이메일이 있는 경우
-        case 2103:
-          return (
-            <DuplicateEmail
-              provider="이메일 가입하기"
-              email="example@email.com"
-              handleOnClick={() => this.resetQueryClient()}
-            />
-          );
-
-        // 존재하지 않는 이슈에 접근하는 경우
-        case 3000:
-          return <NotExistIssue resetError={() => this.resetQueryClient()} />;
-      }
+      console.error('error-boundary require fallbackRender prop');
+      throw error;
     }
 
     return children;
   }
 }
 
-interface CustomErrorBoundaryTypes {
-  fallbackRender?: FallbackRenderType;
-  children: React.ReactNode;
+const resetErrorQuery = (queryClient: QueryClient) => {
+  const queryCache = queryClient.getQueryCache();
+  const queryKeys = queryCache.getAll().filter((q) => q.state.status === 'error');
+
+  if (queryKeys) {
+    queryKeys.forEach(({ queryKey }) => {
+      queryClient.resetQueries({ queryKey });
+    });
+  }
+};
+
+class GeneralErrorBoundary extends ErrorBoundary {
+  static getDerivedStateFromError(error: AxiosError<ErrorMessage>) {
+    const { data, status } = error.response as AxiosResponse<ErrorMessage>;
+
+    const isServerError: boolean = status >= 500;
+    const isTokenError: boolean = data.errorCode >= 1000 && data.errorCode < 2000;
+
+    // 공통에러면 hasError는 false로 두어 general에서 처리하지 않는다.
+    if (isServerError || isTokenError) {
+      return { error, hasError: false };
+    }
+
+    return { error, hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
+    const { hasError } = this.state;
+
+    // 에러는 있지만 잡을 수 없는 에러 = 상위 에러바운더리로 던져야 하는 에러
+    if (error !== null && hasError === false) {
+      this.resetErrorBoundary();
+      throw error;
+    }
+  }
 }
 
-const CustomErrorBoundary = ({ children, fallbackRender }: CustomErrorBoundaryTypes) => {
+const CustomErrorBoundary = ({ resetKeys, fallbackRender, children }: CustomErrorBoundaryProps) => {
   const queryClient = useQueryClient();
+  const isGlobal = resetKeys?.[0] === 'global';
 
   return (
-    <ErrorBoundary queryClient={queryClient} fallbackRender={fallbackRender}>
-      {children}
-    </ErrorBoundary>
+    <QueryErrorResetBoundary>
+      {({ reset }) => {
+        const onReset = () => {
+          reset();
+          resetErrorQuery(queryClient);
+        };
+
+        const errorBoundaryProps = {
+          fallbackRender,
+          onReset,
+        };
+
+        return isGlobal ? (
+          <ErrorBoundary {...errorBoundaryProps}>{children}</ErrorBoundary>
+        ) : (
+          <GeneralErrorBoundary {...errorBoundaryProps}>{children}</GeneralErrorBoundary>
+        );
+      }}
+    </QueryErrorResetBoundary>
   );
 };
 
-export default CustomErrorBoundary;
+export default memo(CustomErrorBoundary);

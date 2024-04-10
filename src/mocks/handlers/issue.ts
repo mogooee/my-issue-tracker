@@ -6,7 +6,7 @@ import { IssuesTypes, CommentsTypes, ContentTypes, IssueHistoryTypes, ReactionRe
 import { TEST_USER, USER_TABLE } from '@/mocks/handlers/auth';
 import { LABEL_TABLE } from '@/mocks/handlers/label';
 import { findMilestoneHelper } from '@/mocks/helpers/findMilestoneHelpers';
-import { ERROR_CODE } from '@/api/constants';
+import { CustomErrorCode, makeErrRes } from '@/api/constants';
 
 import {
   assigneesHistory,
@@ -180,9 +180,10 @@ export const issueHandlers = [
     const issue = findIssue(Number(issueId));
 
     if (!issue) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_ISSUE)));
     }
     return res(ctx.status(200), ctx.json(issue));
+    // return res(ctx.status(403), ctx.json({ errorCode: 1001, msg: '핫이슈' }));
   }),
 
   // 이슈 제목 수정
@@ -191,7 +192,7 @@ export const issueHandlers = [
     const issue = findIssue(Number(issueId));
 
     if (!issue) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_ISSUE)));
     }
 
     const { title } = await req.json();
@@ -273,7 +274,7 @@ export const issueHandlers = [
     const issue = findIssue(Number(issueId));
 
     if (!issue) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_ISSUE)));
     }
 
     const { content } = await req.json();
@@ -304,7 +305,7 @@ export const issueHandlers = [
     const issue = findIssue(Number(issueId));
 
     if (!issue) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_ISSUE)));
     }
 
     const newComment: CommentsTypes[] = issue.comments.map((comment) => {
@@ -327,7 +328,7 @@ export const issueHandlers = [
     const issue = findIssue(Number(issueId));
 
     if (!issue) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_ISSUE)));
     }
 
     const newComment: CommentsTypes[] = issue.comments.filter((comment) => comment.id !== Number(commentId));
@@ -348,7 +349,7 @@ export const issueHandlers = [
     const issue = findIssue(Number(issueId));
 
     if (!issue) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_ISSUE)));
     }
 
     const newReactionId = addReactionsId();
@@ -383,7 +384,7 @@ export const issueHandlers = [
     const issue = findIssue(Number(issueId));
 
     if (!issue) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_ISSUE)));
     }
 
     const newComments: CommentsTypes[] = issue.comments.map((comment) => {
@@ -460,13 +461,13 @@ export const issueHandlers = [
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
     if (!findOpenIssues && !findCloseIssues) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_ISSUE)));
     }
 
     const findLabel = LABEL_TABLE.find((label) => label.id === Number(labelId));
 
     if (!findLabel) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_LABEL));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_LABEL)));
     }
 
     if (findOpenIssues) {
@@ -503,13 +504,13 @@ export const issueHandlers = [
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
     if (!findOpenIssues && !findCloseIssues) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_ISSUE)));
     }
 
     const findLabel = LABEL_TABLE.find((label) => label.id === Number(labelId));
 
     if (!findLabel) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_LABEL));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_LABEL)));
     }
 
     if (findOpenIssues) {
@@ -553,13 +554,13 @@ export const issueHandlers = [
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
     if (!findOpenIssues && !findCloseIssues) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_ISSUE)));
     }
 
     const findAssinees = USER_TABLE.find((label) => label.id === Number(assigneeId));
 
     if (!findAssinees) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_MEMBER));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_MEMBER)));
     }
 
     if (findOpenIssues) {
@@ -597,13 +598,13 @@ export const issueHandlers = [
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
     if (!findOpenIssues && !findCloseIssues) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_ISSUE)));
     }
 
     const findAssinees = USER_TABLE.find((label) => label.id === Number(assigneeId));
 
     if (!findAssinees) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_MEMBER));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_MEMBER)));
     }
 
     if (findOpenIssues) {
@@ -645,13 +646,13 @@ export const issueHandlers = [
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
     if (!findOpenIssues && !findCloseIssues) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_ISSUE)));
     }
 
     const findMilestone = findMilestoneHelper(Number(milestoneId));
 
     if (!findMilestone) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_MILESTONE));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_MILESTONE)));
     }
 
     if (findOpenIssues) {
@@ -728,13 +729,13 @@ export const issueHandlers = [
     const findCloseIssues = issueTable.closedIssues.find((el) => el.id === Number(issueId));
 
     if (!findOpenIssues && !findCloseIssues) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_ISSUE));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_ISSUE)));
     }
 
     const findMilestone = findMilestoneHelper(Number(milestoneId));
 
     if (!findMilestone) {
-      return res(ctx.status(400), ctx.json(ERROR_CODE.NOT_EXISTS_MILESTONE));
+      return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_MILESTONE)));
     }
 
     if (findOpenIssues) {
