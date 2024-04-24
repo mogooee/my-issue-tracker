@@ -15,7 +15,9 @@ export const Divider = styled.div`
 
 export const NewIssueEditer = styled.div`
   width: 100%;
-  ${({ theme }) => theme.MIXIN.FLEX({ align: 'flex-start', justify: 'space-between' })};
+  ${({ theme }) => theme.MIXIN.GRID({ align: 'flex-start' })};
+  grid-template-columns: auto 1fr max-content;
+  gap: 12px;
 
   @media ${({ theme }) => theme.DEVICE.MOBILE} {
     ${({ theme }) => theme.MIXIN.FLEX({ direction: 'column' })};
@@ -27,7 +29,6 @@ export const NewIssueEditer = styled.div`
 `;
 
 export const NewIssueForm = styled.div<{ isActive: boolean }>`
-  margin: 0 12px;
   min-width: 268px; /* 갤럭시 폴드 width 280px 에서 마진 12px를 뺀 값 */
   width: 100%;
 
