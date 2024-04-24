@@ -12,7 +12,6 @@ const GlobalErrorUI = ({
   status,
   errorCode,
 }: FallbackRenderPropsType): React.ReactElement<React.FunctionComponent> => {
-  console.log('globalUI', errorCode, status);
   if (status === 500) {
     return <InternalServerError resetError={resetErrorBoundary} />;
   }
