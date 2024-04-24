@@ -38,9 +38,9 @@ const updateIssueTable = (newIssue: ContentTypes) => {
   else issueTable.openIssues = newIssuesContent;
 };
 
-const addIdCount = (type: 'comments' | 'reactions') => {
+const addIdCount = (type: 'issues' | 'comments' | 'reactions') => {
   const contents = [...issueTable.openIssues, ...issueTable.closedIssues];
-  const count = { comments: 0, reactions: 0 };
+  const count = { issues: contents.length, comments: 0, reactions: 0 };
 
   count.comments = contents.reduce((acc, cur) => acc + cur.comments.length, 0);
 
@@ -56,6 +56,11 @@ const addIdCount = (type: 'comments' | 'reactions') => {
   );
 
   const addId = () => {
+    if (type === 'issues') {
+      count.issues += 1;
+      return count.issues;
+    }
+
     if (type === 'comments') {
       count.comments += 1;
       return count.comments;
@@ -68,6 +73,7 @@ const addIdCount = (type: 'comments' | 'reactions') => {
   return addId;
 };
 
+const addIssuesId = addIdCount('issues');
 const addCommentsId = addIdCount('comments');
 const addReactionsId = addIdCount('reactions');
 
@@ -183,7 +189,6 @@ export const issueHandlers = [
       return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.NOT_EXISTS_ISSUE)));
     }
     return res(ctx.status(200), ctx.json(issue));
-    // return res(ctx.status(403), ctx.json({ errorCode: 1001, msg: '핫이슈' }));
   }),
 
   // 이슈 제목 수정
@@ -410,20 +415,23 @@ export const issueHandlers = [
   // 이슈 등록
   rest.post('api/issues?memberId', async (req, res, ctx) => {
     const requestData = await req.json();
-    const userId = req.url.searchParams.get('memberId');
+    const userId = Number(req.url.searchParams.get('memberId'));
     const { title } = requestData;
 
-    const findAuthor = (memberId: string) => USER_TABLE.find((el) => el.id === Number(memberId));
+    const findAuthor = (memberId: number) => USER_TABLE.find((el) => el.id === memberId);
+    const author = findAuthor(userId);
 
     if (!title) {
       return res(ctx.status(400), ctx.json('필수 입력값을 입력해주세요'));
     }
 
-    if (!findAuthor(userId!)) {
-      return res(ctx.status(400), ctx.json('유효하지 않은 요청입니다.'));
+    if (!author) {
+      return res(ctx.status(400), ctx.json('존재하지 않는 유저입니다.'));
     }
 
-    const newIssue = responseNewIssueData({ memberId: userId, ...requestData });
+    const newIssueId = addIssuesId();
+    const newCommentId = addCommentsId();
+    const newIssue = responseNewIssueData({ memberId: userId, author, newIssueId, newCommentId, ...requestData });
     issueTable.openIssues.push(newIssue);
 
     return res(ctx.status(200), ctx.json(newIssue));

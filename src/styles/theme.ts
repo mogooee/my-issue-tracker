@@ -108,6 +108,11 @@ const MIXIN = {
     justify-content: ${justify};
     align-items: ${align};
   `,
+  GRID: ({ align = 'center', justify = 'center' }) => `
+  display:grid;
+  align-items: ${align};
+  justify-content: ${justify};
+  `,
 };
 
 const DEVICE_SIZE = {
