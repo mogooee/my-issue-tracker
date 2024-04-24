@@ -258,7 +258,7 @@ export const authHandlers = [
   // 유저 닉네임 중복 검사
   rest.get('api/members/nickname/:nickname/exists', (req, res, ctx) => {
     const { nickname } = req.params;
-    const findUserNickname = USER_TABLE.find((user) => user.loginId === nickname);
+    const findUserNickname = USER_TABLE.find((user) => user.nickname === nickname);
 
     if (findUserNickname) {
       return res(ctx.status(200), ctx.json(true));
@@ -270,7 +270,7 @@ export const authHandlers = [
   // 유저 이메일 중복 검사
   rest.get('api/members/email/:email/exists', (req, res, ctx) => {
     const { email } = req.params;
-    const findUserEmail = USER_TABLE.find((user) => user.loginId === email);
+    const findUserEmail = USER_TABLE.find((user) => user.email === email);
 
     if (findUserEmail) {
       return res(ctx.status(200), ctx.json(true));
