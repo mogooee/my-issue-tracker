@@ -45,7 +45,7 @@ const OAuthSignUpForm = ({ SignUpFormData }: { SignUpFormData: SignUpFormDataTyp
     email,
     nickname: signUpFormValue.nickname,
     profileImage,
-    authProviderType: 'GITHUB',
+    authProviderType: 'KAKAO',
     resourceOwnerId,
   };
 
