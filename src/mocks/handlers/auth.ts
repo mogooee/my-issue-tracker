@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { rest } from 'msw';
 import { OAuthResponse, RedirectAuthTypes } from '@/api/sign';
@@ -7,8 +8,9 @@ import { CustomErrorCode, makeErrRes } from '@/api/constants';
 import { USER_LIST as OAUTH_USER_LIST } from '@/components/Molecules/Dropdown/mock';
 import AppLogo from '@/assets/logo/issueTracker.png';
 
-import { filterIdPassword, getCookie, deleteAllCookies } from '@/mocks/helpers/authHelpers';
-import { ACCESS_TOKEN, REFRESH_TOKEN } from '@/mocks/constants';
+import { filterIdPassword, getCookie, deleteCookie } from '@/mocks/helpers/authHelpers';
+import { decodeJwt, getAccessToken, getRefreshToken } from '../issueTokens';
+import { REFRESH_TOKEN } from '../constants';
 
 interface GeneralUserInfoTypes {
   loginId?: string;
@@ -33,25 +35,28 @@ export const TEST_USER = USER_TABLE.find((user) => user.nickname === 'WebTest') 
 
 export const authHandlers = [
   // silent-refresh
-  rest.get('api/auth/reissue', (req, res, ctx) => {
+  rest.get('api/auth/reissue', async (req, res, ctx) => {
     // Access 토큰은 만료됐지만 refresh 토큰은 유효한 경우
-    if (!getCookie(ACCESS_TOKEN.KEY, ACCESS_TOKEN.VALUE) && getCookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE)) {
-      return res(ctx.status(200), ctx.cookie(ACCESS_TOKEN.KEY, ACCESS_TOKEN.VALUE));
+    const refreshToken = getCookie(REFRESH_TOKEN.KEY);
+    if (refreshToken) {
+      // refresh Token을 디코딩해서 payload에 id를 찾고 userTable에 있으면 accessToken 새로 발급
+      const jwtId = Number(decodeJwt(refreshToken).userId);
+      const isMember = USER_TABLE.find((user) => user.id === jwtId);
+      if (isMember) {
+        const accessToken = await getAccessToken({ userId: jwtId });
+
+        const response = {
+          signInMember: isMember,
+          accessToken: {
+            token: accessToken,
+          },
+        };
+
+        return res(ctx.status(200), ctx.json(response));
+      }
     }
 
-    // Refresh 토큰이 존재하지 않거나 유효하지 않은 경우
-    if (
-      getCookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE) !== REFRESH_TOKEN.VALUE ||
-      !getCookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE)
-    ) {
-      return res(ctx.status(401), ctx.json(makeErrRes(CustomErrorCode.INVALID_REFRESH_TOKEN)));
-    }
-
-    return res(
-      ctx.status(200),
-      ctx.cookie(ACCESS_TOKEN.KEY, ACCESS_TOKEN.VALUE),
-      ctx.cookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE),
-    );
+    return res(ctx.status(401), ctx.json(makeErrRes(CustomErrorCode.INVALID_REFRESH_TOKEN)));
   }),
 
   // 일반 로그인
@@ -62,6 +67,9 @@ export const authHandlers = [
 
     if (!findUser) return res(ctx.status(401), ctx.json(makeErrRes(CustomErrorCode.SIGN_IN_FAIL)));
 
+    const accessToken = await getAccessToken({ userId: findUser.id });
+    const refreshToken = await getRefreshToken({ userId: findUser.id });
+
     if (findUser.password === loginInfo.password) {
       const response: OAuthResponse = {
         memberResponse: {
@@ -71,19 +79,11 @@ export const authHandlers = [
           nickname: findUser.nickname,
         },
         accessToken: {
-          token: ACCESS_TOKEN.VALUE,
+          token: accessToken,
         },
       };
 
-      // 새로고침을 해도 저장된 유저의 정보를 불러올수있다.
-      sessionStorage.setItem('user', JSON.stringify(findUser));
-
-      return res(
-        ctx.status(200),
-        ctx.json(response),
-        ctx.cookie(ACCESS_TOKEN.KEY, ACCESS_TOKEN.VALUE),
-        ctx.cookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE),
-      );
+      return res(ctx.status(200), ctx.json(response), ctx.cookie(REFRESH_TOKEN.KEY, refreshToken));
     }
 
     return res(ctx.status(401), ctx.json(makeErrRes(CustomErrorCode.SIGN_IN_FAIL)));
@@ -91,48 +91,84 @@ export const authHandlers = [
 
   // 유저 정보 요청 API
   rest.get('api/members/info', (req, res, ctx) => {
-    // sessionStorage에 유저가 있는지 확인한다.
-    const getSessionStorgeUserInfo = sessionStorage.getItem('user');
-    if (getSessionStorgeUserInfo) {
-      const parserUserInfo = JSON.parse(getSessionStorgeUserInfo) as UserTableTypes;
-      const findUser = USER_TABLE.find((user) => user.nickname === parserUserInfo.nickname);
+    // 전달된 jwt 토큰 복호화해서 payload의 userId로 유저 찾기
+    const accessToken = req.headers.get('authorization')?.replace('Bearear ', '');
+    if (accessToken) {
+      const jwtId = decodeJwt(accessToken).userId;
+      const findUser = USER_TABLE.find((user) => user.id === jwtId);
 
-      // 유저테이블에 없는 유저면 테이블에 추가한다.
-      if (!findUser) {
-        USER_TABLE.push(parserUserInfo);
+      if (findUser) {
+        return res(ctx.status(200), ctx.json(findUser));
       }
-      return res(ctx.status(200), ctx.json(parserUserInfo));
     }
 
-    return res(ctx.status(200), ctx.json(TEST_USER));
+    return res(ctx.status(401), ctx.json(makeErrRes(CustomErrorCode.INVALID_AUTHOR)));
   }),
 
-  // 유저 정보
-  rest.get('api/auth/:provider', (req, res, ctx) => {
+  // oauth 로그인/회원가입
+  rest.get('api/auth/:provider', async (req, res, ctx) => {
     const { provider } = req.params;
 
-    // 사이트에 유저정보를 요청하면 OAuth 정보 - 깃허브에서 오는 정보 (signUpData)
+    // 인가 코드로 서드 파티 Authorization server에 access token 요청
+    const AUTHORIZE_CODE = req.url.searchParams.get('code');
+
+    const kakaoOAuth = 'https://kauth.kakao.com/oauth/token';
+
+    const tokenResponse = await ctx.fetch(kakaoOAuth, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8"',
+      },
+      body: encodeURI(
+        Object.entries({
+          grant_type: 'authorization_code',
+          client_id: '46649127c2ff32b41c517279f9791033',
+          redirect_uri: 'http://localhost:3000/redirect-auth?provider=kakao',
+          code: AUTHORIZE_CODE,
+          client_secret: 'O9o0lOEHOVed0SqA2AUHUJS1bBHzsIPU',
+        })
+          .map(([key, value]) => `${key}=${value}`)
+          .join('&'),
+      ),
+    });
+
+    const token = await tokenResponse.json();
+
+    // 발급받은 access token으로 서드 파티 Resource server에 리소스 요청
+    const authResponse = await ctx.fetch('https://kapi.kakao.com/v2/user/me', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8"',
+        Authorization: `Bearer ${token.access_token}`,
+      },
+    });
+
+    const { id, kakao_account } = await authResponse.json();
+
+    // 사이트에 요청한 유저 정보
     const OAuthInfo = {
-      loginId: 'dobby',
-      email: 'dobby@gmail.com',
-      nickname: '도비',
-      profileImage: 'https://avatars.githubusercontent.com/u/85747667?v=4',
+      loginId: id,
+      email: kakao_account.has_email ? kakao_account.email : '',
+      nickname: kakao_account.profile.nickname,
+      profileImage: kakao_account.profile.profile_image_url,
     };
 
     const response: RedirectAuthTypes = {
       signUpFormData: null,
       signInMember: null,
-      accessToken: {
-        token: 'token',
-      },
+      accessToken: null,
     };
 
     if (provider === 'github' || provider === 'naver' || provider === 'kakao') {
       const member = USER_TABLE.find((user) => user.email === OAuthInfo.email);
 
+      // 회원인 유저 -> 로그인 처리 후 홈 화면
       if (member) {
         response.signInMember = { ...OAuthInfo, id: member.id };
+        const accessToken = await getAccessToken({ userId: member.id });
+        response.accessToken = { token: accessToken };
       } else {
+        // 회원이 아닌 유저 -> 회원가입 화면
         response.signUpFormData = {
           resourceOwnerId: OAuthInfo.loginId,
           email: OAuthInfo.email,
@@ -166,9 +202,6 @@ export const authHandlers = [
 
     USER_TABLE.push(newMemberInfo);
 
-    // 새로고침을 해도 저장된 유저의 정보를 불러올수있다.
-    sessionStorage.setItem('user', JSON.stringify(newMemberInfo));
-
     const { loginId, password: newMemberPassword, ...response } = newMemberInfo;
 
     return res(ctx.status(200), ctx.json(response));
@@ -176,8 +209,8 @@ export const authHandlers = [
 
   // Oauth 회원 가입
   rest.post('api/members/new/auth', async (req, res, ctx) => {
-    const newMember = await req.json();
-    const { email, nickname } = newMember;
+    const reqMember = await req.json();
+    const { email, nickname } = reqMember;
 
     if (!email || !nickname) {
       return res(ctx.status(400), ctx.json('필수 입력값을 입력해주세요'));
@@ -189,26 +222,24 @@ export const authHandlers = [
       return res(ctx.status(400), ctx.json(makeErrRes(CustomErrorCode.DUPLICATED_EMAIL)));
     }
 
+    const newMember = {
+      id: USER_TABLE.length + 1,
+      ...reqMember,
+    };
+
     USER_TABLE.push(newMember);
 
+    const accessToken = await getAccessToken({ userId: newMember.id });
+    const refreshToken = await getRefreshToken({ userId: newMember.id });
+
     const response = {
-      memberResponse: {
-        id: USER_TABLE.length + 1,
-        email: newMember.email,
-        nickname: newMember.nickname,
-        profileImage: newMember.profileImage,
-      },
+      memberResponse: newMember,
       accessToken: {
-        token: ACCESS_TOKEN.VALUE,
+        token: accessToken,
       },
     };
 
-    return res(
-      ctx.status(201),
-      ctx.json(response),
-      ctx.cookie(ACCESS_TOKEN.KEY, ACCESS_TOKEN.VALUE),
-      ctx.cookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE),
-    );
+    return res(ctx.status(201), ctx.json(response), ctx.cookie(REFRESH_TOKEN.KEY, refreshToken));
   }),
 
   // 유저 아이디 중복 검사
@@ -250,26 +281,13 @@ export const authHandlers = [
 
   // 로그아웃
   rest.post('api/members/signout', (req, res, ctx) => {
-    deleteAllCookies();
+    deleteCookie(REFRESH_TOKEN.KEY);
     return res(ctx.status(200));
   }),
 
   // 모든 유저 정보 불러오기
   rest.get('api/members', (req, res, ctx) => {
     const FILTERED_USER_LIST = USER_TABLE.map((user) => filterIdPassword(user));
-    // Access 토큰은 만료됐지만 refresh 토큰은 유효한 경우
-    if (!getCookie(ACCESS_TOKEN.KEY, ACCESS_TOKEN.VALUE) && getCookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE)) {
-      return res(ctx.status(200), ctx.cookie(ACCESS_TOKEN.KEY, ACCESS_TOKEN.VALUE));
-    }
-
-    // Refresh 토큰이 존재하지 않거나 유효하지 않은 경우
-    if (
-      getCookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE) !== REFRESH_TOKEN.VALUE ||
-      !getCookie(REFRESH_TOKEN.KEY, REFRESH_TOKEN.VALUE)
-    ) {
-      return res(ctx.status(401), ctx.json(makeErrRes(CustomErrorCode.INVALID_REFRESH_TOKEN)));
-    }
-
     return res(ctx.status(200), ctx.json(FILTERED_USER_LIST));
   }),
 ];
