@@ -16,6 +16,7 @@ import { useResetRecoilState } from 'recoil';
 import { NewIssueFormState } from '@/stores/newIssue';
 import useFilter from '@/hooks/useFilter';
 import notifyError from '@/api/alertHelper';
+import { getReactionData } from './reaction';
 
 const useFetchIssue = (id?: number) => {
   const queryClient = useQueryClient();
@@ -30,9 +31,19 @@ const useFetchIssue = (id?: number) => {
   };
 
   const useIssueData = (issueId: number) =>
-    useQuery<ContentTypes>(['issue', issueId], () => getIssueData(issueId), {
-      refetchOnWindowFocus: false,
-    });
+    useQuery<ContentTypes>(
+      ['issue', issueId],
+      () => {
+        queryClient.prefetchQuery({
+          queryKey: ['reactions'],
+          queryFn: getReactionData,
+        });
+        return getIssueData(issueId);
+      },
+      {
+        refetchOnWindowFocus: false,
+      },
+    );
 
   const useUpdateIssueTitle = (issueId: number) =>
     useMutation(updateIssueTitle, {
