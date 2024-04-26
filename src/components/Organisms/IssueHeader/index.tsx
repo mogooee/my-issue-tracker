@@ -11,16 +11,17 @@ import { ContentTypes } from '@/api/issue/types';
 
 type IssueHeaderTypes = Pick<ContentTypes, 'id' | 'title' | 'closed' | 'createdAt' | 'author'> & {
   commentNum: number;
+  isAuthor: boolean;
 };
 
-const IssueHeader = ({ id, closed, title, createdAt, author, commentNum }: IssueHeaderTypes) => {
+const IssueHeader = ({ id, closed, title, createdAt, author, commentNum, isAuthor }: IssueHeaderTypes) => {
   const issueOpenSummary = `이 이슈가 ${calcTimeForToday(createdAt)}에 ${author.nickname}님에 의해 ${
     closed ? '닫혔습니다' : '열렸습니다.'
   }`;
 
   return (
     <S.IssueHeader>
-      <HeaderInline id={id} title={title} closed={closed} />
+      <HeaderInline isAuthor={isAuthor} id={id} title={title} closed={closed} />
       <S.Info closed={closed}>
         <Label
           icon={<Icon icon="AlertCircle" stroke={closed ? COLORS.SECONDORY.PURPLE : COLORS.PRIMARY.BLUE} />}
