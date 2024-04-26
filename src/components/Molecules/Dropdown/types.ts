@@ -1,6 +1,6 @@
 import { UserTypes, MilestoneTypes, LabelTypes } from '@/api/issue/types';
 
-import React from 'react';
+import React, { MouseEventHandler } from 'react';
 import * as panels from '@/components/Molecules/Dropdown/Panel/panels';
 import { UsedEmojisTypes } from '@/components/Organisms/Comment';
 import { ReactionTypes } from '@/api/issue/reaction';
@@ -82,5 +82,6 @@ export interface DropdownTypes<Panel> {
   panelProps: Panel;
   isActive?: boolean;
   isError?: boolean;
-  handleOnDropdownClick?: (event: React.MouseEvent<HTMLDetailsElement>) => void;
+  handleOnDropdownClick?: MouseEventHandler<HTMLDetailsElement>;
+  handleOnDropdownMouseEnter?: MouseEventHandler<HTMLDetailsElement>;
 }
