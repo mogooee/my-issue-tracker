@@ -37,6 +37,8 @@ const useFetchIssue = (id?: number) => {
         queryClient.prefetchQuery({
           queryKey: ['reactions'],
           queryFn: getReactionData,
+          cacheTime: Infinity,
+          staleTime: Infinity,
         });
         return getIssueData(issueId);
       },
