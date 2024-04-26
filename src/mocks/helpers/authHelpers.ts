@@ -1,20 +1,20 @@
 import { UserTypes } from '@/api/issue/types';
 import { TEST_USER, USER_TABLE, UserTableTypes } from '../handlers/auth';
 
-export const getCookie = (key: string, value: string) => {
+export const getCookie = (key: string) => {
   const matchKey = document.cookie.match(`(^|;) ?${key}=([^;]*)(;|$)`);
-  return matchKey?.filter((el) => el === value)[0];
+  return matchKey?.[0];
 };
 
-export const deleteAllCookies = () => {
+export const deleteCookie = (key: string) => {
   const cookies = document.cookie.split('; ');
   const expiration = 'Fri, 31 Dec 1999 00:00:00 GMT';
 
   cookies.forEach((cookie: any) => {
-    const [key, _] = cookie.split('=');
-    document.cookie = `${key}=; expires=${expiration}`;
-    document.cookie = `${key}=; expires=${expiration}`;
-    document.cookie = `${key}=; expires=${expiration}; domain=localhost`;
+    const [cookieKey, _] = cookie.split('=');
+    if (cookieKey === key) {
+      document.cookie = `${key}=; expires=${expiration};`;
+    }
   });
 };
 

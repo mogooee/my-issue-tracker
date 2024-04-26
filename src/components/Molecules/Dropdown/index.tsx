@@ -15,8 +15,13 @@ const Dropdown = <Panel extends ReactionPanelTypes | ListPanelTypes | BubblePane
   panelProps,
   isActive,
   handleOnDropdownClick,
+  handleOnDropdownMouseEnter,
 }: DropdownTypes<Panel>): JSX.Element => (
-  <S.Dropdown dropdownStyle={indicatorProps.indicatorStyle} onClick={handleOnDropdownClick}>
+  <S.Dropdown
+    dropdownStyle={indicatorProps.indicatorStyle}
+    onClick={handleOnDropdownClick}
+    onMouseEnter={handleOnDropdownMouseEnter}
+  >
     <DropdownIndicator isActive={isActive} {...indicatorProps} />
     <DropdownPanel type={type} prop={panelProps} />
   </S.Dropdown>

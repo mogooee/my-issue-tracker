@@ -1,41 +1,39 @@
 import { ContentTypes } from '@/api/issue/types';
 import { NEW_ISSUE_FORM_TYPES } from '@/stores/newIssue';
-import { TEST_USER, USER_TABLE } from '@/mocks/handlers/auth';
+import { USER_TABLE, UserTableTypes } from '@/mocks/handlers/auth';
 import { LABEL_TABLE } from '@/mocks/handlers/label';
-import { issueTable, MILESTONE_TABLE } from '@/mocks/tables/issue';
-import { filterIdPassword } from '@/mocks/helpers/authHelpers';
+import { MILESTONE_TABLE } from '@/mocks/tables/issue';
 
 interface ResponseNewIssueDataTypes {
   memberId: number;
+  newIssueId: number;
+  newCommentId: number;
+  author: UserTableTypes;
 }
 
 export const responseNewIssueData = ({ memberId, ...props }: NEW_ISSUE_FORM_TYPES & ResponseNewIssueDataTypes) => {
   const { title, comment, assigneeIds, labelIds, milestoneId } = props;
 
-  const findUser = (id: number) => USER_TABLE.find((user) => user.id === id)!;
-  const findAssignees = (ids: number[]) => (ids.length ? ids.map((id) => findUser(id)) : []);
-  const findLabels = (ids: number[]) =>
-    ids.length ? ids.map((id) => LABEL_TABLE.find((label) => label.id === id)!) : [];
-  const findMilestone = (id: number | null) =>
-    id !== null ? MILESTONE_TABLE.openedMilestones.find((el) => el.id === id) : null;
-
-  const newIssueId = issueTable.openIssues.length + issueTable.closedIssues.length + 1;
+  const findUser = (id: number) => USER_TABLE.find((user) => user.id === id);
+  const findAssignees = (ids: number[]) => ids.map((id) => findUser(id)!);
+  const findLabels = (ids: number[]) => ids.map((id) => LABEL_TABLE.find((label) => label.id === id)!);
+  const findMilestone = (id: number | null) => id && MILESTONE_TABLE.openedMilestones.find((el) => el.id === id);
 
   const responseIssue: ContentTypes = {
-    id: newIssueId,
+    id: props.newIssueId,
     title,
-    author: filterIdPassword(USER_TABLE[memberId] || TEST_USER),
+    author: props.author,
     comments: [
       {
-        id: 12,
-        author: filterIdPassword(USER_TABLE[memberId] || TEST_USER),
+        id: props.newCommentId,
+        author: props.author,
         content: comment,
         createdAt: new Date().toISOString(),
         issueCommentReactionsResponse: [],
       },
     ],
     issueAssignees: {
-      issueAssignees: findAssignees(assigneeIds),
+      issueAssignees: findAssignees(assigneeIds) ?? [],
     },
     issueLabels: {
       issueLabels: findLabels(labelIds),
