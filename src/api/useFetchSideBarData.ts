@@ -14,10 +14,32 @@ const useFetchSideBarData = () => {
   const { data: memberData, refetch: memberDataRefetch } = useQuery(['members'], getMemberList, {
     enabled: false,
   });
+
   const { data: labelData, refetch: labelDataRefetch } = useQuery(['labels'], getLabelData, { enabled: false });
   const { data: milestoneData, refetch: milestoneDataRefetch } = useQuery(['milestones'], getMilestoneData, {
     enabled: false,
   });
+
+  const prefetchMembers = () => {
+    queryClient.prefetchQuery({
+      queryKey: ['members'],
+      queryFn: getMemberList,
+    });
+  };
+
+  const prefetchLabels = () => {
+    queryClient.prefetchQuery({
+      queryKey: ['labels'],
+      queryFn: getLabelData,
+    });
+  };
+
+  const prefetchMilestones = () => {
+    queryClient.prefetchQuery({
+      queryKey: ['milestones'],
+      queryFn: getMilestoneData,
+    });
+  };
 
   const { mutate: IssueSideBarModifyMutate } = useMutation(IssueSideBarModify, {
     onSuccess: (_, variables) => {
@@ -53,6 +75,9 @@ const useFetchSideBarData = () => {
     milestoneData,
     milestoneDataRefetch,
     IssueSideBarModifyMutate,
+    prefetchMembers,
+    prefetchLabels,
+    prefetchMilestones,
   };
 };
 

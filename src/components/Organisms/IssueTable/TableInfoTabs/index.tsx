@@ -25,7 +25,7 @@ const TableInfoTabs = () => {
   const [checkState, setCheckState] = useRecoilState(CheckState);
   const checkedBoxNum = checkState.child.length;
 
-  const { memberData, memberDataRefetch, labelData, milestoneData, labelDataRefetch, milestoneDataRefetch } =
+  const { memberData, labelData, milestoneData, prefetchMembers, prefetchLabels, prefetchMilestones } =
     useFetchSideBarData();
   const { useUpdateIssueState } = useFetchIssue();
   const { mutate: updateIssueState } = useUpdateIssueState(checkState.child);
@@ -70,11 +70,11 @@ const TableInfoTabs = () => {
       return isExistedFilter(filter);
     };
 
-  const handleOnMemberDropdownClick = (filterKey: string) => {
+  const handleDropdownData = (filterKey: string) => {
     const isMemberListData = filterKey === 'assignee' || filterKey === 'author';
-    if (isMemberListData && !memberData) memberDataRefetch();
-    if (filterKey === 'label' && !labelData) labelDataRefetch();
-    if (filterKey === 'milestone' && !milestoneData) milestoneDataRefetch();
+    if (isMemberListData && !memberData) prefetchMembers();
+    if (filterKey === 'label' && !labelData) prefetchLabels();
+    if (filterKey === 'milestone' && !milestoneData) prefetchMilestones();
   };
 
   return (
@@ -98,7 +98,7 @@ const TableInfoTabs = () => {
             <Dropdown
               key={panelTitle}
               {...DROPDOWN_PROPS}
-              handleOnDropdownClick={(e) => handleOnMemberDropdownClick(filterKey)}
+              handleOnDropdownMouseEnter={(e) => handleDropdownData(filterKey)}
             />
           );
         })
