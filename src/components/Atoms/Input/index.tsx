@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as S from '@/components/Atoms/Input/index.styles';
 
 export interface InputTypes {
@@ -18,7 +18,7 @@ export interface InputTypes {
   onSubmit?: (event: React.ChangeEvent<HTMLFormElement>) => void;
 }
 
-const defaultMaxLength = 20;
+const defaultMaxLength = 100;
 
 const Input = ({ disabled = false, inputMaxLength = defaultMaxLength, ...props }: InputTypes) => {
   const {
@@ -35,7 +35,15 @@ const Input = ({ disabled = false, inputMaxLength = defaultMaxLength, ...props }
     onSubmit,
   } = props;
 
+  const [value, setValue] = useState<string>('');
+
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (inputValue) {
+      setValue(inputValue);
+    }
+  }, [inputValue]);
 
   const handleOnClickForm = () => {
     if (disabled) return;
@@ -44,10 +52,10 @@ const Input = ({ disabled = false, inputMaxLength = defaultMaxLength, ...props }
   };
 
   const handleOnChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
+    const { value: oldValue } = event.target;
     onChange?.(event);
-    // eslint-disable-next-line no-param-reassign
-    if (Number(value) >= inputMaxLength) event.target.value = value.slice(0, inputMaxLength);
+    const newValue = Number(oldValue) >= inputMaxLength ? oldValue.slice(0, inputMaxLength) : oldValue;
+    setValue(newValue);
   };
 
   const handleOnSubmitForm = (event: React.ChangeEvent<HTMLFormElement>) => {
@@ -68,7 +76,7 @@ const Input = ({ disabled = false, inputMaxLength = defaultMaxLength, ...props }
       <S.Input
         type={inputType}
         disabled={disabled}
-        value={inputValue || ''}
+        value={value ?? ''}
         placeholder={inputPlaceholder}
         maxLength={inputMaxLength}
         ref={inputRef}
