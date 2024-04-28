@@ -8,22 +8,15 @@ export const IssueStates = styled.div`
 
 export const IssueInfoTabs = styled.div`
   ${({ theme }) => theme.MIXIN.FLEX({ direction: 'row', justify: 'flex-end' })};
-
-  details + details {
-    margin-left: 32px;
-  }
+  gap: 32px;
 
   @media ${({ theme }) => theme.DEVICE.TABLET} {
-    details + details {
-      margin-left: 24px;
-    }
+    gap: 24px;
   }
 
   @media ${({ theme }) => theme.DEVICE.MOBILE} {
     justify-content: space-around;
-    details + details {
-      margin-left: 4px;
-    }
+    gap: 4px;
 
     details:nth-child(1),
     details:nth-child(2) {
@@ -37,7 +30,7 @@ export const IssueInfoTabs = styled.div`
 export const IssueTableHeader = styled.div`
   display: grid;
   align-items: center;
-  grid-template-columns: 60px 500px auto;
+  grid-template-columns: 60px auto auto;
   width: 100%;
 
   @media ${({ theme }) => theme.DEVICE.TABLET} {
