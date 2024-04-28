@@ -49,6 +49,7 @@ const AUTHOR = {
   WHO: USER_TABLE[2],
   ADER: USER_TABLE[3],
   BECK: USER_TABLE[4],
+  WEBTEST: USER_TABLE[5],
 };
 
 const LABEL = {
@@ -56,6 +57,7 @@ const LABEL = {
   DOCS: LABEL_TABLE[1],
   BUGS: LABEL_TABLE[2],
   QUESTION: LABEL_TABLE[3],
+  REFACTOR: LABEL_TABLE[4],
 };
 
 export const issues: IssuesTypes = {
@@ -418,7 +420,7 @@ export const issues: IssuesTypes = {
       },
       {
         id: 9,
-        title: '✨ 이슈 필터 기능 구현',
+        title: '[FE]✨ 이슈 필터 기능 구현',
         author: AUTHOR.DOTORI,
         comments: [
           {
@@ -450,32 +452,203 @@ export const issues: IssuesTypes = {
         lastModifiedAt: '2022-09-13T11:47:11.372872',
         closed: false,
       },
+      {
+        id: 10,
+        title: '[FE]♻️ 커스텀 에러바운더리 개선하기',
+        author: AUTHOR.DOTORI,
+        comments: [
+          {
+            id: 13,
+            author: AUTHOR.DOTORI,
+            content: `## 기능 요청사항
+- 에러바운더리 비즈니스 로직 분리
+- unknown error 처리하기
+
+## 요청 세부사항
+- 현재 공통 에러(토큰 관련) 처리 로직이 에러바운더리 내에 존재하므로 적절히 분리하기 
+- 알 수 없는 에러(unknown error)도 에러 바운더리에서 캐치하여 처리하기 `,
+            createdAt: '2024-04-24T12:59:59.000Z',
+            issueCommentReactionsResponse: [
+              {
+                id: 11,
+                emoji: 'U+1F389',
+                issueCommentReactorResponse: {
+                  id: 5,
+                  nickname: 'WebTest',
+                },
+              },
+            ],
+          },
+        ],
+        issueAssignees: {
+          issueAssignees: [AUTHOR.DOTORI],
+        },
+        issueLabels: {
+          issueLabels: [LABEL.REFACTOR],
+        },
+        milestone: null,
+        issueHistories: [],
+        createdAt: '2024-04-24T12:59:59.000Z',
+        lastModifiedAt: '2024-04-24T12:59:59.000Z',
+        closed: false,
+      },
+      {
+        id: 11,
+        title: '[FE]✨ 카카오 소셜 로그인',
+        author: AUTHOR.DOTORI,
+        comments: [
+          {
+            id: 14,
+            author: AUTHOR.DOTORI,
+            content: `## 기능 요청사항
+카카오 소셜 로그인/회원가입 
+
+## 요청 세부사항
+서버 지원이 중단되면서 사용할 수 없었던 카카오 소셜 로그인/회원가입 기능을 msw로 구현한다.
+
+## 레퍼런스
+- https://developers.kakao.com/product/kakaoLogin`,
+            createdAt: '2024-04-24T12:59:59.000Z',
+            issueCommentReactionsResponse: [
+              {
+                id: 12,
+                emoji: 'U+1F440',
+                issueCommentReactorResponse: {
+                  id: 5,
+                  nickname: 'WebTest',
+                },
+              },
+            ],
+          },
+          {
+            id: 15,
+            author: AUTHOR.WEBTEST,
+            content: '🔐 소셜 로그인 기능을 구현하시는군요!',
+            createdAt: '2024-04-25T12:59:59.000Z',
+            issueCommentReactionsResponse: [
+              {
+                id: 13,
+                emoji: 'U+2764 U+FE0F',
+                issueCommentReactorResponse: {
+                  id: 1,
+                  nickname: AUTHOR.DOTORI.nickname,
+                },
+              },
+            ],
+          },
+        ],
+        issueAssignees: {
+          issueAssignees: [AUTHOR.DOTORI],
+        },
+        issueLabels: {
+          issueLabels: [LABEL.FEATURE],
+        },
+        milestone: null,
+        issueHistories: [],
+        createdAt: '2024-04-24T12:59:59.000Z',
+        lastModifiedAt: '2024-04-24T12:59:59.000Z',
+        closed: false,
+      },
+      {
+        id: 12,
+        title: '[FE]♻️ 이슈 상세페이지 Suspense API 병목 현상',
+        author: AUTHOR.WEBTEST,
+        comments: [
+          {
+            id: 16,
+            author: AUTHOR.WEBTEST,
+            content: `## 기능 요청사항
+이슈 상세페이지 Suspense API 병목 현상
+
+## 요청 세부사항
+이슈 상세페이지에서 API 병목 현상이 발생한다. 
+1. 이슈 상세 정보 조회 API
+2. 리액션 조회 API 
+`,
+            createdAt: '2024-04-27T12:59:59.000Z',
+            issueCommentReactionsResponse: [],
+          },
+          {
+            id: 17,
+            author: AUTHOR.DOTORI,
+            content: '해결해봅시다~ 🔥',
+            createdAt: '2024-04-28T12:59:59.000Z',
+            issueCommentReactionsResponse: [
+              {
+                id: 14,
+                emoji: 'U+1F680',
+                issueCommentReactorResponse: {
+                  id: 5,
+                  nickname: AUTHOR.WEBTEST.nickname,
+                },
+              },
+            ],
+          },
+          {
+            id: 18,
+            author: AUTHOR.WEBTEST,
+            content: 'tanstack-query가 버전업되면서 useQueries가 이제는 병렬 처리를 해결할 수 있게 되었네요~',
+            createdAt: '2024-04-28T12:59:59.000Z',
+            issueCommentReactionsResponse: [
+              {
+                id: 15,
+                emoji: 'U+1F44D',
+                issueCommentReactorResponse: {
+                  id: 1,
+                  nickname: AUTHOR.DOTORI.nickname,
+                },
+              },
+              {
+                id: 16,
+                emoji: 'U+1F440',
+                issueCommentReactorResponse: {
+                  id: 1,
+                  nickname: AUTHOR.DOTORI.nickname,
+                },
+              },
+            ],
+          },
+        ],
+        issueAssignees: {
+          issueAssignees: [AUTHOR.WEBTEST, AUTHOR.DOTORI],
+        },
+        issueLabels: {
+          issueLabels: [LABEL.REFACTOR],
+        },
+        milestone: null,
+        issueHistories: [],
+        createdAt: '2024-04-27T12:59:59.000Z',
+        lastModifiedAt: '2024-04-27T12:59:59.000Z',
+        closed: false,
+      },
     ],
     pageable: {
+      // 페이지네이션된 데이터가 정렬되어있는지
       sort: {
         empty: true,
         sorted: false,
         unsorted: true,
       },
-      offset: 0,
+      offset: 0, // 데이터셋에서 현재 페이지의 첫번째 항목이 몇번째인지
       pageNumber: 0,
       pageSize: 10,
       paged: true,
       unpaged: false,
     },
     last: true,
-    totalPages: 1,
-    totalElements: 8,
+    totalPages: Math.ceil(12 / 10), // 전체 페이지 수
+    totalElements: 12, // 전체 데이터 셋
+    // 전체 데이터 셋이 정렬되어있는지
     sort: {
-      empty: true,
+      empty: true, // 정렬 정보가 비어있는 지
       sorted: false,
       unsorted: true,
     },
     first: true,
-    size: 10,
-    number: 0,
-    numberOfElements: 8,
-    empty: false,
+    size: 10, // 한 페이지에 표시되는 항목의 수
+    number: 0, // 현재 페이지 번호
+    numberOfElements: 12, // 현재 페이지에 몇개의 요소가 포함되어 있는지
+    empty: false, // 전체 데이터가 비어있는 지
   },
 };
 
