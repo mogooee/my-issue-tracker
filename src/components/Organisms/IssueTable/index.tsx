@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react/prop-types */
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { CheckState, DefaultCheckIds } from '@/stores/checkBox';
 
@@ -25,6 +26,7 @@ const PARENT_CHECKBOX_ID = -1;
 const EmptyIssueItem = () => <S.NoSearchResult>해당하는 이슈가 없습니다. 👀</S.NoSearchResult>;
 
 const IssueTable = ({ issuesData }: { issuesData: IssuesTypes }) => {
+  const navigate = useNavigate();
   const { openIssueCount, closedIssueCount, issues } = issuesData;
 
   const checkState = useRecoilValue(CheckState);
@@ -35,6 +37,10 @@ const IssueTable = ({ issuesData }: { issuesData: IssuesTypes }) => {
   const queries = useRecoilValue(FilterState);
 
   useEffect(() => {
+    if (page > 0 && !issues.content.length) {
+      navigate(`/issues?page=${page - 1}&q=${queries}`);
+    }
+
     const ids: number[] = issues.content.map((issue) => issue.id);
     setDefaultCheckIds(ids);
   }, [issues.content.length]);

@@ -140,39 +140,52 @@ export const issueHandlers = [
     const stateContent = queries.match(openStateReg) ? openIssueContents : closedIssueContents;
 
     const issueStateReg = new RegExp(`${OPEN_QUERY}|${CLOSED_QUERY}`);
-    const filteredContent = queries.match(issueStateReg)
-      ? stateContent
-      : [...openIssueContents, ...closedIssueContents];
+    const stateFilteredContent = (
+      queries.match(issueStateReg) ? stateContent : [...openIssueContents, ...closedIssueContents]
+    ).sort((a, b) => b.id - a.id);
+
+    const size = 10;
+    const pagedStart = page * 10;
+    const pagedEnd = pagedStart + 10;
+
+    const pagedIssues = stateFilteredContent.slice(pagedStart, pagedEnd);
+    const totalElements = stateFilteredContent.length;
+    const totalPages = Math.ceil(totalElements / size);
+
+    const first = page === 0;
+    const last = page + 1 === totalPages;
+
+    const numberOfElements = content.length;
 
     const response: IssuesTypes = {
       openIssueCount: openIssueContents.length,
       closedIssueCount: closedIssueContents.length,
       issues: {
-        content: filteredContent.sort((a, b) => b.id - a.id),
+        content: pagedIssues,
         pageable: {
           sort: {
             empty: true,
             sorted: false,
             unsorted: true,
           },
-          offset: 0,
+          offset: pagedStart,
           pageNumber: page,
-          pageSize: 10,
+          pageSize: size,
           paged: true,
           unpaged: false,
         },
-        last: true,
-        totalPages: 1,
-        totalElements: 8,
+        last,
+        totalPages,
+        totalElements,
         sort: {
           empty: true,
           sorted: false,
           unsorted: true,
         },
-        first: true,
-        size: 10,
-        number: 0,
-        numberOfElements: 8,
+        first,
+        size,
+        number: page,
+        numberOfElements,
         empty: false,
       },
     };

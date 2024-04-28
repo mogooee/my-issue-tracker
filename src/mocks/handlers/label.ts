@@ -34,6 +34,13 @@ export let LABEL_TABLE: LabelTypes[] = [
     description: '질문용 라벨입니다.',
     textColor: 'WHITE',
   },
+  {
+    id: 5,
+    title: 'Refactor',
+    backgroundColorCode: '#008672',
+    description: '리팩토링 라벨입니다.',
+    textColor: 'WHITE',
+  },
 ];
 
 const addIdCount = () => {

@@ -74,6 +74,8 @@ const IssueDetail = (): JSX.Element => {
         closed={closed}
         title={title}
         createdAt={createdAt}
+        lastModifiedAt={lastModifiedAt}
+        issueHistories={issueHistories}
         author={author}
         isAuthor={author.id === memberId}
         commentNum={comments.length}
