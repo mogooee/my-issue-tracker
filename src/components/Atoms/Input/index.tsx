@@ -68,7 +68,7 @@ const Input = ({ disabled = false, inputMaxLength = defaultMaxLength, ...props }
       <S.Input
         type={inputType}
         disabled={disabled}
-        defaultValue={inputValue || ''}
+        value={inputValue || ''}
         placeholder={inputPlaceholder}
         maxLength={inputMaxLength}
         ref={inputRef}
