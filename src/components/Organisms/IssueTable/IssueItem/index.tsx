@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Link } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 
 import * as S from '@/components/Organisms/IssueTable/IssueItem/index.styles';
 import { COLORS } from '@/styles/theme';
@@ -11,9 +11,9 @@ import Label from '@/components/Atoms/Label';
 import UserImage from '@/components/Atoms/UserImage';
 
 import { CheckState } from '@/stores/checkBox';
-import calcTimeForToday from '@/utils/calcForTimeToday';
 import { ContentTypes } from '@/api/issue/types';
 import useFilter from '@/hooks/useFilter';
+import { getIssueSummary } from '../stateHelper';
 
 const IssueItem = (issueInfo: ContentTypes) => {
   const {
@@ -35,15 +35,7 @@ const IssueItem = (issueInfo: ContentTypes) => {
   const issueLink = `/issues/${id}`;
   const milestoneLink = `/milestone/${id}`;
 
-  const issueState = closed ? '닫혔습니다' : '열렸습니다';
-  const closeIssueHistories = issueHistories.filter((history) => history.action === 'CLOSE_ISSUE');
-
-  const lastCloseIssueHistory = closeIssueHistories.length
-    ? closeIssueHistories[closeIssueHistories.length - 1].modifiedAt
-    : lastModifiedAt;
-
-  const timeStamp = closed ? lastCloseIssueHistory : createdAt;
-  const issueSummary = `이 이슈가 ${calcTimeForToday(timeStamp)}, ${author.nickname}님에 의해 ${issueState}`;
+  const issueSummary = getIssueSummary(issueHistories, author.nickname, createdAt, lastModifiedAt);
 
   const isChecked = !!checkState.child.find((checkboxId) => checkboxId === id);
 
